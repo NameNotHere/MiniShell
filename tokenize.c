@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 
 int	count_tokens(char *str)
 {
@@ -33,34 +33,31 @@ int	count_tokens(char *str)
 	return (count);
 }
 
-char	*make_word(char *str)
+char	*make_word(char *str, int *i)
 {
-	int		i;
 	int		s;
 	char	*word;
 
-	i = 0;
 	s = 0;
-	while (*str && (str[s] != ' ' || str[s] != '\n' || str[s] != '\t'\
+	while (str[s] != '\0' && (str[s] != ' ' || str[s] != '\n' || str[s] != '\t'\
 		|| str[s] != '\'' || str[s] != '\"'))
 		s++;
-	word = malloc(i * sizeof(char));
+	word = malloc(s * sizeof(char));
 	if (!word)
 		return (NULL);
-	i = 0;
-	while (i <= s)
-		word[i] = str[i++];
-	word[s] = '\0';
+	while (str[*i] && *i < s)
+		word[*i] = str[*i++];
+	word[*i] = '\0';
 	return (word);
 }
 
-t_token	token(char *str)
+t_token	ft_token(char *str)
 {
 	t_token	output;
 
 	output.word = str;
 	if (strcmp(str, "<<"))
-		output.ty = TOKEN_HERODOC;
+		output.ty = TOKEN_HEREDOC;
 	else if (strcmp(str, ">>"))
 		output.ty = TOKEN_APPEND;
 	else if (strcmp(str, "<"))
@@ -68,11 +65,11 @@ t_token	token(char *str)
 	else if (strcmp(str, ">"))
 		output.ty = TOKEN_INPUT;
 	else if (strcmp(str, "\""))
-		output.ty = DOUBLE_QUOTE;
+		output.ty = TOKEN_DOUBLE_QUOTE;
 	else if (strcmp(str, "\'"))
-		output.ty = SINGLE_QUOTE;
+		output.ty = TOKEN_SINGLE_QUOTE;
 	else if (str[0] == '-')
-		output.ty = TOKEN_PARAMETER;
+		output.ty = TOKEN_PARAM;
 	else if (str[0] == '$')
 		output.ty = TOKEN_VARIABLE;
 	else
@@ -91,12 +88,13 @@ t_token	*tokenize(char *input)
 	t_amount = count_tokens(input);
 	i = 0;
 	output = malloc(sizeof(t_token) * t_amount);
+	if (!output)
 		return (NULL);
 	while (t_amount--)
 	{
-		token = make_word(&input[i]); // might also not work
-		i += sizeof(token); // might not work
-		output[t_amount] = token(token);
+		token = make_word(input, &i); // might also not work
+		i += sizeof(token) + 1; // might not work
+		output[t_amount] = ft_token(token);
 		while (input[i] == '\n' || input[i] == ' ' || input[i] == '\t')
 			i++;
 	}

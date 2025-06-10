@@ -10,25 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
+#include <stdio.h>
 
 int	strcmp(char *str, char *str1)
 {
 	char	*s;
-	char	*s2;
 
-	while (*s && *s1)
+	while (*s && *str1)
 	{
-		if (*s++ != *s1++)
+		if (*s++ != *str1++)
 			break ;
 	}
-	if (*s == '\0' && *s1 == '\0')
+	if (*s == '\0' && *str1 == '\0')
 		return (1);
 	return (0);
 }
 
 void	main()
 {
-	char	*string = "cat <<EOF | grep "pattern" > output.txt";
-
+	int i = 0;
+	char	*string = "cat <<EOF | grep \"pattern\" > output.txt";
+	t_token *output = tokenize(string);
+	printf("ok main\n");
+	while (sizeof(output) >= i)
+		printf("%s\n", output[i++].word);
 }

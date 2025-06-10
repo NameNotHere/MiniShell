@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
+#include <stdio.h>
+
 typedef enum e_token_type
 {
 	TOKEN_WORD,
@@ -18,11 +21,11 @@ typedef enum e_token_type
 	TOKEN_OUTPUT,
 	TOKEN_APPEND,
 	TOKEN_HEREDOC,
-	TOKEN_SINGLE_QUOTED,
-	TOKEN_DOUBLE_QUOTED,
+	TOKEN_SINGLE_QUOTE,
+	TOKEN_DOUBLE_QUOTE,
 	TOKEN_VARIABLE,
 	TOKEN_PARAM
-}	t_token_type;
+}	e_token_type;
 
 typedef struct t_token
 {
@@ -31,8 +34,6 @@ typedef struct t_token
 }	t_token;
 
 int		count_tokens(char *str);
-
-char	*make_word(char *str);
 
 t_token	token(char *str);
 
