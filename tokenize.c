@@ -12,6 +12,16 @@
 
 #include "minishell.h"
 
+void skip_spaces(int *i, char *str)
+{
+    while (str[*i] && (str[*i] == ' ' || str[*i] == '\n' || str[*i] == '\t'))
+    {
+        (*i)++;
+    }
+}
+
+
+
 int	count_tokens(char *str)
 {
 	int	count;
@@ -19,21 +29,16 @@ int	count_tokens(char *str)
 
 	count = 0;
 	i = 0;
+	printf("y\n");
 	while (str[i])
-	{
-		while (str[i] == ' ' || str[i] == '\n' || str[i] == '\t')
-			i++;
+	{// doesnt work
+		skip_spaces(&i, str);
 		if (str[i])
-		{
 			count++;
-			while (str[i] && str[i] != ' ' && str[i] != '\n' && str[i] != '\t')
-				i++;
-		}
+		i++;
 	}
 	return (count);
 }
-
-#include <stdlib.h>
 
 char	*make_word(char *str, int *i)
 {
@@ -41,20 +46,31 @@ char	*make_word(char *str, int *i)
 	int		len;
 	char	*word;
 	int		j;
+	char	quote;
 
 	start = *i;
 	len = 0;
-
+	j = 0;
 	while (str[*i] && str[*i] != ' ' && str[*i] != '\n' &&
 		str[*i] != '\t' && str[*i] != '\'' && str[*i] != '\"')
 	{
 		(*i)++;
 		len++;
 	}
+	if (str[*i] == '\'' || str[*i] == '\"')
+	{
+		quote = str[*i];
+		(*i)++;
+		while (str[*i] && str[*i] != quote)
+		{
+			(*i)++;
+			len++;
+		}
+		(*i)++;
+	}
 	word = malloc(len + 1);
 	if (!word)
 		return (NULL);
-	j = 0;
 	while (j < len)
 	{
 		word[j] = str[start + j];
@@ -97,19 +113,27 @@ t_token	*tokenize(char *input)
 	int		i;
 	int		t_amount;
 	char	*token;
+	int		id;
 
 	t_amount = count_tokens(input);
 	i = 0;
 	output = malloc(sizeof(t_token) * t_amount);
 	if (!output)
 		return (NULL);
+	id = 0;
 	while (t_amount--)
 	{
+		printf("ff\n");
+		skip_spaces(&i, input);
 		token = make_word(input, &i); // might also not work
-		i += sizeof(token) + 1; // might not work
-		output[t_amount] = ft_token(token);
-		while (input[i] == '\n' || input[i] == ' ' || input[i] == '\t')
-			i++;
+		output[id++] = ft_token(token);
+        if (token)
+            output[id++] = ft_token(token);
+        else
+        {
+            free(output);
+            return (NULL);
+        }
 	}
 	return (output);
 }

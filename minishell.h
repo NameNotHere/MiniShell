@@ -12,6 +12,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h> // illegal but used in main for strlen
 
 typedef enum e_token_type
 {
