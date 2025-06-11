@@ -39,6 +39,6 @@ t_token	token(char *str);
 
 t_token	*tokenize(char *input);
 
-int		strcmp(char *str, char *str1);
+int		ft_strcmp(char *str, char *str1);
 
 int parse_tokens(t_token *list);

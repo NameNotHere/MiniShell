@@ -33,40 +33,54 @@ int	count_tokens(char *str)
 	return (count);
 }
 
+#include <stdlib.h>
+
 char	*make_word(char *str, int *i)
 {
-	int		s;
+	int		start;
+	int		len;
 	char	*word;
+	int		j;
 
-	s = 0;
-	while (str[s] != '\0' && (str[s] != ' ' || str[s] != '\n' || str[s] != '\t'\
-		|| str[s] != '\'' || str[s] != '\"'))
-		s++;
-	word = malloc(s * sizeof(char));
+	start = *i;
+	len = 0;
+
+	while (str[*i] && str[*i] != ' ' && str[*i] != '\n' &&
+		str[*i] != '\t' && str[*i] != '\'' && str[*i] != '\"')
+	{
+		(*i)++;
+		len++;
+	}
+	word = malloc(len + 1);
 	if (!word)
 		return (NULL);
-	while (str[*i] && *i < s)
-		word[*i] = str[*i++];
-	word[*i] = '\0';
+	j = 0;
+	while (j < len)
+	{
+		word[j] = str[start + j];
+		j++;
+	}
+	word[j] = '\0';
 	return (word);
 }
+
 
 t_token	ft_token(char *str)
 {
 	t_token	output;
 
 	output.word = str;
-	if (strcmp(str, "<<"))
+	if (ft_strcmp(str, "<<"))
 		output.ty = TOKEN_HEREDOC;
-	else if (strcmp(str, ">>"))
+	else if (ft_strcmp(str, ">>"))
 		output.ty = TOKEN_APPEND;
-	else if (strcmp(str, "<"))
+	else if (ft_strcmp(str, "<"))
 		output.ty = TOKEN_OUTPUT;
-	else if (strcmp(str, ">"))
+	else if (ft_strcmp(str, ">"))
 		output.ty = TOKEN_INPUT;
-	else if (strcmp(str, "\""))
+	else if (ft_strcmp(str, "\""))
 		output.ty = TOKEN_DOUBLE_QUOTE;
-	else if (strcmp(str, "\'"))
+	else if (ft_strcmp(str, "\'"))
 		output.ty = TOKEN_SINGLE_QUOTE;
 	else if (str[0] == '-')
 		output.ty = TOKEN_PARAM;
@@ -81,7 +95,6 @@ t_token	*tokenize(char *input)
 {
 	t_token	*output;
 	int		i;
-	int		t_size;
 	int		t_amount;
 	char	*token;
 
