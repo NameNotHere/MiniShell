@@ -20,8 +20,6 @@ void skip_spaces(int *i, char *str)
     }
 }
 
-
-
 int	count_tokens(char *str)
 {
 	int	count;
