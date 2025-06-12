@@ -6,18 +6,23 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/09 15:06:41 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/12 14:31:06 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void skip_spaces(int *i, char *str)
+int	skip_spaces(int *i, char *str)
 {
-    while (str[*i] && (str[*i] == ' ' || str[*i] == '\n' || str[*i] == '\t'))
-    {
-        (*i)++;
-    }
+	int	y;
+
+	y = 0;
+	while (str[*i] && (str[*i] == ' ' || str[*i] == '\n' || str[*i] == '\t'))
+	{
+		(*i)++;
+		y++;
+	}
+	return (y);
 }
 
 int	count_tokens(char *str)
@@ -46,15 +51,12 @@ char	*make_word(char *str, int *i)
 	int		j;
 	char	quote;
 
-	start = *i;
+	skip_spaces(i, str);
 	len = 0;
 	j = 0;
-	while (str[*i] && str[*i] != ' ' && str[*i] != '\n' &&
-		str[*i] != '\t' && str[*i] != '\'' && str[*i] != '\"')
-	{
-		(*i)++;
+	start = *i;
+	while (str[(*i) + len] && (str[(*i) + len] != ' ' && str[(*i) + len] != '\n' && str[(*i) + len] != '\t'))
 		len++;
-	}
 	if (str[*i] == '\'' || str[*i] == '\"')
 	{
 		quote = str[*i];
@@ -64,7 +66,6 @@ char	*make_word(char *str, int *i)
 			(*i)++;
 			len++;
 		}
-		(*i)++;
 	}
 	word = malloc(len + 1);
 	if (!word)
@@ -78,7 +79,7 @@ char	*make_word(char *str, int *i)
 	return (word);
 }
 
-
+// this doesnt work
 t_token	ft_token(char *str)
 {
 	t_token	output;
@@ -101,7 +102,7 @@ t_token	ft_token(char *str)
 	else if (str[0] == '$')
 		output.ty = TOKEN_VARIABLE;
 	else
-		output.ty = TOKEN_WORD;
+		output.ty = TOKEN_COMMAND;
 	return (output);
 }
 
@@ -121,7 +122,6 @@ t_token	*tokenize(char *input)
 	id = 0;
 	while (t_amount--)
 	{
-		printf("ff\n");
 		skip_spaces(&i, input);
 		token = make_word(input, &i); // might also not work
 		output[id++] = ft_token(token);
