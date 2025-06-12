@@ -6,7 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/12 14:10:53 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/12 16:02:48 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int		count_tokens(char *str);
 
 t_token	token(char *str);
 
-t_token	*tokenize(char *input);
+t_token	*tokenize(char *input, int *token_count);
 
 int		ft_strcmp(char *str, char *str1);
 

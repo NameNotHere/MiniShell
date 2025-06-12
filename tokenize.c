@@ -6,7 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/12 14:31:06 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/12 16:02:44 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,59 +25,84 @@ int	skip_spaces(int *i, char *str)
 	return (y);
 }
 
-int	count_tokens(char *str)
+int count_tokens(char *str)
 {
-	int	count;
-	int	i;
+	int count = 0;
+	int i = 0;
 
-	count = 0;
-	i = 0;
-	printf("y\n");
 	while (str[i])
-	{// doesnt work
+	{
 		skip_spaces(&i, str);
 		if (str[i])
+		{
 			count++;
-		i++;
+
+			// Skip over the current token
+			if (str[i] == '\'' || str[i] == '\"')
+			{
+				char quote = str[i++];
+				while (str[i] && str[i] != quote)
+					i++;
+				if (str[i] == quote)
+					i++;
+			}
+			else
+			{
+				while (str[i] && str[i] != ' ' && str[i] != '\n' && str[i] != '\t')
+					i++;
+			}
+		}
 	}
-	return (count);
+	return count;
 }
 
-char	*make_word(char *str, int *i)
+char *make_word(char *str, int *i)
 {
-	int		start;
-	int		len;
-	char	*word;
-	int		j;
-	char	quote;
+	int start;
+	int len = 0;
+	char *word;
+	char quote;
 
 	skip_spaces(i, str);
-	len = 0;
-	j = 0;
+
+	if (!str[*i])
+		return NULL;
+
 	start = *i;
-	while (str[(*i) + len] && (str[(*i) + len] != ' ' && str[(*i) + len] != '\n' && str[(*i) + len] != '\t'))
-		len++;
+
 	if (str[*i] == '\'' || str[*i] == '\"')
 	{
 		quote = str[*i];
-		(*i)++;
+		(*i)++;       // Skip opening quote
+		start = *i;   // start after quote
 		while (str[*i] && str[*i] != quote)
 		{
 			(*i)++;
 			len++;
 		}
+		if (str[*i] == quote)
+			(*i)++;   // skip closing quote
 	}
+	else
+	{
+		while (str[*i] && str[*i] != ' ' && str[*i] != '\n' && str[*i] != '\t')
+		{
+			(*i)++;
+			len++;
+		}
+	}
+
 	word = malloc(len + 1);
 	if (!word)
-		return (NULL);
-	while (j < len)
-	{
+		return NULL;
+
+	for (int j = 0; j < len; j++)
 		word[j] = str[start + j];
-		j++;
-	}
-	word[j] = '\0';
-	return (word);
+	word[len] = '\0';
+
+	return word;
 }
+
 
 // this doesnt work
 t_token	ft_token(char *str)
@@ -85,17 +110,17 @@ t_token	ft_token(char *str)
 	t_token	output;
 
 	output.word = str;
-	if (ft_strcmp(str, "<<"))
+	if (ft_strcmp(str, "<<") == 0)
 		output.ty = TOKEN_HEREDOC;
-	else if (ft_strcmp(str, ">>"))
+	else if (ft_strcmp(str, ">>") == 0)
 		output.ty = TOKEN_APPEND;
-	else if (ft_strcmp(str, "<"))
+	else if (ft_strcmp(str, "<") == 0)
 		output.ty = TOKEN_OUTPUT;
-	else if (ft_strcmp(str, ">"))
+	else if (ft_strcmp(str, ">") == 0)
 		output.ty = TOKEN_INPUT;
-	else if (ft_strcmp(str, "\""))
+	else if (ft_strcmp(str, "\"") == 0)
 		output.ty = TOKEN_DOUBLE_QUOTE;
-	else if (ft_strcmp(str, "\'"))
+	else if (ft_strcmp(str, "\'") == 0)
 		output.ty = TOKEN_SINGLE_QUOTE;
 	else if (str[0] == '-')
 		output.ty = TOKEN_PARAM;
@@ -106,7 +131,7 @@ t_token	ft_token(char *str)
 	return (output);
 }
 
-t_token	*tokenize(char *input)
+t_token	*tokenize(char *input, int *token_count)
 {
 	t_token	*output;
 	int		i;
@@ -123,15 +148,15 @@ t_token	*tokenize(char *input)
 	while (t_amount--)
 	{
 		skip_spaces(&i, input);
-		token = make_word(input, &i); // might also not work
-		output[id++] = ft_token(token);
-        if (token)
-            output[id++] = ft_token(token);
-        else
-        {
-            free(output);
-            return (NULL);
-        }
+		token = make_word(input, &i);
+		if (token)
+			output[id++] = ft_token(token);
+		else
+		{
+			free(output);
+			return (NULL);
+		}
 	}
+	*token_count = id;
 	return (output);
 }
