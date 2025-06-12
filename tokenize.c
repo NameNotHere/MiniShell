@@ -48,7 +48,7 @@ int count_tokens(char *str)
 			}
 			else
 			{
-				while (str[i] && str[i] != ' ' && str[i] != '\n' && str[i] != '\t')
+				while (str[i] && ((str[i] > 64 && str[i] < 91) || (str[i] > 96 && str[i] < 123)))
 					i++;
 			}
 		}
@@ -73,33 +73,30 @@ char *make_word(char *str, int *i)
 	if (str[*i] == '\'' || str[*i] == '\"')
 	{
 		quote = str[*i];
-		(*i)++;       // Skip opening quote
-		start = *i;   // start after quote
+		start = *i;
+		(*i)++;
 		while (str[*i] && str[*i] != quote)
 		{
 			(*i)++;
 			len++;
 		}
 		if (str[*i] == quote)
-			(*i)++;   // skip closing quote
+			(*i)++;
 	}
 	else
 	{
-		while (str[*i] && str[*i] != ' ' && str[*i] != '\n' && str[*i] != '\t')
+		while (str[*i] && ((str[*i] > 64 && str[*i] < 91) || (str[*i] > 96 && str[*i] < 123)))
 		{
 			(*i)++;
 			len++;
 		}
 	}
-
 	word = malloc(len + 1);
 	if (!word)
 		return NULL;
-
-	for (int j = 0; j < len; j++)
+	for (int j = 0; j < len; j++) // remove
 		word[j] = str[start + j];
 	word[len] = '\0';
-
 	return word;
 }
 

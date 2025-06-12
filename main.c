@@ -29,11 +29,13 @@ int	main()
 {
 	int i = 0;
 	int	token_count;
-	char	*string = "cat <<EOF | grep \"pattern\" > output.txt";
+	char	*string = "cat << EOF | grep \"pattern\" > output.txt";
 	t_token *output = tokenize(string, &token_count);
-
-	printf("%d\n", ft_strcmp("str", "strpp"));
+	printf("main\n");
 	while (token_count > i)
-		printf("%s \n", output[i++].word);
+	{
+		printf("%d %s \n", output[i].ty, output[i].word);
+		i++;
+	}
 	return (0);
 }
