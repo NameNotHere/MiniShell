@@ -27,20 +27,19 @@ int	skip_spaces(int *i, char *str)
 
 int count_tokens(char *str)
 {
-	int count = 0;
-	int i = 0;
-
+	int		count = 0;
+	int		i = 0;
+	char	quote;
+	printf("ff\n");
 	while (str[i])
 	{
 		skip_spaces(&i, str);
 		if (str[i])
 		{
 			count++;
-
-			// Skip over the current token
 			if (str[i] == '\'' || str[i] == '\"')
 			{
-				char quote = str[i++];
+				quote = str[i++];
 				while (str[i] && str[i] != quote)
 					i++;
 				if (str[i] == quote)
@@ -48,8 +47,8 @@ int count_tokens(char *str)
 			}
 			else
 			{
-				while (str[i] && ((str[i] > 64 && str[i] < 91) || (str[i] > 96 && str[i] < 123)))
-					i++;
+				while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' && str[i] != '\"')
+	   				i++;
 			}
 		}
 	}
@@ -107,24 +106,24 @@ t_token	ft_token(char *str)
 	t_token	output;
 
 	output.word = str;
-	if (ft_strcmp(str, "<<") == 0)
+	if (ft_strncmp(str, "<<", 2) == 0)
 		output.ty = TOKEN_HEREDOC;
-	else if (ft_strcmp(str, ">>") == 0)
+	else if (ft_strncmp(str, ">>", 2) == 0)
 		output.ty = TOKEN_APPEND;
-	else if (ft_strcmp(str, "<") == 0)
+	else if (ft_strncmp(str, "<", 1) == 0)
 		output.ty = TOKEN_OUTPUT;
-	else if (ft_strcmp(str, ">") == 0)
+	else if (ft_strncmp(str, ">", 1) == 0)
 		output.ty = TOKEN_INPUT;
-	else if (ft_strcmp(str, "\"") == 0)
+	else if (ft_strncmp(str, "\"", 1) == 0)
 		output.ty = TOKEN_DOUBLE_QUOTE;
-	else if (ft_strcmp(str, "\'") == 0)
+	else if (ft_strncmp(str, "\'", 1) == 0)
 		output.ty = TOKEN_SINGLE_QUOTE;
 	else if (str[0] == '-')
 		output.ty = TOKEN_PARAM;
 	else if (str[0] == '$')
 		output.ty = TOKEN_VARIABLE;
 	else
-		output.ty = TOKEN_COMMAND;
+		output.ty = TOKEN_COMMAND; // need to add a filepath version too
 	return (output);
 }
 
@@ -144,6 +143,7 @@ t_token	*tokenize(char *input, int *token_count)
 	id = 0;
 	while (t_amount--)
 	{
+		printf("p\n");
 		skip_spaces(&i, input);
 		token = make_word(input, &i);
 		if (token)

@@ -13,23 +13,14 @@
 #include "minishell.h"
 #include <stdio.h>
 
-// unusual way but my tokeniser uses it this way
-int	ft_strcmp(char *str, char *str1)
-{
-	while (*str && (*str == *str1))
-	{
-		str++;
-		str1++;
-	}
-	return ((unsigned char)*str - (unsigned char)*str1);
-}
-
 // everything is a heredoc but properly split in size but not properly displayed
 int	main()
 {
 	int i = 0;
 	int	token_count;
-	char	*string = "cat << EOF | grep \"pattern\" > output.txt";
+	// char	*string = "cat << EOF | grep \"pattern\" > output.txt";
+	char	*string = "cat EOF grep \"pattern\"  output txt";
+
 	t_token *output = tokenize(string, &token_count);
 	printf("main\n");
 	while (token_count > i)

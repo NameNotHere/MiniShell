@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h> // illegal but used in main for strlen
+#include "libft/libft.h"
 
 typedef enum e_token_type
 {
@@ -41,7 +42,5 @@ int		count_tokens(char *str);
 t_token	token(char *str);
 
 t_token	*tokenize(char *input, int *token_count);
-
-int		ft_strcmp(char *str, char *str1);
 
 int		parse_tokens(t_token *list);
