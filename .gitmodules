@@ -1,0 +1,6 @@
+[submodule "minishell/libft"]
+	path = minishell/libft
+	url = https://github.com/NameNotHere/libft.git
+[submodule "libft"]
+	path = libft
+	url = https://github.com/NameNotHere/libft.git

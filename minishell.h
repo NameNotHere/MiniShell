@@ -26,8 +26,8 @@ typedef enum e_token_type
 	TOKEN_DOUBLE_QUOTE,
 	TOKEN_VARIABLE,
 	TOKEN_PARAM,
-	TOKEN_INBUILT,
-	TOKEN_FILE_PATH
+	TOKEN_FILE_PATH,
+	TOKEN_NUMBER
 }	t_token_type;
 
 typedef struct t_token

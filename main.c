@@ -18,7 +18,7 @@ int	main()
 {
 	int i = 0;
 	int	token_count;
-	char	*string = "cat << EOF | grep \"pattern\" > output.txt";
+	char	*string = "cat << 99 a EOF | grep \"pattern\" > output.txt";
 	// char	*string = "cat EOF grep \"pattern\"  output txt";
 
 	t_token *output = tokenize(string, &token_count);

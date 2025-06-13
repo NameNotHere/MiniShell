@@ -99,6 +99,14 @@ char *make_word(char *str, int *i)
 		len += ft_isoperator(str, *i);
 		*i += ft_isoperator(str, *i);
 	}
+	else if (ft_isdigit(str[*i]))
+	{
+		while (ft_isdigit(str[*i]))
+		{
+			(*i)++;
+			len++;
+		}
+	}
 	word = malloc(len + 1);
 	if (!word)
 		return NULL;
@@ -131,6 +139,10 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_PARAM;
 	else if (str[0] == '$')
 		output.ty = TOKEN_VARIABLE;
+	else if (str[0] == '/')
+		output.ty = TOKEN_FILE_PATH;
+	else if (ft_isdigit(str[0])) // issue is if we have number followed by something else without space
+		output.ty = TOKEN_NUMBER;
 	else
 		output.ty = TOKEN_COMMAND; // need to add a filepath version too
 	return (output);
