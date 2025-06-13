@@ -58,12 +58,12 @@ int count_tokens(char *str)
 char *make_word(char *str, int *i)
 {
 	int start;
-	int len = 0;
+	int len;
 	char *word;
 	char quote;
 
 	skip_spaces(i, str);
-
+	len = 0;
 	if (!str[*i])
 		return NULL;
 
@@ -80,15 +80,24 @@ char *make_word(char *str, int *i)
 			len++;
 		}
 		if (str[*i] == quote)
+		{
+			len += 2;
 			(*i)++;
+		}
 	}
-	else
+	else if (ft_isalpha(str[*i]))
 	{
-		while (str[*i] && ((str[*i] > 64 && str[*i] < 91) || (str[*i] > 96 && str[*i] < 123)))
+		start = *i;
+		while (str[*i] && ft_isalpha(str[*i]))
 		{
 			(*i)++;
 			len++;
 		}
+	}
+	else if (ft_isoperator(str, *i))
+	{
+		len += ft_isoperator(str, *i);
+		*i += ft_isoperator(str, *i);
 	}
 	word = malloc(len + 1);
 	if (!word)
@@ -106,17 +115,17 @@ t_token	ft_token(char *str)
 	t_token	output;
 
 	output.word = str;
-	if (ft_strncmp(str, "<<", 2) == 0)
+	if (ft_strncmp(str, "<<", 3) == 0)
 		output.ty = TOKEN_HEREDOC;
-	else if (ft_strncmp(str, ">>", 2) == 0)
+	else if (ft_strncmp(str, ">>", 3) == 0)
 		output.ty = TOKEN_APPEND;
-	else if (ft_strncmp(str, "<", 1) == 0)
+	else if (ft_strncmp(str, "<", 2) == 0)
 		output.ty = TOKEN_OUTPUT;
-	else if (ft_strncmp(str, ">", 1) == 0)
+	else if (ft_strncmp(str, ">", 2) == 0)
 		output.ty = TOKEN_INPUT;
-	else if (ft_strncmp(str, "\"", 1) == 0)
+	else if (ft_strncmp(str, "\"", 2) == 0)
 		output.ty = TOKEN_DOUBLE_QUOTE;
-	else if (ft_strncmp(str, "\'", 1) == 0)
+	else if (ft_strncmp(str, "\'", 2) == 0)
 		output.ty = TOKEN_SINGLE_QUOTE;
 	else if (str[0] == '-')
 		output.ty = TOKEN_PARAM;

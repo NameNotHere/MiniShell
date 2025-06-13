@@ -10,7 +10,7 @@ SRCS = libft/ft_atoi.c libft/ft_calloc.c libft/ft_memcmp.c libft/ft_strrchr.c li
 	libft/ft_tolower.c libft/ft_toupper.c libft/ft_strjoin.c libft/ft_split.c libft/ft_strtrim.c \
 	libft/ft_substr.c libft/ft_itoa.c libft/ft_memchr.c libft/ft_strmapi.c libft/ft_striteri.c \
 	libft/ft_putcharfd.c libft/ft_putstr_fd.c libft/ft_putendl_fd.c libft/ft_putnbr_fd.c \
-	tokenize.c AST.c main.c libft/ft_isspace.c
+	libft/ft_isspace.c libft/ft_isoperator.c tokenize.c AST.c main.c 
 
 BONUS_SRCS = libft/ft_lstnew.c libft/ft_lstadd_front.c libft/ft_lstsize.c libft/ft_lstlast.c \
 	libft/ft_lstadd_back.c libft/ft_lstdelone.c libft/ft_lstclear.c libft/ft_lstiter.c libft/ft_lstmap.c
