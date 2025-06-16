@@ -16,7 +16,8 @@
 
 typedef enum e_token_type
 {
-	TOKEN_COMMAND,
+	TOKEN_WORD,
+	TOKEN_INBUILT,
 	TOKEN_PIPE,
 	TOKEN_INPUT,
 	TOKEN_OUTPUT,
@@ -27,7 +28,8 @@ typedef enum e_token_type
 	TOKEN_VARIABLE,
 	TOKEN_PARAM,
 	TOKEN_FILE_PATH,
-	TOKEN_NUMBER
+	TOKEN_NUMBER,
+	TOKEN_BACKSLASH
 }	t_token_type;
 
 typedef struct t_token
@@ -43,3 +45,9 @@ t_token	token(char *str);
 t_token	*tokenize(char *input, int *token_count);
 
 int		parse_tokens(t_token *list);
+
+int	skip_spaces(int *i, char *str);
+
+int	is_builtin(char *str);
+
+char *make_word(char *str, int *i);

@@ -12,139 +12,37 @@
 
 #include "minishell.h"
 
-int	skip_spaces(int *i, char *str)
-{
-	int	y;
-
-	y = 0;
-	while (str[*i] && (str[*i] == ' ' || str[*i] == '\n' || str[*i] == '\t'))
-	{
-		(*i)++;
-		y++;
-	}
-	return (y);
-}
-
-int count_tokens(char *str)
-{
-	int		count = 0;
-	int		i = 0;
-	char	quote;
-	printf("ff\n");
-	while (str[i])
-	{
-		skip_spaces(&i, str);
-		if (str[i])
-		{
-			count++;
-			if (str[i] == '\'' || str[i] == '\"')
-			{
-				quote = str[i++];
-				while (str[i] && str[i] != quote)
-					i++;
-				if (str[i] == quote)
-					i++;
-			}
-			else
-			{
-				while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' && str[i] != '\"')
-	   				i++;
-			}
-		}
-	}
-	return count;
-}
-
-char *make_word(char *str, int *i)
-{
-	int start;
-	int len;
-	char *word;
-	char quote;
-
-	skip_spaces(i, str);
-	len = 0;
-	if (!str[*i])
-		return NULL;
-
-	start = *i;
-
-	if (str[*i] == '\'' || str[*i] == '\"')
-	{
-		quote = str[*i];
-		start = *i;
-		(*i)++;
-		while (str[*i] && str[*i] != quote)
-		{
-			(*i)++;
-			len++;
-		}
-		if (str[*i] == quote)
-		{
-			len += 2;
-			(*i)++;
-		}
-	}
-	else if (ft_isalpha(str[*i]))
-	{
-		start = *i;
-		while (str[*i] && ft_isalpha(str[*i]))
-		{
-			(*i)++;
-			len++;
-		}
-	}
-	else if (ft_isoperator(str, *i))
-	{
-		len += ft_isoperator(str, *i);
-		*i += ft_isoperator(str, *i);
-	}
-	else if (ft_isdigit(str[*i]))
-	{
-		while (ft_isdigit(str[*i]))
-		{
-			(*i)++;
-			len++;
-		}
-	}
-	word = malloc(len + 1);
-	if (!word)
-		return NULL;
-	for (int j = 0; j < len; j++) // remove
-		word[j] = str[start + j];
-	word[len] = '\0';
-	return word;
-}
-
-
-// this doesnt work
 t_token	ft_token(char *str)
 {
 	t_token	output;
 
 	output.word = str;
-	if (ft_strncmp(str, "<<", 3) == 0)
+	if (ft_strncmp(str, "<<", 2) == 0)
 		output.ty = TOKEN_HEREDOC;
-	else if (ft_strncmp(str, ">>", 3) == 0)
+	else if (ft_strncmp(str, ">>", 2) == 0)
 		output.ty = TOKEN_APPEND;
-	else if (ft_strncmp(str, "<", 2) == 0)
+	else if (ft_strncmp(str, "<", 1) == 0)
 		output.ty = TOKEN_OUTPUT;
-	else if (ft_strncmp(str, ">", 2) == 0)
+	else if (ft_strncmp(str, ">", 1) == 0)
 		output.ty = TOKEN_INPUT;
-	else if (ft_strncmp(str, "\"", 2) == 0)
+	else if (ft_strncmp(str, "\"", 1) == 0)
 		output.ty = TOKEN_DOUBLE_QUOTE;
-	else if (ft_strncmp(str, "\'", 2) == 0)
+	else if (ft_strncmp(str, "\'", 1) == 0)
 		output.ty = TOKEN_SINGLE_QUOTE;
 	else if (str[0] == '-')
 		output.ty = TOKEN_PARAM;
 	else if (str[0] == '$')
 		output.ty = TOKEN_VARIABLE;
-	else if (str[0] == '/')
+	else if (str[0] == '|')
+		output.ty = TOKEN_PIPE;
+	else if (ft_strncmp(str, "./", 2) == 0)
 		output.ty = TOKEN_FILE_PATH;
-	else if (ft_isdigit(str[0])) // issue is if we have number followed by something else without space
+	else if (ft_isdigit(str[0]))
 		output.ty = TOKEN_NUMBER;
+	else if (is_builtin(str) == 1)
+		output.ty = TOKEN_INBUILT;
 	else
-		output.ty = TOKEN_COMMAND; // need to add a filepath version too
+		output.ty = TOKEN_WORD;
 	return (output);
 }
 
@@ -164,7 +62,6 @@ t_token	*tokenize(char *input, int *token_count)
 	id = 0;
 	while (t_amount--)
 	{
-		printf("p\n");
 		skip_spaces(&i, input);
 		token = make_word(input, &i);
 		if (token)
