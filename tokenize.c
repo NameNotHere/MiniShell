@@ -29,13 +29,13 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_DOUBLE_QUOTE;
 	else if (ft_strncmp(str, "\'", 1) == 0)
 		output.ty = TOKEN_SINGLE_QUOTE;
-	else if (str[0] == '-')
+	else if (str[0] == '-') // this might be wrong as params can be without - ?
 		output.ty = TOKEN_PARAM;
 	else if (str[0] == '$')
 		output.ty = TOKEN_VARIABLE;
 	else if (str[0] == '|')
 		output.ty = TOKEN_PIPE;
-	else if (ft_strncmp(str, "./", 2) == 0)
+	else if (str[0] == '.' || str[0] == '/' || str[0] == '~')
 		output.ty = TOKEN_FILE_PATH;
 	else if (ft_isdigit(str[0]))
 		output.ty = TOKEN_NUMBER;
