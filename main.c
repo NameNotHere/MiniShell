@@ -18,8 +18,7 @@ int	main()
 {
 	int i = 0;
 	int	token_count;
-	// char	*string = "cat << uuu 99 a EOF | unset cd grep \"pattern\" > ./mom.txt output.txt";
-	char	*string = "cat << 99 a EOF | grep \"pattern\" > output.txt ./mimi";
+	char	*string = "cat << 99 a EOF ./moo/txt $doodoo | grep \"pattern\" > export env unset pipi cd output.txt ./mimi";
 /*	char *string = "(export PATH=\\$PATH:/custom/bin && cd ~/projects && (echo \\\"Building project...\\\" && make all | tee build.log) && grep -i \\\"error\\\" build.log || echo \\\"No errors found\\\" > errors.txt && cat <<EOF > report.txt\n\
 Build Report - $(date)\n User: $USER\n\
 Hostname: $(hostname)\n EOF\n\

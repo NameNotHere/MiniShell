@@ -117,7 +117,7 @@ char *make_word(char *str, int *i)
 	len = 0;
 	if (str[*i] && (str[*i] == '\'' || str[*i] == '\"'))
 		make_string(str, &len, *i);	
-	else if (str[*i] && (ft_isalpha(str[*i]) || str[*i] == '.'))
+	else if (str[*i] && (ft_isalpha(str[*i]) || str[*i] == '.' || str[*i] == '$'))
 		parse_word(str, *i, &len);
 	else if (str[*i] && ft_minishellop(str, *i))
 		len += ft_minishellop(str, *i);
