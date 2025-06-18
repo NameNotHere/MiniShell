@@ -6,7 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 14:44:57 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/18 12:51:03 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:36:38 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main()
 {
 	int i = 0;
 	int	token_count;
-	char	*string = "cat << 99 a EOF ./moo/txt $doodoo | grep \"pattern\" > export env unset pipi cd output.txt ./mimi";
+	char	*string = "~/po ~./opop ~/opop/oo cat << 99 a && EO|F \"pop\" ../pop/o ./moo/txt $doodoo | grep \"pattern\" > export env unset pipi cd output.txt ./mimi";
 
 	t_token *output = tokenize(string, &token_count);
 	while (token_count > i)

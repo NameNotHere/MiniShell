@@ -6,7 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/18 12:49:51 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:34:53 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_INBUILT;
 	else
 		output.ty = TOKEN_WORD;
-	return (output);
+	return (output); // mqybe remove the output definition
 }
 
 int	is_builtin(char *str)
@@ -71,14 +71,13 @@ int	is_builtin(char *str)
 
 t_token	*tokenize(char *input, int *token_count)
 {
-	t_token	*output;
-	int		i;
-	int		t_amount;
-	char	*token;
-	int		id;
+	t_token			*output;
+	static int		i;
+	int				t_amount;
+	char			*token;
+	int				id;
 
 	t_amount = count_tokens(input);
-	i = 0;
 	output = malloc(sizeof(t_token) * t_amount);
 	if (!output)
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:18:52 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/18 12:41:57 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:34:09 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	ft_isminioperator(char *token, int i)
 	if (ft_strncmp(token + i, "&", 1) == 0)
 		return (1);
 	if (ft_strncmp(token + i, ";", 1) == 0)
+		return (1);
+	if (ft_strncmp(token + i, "*", 1) == 0)
 		return (1);
 	return (0);
 }
