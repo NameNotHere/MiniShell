@@ -6,7 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/12 16:02:44 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/18 12:49:51 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,29 @@ t_token	ft_token(char *str)
 	else
 		output.ty = TOKEN_WORD;
 	return (output);
+}
+
+int	is_builtin(char *str)
+{
+	if (!str)
+		return (0);
+	if (ft_strncmp(str, "ls", 2) == 0)
+		return (1);
+	else if (ft_strncmp(str, "cd", 2) == 0)
+		return (1);
+	else if (ft_strncmp(str, "echo", 4) == 0)
+		return (1);
+	else if (ft_strncmp(str, "pwd", 3) == 0)
+		return (1);
+	else if (ft_strncmp(str, "export", 5) == 0)
+		return (1);
+	else if (ft_strncmp(str, "unset", 5) == 0)
+		return (1);
+	else if (ft_strncmp(str, "env", 3) == 0)
+		return (1);
+	else if (ft_strncmp(str, "exit", 4) == 0)
+		return (1);
+	return (0);
 }
 
 t_token	*tokenize(char *input, int *token_count)
