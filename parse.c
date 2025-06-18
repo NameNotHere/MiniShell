@@ -6,7 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/18 15:34:02 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:48:28 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ char	*make_word(char *str, int *i)
 	if (str[*i] && (str[*i] == '\'' || str[*i] == '\"'))
 		make_string(str, &len, *i);
 	else if (str[*i] && (ft_isalpha(str[*i]) || str[*i] == '.' || \
-		str[*i] == '$' || str[*i] == '~'))
+		str[*i] == '$' || str[*i] == '~' || str[*i] == '*'))
 		parse_word(str, *i, &len);
 	else if (str[*i] && ft_isminioperator(str, *i))
 		len += ft_isminioperator(str, *i);
