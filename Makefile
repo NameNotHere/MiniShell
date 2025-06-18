@@ -1,28 +1,55 @@
-NAME := minishell
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I.
+NAME = parser
 
-SRCS = functions/ft_atoi.c functions/ft_calloc.c functions/ft_strncmp.c \
-	functions/ft_isalnum.c functions/ft_isalpha.c functions/ft_isascii.c functions/ft_isdigit.c \
-	functions/ft_isprint.c functions/ft_strlen.c functions/ft_isspace.c \
-	functions/ft_isminioperator.c functions/ft_memcpy.c parse.c tokenize.c main.c
+# compiler settings
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
 
+# LIBFT settings
+LIBFTDIR = libft
+LIBFT = $(LIBFTDIR)/libft.a
+LIBS = -Llibft -lft
+
+
+INCLUDEDIR = include
+INCLUDE = -I $(INCLUDEDIR) -I $(LIBFTDIR)
+SRCDIR = src
+OBJDIR = src/obj
+
+# Source files
+SRCS = parser/AST.c \
+	parser/main.c \
+	parser/lex.c \
+	parser/tokenize.c
 
 OBJS = $(SRCS:.c=.o)
+OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
 
-all: $(NAME)
+RM = rm -f
 
-$(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+# Default rule
+all:
+	@$(MAKE) $(NAME)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Link object files into executable
+$(NAME): $(LIBFT) $(OBJS)
+	$(CC) $(CFLAGS) $(INCLUDE) -o $(NAME) $(OBJS) $(LIBS)
+
+# compile rules (.c to .o)
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDE) -c -o $@ $<
+
+$(LIBFT):
+	@$(MAKE) -C $(LIBFTDIR)
 
 clean:
-	rm -f $(OBJS)
+	$(RM) $(OBJS)
+	@$(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
+	$(RM) -r $(OBJDIR)
+	@$(MAKE) -C $(LIBFTDIR) fclean
 
 re: fclean all
 
