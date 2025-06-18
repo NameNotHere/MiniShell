@@ -1,0 +1,7 @@
+.vscode
+en.subject.pdf
+*.o
+*.a
+*.out
+minishell
+./parser

@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_parser.h                                        :+:      :+:    :+:   */
+/*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/18 22:23:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/18 23:05:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_PARSER_H
 # define MINISHELL_PARSER_H
 
-#include <stdlib.h>
-#include <stdio.h>
+# include <stdlib.h>
+# include <stdio.h>
 
 typedef enum e_token_type
 {
@@ -52,30 +52,8 @@ int		skip_spaces(int *i, char *str);
 
 int		is_builtin(char *str);
 
+int		isminioperator(char *token, int i);
+
 char	*make_word(char *str, int *i);
-
-int		ft_atoi(const char *s);
-
-void	*ft_calloc(size_t nmemb, size_t size);
-
-int		ft_isalnum(int c);
-
-int		ft_isalpha( int c );
-
-int		ft_isascii(int c);
-
-int		ft_isdigit(int c);
-
-int		ft_isminioperator(char *token, int i);
-
-int		ft_isprint(int c);
-
-int		ft_isspace(char c);
-
-size_t	ft_strlen(const char *str);
-
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
-
-void	*ft_memcpy(void *dst, const void *src, size_t num);
 
 #endif

@@ -20,6 +20,7 @@ SRCS = parser/AST.c \
 	parser/main.c \
 	parser/lex.c \
 	parser/tokenize.c
+	parser/utils/isminioperator.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
