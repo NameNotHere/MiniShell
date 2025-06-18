@@ -14,7 +14,7 @@ int	skip_spaces(int *i, char *str)
 	return (y);
 }
 
-int count_tokens(char *str)
+int	count_tokens(char *str)
 {
 	int		count = 0;
 	int		i = 0;
@@ -93,7 +93,7 @@ void make_string(char *str, int *len, int i)
 
 void parse_word(char *str, int i, int *len)
 {
-	while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' && str[i] != '\"' && !ft_minishellop(str, i))
+	while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' && str[i] != '\"' && !ft_isminioperator(str, i))
 	{
 		if (str[i] == '\\' && str[i + 1])
 		{
@@ -119,8 +119,8 @@ char *make_word(char *str, int *i)
 		make_string(str, &len, *i);	
 	else if (str[*i] && (ft_isalpha(str[*i]) || str[*i] == '.' || str[*i] == '$'))
 		parse_word(str, *i, &len);
-	else if (str[*i] && ft_minishellop(str, *i))
-		len += ft_minishellop(str, *i);
+	else if (str[*i] && ft_isminioperator(str, *i))
+		len += ft_isminioperator(str, *i);
 	else if (str[*i] && ft_isdigit(str[*i]))
 		while (ft_isdigit(str[*i + len]))
 			len++;
