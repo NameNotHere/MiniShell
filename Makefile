@@ -9,7 +9,6 @@ LIBFTDIR = libft
 LIBFT = $(LIBFTDIR)/libft.a
 LIBS = -Llibft -lft
 
-
 INCLUDEDIR = include
 INCLUDE = -I $(INCLUDEDIR) -I $(LIBFTDIR)
 SRCDIR = src
@@ -19,7 +18,8 @@ OBJDIR = src/obj
 SRCS = parser/AST.c \
 	parser/main.c \
 	parser/lex.c \
-	parser/tokenize.c
+	parser/tokenize.c \
+	parser/utils/isminioperator.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))

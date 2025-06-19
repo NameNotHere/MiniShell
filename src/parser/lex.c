@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/18 22:25:01 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/18 23:08:41 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	count_tokens(char *str)
 			else
 				while (str[i] && !ft_isspace(str[i]) \
 					&& str[i] != '\'' && str[i] != '\"')
-					//&& !ft_isminioperator(str, i))
+					// && !isminioperator(str, i))
 					i++;
 		}
 	}
@@ -83,7 +83,7 @@ void	make_string(char *str, int *len, int i)
 void	parse_word(char *str, int i, int *len)
 {
 	while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' && \
-		str[i] != '\"' && !ft_isminioperator(str, i))
+		str[i] != '\"' && !isminioperator(str, i))
 	{
 		if (str[i] == '\\' && str[i + 1])
 		{
@@ -110,11 +110,13 @@ char	*make_word(char *str, int *i)
 	else if (str[*i] && (ft_isalpha(str[*i]) || str[*i] == '.' || \
 		str[*i] == '$' || str[*i] == '~' || str[*i] == '*'))
 		parse_word(str, *i, &len);
-	else if (str[*i] && ft_isminioperator(str, *i))
-		len += ft_isminioperator(str, *i);
+	else if (str[*i] && isminioperator(str, *i))
+		len += isminioperator(str, *i);
 	else if (str[*i] && ft_isdigit(str[*i]))
 		while (ft_isdigit(str[*i + len]))
 			len++;
+	else if (str[*i])  // Fallback for any other character
+		len = 1;
 	(*i) += len;
 	word = malloc(len + 1);
 	if (!str || !word)

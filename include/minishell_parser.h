@@ -1,20 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_parser.h                                        :+:      :+:    :+:   */
+/*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/18 22:23:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/19 10:02:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_PARSER_H
 # define MINISHELL_PARSER_H
 
-#include <stdlib.h>
-#include <stdio.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <stdbool.h>
+# include "libft.h"
 
 typedef enum e_token_type
 {
@@ -31,51 +33,127 @@ typedef enum e_token_type
 	TOKEN_PARAM,
 	TOKEN_FILE_PATH,
 	TOKEN_NUMBER,
-	TOKEN_BACKSLASH
+	TOKEN_BACKSLASH,
+	TOKEN_AND,
+	TOKEN_OR
 }	t_token_type;
 
-typedef struct t_token
+typedef struct s_token
 {
 	t_token_type	ty;
 	char			*word;
 }	t_token;
 
-int		count_tokens(char *str);
+/*
+AST DATA STRUCTURE:
+*/
 
-t_token	token(char *str);
+/* shell node type, not sure im needing this enum
+	removed redir nodes, they enter into cmd only*/
+typedef enum e_node_type
+{
+	NODE_CMD,
+	NODE_PIPE,
+}	t_node_type;
 
-t_token	*tokenize(char *input, int *token_count);
+/* out modes*/
+typedef enum e_out_mode
+{
+	CREATE_TRUNCATE,
+	APPEND,
+}	t_out_mode;
 
-int		parse_tokens(t_token *list);
+typedef enum e_redir_in_type
+{
+	REDIR_FILE,
+	REDIR_HEREDOC
+}	t_redir_in_type;
 
-int		skip_spaces(int *i, char *str);
+/*
+* TYPE (FILE or HEREDOC)
+* STRING → (char *)string = file to be opened or delimiter if heredoc
+*/
+typedef struct s_redir_in_node
+{
+	t_redir_in_type	type;
+	char			*string;
+}	t_redir_in_node;
 
-int		is_builtin(char *str);
+/*
+* OUT → (int)fd or (char *)filepath to be opened (to determine later
+	- but probably the latter) → DEFAULTS TO STDOUT
+* OUT_MODE → (create/truncate OR append ) ->  DEFAULTS TO create/truncate
+*/
+typedef struct s_redir_out_node
+{
+	char		*out;
+	t_out_mode	out_mode;
+}	t_redir_out_node;
 
-char	*make_word(char *str, int *i);
+/*
+* 	(REMOVED PATH)
+* (char *) cmd (cmd name or cmd file name with or without path: absolute, relative, etc
+* (bool) built-in → defaults to false
+* (char **)argv → each  argument in a separate string, NULL terminated.
+		→ DEFAULTS to NULL
+* REDIR IN NODE → DEFAULTS TO STDIN
+* REDIR OUT NODE → DEFAULTS TO STDOUT, (create/truncate)
+*/
+typedef struct s_cmd_node
+{
+	char				*cmd;
+	char				**argv;
+	bool				built_in;
+	t_redir_in_node		*redir_in;
+	t_redir_out_node	*redir_out;
+}	t_cmd_node;
 
-int		ft_atoi(const char *s);
+typedef struct s_ast_node	t_shell_node;
 
-void	*ft_calloc(size_t nmemb, size_t size);
+typedef struct s_pipe_node
+{
+	t_shell_node	*left;
+	t_shell_node	*right;
+}	t_pipe_node;
 
-int		ft_isalnum(int c);
+/*
+shell AST node,
+just what enters as main nodes in the tree
+*/
+typedef struct s_ast_node
+{
+	t_node_type	nty;
+	union u_node_data
+	{
+		t_cmd_node			cmd;
+		t_pipe_node			pipe;
+	}	data;
+}	t_ast_node;
 
-int		ft_isalpha( int c );
+// parser/AST.c
+t_ast_node	*parse_command_tokens(t_token *tokens, int start, int end);
 
-int		ft_isascii(int c);
+// parser/lex.c
 
-int		ft_isdigit(int c);
+int			count_tokens(char *str);
 
-int		ft_isminioperator(char *token, int i);
+int			skip_spaces(int *i, char *str);
 
-int		ft_isprint(int c);
+char		*make_word(char *str, int *i);
 
-int		ft_isspace(char c);
+// parser/tokenize.c
 
-size_t	ft_strlen(const char *str);
+const char	*get_token_name(t_token_type type);
 
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
+int			is_builtin(char *str);
 
-void	*ft_memcpy(void *dst, const void *src, size_t num);
+t_token		*tokenize(char *input, int *token_count);
+
+// parser/utils/isminioperator.c
+
+int			isminioperator(char *token, int i);
 
 #endif
+// -> PROTOTYPES OF INEXISTENT FUNCTIONS REMOVED
+// t_token		token(char *str);
+// int			parse_tokens(t_token *list);
