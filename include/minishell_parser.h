@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/19 04:15:25 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/19 10:02:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,12 @@ typedef struct s_token
 AST DATA STRUCTURE:
 */
 
-/* shell node type*/
+/* shell node type, not sure im needing this enum
+	removed redir nodes, they enter into cmd only*/
 typedef enum e_node_type
 {
 	NODE_CMD,
 	NODE_PIPE,
-	NODE_REDIR_IN,
-	NODE_REDIR_OUT,
-	NODE_HEREDOC
 }	t_node_type;
 
 /* out modes*/
@@ -65,21 +63,20 @@ typedef enum e_out_mode
 	APPEND,
 }	t_out_mode;
 
-/*attaches only in: s_redir_in_node*/
-typedef struct s_heredoc_node
+typedef enum e_redir_in_type
 {
-	char	*delimiter;
-}	t_heredoc_node;
+	REDIR_FILE,
+	REDIR_HEREDOC
+}	t_redir_in_type;
 
 /*
-* IN → (int)fd or (char *)filepath to be opened (to determine later
-	- but probably the latter)
-* HEREDOC NODE → DEFAULTS TO  NULL
+* TYPE (FILE or HEREDOC)
+* STRING → (char *)string = file to be opened or delimiter if heredoc
 */
 typedef struct s_redir_in_node
 {
-	char			*in;
-	t_heredoc_node	heredoc;
+	t_redir_in_type	type;
+	char			*string;
 }	t_redir_in_node;
 
 /*
@@ -89,13 +86,13 @@ typedef struct s_redir_in_node
 */
 typedef struct s_redir_out_node
 {
-	char	*out;
-	int		out_mode;
+	char		*out;
+	t_out_mode	out_mode;
 }	t_redir_out_node;
 
 /*
-* (char *) path → DEFAULTS TO current directory
-* (char *) cmd_name (file name (stripped of path) or builtin name)
+* 	(REMOVED PATH)
+* (char *) cmd (cmd name or cmd file name with or without path: absolute, relative, etc
 * (bool) built-in → defaults to false
 * (char **)argv → each  argument in a separate string, NULL terminated.
 		→ DEFAULTS to NULL
@@ -104,15 +101,14 @@ typedef struct s_redir_out_node
 */
 typedef struct s_cmd_node
 {
-	char				*path;
-	char				*cmd_name;
+	char				*cmd;
 	char				**argv;
 	bool				built_in;
 	t_redir_in_node		*redir_in;
 	t_redir_out_node	*redir_out;
 }	t_cmd_node;
 
-typedef struct s_shell_node	t_shell_node;
+typedef struct s_ast_node	t_shell_node;
 
 typedef struct s_pipe_node
 {
@@ -120,37 +116,44 @@ typedef struct s_pipe_node
 	t_shell_node	*right;
 }	t_pipe_node;
 
-/* shell AST node */
-typedef struct s_shell_node
+/*
+shell AST node,
+just what enters as main nodes in the tree
+*/
+typedef struct s_ast_node
 {
 	t_node_type	nty;
 	union u_node_data
 	{
 		t_cmd_node			cmd;
 		t_pipe_node			pipe;
-		t_heredoc_node		heredoc;
-		t_redir_in_node		redir_in;
-		t_redir_out_node	redir_out;
 	}	data;
-}	t_shell_node;
+}	t_ast_node;
 
+// parser/AST.c
+t_ast_node	*parse_command_tokens(t_token *tokens, int start, int end);
+
+// parser/lex.c
 
 int			count_tokens(char *str);
 
-t_token		token(char *str);
-
-t_token		*tokenize(char *input, int *token_count);
-
-int			parse_tokens(t_token *list);
-
 int			skip_spaces(int *i, char *str);
-
-int			is_builtin(char *str);
-
-int			isminioperator(char *token, int i);
 
 char		*make_word(char *str, int *i);
 
+// parser/tokenize.c
+
 const char	*get_token_name(t_token_type type);
 
+int			is_builtin(char *str);
+
+t_token		*tokenize(char *input, int *token_count);
+
+// parser/utils/isminioperator.c
+
+int			isminioperator(char *token, int i);
+
 #endif
+// -> PROTOTYPES OF INEXISTENT FUNCTIONS REMOVED
+// t_token		token(char *str);
+// int			parse_tokens(t_token *list);

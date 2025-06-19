@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/19 02:51:41 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/19 09:00:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_token	ft_token(char *str)
 	else if (ft_strncmp(str, "\'", 1) == 0)
 		output.ty = TOKEN_SINGLE_QUOTE;
 // I AGREE WITH YOUR COMMENT BELOW! Although, token may be useful to keep because some built ins are explicitly not accepting dash params.
-// SUGGESTION: call it DASH_PARAM?
+// SUGGESTION: call it TOKEN_DASH_PARAM?
 	else if (str[0] == '-') // this might be wrong as params can be without - ?
 		output.ty = TOKEN_PARAM;
 	else if (str[0] == '$')
