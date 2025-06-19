@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/19 01:11:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/19 01:42:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ typedef enum e_token_type
 	TOKEN_PARAM,
 	TOKEN_FILE_PATH,
 	TOKEN_NUMBER,
-	TOKEN_BACKSLASH
+	TOKEN_BACKSLASH,
+	TOKEN_AND,
+	TOKEN_OR
 }	t_token_type;
 
 typedef struct t_token
@@ -41,20 +43,22 @@ typedef struct t_token
 	char			*word;
 }	t_token;
 
-int		count_tokens(char *str);
+int			count_tokens(char *str);
 
-t_token	token(char *str);
+t_token		token(char *str);
 
-t_token	*tokenize(char *input, int *token_count);
+t_token		*tokenize(char *input, int *token_count);
 
-int		parse_tokens(t_token *list);
+int			parse_tokens(t_token *list);
 
-int		skip_spaces(int *i, char *str);
+int			skip_spaces(int *i, char *str);
 
-int		is_builtin(char *str);
+int			is_builtin(char *str);
 
-int		isminioperator(char *token, int i);
+int			isminioperator(char *token, int i);
 
-char	*make_word(char *str, int *i);
+char		*make_word(char *str, int *i);
+
+const char	*get_token_name(t_token_type type);
 
 #endif

@@ -51,7 +51,7 @@ int	count_tokens(char *str)
 			else
 				while (str[i] && !ft_isspace(str[i]) \
 					&& str[i] != '\'' && str[i] != '\"')
-					//&& !isminioperator(str, i))
+					// && !isminioperator(str, i))
 					i++;
 		}
 	}
@@ -115,6 +115,8 @@ char	*make_word(char *str, int *i)
 	else if (str[*i] && ft_isdigit(str[*i]))
 		while (ft_isdigit(str[*i + len]))
 			len++;
+	else if (str[*i])  // Fallback for any other character
+		len = 1;
 	(*i) += len;
 	word = malloc(len + 1);
 	if (!str || !word)
