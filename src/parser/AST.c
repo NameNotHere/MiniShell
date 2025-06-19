@@ -1,27 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   AST.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/06/19 04:08:55 by tda-roch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 
 #include "minishell_parser.h"
 
-// t_token parse_tokens(t_token *list)
-// {
-
-// }
-
-// t_token parse_string_literal()
-// {
-
-// }
-
-// t_token parse_param()
-// {
-
-// }
-
-// t_token parse_var()
-// {
-
-// }
-
-// t_token parse_command
-// {
-
-// }
+/*
+AST DATASTRUCTURE ADDED TO minishell.h
+*/
