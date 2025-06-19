@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/19 10:05:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/19 20:10:41 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,6 @@ AST DATASTRUCTURE ADDED TO minishell.h
 */
 
 
-// TODO: ADD A FUNCTION TO PARSE THE WHOLE THING THEN for each command:
-// find start/end token, then parse the command there (func below)
-
 /*
 CMD only tokens sent here (knowing start and end of cmd tokens):
 	- 1st - will extract command name (with or without path)
@@ -32,11 +29,78 @@ CMD only tokens sent here (knowing start and end of cmd tokens):
 	- NOT validate things that are supposed to fail in execve (ex: invalid path)
 	- return clean AST node
 */
-t_ast_node	*parse_command_tokens(t_token *tokens, int start, int end)
+void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 {
 	(void)tokens;
-	printf("parsing command tokens now\nstart token: %d, end token: %d\n",
+	printf("parsing command tokens now\n" \
+		"start token: %d, end token: %d\n",
 		start,
 		end);
-	return (NULL);
+	// PARSING CMD HERE -->
+	// 1. validade syntax,
+	// 2. validate options,
+	// 3. extract and process redir tokens into redir nodes
+	// 4. expand vars,
+	// 5. cleanup then build argv.
+	// etc.
+	return (ast);
+}
+
+void	parse_pipe(t_ast_node *ast, t_token *tokens, int start, int end)
+{
+	if (tokens && tokens[0].word)
+		printf("parse pipe:\n");
+	else
+		return (NULL);
+	printf("parsing a pipe\n" \
+		"start token: %d, end token: %d\n",
+		start,
+		end);
+	if (ast == NULL)
+		printf("ast not initialized yet, maloc it here?\n");
+	printf("add a pipe node in the right place (root or right)\n"
+		"next, add the command on left node (send to parse_cmd with end-1)");
+	// parse_cmd() --> add correctly
+	return ;
+}
+
+/*scanning if pipe is found, if yes, call parsing with start/end */
+void	scan_pipe(t_ast_node *ast, t_token *tokens, int *i)
+{
+	int	start;
+
+	start = *i;
+	if (tokens[start].word == NULL)
+		return ;
+	while (tokens[*i].word)
+	{
+		if (tokens[*i].ty == TOKEN_PIPE)
+		{
+			parse_pipe(ast, tokens, start, *i);
+			return ;
+		}
+	}
+	*i--;
+	parse_cmd(ast, tokens, start, *i);
+	return ;
+}
+
+/*
+creates the ast node pointer then starts scan
+keeps scanning while there are tokens in line
+--> using iterative instead of recursive approach - safer? probably
+*/
+t_ast_node	*build_ast(t_token *tokens)
+{
+	int			start;
+	int			i;
+	t_ast_node	*ast;
+
+	if (tokens == NULL || tokens[0].ty == NULL)
+		return (NULL);
+	start = 0;
+	i = -1;
+	while (tokens[++i].word)
+		scan_pipe(ast, tokens, &i);
+	return (ast);
 }
