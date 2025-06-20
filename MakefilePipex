@@ -5,23 +5,24 @@ LDFLAGS = -lreadline
 RM = rm -f
 INCLUDEDIR = include
 INCLUDE = -I $(INCLUDEDIR)
-SRCDIR = src/exec/
-OBJDIR = src/exec/obj
-SRCS = ft_mem_utils.c \
-		ft_str_utils.c \
-		pipex.c \
-		pipex_process.c \
-		pipex_heredoc.c \
-		pipex_initialize.c \
-		pipex_interactive.c \
-		utils_error.c \
-		utils_exit.c \
-		utils_free.c \
-		utils_mem.c \
-		utils_path.c \
-		utils_split_quotes.c \
-		utils_split_single_delimiter.c \
-		utils_string.c
+SRCDIR = src/
+OBJDIR = src/obj
+SRCS = pipex/ft_mem_utils.c \
+		pipex/ft_str_utils.c \
+		pipex/pipex.c \
+		pipex/pipex_main.c \
+		pipex/pipex_process.c \
+		pipex/pipex_heredoc.c \
+		pipex/pipex_initialize.c \
+		pipex/pipex_interactive.c \
+		pipex/utils_error.c \
+		pipex/utils_exit.c \
+		pipex/utils_free.c \
+		pipex/utils_mem.c \
+		pipex/utils_path.c \
+		pipex/utils_split_quotes.c \
+		pipex/utils_split_single_delimiter.c \
+		pipex/utils_string.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))

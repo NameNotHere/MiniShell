@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:13:01 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/16 06:02:38 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/20 08:58:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct s_nxtsq
 	size_t	write_pos;
 }	t_nxtsq;
 
-// main.c
+// pipex_main.c
 int		run_pipex_once(int argc, char **argv, char **envp);
 
 // pipex_interactive.c

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 13:21:53 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/15 20:37:52 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/20 09:40:19 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ int	run_pipex_once(int argc, char **argv, char **envp)
 
 	if (argc < 5 || (ft_strncmp(argv[1], "here_doc", 8) == 0 && argc < 6))
 	{
-		put_stderr_2("Not enough arguments", "\n");
+		put_stderr_2("Not enough arguments.\n\n" \
+			"To run in interactive mode do:\n.\\pipex -i\n", "\n");
 		return (1);
 	}
 	initialize_pipex(&px, argc, argv, envp);
@@ -58,12 +59,4 @@ int	run_pipex_once(int argc, char **argv, char **envp)
 		parse_command(&px, cmd_i++);
 	cmd_i = 0;
 	return (process_all_piped_commands(&px, cmd_i));
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	if (argc == 2 && (ft_strncmp(argv[1], "-i", 2) == 0))
-		return (run_pipex_interactive(argv[0], envp));
-	else
-		return (run_pipex_once(argc, argv, envp));
 }
