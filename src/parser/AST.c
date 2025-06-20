@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/19 20:10:41 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/20 10:23:14 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ CMD only tokens sent here (knowing start and end of cmd tokens):
 void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 {
 	(void)tokens;
+	(void)ast;
 	printf("parsing command tokens now\n" \
 		"start token: %d, end token: %d\n",
 		start,
@@ -43,7 +44,7 @@ void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 	// 4. expand vars,
 	// 5. cleanup then build argv.
 	// etc.
-	return (ast);
+	return ;
 }
 
 void	parse_pipe(t_ast_node *ast, t_token *tokens, int start, int end)
@@ -51,7 +52,8 @@ void	parse_pipe(t_ast_node *ast, t_token *tokens, int start, int end)
 	if (tokens && tokens[0].word)
 		printf("parse pipe:\n");
 	else
-		return (NULL);
+		return ;
+		// return (NULL);
 	printf("parsing a pipe\n" \
 		"start token: %d, end token: %d\n",
 		start,
@@ -79,8 +81,9 @@ void	scan_pipe(t_ast_node *ast, t_token *tokens, int *i)
 			parse_pipe(ast, tokens, start, *i);
 			return ;
 		}
+		(*i)++;
 	}
-	*i--;
+	(*i)--;
 	parse_cmd(ast, tokens, start, *i);
 	return ;
 }
@@ -90,17 +93,15 @@ creates the ast node pointer then starts scan
 keeps scanning while there are tokens in line
 --> using iterative instead of recursive approach - safer? probably
 */
-t_ast_node	*build_ast(t_token *tokens)
+void	build_ast(t_ast_node *ast,  t_token *tokens)
 {
-	int			start;
 	int			i;
-	t_ast_node	*ast;
 
-	if (tokens == NULL || tokens[0].ty == NULL)
-		return (NULL);
-	start = 0;
+	if (tokens == NULL || tokens[0].word == NULL)
+		// return (NULL);
+		return ;
 	i = -1;
 	while (tokens[++i].word)
 		scan_pipe(ast, tokens, &i);
-	return (ast);
+	return ;
 }

@@ -1,44 +1,89 @@
-NAME = parser
+# THIS MAKEFILE COMPILES 3 separate executables:
+# parser, pipex (interactive) and minishell
+# TODO: minishell not implemented yet, parser is the minishell parser
+# TODO: before eval, this makefile will only compile minishell (cleanup before eval)
+
+# executables
+NAME = minishell
+PIPEX = pipex
+PARSER = parser
 
 # compiler settings
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Werror -Wextra
+# LDFLAGS = -lreadline
+LDFLAGS = -lreadline -Llibft -lft
 
 # LIBFT settings
 LIBFTDIR = libft
 LIBFT = $(LIBFTDIR)/libft.a
-LIBS = -Llibft -lft
+# LIBS = -Llibft -lft
 
+# DIR settings
 INCLUDEDIR = include
 INCLUDE = -I $(INCLUDEDIR) -I $(LIBFTDIR)
-SRCDIR = src
+SRCDIR = src/
 OBJDIR = src/obj
 
-# Source files
-SRCS = parser/AST.c \
+# Default rule
+all:
+	@$(MAKE) $(NAME)
+	@$(MAKE) $(PIPEX)
+	@$(MAKE) $(PARSER)
+
+# ***** MINISHELL SRCS *****
+SRCS = minishell_main.c
+OBJS = $(SRCS:.c=.o)
+OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
+
+$(NAME): $(LIBFT) $(OBJS)
+	$(CC) $(CFLAGS) $(INCLUDE) -o $(NAME) $(OBJS) $(LDFLAGS)
+
+# ***** PARSER SRCS *****
+PARSER_SRCS = parser/AST.c \
 	parser/main.c \
 	parser/lex.c \
 	parser/tokenize.c \
 	parser/utils/isminioperator.c
 
-OBJS = $(SRCS:.c=.o)
-OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
+PARSER_OBJS = $(PARSER_SRCS:.c=.o)
+PARSER_OBJS := $(addprefix $(OBJDIR)/, $(PARSER_OBJS))
 
+$(PARSER): $(LIBFT) $(PARSER_OBJS)
+	$(CC) $(CFLAGS) $(INCLUDE) -o $(PARSER) $(PARSER_OBJS) $(LDFLAGS)
+
+# ***** PIPEX SRCS *****
+PIPEX_SRCS = pipex/ft_mem_utils.c \
+		pipex/ft_str_utils.c \
+		pipex/pipex.c \
+		pipex/pipex_main.c \
+		pipex/pipex_process.c \
+		pipex/pipex_heredoc.c \
+		pipex/pipex_initialize.c \
+		pipex/pipex_interactive.c \
+		pipex/utils_error.c \
+		pipex/utils_exit.c \
+		pipex/utils_free.c \
+		pipex/utils_mem.c \
+		pipex/utils_path.c \
+		pipex/utils_split_quotes.c \
+		pipex/utils_split_single_delimiter.c \
+		pipex/utils_string.c
+PIPEX_OBJS = $(PIPEX_SRCS:.c=.o)
+PIPEX_OBJS := $(addprefix $(OBJDIR)/, $(PIPEX_OBJS))
+
+$(PIPEX): $(LIBFT) $(PIPEX_OBJS)
+	$(CC) $(CFLAGS) $(INCLUDE) -o $(PIPEX) $(PIPEX_OBJS) $(LDFLAGS)
+
+# shell commands
 RM = rm -f
-
-# Default rule
-all:
-	@$(MAKE) $(NAME)
-
-# Link object files into executable
-$(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(INCLUDE) -o $(NAME) $(OBJS) $(LIBS)
 
 # compile rules (.c to .o)
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDE) -c -o $@ $<
 
+# libft maker
 $(LIBFT):
 	@$(MAKE) -C $(LIBFTDIR)
 
@@ -48,9 +93,13 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
+	$(RM) $(PIPEX)
+	$(RM) $(PARSER)
 	$(RM) -r $(OBJDIR)
 	@$(MAKE) -C $(LIBFTDIR) fclean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+bonus: all
+
+.PHONY: all clean fclean re bonus
