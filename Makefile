@@ -32,7 +32,14 @@ all:
 	@$(MAKE) $(PARSER)
 
 # ***** MINISHELL SRCS *****
-SRCS = minishell_main.c
+SRCS = minishell_main.c \
+	exec/utils_free.c \
+	exec/utils_readline.c \
+	parser/AST.c \
+	parser/lex.c \
+	parser/tokenize.c \
+	parser/utils/isminioperator.c
+
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
 

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/19 10:02:37 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/20 18:56:39 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,8 @@ const char	*get_token_name(t_token_type type);
 int			is_builtin(char *str);
 
 t_token		*tokenize(char *input, int *token_count);
+
+void	free_tokens(t_token *tokens);
 
 // parser/utils/isminioperator.c
 

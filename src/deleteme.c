@@ -1,23 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_main.c                                       :+:      :+:    :+:   */
+/*   deleteme.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/20 09:01:43 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/20 17:05:49 by tda-roch         ###   ########.fr       */
+/*   Created: 2025/06/20 18:45:49 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/06/20 18:50:07 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
-
-
-
-int	main(int argc, char **argv, char **envp)
+void	free_tokens(t_token *tokens, int token_count)
 {
-	if (argc == 2 && (ft_strncmp(argv[1], "-i", 2) == 0))
-		return (run_pipex_interactive(argv[0], envp));
-	else
-		return (run_pipex_once(argc, argv, envp));
+	int	i;
+
+	if (!tokens)
+		return ;
+	i = 0;
+	while (i < token_count)
+	{
+		if (tokens[i].word)
+		{
+			free(tokens[i].word);
+			tokens[i].word = NULL;
+		}
+		i++;
+	}
+	free(tokens);
+}
+
+
+void	free_tokens(t_token *tokens)
+{
+	int	i;
+
+	if (!tokens)
+		return ;
+	i = 0;
+	while (tokens[i].word != NULL)
+	{
+		free(tokens[i].word);
+		i++;
+	}
+	free(tokens);
 }

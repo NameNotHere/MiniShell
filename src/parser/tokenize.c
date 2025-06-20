@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/19 09:00:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/20 18:55:08 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,22 @@ t_token	*tokenize(char *input, int *token_count)
 			return (NULL);
 		}
 	}
+	output[id] = (t_token){0};
 	*token_count = id;
 	return (output);
+}
+
+void	free_tokens(t_token *tokens)
+{
+	int	i;
+
+	if (!tokens)
+		return ;
+	i = 0;
+	while (tokens[i].word != NULL)
+	{
+		free(tokens[i].word);
+		i++;
+	}
+	free(tokens);
 }
