@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/20 18:55:08 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/21 18:57:12 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_token	ft_token(char *str)
 
 const char	*get_token_name(t_token_type type)
 {
-	if (type < 0 || type > TOKEN_OR + 1)
+	if (type < 0 || type > TOKEN_LAST)
 		return ("UNKNOWN");
 	if (type == TOKEN_WORD)
 		return ("WORD");

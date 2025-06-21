@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/21 14:27:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/21 20:49:41 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,69 @@
 AST DATASTRUCTURE ADDED TO minishell.h
 */
 
+void	parse_redir(t_token *tokens, int *start, int *end, t_redir_node *redir)
+{
+	int				i;
+	int				cmd_count;
+	bool			scan_redir;
+	int				last_cmd_token;
+	t_redir_node	*new;
+
+	cmd_count = 0;
+	scan_redir = true;
+	last_cmd_token = -1;
+	i = *start - 1;
+	while (++i <= *end)
+	{
+		if (tokens[i].ty == TOKEN_INPUT || tokens[i].ty == TOKEN_HEREDOC \
+			|| tokens[i].ty == TOKEN_APPEND || tokens[i].ty == TOKEN_OUTPUT)
+		{
+			if (i == *end)
+				printf(" ***ERROR*** " \
+					"invalid redirection, needs a file or delimiter\n");
+			scan_redir = true;
+			if (redir->string == NULL)
+				new = redir;
+			else
+			{
+				redir->next = ft_calloc(1, sizeof(t_redir_node));
+				new = redir->next;
+			}
+			new->string = ft_strdup(tokens[i+1].word); //guard for failure
+			if (tokens[i].ty == TOKEN_INPUT)
+				new->type = REDIR_INPUT;
+			if (tokens[i].ty == TOKEN_OUTPUT)
+				new->type = REDIR_OUTPUT;
+			if (tokens[i].ty == TOKEN_APPEND)
+				new->type = REDIR_APPEND;
+			if (tokens[i].ty == TOKEN_HEREDOC)
+				new->type = REDIR_HEREDOC;
+			printf("__redir: ty %d : %s\n", tokens[i].ty, tokens[i+1].word);
+			i++;
+		}
+		else
+		{
+			if (scan_redir)
+			{
+				cmd_count++;
+				scan_redir = false;
+				if (cmd_count > 1)
+					printf(" *** ERROR *** "\
+					"invalid syntax, multiple commands!\n");
+				else
+					*start = i;
+			}
+			last_cmd_token = i;
+		}
+	}
+	if (last_cmd_token >= 0 && last_cmd_token < *end)
+	{
+		printf("Updated cmd end from %d to %d\n", *end, last_cmd_token);
+		*end = last_cmd_token;
+	}
+	if (cmd_count != 1)
+		printf("  **** ERROR *** no command or multiple commands\n");
+}
 
 /*
 CMD only tokens sent here (knowing start and end of cmd tokens):
@@ -31,12 +94,17 @@ CMD only tokens sent here (knowing start and end of cmd tokens):
 */
 void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 {
-	(void)tokens;
+	t_redir_node redir;
+
 	(void)ast;
+	ft_bzero(&redir, sizeof(t_redir_node));
+
+
 	printf("cmd node->ADD\n" \
 		"	start cmd tk: %d, end cmd tk: %d\n",
 		start,
 		end);
+	parse_redir(tokens, &start, &end, &redir);
 	printf("		$ command is:%s, ends with %s\n", tokens[start].word,
 		tokens[end].word);
 	// PARSING CMD HERE -->

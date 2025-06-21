@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/20 19:23:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/21 19:15:04 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ typedef enum e_token_type
 	TOKEN_BACKSLASH,
 	TOKEN_AND,
 	TOKEN_OR,
-	TOKEN_EQUAL
+	TOKEN_EQUAL,
+	TOKEN_LAST
 }	t_token_type;
 
 typedef struct s_token
@@ -57,39 +58,25 @@ typedef enum e_node_type
 	NODE_PIPE,
 }	t_node_type;
 
-/* out modes*/
-typedef enum e_out_mode
+typedef enum e_redir_type
 {
-	CREATE_TRUNCATE,
-	APPEND,
-}	t_out_mode;
-
-typedef enum e_redir_in_type
-{
-	REDIR_FILE,
-	REDIR_HEREDOC
-}	t_redir_in_type;
+	REDIR_INPUT,
+	REDIR_HEREDOC,
+	REDIR_OUTPUT,
+	REDIR_APPEND,
+}	t_redir_type;
 
 /*
-* TYPE (FILE or HEREDOC)
+* TYPE (t_redir_type)
 * STRING → (char *)string = file to be opened or delimiter if heredoc
 */
-typedef struct s_redir_in_node
+typedef struct s_redir_node
 {
-	t_redir_in_type	type;
-	char			*string;
-}	t_redir_in_node;
+	t_redir_type		type;
+	char				*string;
+	struct s_redir_node	*next;
+}	t_redir_node;
 
-/*
-* OUT → (int)fd or (char *)filepath to be opened (to determine later
-	- but probably the latter) → DEFAULTS TO STDOUT
-* OUT_MODE → (create/truncate OR append ) ->  DEFAULTS TO create/truncate
-*/
-typedef struct s_redir_out_node
-{
-	char		*out;
-	t_out_mode	out_mode;
-}	t_redir_out_node;
 
 /*
 * 	(REMOVED PATH)
@@ -105,8 +92,7 @@ typedef struct s_cmd_node
 	char				*cmd;
 	char				**argv;
 	bool				built_in;
-	t_redir_in_node		*redir_in;
-	t_redir_out_node	*redir_out;
+	t_redir_node		*redir;
 }	t_cmd_node;
 
 typedef struct s_ast_node	t_shell_node;
