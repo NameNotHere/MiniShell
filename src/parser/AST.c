@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/20 10:23:14 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/20 19:34:47 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ creates the ast node pointer then starts scan
 keeps scanning while there are tokens in line
 --> using iterative instead of recursive approach - safer? probably
 */
-void	build_ast(t_ast_node *ast,  t_token *tokens)
+void	build_ast(t_ast_node *ast, t_token *tokens)
 {
 	int			i;
 

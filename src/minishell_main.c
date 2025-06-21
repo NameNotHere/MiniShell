@@ -6,13 +6,24 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/20 18:57:15 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/20 19:25:13 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+
+/*
+TODO: REMOVE TEST BEFORE EVALUATION
+*/
+void	test_build_ast(t_token *tokens)
+{
+	t_ast_node	ast;
+
+	build_ast(&ast, tokens);
+	return ;
+}
 
 /*
 TODO: REMOVE TEST BEFORE EVALUATION
@@ -35,9 +46,12 @@ void	test_parsing(char *string)
 			output[i].ty,
 			get_token_name(output[i].ty),
 			output[i].word);
+	test_build_ast(output);
 	free_tokens(output);
 	return ;
 }
+
+
 
 int	main(void)
 {

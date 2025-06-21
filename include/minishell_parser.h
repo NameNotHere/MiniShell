@@ -6,7 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/20 18:56:39 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/20 19:23:23 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,8 @@ typedef struct s_ast_node
 }	t_ast_node;
 
 // parser/AST.c
+void		build_ast(t_ast_node *ast, t_token *tokens);
+
 t_ast_node	*parse_command_tokens(t_token *tokens, int start, int end);
 
 // parser/lex.c
@@ -150,7 +152,7 @@ int			is_builtin(char *str);
 
 t_token		*tokenize(char *input, int *token_count);
 
-void	free_tokens(t_token *tokens);
+void		free_tokens(t_token *tokens);
 
 // parser/utils/isminioperator.c
 
