@@ -118,8 +118,11 @@ char	*make_word(char *str, int *i)
 	else if (str[*i])  // Fallback for any other character
 		len = 1;
 	(*i) += len;
+	if (len == 0)
+		return (NULL);
+		
 	word = malloc(len + 1);
-	if (!str || !word)
+	if (!word)
 		return (NULL);
 	ft_memcpy(word, str + (*i - len), len);
 	word[len] = '\0';

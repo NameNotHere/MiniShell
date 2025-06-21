@@ -5,3 +5,5 @@ en.subject.pdf
 *.out
 minishell
 ./parser
+./pipex
+./minishell
