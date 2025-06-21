@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/20 19:34:47 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/21 14:27:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@ void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 {
 	(void)tokens;
 	(void)ast;
-	printf("parsing command tokens now\n" \
-		"start token: %d, end token: %d\n",
+	printf("cmd node->ADD\n" \
+		"	start cmd tk: %d, end cmd tk: %d\n",
 		start,
 		end);
+	printf("		$ command is:%s, ends with %s\n", tokens[start].word,
+		tokens[end].word);
 	// PARSING CMD HERE -->
 	// 1. validade syntax,
 	// 2. validate options,
@@ -49,20 +51,16 @@ void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 
 void	parse_pipe(t_ast_node *ast, t_token *tokens, int start, int end)
 {
-	if (tokens && tokens[0].word)
-		printf("parse pipe:\n");
-	else
+	if (!(tokens && tokens[0].word))
 		return ;
-		// return (NULL);
-	printf("parsing a pipe\n" \
-		"start token: %d, end token: %d\n",
+	printf("pipe node->ADD\n");
+	printf("	start pipe tk: %d, end pipe tk: %d\n",
 		start,
 		end);
 	if (ast == NULL)
-		printf("ast not initialized yet, maloc it here?\n");
-	printf("add a pipe node in the right place (root or right)\n"
-		"next, add the command on left node (send to parse_cmd with end-1)");
-	// parse_cmd() --> add correctly
+		printf("### ast not initialized yet, maloc it here?\n");
+
+	parse_cmd(ast, tokens, start, end - 1);
 	return ;
 }
 
