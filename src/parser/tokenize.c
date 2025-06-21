@@ -54,7 +54,7 @@ t_token	ft_token(char *str)
 
 const char	*get_token_name(t_token_type type)
 {
-	if (type < 0 || type > TOKEN_OR)
+	if (type < 0 || type > TOKEN_OR + 1)
 		return ("UNKNOWN");
 	if (type == TOKEN_WORD)
 		return ("WORD");
