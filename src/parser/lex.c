@@ -36,21 +36,27 @@ int	count_tokens(char *str)
 	while (str[i])
 	{
 		skip_spaces(&i, str);
-		count++;
-		quote = str[i];
-		if (str[i] && (str[i] == '\'' || str[i] == '\"'))
+		if (str[i] && str[i+1] && isminioperator(str, i) > 0)
 		{
-			i++;
+			count++;
+			i += isminioperator(str, i);
+		}
+		else if (str[i] && (str[i] == '\'' || str[i] == '\"'))
+		{
+			quote = str[i++];
 			while (str[i] && str[i] != quote)
 				i++;
 			if (str[i] == quote)
 				i++;
+			count++;
 		}
 		else
+		{
 			while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' \
 				&& str[i] != '\"' && isminioperator(str, i) == 0)
 				i++;
-		i++;
+			count++;
+		}
 	}
 	return (count);
 }
@@ -117,7 +123,6 @@ char	*make_word(char *str, int *i)
 	(*i) += len;
 	if (len == 0)
 		return (NULL);
-		
 	word = malloc(len + 1);
 	if (!word)
 		return (NULL);
