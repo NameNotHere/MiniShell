@@ -152,7 +152,7 @@ int			is_builtin(char *str);
 
 t_token		*tokenize(char *input, int *token_count);
 
-void		free_tokens(t_token *tokens);
+void		free_tokens(t_token *tokens, int amount);
 
 // parser/utils/isminioperator.c
 

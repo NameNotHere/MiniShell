@@ -124,7 +124,7 @@ t_token	*tokenize(char *input, int *token_count)
 	int				id;
 
 	i = 0;
-	output = malloc(sizeof(t_token) * (count_tokens(input)));
+	output = malloc(sizeof(t_token) * ((count_tokens(input) + 2)));
 	if (!output)
 		return (NULL);
 	id = 0;
@@ -147,17 +147,18 @@ t_token	*tokenize(char *input, int *token_count)
 	return (output);
 }
 
-void	free_tokens(t_token *tokens)
+void	free_tokens(t_token *tokens, int amount)
 {
 	int	i;
 
 	if (!tokens)
 		return ;
 	i = 0;
-	while (tokens[i].word != NULL)
+	while (amount--)// (tokens[i].word != NULL)
 	{
 		free(tokens[i].word);
 		i++;
 	}
-	free(tokens);
+	if (tokens)
+		free(tokens);
 }
