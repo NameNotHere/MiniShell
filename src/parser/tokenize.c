@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
 /*   Updated: 2025/06/20 18:55:08 by tda-roch         ###   ########.fr       */
@@ -29,10 +29,8 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_DOUBLE_QUOTE;
 	else if (ft_strncmp(str, "\'", 1) == 0)
 		output.ty = TOKEN_SINGLE_QUOTE;
-// I AGREE WITH YOUR COMMENT BELOW! Although, token may be useful to keep because some built ins are explicitly not accepting dash params.
-// SUGGESTION: call it TOKEN_DASH_PARAM?
-	else if (str[0] == '-') // this might be wrong as params can be without - ?
-		output.ty = TOKEN_PARAM;
+	else if (str[0] == '-')
+		output.ty = TOKEN_DASH_PARAM;
 	else if (str[0] == '$')
 		output.ty = TOKEN_VARIABLE;
 	else if (ft_strncmp(str, "&&", 2) == 0)
@@ -41,6 +39,8 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_OR;
 	else if (str[0] == '|')
 		output.ty = TOKEN_PIPE;
+	else if (str[0] == '=')
+		output.ty = TOKEN_EQUAL;
 	else if (str[0] == '.' || str[0] == '/' || str[0] == '~')
 		output.ty = TOKEN_FILE_PATH;
 	else if (ft_isdigit(str[0]))
@@ -49,12 +49,12 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_INBUILT;
 	else
 		output.ty = TOKEN_WORD;
-	return (output); // mqybe remove the output definition
+	return (output);
 }
 
 const char	*get_token_name(t_token_type type)
 {
-	if (type < 0 || type > TOKEN_OR)
+	if (type < 0 || type > TOKEN_OR + 1)
 		return ("UNKNOWN");
 	if (type == TOKEN_WORD)
 		return ("WORD");
@@ -76,7 +76,7 @@ const char	*get_token_name(t_token_type type)
 		return ("DOUBLE_QUOTE");
 	if (type == TOKEN_VARIABLE)
 		return ("VARIABLE");
-	if (type == TOKEN_PARAM)
+	if (type == TOKEN_DASH_PARAM)
 		return ("PARAM");
 	if (type == TOKEN_FILE_PATH)
 		return ("FILE_PATH");
@@ -88,6 +88,8 @@ const char	*get_token_name(t_token_type type)
 		return ("AND");
 	if (type == TOKEN_OR)
 		return ("OR");
+	if (type == TOKEN_EQUAL)
+		return ("EQUAL");
 	return ("UNKNOWN");
 }
 
@@ -118,25 +120,18 @@ t_token	*tokenize(char *input, int *token_count)
 {
 	t_token			*output;
 	int				i;
-	int				t_amount;
 	char			*token;
 	int				id;
 
 	i = 0;
-	t_amount = count_tokens(input);
-	// CHANGED: I added +50 to catch-fit operators that got split into multiple tokens
-	// or any difference in count and tokenizing -- avoid overflow
-	// feel free to bring it back if the count is matching
-	output = malloc(sizeof(t_token) * (t_amount + 51));
+	output = malloc(sizeof(t_token) * (count_tokens(input)));
 	if (!output)
 		return (NULL);
 	id = 0;
-	// while (t_amount--) //COMMENTED OUT --> not using token count now
-	// CHANGED to just keep scan string until end
 	while(input[i])
 	{
 		skip_spaces(&i, input);
-		if (!input[i]) // ADDED ESCAPE: NOTHING ELSE TO READ -> break
+		if (!input[i])
 			break;
 		token = make_word(input, &i);
 		if (token)

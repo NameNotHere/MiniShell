@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
 /*   Updated: 2025/06/20 19:23:23 by tda-roch         ###   ########.fr       */
@@ -30,12 +30,13 @@ typedef enum e_token_type
 	TOKEN_SINGLE_QUOTE,
 	TOKEN_DOUBLE_QUOTE,
 	TOKEN_VARIABLE,
-	TOKEN_PARAM,
+	TOKEN_DASH_PARAM,
 	TOKEN_FILE_PATH,
 	TOKEN_NUMBER,
 	TOKEN_BACKSLASH,
 	TOKEN_AND,
-	TOKEN_OR
+	TOKEN_OR,
+	TOKEN_EQUAL
 }	t_token_type;
 
 typedef struct s_token

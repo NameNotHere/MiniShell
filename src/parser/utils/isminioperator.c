@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   isminioperator.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:18:52 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/19 02:36:39 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/20 16:09:27 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 
-/*orhan: added AND / OR cases: && || */
 int	isminioperator(char *token, int i)
 {
 	if (!token)
@@ -38,6 +37,8 @@ int	isminioperator(char *token, int i)
 	if (ft_strncmp(token + i, "&", 1) == 0)
 		return (1);
 	if (ft_strncmp(token + i, ";", 1) == 0)
+		return (1);
+	if (ft_strncmp(token + i, "=", 1) == 0)
 		return (1);
 	return (0);
 }

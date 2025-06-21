@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/18 23:08:41 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/20 16:15:59 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,21 @@ int	count_tokens(char *str)
 	while (str[i])
 	{
 		skip_spaces(&i, str);
-		if (str[i])
+		count++;
+		quote = str[i];
+		if (str[i] && (str[i] == '\'' || str[i] == '\"'))
 		{
-			count++;
-			quote = str[i];
-			if (str[i] == '\'' || str[i] == '\"')
-			{
+			i++;
+			while (str[i] && str[i] != quote)
 				i++;
-				while (str[i] && str[i] != quote)
-					i++;
-				if (str[i] == quote)
-					i++;
-			}
-			else
-				while (str[i] && !ft_isspace(str[i]) \
-					&& str[i] != '\'' && str[i] != '\"')
-					// && !isminioperator(str, i))
-					i++;
+			if (str[i] == quote)
+				i++;
 		}
+		else
+			while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' \
+				&& str[i] != '\"' && isminioperator(str, i) == 0)
+				i++;
+		i++;
 	}
 	return (count);
 }
