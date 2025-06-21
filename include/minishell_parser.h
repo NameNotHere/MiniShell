@@ -35,7 +35,8 @@ typedef enum e_token_type
 	TOKEN_NUMBER,
 	TOKEN_BACKSLASH,
 	TOKEN_AND,
-	TOKEN_OR
+	TOKEN_OR,
+	TOKEN_EQUAL
 }	t_token_type;
 
 typedef struct s_token

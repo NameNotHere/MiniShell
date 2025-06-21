@@ -29,9 +29,7 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_DOUBLE_QUOTE;
 	else if (ft_strncmp(str, "\'", 1) == 0)
 		output.ty = TOKEN_SINGLE_QUOTE;
-// I AGREE WITH YOUR COMMENT BELOW! Although, token may be useful to keep because some built ins are explicitly not accepting dash params.
-// SUGGESTION: call it TOKEN_DASH_PARAM?
-	else if (str[0] == '-') // this might be wrong as params can be without - ?
+	else if (str[0] == '-')
 		output.ty = TOKEN_DASH_PARAM;
 	else if (str[0] == '$')
 		output.ty = TOKEN_VARIABLE;
@@ -41,6 +39,8 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_OR;
 	else if (str[0] == '|')
 		output.ty = TOKEN_PIPE;
+	else if (str[0] == '=')
+		output.ty = TOKEN_EQUAL;
 	else if (str[0] == '.' || str[0] == '/' || str[0] == '~')
 		output.ty = TOKEN_FILE_PATH;
 	else if (ft_isdigit(str[0]))
@@ -49,7 +49,7 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_INBUILT;
 	else
 		output.ty = TOKEN_WORD;
-	return (output); // mqybe remove the output definition
+	return (output);
 }
 
 const char	*get_token_name(t_token_type type)
@@ -88,6 +88,8 @@ const char	*get_token_name(t_token_type type)
 		return ("AND");
 	if (type == TOKEN_OR)
 		return ("OR");
+	if (type == TOKEN_EQUAL)
+		return ("EQUAL");
 	return ("UNKNOWN");
 }
 
@@ -122,9 +124,6 @@ t_token	*tokenize(char *input, int *token_count)
 	int				id;
 
 	i = 0;
-	//// CHANGED: I added +50 to catch-fit operators that got split into multiple tokens
-	// or any difference in count and tokenizing -- avoid overflow
-	// feel free to bring it back if the count is matching
 	output = malloc(sizeof(t_token) * (count_tokens(input)));
 	if (!output)
 		return (NULL);

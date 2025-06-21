@@ -19,8 +19,8 @@ int	main(void)
 	int		i;
 	int		token_count;
 	t_token	*output;
-	char	*string = "~/po && || & ~./opop *.c ~/opop/oo cat|| 'hello world'&& << 99 a && EO|F \"pop\" ../pop/o ./moo/txt $doodoo | grep \"pattern\" > export env unset pipi cd output.txt ./mimi";
-
+	char *string = "VAR=hello || && echo \"Double quotes\" && echo 'Single quotes' && echo Unquoted | grep quotes > out.txt && cat < out.txt && echo $VAR && echo \\$HOME && cd .. && pwd && ls *.c | wc -l && echo done && cat << EOF\nThis is a heredoc\n$HOME should not expand\nEOF\n";
+	
 	printf("Input string: %s\n", string);
 	printf("Expected token count: %d\n", count_tokens(string));
 	output = tokenize(string, &token_count);
