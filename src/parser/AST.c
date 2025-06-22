@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/21 20:49:41 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/22 02:38:42 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,25 @@ void	parse_redir(t_token *tokens, int *start, int *end, t_redir_node *redir)
 		printf("  **** ERROR *** no command or multiple commands\n");
 }
 
+
+char	**token_words_to_argv(t_token *tokens, int start, int end)
+{
+	int		i;
+	char	**argv;
+
+	argv = ft_calloc(end - start + 2, sizeof(char *));
+	i = -1;
+	while (++i + start <= end)
+		argv[i] = ft_strdup(tokens[i + start].word);
+	argv[i] = NULL; // redundant with ft_calloc, but safe nonetheless
+	i = -1;
+	printf(" :: argv -> ");
+	while (argv[++i] != NULL)
+		printf("|%s", argv[i]);
+	printf("|\n");
+	return (argv);
+}
+
 /*
 CMD only tokens sent here (knowing start and end of cmd tokens):
 	- 1st - will extract command name (with or without path)
@@ -91,14 +110,17 @@ CMD only tokens sent here (knowing start and end of cmd tokens):
 	- validate most things (syntax errors, invalid built in params)
 	- NOT validate things that are supposed to fail in execve (ex: invalid path)
 	- return clean AST node
+	TOKEN # MUST COINCIDE WITH ARGV #! (so inside cmd, space or quote separated
+	words MUST be equal to token number OR there must be a way to convert tokens
+	to unify the separated ones (so no loss of information about space
+	separation is allowed, or argv is not reacreatable.))
 */
 void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 {
-	t_redir_node redir;
+	t_redir_node	redir;
 
-	(void)ast;
-	ft_bzero(&redir, sizeof(t_redir_node));
-
+	ast->data.cmd.redir = ft_calloc(1, sizeof(t_redir_node));
+	redir = *(ast->data.cmd.redir);
 
 	printf("cmd node->ADD\n" \
 		"	start cmd tk: %d, end cmd tk: %d\n",
@@ -114,6 +136,8 @@ void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 	// 4. expand vars,
 	// 5. cleanup then build argv.
 	// etc.
+	ast->data.cmd.built_in = false;
+	ast->data.cmd.argv = token_words_to_argv(tokens, start, end);
 	return ;
 }
 
