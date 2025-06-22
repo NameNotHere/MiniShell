@@ -15,7 +15,9 @@
 t_token	ft_token(char *str)
 {
 	t_token	output;
+	int		i;
 
+	i = 0;
 	output.word = str;
 	if (ft_strncmp(str, "<<", 2) == 0)
 		output.ty = TOKEN_HEREDOC;
@@ -43,10 +45,22 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_EQUAL;
 	else if (str[0] == '.' || str[0] == '/' || str[0] == '~')
 		output.ty = TOKEN_FILE_PATH;
-	else if (ft_isdigit(str[0]))
-		output.ty = TOKEN_NUMBER;
 	else if (is_builtin(str) == 1)
 		output.ty = TOKEN_INBUILT;
+	else if (ft_isdigit(str[0]))
+	{
+		while (str[i])
+		{
+			if (ft_isdigit(str[i]))
+				output.ty = TOKEN_NUMBER;
+			else
+			{
+				output.ty = TOKEN_WORD;
+				break;
+			}
+			i++;
+		}
+	}
 	else
 		output.ty = TOKEN_WORD;
 	return (output);
@@ -112,6 +126,8 @@ int	is_builtin(char *str)
 	else if (ft_strncmp(str, "env", 3) == 0)
 		return (1);
 	else if (ft_strncmp(str, "exit", 4) == 0)
+		return (1);
+	else if (ft_strncmp(str, "cat", 4) == 0)
 		return (1);
 	return (0);
 }
