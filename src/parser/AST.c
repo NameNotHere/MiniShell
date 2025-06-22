@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/22 02:38:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/22 02:45:14 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,10 +110,10 @@ CMD only tokens sent here (knowing start and end of cmd tokens):
 	- validate most things (syntax errors, invalid built in params)
 	- NOT validate things that are supposed to fail in execve (ex: invalid path)
 	- return clean AST node
-	TOKEN # MUST COINCIDE WITH ARGV #! (so inside cmd, space or quote separated
-	words MUST be equal to token number OR there must be a way to convert tokens
-	to unify the separated ones (so no loss of information about space
-	separation is allowed, or argv is not reacreatable.))
+	TODO: TOKEN # MUST COINCIDE WITH ARGV #! (so inside cmd, space or quote
+	separated words MUST be equal to token number OR there must be a way to
+	convert tokens to unify the separated ones (so no loss of information about
+	space separation is allowed, or argv is not reacreatable.))
 */
 void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 {
@@ -126,16 +126,16 @@ void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 		"	start cmd tk: %d, end cmd tk: %d\n",
 		start,
 		end);
+	// 3. extract and process redir tokens into redir nodes -> done below
 	parse_redir(tokens, &start, &end, &redir);
 	printf("		$ command is:%s, ends with %s\n", tokens[start].word,
 		tokens[end].word);
-	// PARSING CMD HERE -->
+	// TODO:
 	// 1. validade syntax,
 	// 2. validate options,
-	// 3. extract and process redir tokens into redir nodes
 	// 4. expand vars,
-	// 5. cleanup then build argv.
-	// etc.
+	// 5. cleanup
+	// 6. then build argv. (done below)
 	ast->data.cmd.built_in = false;
 	ast->data.cmd.argv = token_words_to_argv(tokens, start, end);
 	return ;
