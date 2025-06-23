@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/21 18:57:12 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/23 12:54:47 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ t_token	ft_token(char *str)
 	else if (ft_strncmp(str, ">>", 2) == 0)
 		output.ty = TOKEN_APPEND;
 	else if (ft_strncmp(str, "<", 1) == 0)
-		output.ty = TOKEN_OUTPUT;
-	else if (ft_strncmp(str, ">", 1) == 0)
 		output.ty = TOKEN_INPUT;
+	else if (ft_strncmp(str, ">", 1) == 0)
+		output.ty = TOKEN_OUTPUT;
 	else if (ft_strncmp(str, "\"", 1) == 0)
 		output.ty = TOKEN_DOUBLE_QUOTE;
 	else if (ft_strncmp(str, "\'", 1) == 0)

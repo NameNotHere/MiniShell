@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/23 02:41:41 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/23 15:24:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef enum e_node_type
 {
 	NODE_CMD,
 	NODE_PIPE,
+	NODE_UNKNOWN,
 }	t_node_type;
 
 typedef enum e_redir_type
@@ -66,6 +67,11 @@ typedef enum e_redir_type
 	REDIR_APPEND,
 	REDIR_UNKNOWN
 }	t_redir_type;
+
+# define REDIR_INPUT_SYMBOL "<"
+# define REDIR_OUTPUT_SYMBOL ">"
+# define REDIR_APPEND_SYMBOL ">>"
+# define REDIR_HEREDOC_SYMBOL "<<"
 
 /*
 * TYPE (t_redir_type)
@@ -81,12 +87,14 @@ typedef struct s_redir_node
 
 /*
 * 	(REMOVED PATH)
-* (char *) cmd (cmd name or cmd file name with or without path: absolute, relative, etc
+* (char *) cmd (cmd name or cmd file name with or without path: absolute, 
+	relative, etc
+		TODO: check if I can get rid of cmd, use argv[0] instead.
 * (bool) built-in → defaults to false
+	TODO: also check if we will need this
 * (char **)argv → each  argument in a separate string, NULL terminated.
 		→ DEFAULTS to NULL
-* REDIR IN NODE → DEFAULTS TO STDIN
-* REDIR OUT NODE → DEFAULTS TO STDOUT, (create/truncate)
+* REDIR → DEFAULTS TO STDIN & STDOUT -> (basic linked list)
 */
 typedef struct s_cmd_node
 {
@@ -105,8 +113,8 @@ typedef struct s_pipe_node
 }	t_pipe_node;
 
 /*
-shell AST node,
-just what enters as main nodes in the tree
+AST node for shell commands & pipes,
+	- includes a data-named-union of two subtypes: cmd or pipe
 */
 typedef struct s_ast_node
 {
@@ -118,10 +126,38 @@ typedef struct s_ast_node
 	}	data;
 }	t_ast_node;
 
+
+/*
+TODO: TRY UN-NAMED UNION LIKE BELOW, CHECK IF NORMINETTE WILL COMPLAIN
+would avoid a lot of ".data" added to tree.
+*/
+// typedef struct s_ast_node
+// {
+// 	t_node_type	nty;
+// 	union
+// 	{
+// 		t_cmd_node			cmd;
+// 		t_pipe_node			pipe;
+// 	};
+// }	t_ast_node;
+
 // parser/AST.c
 void		build_ast(t_ast_node *ast, t_token *tokens);
 
+void		free_ast(t_ast_node *node);
+
+t_ast_node	*make_ast_node(t_node_type type);
+
 t_ast_node	*parse_command_tokens(t_token *tokens, int start, int end);
+
+int			last_token(t_token *tokens);
+
+void		scan_tokens(t_ast_node *ast, t_token *tokens, int start, int end);
+
+// parser/AST.c CONTINUED
+// TODO: REMOVE THIS FUNCTION PROTOTYPE BEFORE EVALUATION
+// TODO: MAYBE KEEP IN A SEPARATE (NOT SUBMITTED TEST SUITE, FOR DEBUGGING)
+void		print_ast(t_ast_node *root);
 
 // parser/lex.c
 
@@ -146,6 +182,3 @@ void		free_tokens(t_token *tokens, int amount);
 int			isminioperator(char *token, int i);
 
 #endif
-// -> PROTOTYPES OF INEXISTENT FUNCTIONS REMOVED
-// t_token		token(char *str);
-// int			parse_tokens(t_token *list);
