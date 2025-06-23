@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/20 19:25:13 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/23 14:59:22 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,27 @@ TODO: REMOVE TEST BEFORE EVALUATION
 */
 void	test_build_ast(t_token *tokens)
 {
-	t_ast_node	ast;
+	t_ast_node	*ast;
 
-	build_ast(&ast, tokens);
+
+	ast = make_ast_node(NODE_UNKNOWN);
+	if (!ast)
+		return ;
+	build_ast(ast, tokens);
+	print_ast(ast);
+	free_ast(ast);
 	return ;
 }
 
 /*
 TODO: REMOVE TEST BEFORE EVALUATION
-
 This test runs every time a line is sent to readline.
 */
 void	test_parsing(char *string)
 {
-	int		i;
-	int		token_count;
-	t_token	*output;
+	int			i;
+	int			token_count;
+	t_token		*output;
 
 	printf("Input string: %s\n", string);
 	printf("Expected token count: %d\n", count_tokens(string));
@@ -50,8 +55,6 @@ void	test_parsing(char *string)
 	free_tokens(output);
 	return ;
 }
-
-
 
 int	main(void)
 {

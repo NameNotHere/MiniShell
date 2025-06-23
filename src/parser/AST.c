@@ -6,17 +6,35 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/23 03:01:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/23 15:13:54 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "minishell_parser.h"
 
-/*
-AST DATASTRUCTURE ADDED TO minishell.h
-*/
+int	last_token(t_token *tokens)
+{
+	int	i;
+
+	i = 0;
+	while (tokens[i].word)
+		i++;
+	return (i);
+}
+
+bool	has_pipe(t_token *tokens, int start, int end)
+{
+	int	i;
+
+	i = start;
+	while (tokens[i].word && i <= end)
+	{
+		if (tokens[i].ty == TOKEN_PIPE)
+			return (true);
+		i++;
+	}
+	return (false);
+}
 
 t_redir_type	get_redir_type(t_token_type ty)
 {
@@ -29,6 +47,19 @@ t_redir_type	get_redir_type(t_token_type ty)
 	if (ty == TOKEN_HEREDOC)
 		return (REDIR_HEREDOC);
 	return (REDIR_UNKNOWN);
+}
+
+char	*get_redir_symbol(t_redir_type ty)
+{
+	if (ty == REDIR_INPUT)
+		return (REDIR_INPUT_SYMBOL);
+	if (ty == REDIR_OUTPUT)
+		return (REDIR_OUTPUT_SYMBOL);
+	if (ty == REDIR_APPEND)
+		return (REDIR_APPEND_SYMBOL);
+	if (ty == REDIR_HEREDOC)
+		return (REDIR_HEREDOC_SYMBOL);
+	return (REDIR_INPUT_SYMBOL);
 }
 
 // TODO: HANDLE ALLOC ERRORS for ft_calloc & ft_strdup
@@ -70,6 +101,7 @@ t_ast_node	*make_ast_node(t_node_type type)
 	new_node->nty = type;
 	return (new_node);
 }
+
 /*
 TODO: remove printfs, add error handling
 */
@@ -84,7 +116,7 @@ void	parse_redir(t_ast_node *ast, t_token *tokens, int *start, int *end)
 	scan_redir = true;
 	last_cmd_token = -1;
 	i = *start - 1;
-	while (++i <= *end)
+	while (++i < *end)
 	{
 		if (tokens[i].ty == TOKEN_INPUT || tokens[i].ty == TOKEN_HEREDOC \
 			|| tokens[i].ty == TOKEN_APPEND || tokens[i].ty == TOKEN_OUTPUT)
@@ -113,13 +145,12 @@ void	parse_redir(t_ast_node *ast, t_token *tokens, int *start, int *end)
 	}
 	if (last_cmd_token >= 0 && last_cmd_token < *end)
 	{
-		printf("Updated cmd end from %d to %d\n", *end, last_cmd_token);
-		*end = last_cmd_token;
+		printf("Updated cmd end from %d to %d\n", *end, last_cmd_token + 1);
+		*end = last_cmd_token + 1;
 	}
 	if (cmd_count != 1)
 		printf("  **** ERROR *** no command or multiple commands\n");
 }
-
 
 char	**token_words_to_argv(t_token *tokens, int start, int end)
 {
@@ -128,7 +159,7 @@ char	**token_words_to_argv(t_token *tokens, int start, int end)
 
 	argv = ft_calloc(end - start + 2, sizeof(char *));
 	i = -1;
-	while (++i + start <= end)
+	while (++i + start < end)
 		argv[i] = ft_strdup(tokens[i + start].word);
 	i = -1;
 	printf(" :: argv -> ");
@@ -145,6 +176,7 @@ char	**token_words_to_argv(t_token *tokens, int start, int end)
 	separated words MUST be equal to token number OR there must be a way to
 	convert tokens to unify the separated ones (so no loss of information about
 	space separation is allowed, or argv is not reacreatable.))
+	TODO: REMOVE PRINTF DEBUGS
 */
 void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 {
@@ -156,8 +188,12 @@ void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 
 	ast->nty = NODE_CMD;
 	parse_redir(ast, tokens, &start, &end);
-	printf("		$ command is:%s, ends with %s\n", tokens[start].word,
-		tokens[end].word);
+	if (end > start)
+		printf("		$ cmd is:%s, ends with %s\n",
+			tokens[start].word, tokens[end - 1].word);
+	else
+		printf("		$ cmd is:%s, ends with (none)\n",
+			tokens[start].word);
 	// TODO:
 	// 1. validade syntax,
 	// 2. validate built in options (check: do we still run other commands?)
@@ -169,6 +205,10 @@ void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 	return ;
 }
 
+/*
+TODO: REMOVE PRINTF DEBUGS (ADD ERROR CATCH)
+TODO: ADD ERROR CATCHING
+*/
 void	parse_pipe(t_ast_node *ast, t_token *tokens, int start, int end)
 {
 	if (!(tokens && tokens[0].word))
@@ -181,6 +221,12 @@ void	parse_pipe(t_ast_node *ast, t_token *tokens, int start, int end)
 		printf("### ast not initialized yet, maloc it here?\n");
 
 	ast->data.pipe.left = make_ast_node(NODE_CMD);
+	ast->data.pipe.right = make_ast_node(NODE_UNKNOWN);
+	if (!ast->data.pipe.left || !ast->data.pipe.right)
+	{
+		printf("*** ERROR *** Failed to allocate AST nodes\n");
+		return ;
+	}
 	parse_cmd(ast->data.pipe.left, tokens, start, end - 1);
 	return ;
 }
@@ -188,24 +234,46 @@ void	parse_pipe(t_ast_node *ast, t_token *tokens, int start, int end)
 /*scanning if pipe is found, if yes, call parsing with start/end */
 void	scan_pipe(t_ast_node *ast, t_token *tokens, int *i)
 {
-	int	start;
+	int			start;
+	int			end;
 
 	start = *i;
+	end = last_token(tokens);
 	if (tokens[start].word == NULL)
 		return ;
+	ast->nty = NODE_PIPE;
 	while (tokens[*i].word)
 	{
 		if (tokens[*i].ty == TOKEN_PIPE)
 		{
 			parse_pipe(ast, tokens, start, *i);
-			return ;
+			(*i)++;
+			break ;
 		}
 		(*i)++;
 	}
-	(*i)--;
-	ast->data.pipe.right = make_ast_node(NODE_CMD);
-	parse_cmd(ast->data.pipe.right, tokens, start, *i);
+	if (has_pipe(tokens, *i, end))
+	{
+		ast->data.pipe.right->nty = NODE_PIPE;
+		scan_tokens(ast->data.pipe.right, tokens, *i, end);
+	}
+	else if (tokens[*i].word)
+		parse_cmd(ast->data.pipe.right, tokens, *i, end);
 	return ;
+}
+
+
+void	scan_tokens(t_ast_node *ast, t_token *tokens, int start, int end)
+{
+	int			i;
+	t_ast_node	*current_node;
+
+	current_node = ast;
+	i = start;
+	if (has_pipe(tokens, start, end))
+		scan_pipe(current_node, tokens, &i);
+	else
+		parse_cmd(current_node, tokens, start, end);
 }
 
 /*
@@ -215,12 +283,109 @@ keeps scanning while there are tokens in line
 */
 void	build_ast(t_ast_node *ast, t_token *tokens)
 {
-	int			i;
-
 	if (tokens == NULL || tokens[0].word == NULL)
 		return ;
-	i = -1;
-	while (tokens[++i].word)
-		scan_pipe(ast, tokens, &i);
+	scan_tokens(ast, tokens, 0, last_token(tokens));
 	return ;
+}
+
+/*
+Prints representation (very simplified) of the AST tree
+NOTE: Uses indentation (updating depth var) to represent tree structure
+	- first item at each depth is either ROOT, or LEFT node
+	- second item at each depth is RIGHT node
+TODO: REMOVE THIS WHEN FINISHED DEBUGGING, BEFORE SUBMITTING!
+MAYBE ADD PRINT AST FUNCTIONS TO A SEPARATE TEST SUITE
+*/
+void	print_ast_helper(t_ast_node *node, int depth)
+{
+	int				i;
+	t_redir_node	*redir;
+
+	if (!node)
+		return ;
+	i = -1;
+	while (++i < depth)
+		printf("  ");
+	if (node->nty == NODE_CMD)
+	{
+		printf("CMD: ");
+		if (node->data.cmd.argv && node->data.cmd.argv[0])
+		{
+			i = -1;
+			while (node->data.cmd.argv[++i])
+			{
+				printf("%s", node->data.cmd.argv[i]);
+				if (node->data.cmd.argv[i + 1])
+					printf(" ");
+			}
+		}
+		redir = node->data.cmd.redir;
+		while (redir)
+		{
+			printf(" [%s%s]", get_redir_symbol(redir->type),
+				redir->string);
+			redir = redir->next;
+		}
+		printf("\n");
+	}
+	else if (node->nty == NODE_PIPE)
+	{
+		printf("PIPE\n");
+		print_ast_helper(node->data.pipe.left, depth + 1);
+		print_ast_helper(node->data.pipe.right, depth + 1);
+	}
+}
+
+/*
+TODO: REMOVE THIS WHEN FINISHED DEBUGGING, BEFORE SUBMITTING!
+MAYBE ADD PRINT AST FUNCTIONS TO A SEPARATE TEST SUITE
+*/
+void	print_ast(t_ast_node *root)
+{
+	if (!root)
+	{
+		printf("AST: (empty)\n");
+		return ;
+	}
+	printf("AST:\n");
+	print_ast_helper(root, 0);
+}
+
+/*
+TODO: REMOVE THIS WHEN FINISHED DEBUGGING, BEFORE SUBMITTING!
+MAYBE ADD PRINT AST FUNCTIONS TO A SEPARATE TEST SUITE
+*/
+void free_ast(t_ast_node *node)
+{
+	int				i;
+	t_redir_node	*redir;
+	t_redir_node	*next;
+
+	if (!node)
+		return ;
+	if (node->nty == NODE_CMD)
+	{
+		if (node->data.cmd.argv)
+		{
+			i = -1;
+			while (node->data.cmd.argv[++i])
+				free(node->data.cmd.argv[i]);
+			free(node->data.cmd.argv);
+		}
+		redir = node->data.cmd.redir;
+		while (redir)
+		{
+			next = redir->next;
+			free(redir->string);
+			free(redir);
+			redir = next;
+		}
+	}
+	else if (node->nty == NODE_PIPE)
+	{
+		free_ast(node->data.pipe.left);
+		free_ast(node->data.pipe.right);
+	}
+	free(node);
 }
