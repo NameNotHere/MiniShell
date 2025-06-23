@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/21 19:15:04 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/23 02:41:41 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef enum e_redir_type
 	REDIR_HEREDOC,
 	REDIR_OUTPUT,
 	REDIR_APPEND,
+	REDIR_UNKNOWN
 }	t_redir_type;
 
 /*
