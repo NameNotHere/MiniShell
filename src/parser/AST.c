@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/23 15:13:54 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/24 00:55:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,19 +104,20 @@ t_ast_node	*make_ast_node(t_node_type type)
 
 /*
 TODO: remove printfs, add error handling
+TODO: check when empty command is valid, if always (redir only is valid in bash)s
 */
 void	parse_redir(t_ast_node *ast, t_token *tokens, int *start, int *end)
 {
 	int				i;
+	int				last_node_token;
 	int				cmd_count;
-	bool			scan_redir;
-	int				last_cmd_token;
+	bool			before_cmd;
 
 	cmd_count = 0;
-	scan_redir = true;
-	last_cmd_token = -1;
 	i = *start - 1;
-	while (++i < *end)
+	last_node_token = *end;
+	before_cmd = true;
+	while (++i < last_node_token)
 	{
 		if (tokens[i].ty == TOKEN_INPUT || tokens[i].ty == TOKEN_HEREDOC \
 			|| tokens[i].ty == TOKEN_APPEND || tokens[i].ty == TOKEN_OUTPUT)
@@ -124,32 +125,26 @@ void	parse_redir(t_ast_node *ast, t_token *tokens, int *start, int *end)
 			if (i == *end)
 				printf(" ***ERROR*** " \
 					"invalid redirection, needs a file or delimiter\n");
-			scan_redir = true;
+			if (!before_cmd)
+				*end = i;
+			before_cmd = true;
 			add_redir_node(ast, tokens[i].ty, tokens[i+1].word);
 			i++;
 		}
 		else
 		{
-			if (scan_redir)
+			if (before_cmd)
 			{
 				cmd_count++;
-				scan_redir = false;
+				before_cmd = false;
 				if (cmd_count > 1)
 					printf(" *** ERROR *** "\
 					"invalid syntax, multiple commands!\n");
 				else
 					*start = i;
 			}
-			last_cmd_token = i;
 		}
 	}
-	if (last_cmd_token >= 0 && last_cmd_token < *end)
-	{
-		printf("Updated cmd end from %d to %d\n", *end, last_cmd_token + 1);
-		*end = last_cmd_token + 1;
-	}
-	if (cmd_count != 1)
-		printf("  **** ERROR *** no command or multiple commands\n");
 }
 
 char	**token_words_to_argv(t_token *tokens, int start, int end)
@@ -227,7 +222,7 @@ void	parse_pipe(t_ast_node *ast, t_token *tokens, int start, int end)
 		printf("*** ERROR *** Failed to allocate AST nodes\n");
 		return ;
 	}
-	parse_cmd(ast->data.pipe.left, tokens, start, end - 1);
+	parse_cmd(ast->data.pipe.left, tokens, start, end);
 	return ;
 }
 
