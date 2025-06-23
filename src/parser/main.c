@@ -20,7 +20,7 @@ int	main(void)
 	int		token_count;
 	t_token	*output;
 	// char *string = "VAR=hello || && echo \"Double quotes\" && echo 'Single quotes' && echo Unquoted | grep quotes > out.txt && cat < out.txt && echo $VAR && echo \\$HOME && cd .. && pwd && ls *.c | wc -l && echo done && cat << EOF\nThis is a heredoc\n$HOME should not expand\nEOF\n";
-	char *string = "VAR hello  echo \"Double quotes\"  echo 'Single quotes'  echo Unquoted  grep quotes  out.txt cat out.txt  echo $VAR echo \\$HOME && cd pwd  ls *.c  wc -l  echo done cat EOF\nThis is a heredoc\n$HOME should not expand\nEOF\n";
+	char *string = "VAR 55hello  echo  66 \"Double quotes\"  echo 'Single quotes'  echo Unquoted  grep quotes  out.txt cat out.txt  echo $VAR echo \\$HOME && cd pwd  ls *.c  wc -l  echo done cat EOF\nThis is a heredoc\n$HOME should not expand\nEOF\n";
 
 	printf("Input string: %s\n", string);
 	printf("Expected token count: %d\n", count_tokens(string));
