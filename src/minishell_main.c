@@ -52,7 +52,7 @@ void	test_parsing(char *string)
 			get_token_name(output[i].ty),
 			output[i].word);
 	test_build_ast(output);
-	free_tokens(output);
+	free_tokens(output, token_count);
 	return ;
 }
 

@@ -36,21 +36,27 @@ int	count_tokens(char *str)
 	while (str[i])
 	{
 		skip_spaces(&i, str);
-		count++;
-		quote = str[i];
-		if (str[i] && (str[i] == '\'' || str[i] == '\"'))
+		if (str[i] && str[i+1] && isminioperator(str, i) > 0)
 		{
-			i++;
+			count++;
+			i += isminioperator(str, i);
+		}
+		else if (str[i] && (str[i] == '\'' || str[i] == '\"'))
+		{
+			quote = str[i++];
 			while (str[i] && str[i] != quote)
 				i++;
 			if (str[i] == quote)
 				i++;
+			count++;
 		}
 		else
+		{
 			while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' \
 				&& str[i] != '\"' && isminioperator(str, i) == 0)
 				i++;
-		i++;
+			count++;
+		}
 	}
 	return (count);
 }
@@ -79,6 +85,11 @@ void	make_string(char *str, int *len, int i)
 
 void	parse_word(char *str, int i, int *len)
 {
+	if (str[i] == '-')
+	{
+		(*len)++;
+		i++;
+	}
 	while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' && \
 		str[i] != '\"' && !isminioperator(str, i))
 	{
@@ -104,20 +115,16 @@ char	*make_word(char *str, int *i)
 	len = 0;
 	if (str[*i] && (str[*i] == '\'' || str[*i] == '\"'))
 		make_string(str, &len, *i);
-	else if (str[*i] && (ft_isalpha(str[*i]) || str[*i] == '.' || \
-		str[*i] == '$' || str[*i] == '~' || str[*i] == '*'))
+	else if (str[*i] && (ft_isalpha(str[*i]) || str[*i] == '.' || ft_isdigit(str[*i + len]) || \
+		str[*i] == '$' || str[*i] == '~' || str[*i] == '*' || str[*i] == '-'))
 		parse_word(str, *i, &len);
 	else if (str[*i] && isminioperator(str, *i))
 		len += isminioperator(str, *i);
-	else if (str[*i] && ft_isdigit(str[*i]))
-		while (ft_isdigit(str[*i + len]))
-			len++;
 	else if (str[*i])  // Fallback for any other character
 		len = 1;
 	(*i) += len;
 	if (len == 0)
 		return (NULL);
-		
 	word = malloc(len + 1);
 	if (!word)
 		return (NULL);
