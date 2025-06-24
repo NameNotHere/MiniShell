@@ -38,7 +38,8 @@ SRCS = minishell_main.c \
 	parser/AST.c \
 	parser/lex.c \
 	parser/tokenize.c \
-	parser/utils/isminioperator.c
+	parser/utils/isminioperator.c\
+	parser/errors.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
@@ -51,6 +52,7 @@ PARSER_SRCS = parser/AST.c \
 	parser/main.c \
 	parser/lex.c \
 	parser/tokenize.c \
+	parser/errors.c \
 	parser/utils/isminioperator.c
 
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)

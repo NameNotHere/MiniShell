@@ -170,7 +170,7 @@ void	free_tokens(t_token *tokens, int amount)
 	if (!tokens)
 		return ;
 	i = 0;
-	while (amount--)// (tokens[i].word != NULL)
+	while (amount--)
 	{
 		free(tokens[i].word);
 		i++;
