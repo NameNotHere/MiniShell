@@ -12,6 +12,31 @@
 
 #include "minishell_parser.h"
 
+int	is_file_path(char *str, int *y)
+{
+	int	i;
+
+	i = *y;
+	if (str[0] == '.' || str[0] == '/' || str[0] == '~')
+	{
+		while (str[(*y)] != ' ')
+			(*y)++;
+		return (1);
+	}
+	else 
+	{
+		while (str[i] && str[i] != ' ' && str[i] != '\n')
+		{
+			if (str[i++] == '.')
+			{
+				*y = i;
+				return (1);
+			}
+		}
+	}
+		return (0);
+}
+
 t_token	ft_token(char *str)
 {
 	t_token	output;
@@ -43,7 +68,7 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_PIPE;
 	else if (str[0] == '=')
 		output.ty = TOKEN_EQUAL;
-	else if (str[0] == '.' || str[0] == '/' || str[0] == '~')
+	else if (is_file_path(str, &i))
 		output.ty = TOKEN_FILE_PATH;
 	else if (is_builtin(str) == 1)
 		output.ty = TOKEN_INBUILT;
