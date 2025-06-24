@@ -167,6 +167,8 @@ t_token	*tokenize(char *input, int *token_count)
 	i = 0;
 	id = 0;
 	output = ft_malloc(sizeof(t_token), (count_tokens(input) + 2));
+	if (!output)
+		return (NULL);
 	while(input[i])
 	{
 		skip_spaces(&i, input);
