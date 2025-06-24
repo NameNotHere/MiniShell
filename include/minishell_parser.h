@@ -119,27 +119,13 @@ AST node for shell commands & pipes,
 typedef struct s_ast_node
 {
 	t_node_type	nty;
-	union u_node_data
+	union
 	{
 		t_cmd_node			cmd;
 		t_pipe_node			pipe;
-	}	data;
+	};
 }	t_ast_node;
 
-
-/*
-TODO: TRY UN-NAMED UNION LIKE BELOW, CHECK IF NORMINETTE WILL COMPLAIN
-would avoid a lot of ".data" added to tree.
-*/
-// typedef struct s_ast_node
-// {
-// 	t_node_type	nty;
-// 	union
-// 	{
-// 		t_cmd_node			cmd;
-// 		t_pipe_node			pipe;
-// 	};
-// }	t_ast_node;
 
 // parser/AST.c
 void		build_ast(t_ast_node *ast, t_token *tokens);
