@@ -127,6 +127,8 @@ char	*make_word(char *str, int *i)
 	if (len == 0)
 		return (NULL);
 	word = ft_malloc((len + 1), sizeof(char));
+	if (!word)
+		return (NULL);
 	ft_memcpy(word, str + (*i - len), len);
 	word[len] = '\0';
 	return (word);
