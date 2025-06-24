@@ -12,6 +12,31 @@
 
 #include "minishell_parser.h"
 
+int	is_file_path(char *str, int *y)
+{
+	int	i;
+
+	i = *y;
+	if (str[0] == '.' || str[0] == '/' || str[0] == '~')
+	{
+		while (str[(*y)] != ' ')
+			(*y)++;
+		return (1);
+	}
+	else 
+	{
+		while (str[i] && str[i] != ' ' && str[i] != '\n')
+		{
+			if (str[i++] == '.')
+			{
+				*y = i;
+				return (1);
+			}
+		}
+	}
+		return (0);
+}
+
 t_token	ft_token(char *str)
 {
 	t_token	output;
@@ -43,7 +68,7 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_PIPE;
 	else if (str[0] == '=')
 		output.ty = TOKEN_EQUAL;
-	else if (str[0] == '.' || str[0] == '/' || str[0] == '~')
+	else if (is_file_path(str, &i))
 		output.ty = TOKEN_FILE_PATH;
 	else if (is_builtin(str) == 1)
 		output.ty = TOKEN_INBUILT;
@@ -140,10 +165,10 @@ t_token	*tokenize(char *input, int *token_count)
 	int				id;
 
 	i = 0;
-	output = malloc(sizeof(t_token) * ((count_tokens(input) + 2)));
+	id = 0;
+	output = ft_malloc(sizeof(t_token), (count_tokens(input) + 2));
 	if (!output)
 		return (NULL);
-	id = 0;
 	while(input[i])
 	{
 		skip_spaces(&i, input);
@@ -170,7 +195,7 @@ void	free_tokens(t_token *tokens, int amount)
 	if (!tokens)
 		return ;
 	i = 0;
-	while (amount--)// (tokens[i].word != NULL)
+	while (amount--)
 	{
 		free(tokens[i].word);
 		i++;

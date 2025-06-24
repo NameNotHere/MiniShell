@@ -167,4 +167,9 @@ void		free_tokens(t_token *tokens, int amount);
 
 int			isminioperator(char *token, int i);
 
+// errors 
+void    is_closed(char *str, int i, char quote);
+
+void *ft_malloc(size_t amount, size_t size);
+
 #endif
