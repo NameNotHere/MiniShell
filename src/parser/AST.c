@@ -6,11 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/24 00:55:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/24 23:16:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
+#include <errno.h>
 
 int	last_token(t_token *tokens)
 {

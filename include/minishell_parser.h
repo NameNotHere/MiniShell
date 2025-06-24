@@ -6,15 +6,17 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/23 15:24:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 01:27:25 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_PARSER_H
 # define MINISHELL_PARSER_H
 
+# include <errno.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <stdint.h>
 # include <stdbool.h>
 # include "libft.h"
 
@@ -149,9 +151,13 @@ void		print_ast(t_ast_node *root);
 
 int			count_tokens(char *str);
 
-int			skip_spaces(int *i, char *str);
+const char	*get_token_name(t_token_type type);
+
+const char	*get_token_name_continued(t_token_type type);
 
 char		*make_word(char *str, int *i);
+
+int			skip_spaces(int *i, char *str);
 
 // parser/tokenize.c
 
@@ -167,9 +173,13 @@ void		free_tokens(t_token *tokens, int amount);
 
 int			isminioperator(char *token, int i);
 
-// errors 
-void    is_closed(char *str, int i, char quote);
+// errors
+void		is_closed(char *str, int i, char quote);
 
-void *ft_malloc(size_t amount, size_t size);
+void		*ft_malloc(size_t amount, size_t size);
+
+int			calloc_check(void **ptr, size_t nmemb, size_t size);
+
+int			malloc_check(void **ptr, size_t nmemb, size_t size);
 
 #endif

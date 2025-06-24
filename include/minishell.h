@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/20 17:51:22 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 01:38:24 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdbool.h>
+# include <stdint.h>
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
