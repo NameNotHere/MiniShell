@@ -80,11 +80,11 @@ void	add_redir_node(t_ast_node *ast, t_token_type token_type, char *word)
 	}
 	new_redir->type = get_redir_type(token_type);
 	printf("__redir: ty %d : %s\n", new_redir->type, word);
-	if (!ast->data.cmd.redir)
-		ast->data.cmd.redir = new_redir;
+	if (!ast->cmd.redir)
+		ast->cmd.redir = new_redir;
 	else
 	{
-		current_redir = ast->data.cmd.redir;
+		current_redir = ast->cmd.redir;
 		while (current_redir->next)
 			current_redir = current_redir->next;
 		current_redir->next = new_redir;
@@ -195,8 +195,8 @@ void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
 	// 4. remove quotes if needed & expand vars,
 	// 5. cleanup
 	// 6. then build argv. (done below)
-	ast->data.cmd.built_in = false;
-	ast->data.cmd.argv = token_words_to_argv(tokens, start, end);
+	ast->cmd.built_in = false;
+	ast->cmd.argv = token_words_to_argv(tokens, start, end);
 	return ;
 }
 
@@ -215,14 +215,14 @@ void	parse_pipe(t_ast_node *ast, t_token *tokens, int start, int end)
 	if (ast == NULL)
 		printf("### ast not initialized yet, maloc it here?\n");
 
-	ast->data.pipe.left = make_ast_node(NODE_CMD);
-	ast->data.pipe.right = make_ast_node(NODE_UNKNOWN);
-	if (!ast->data.pipe.left || !ast->data.pipe.right)
+	ast->pipe.left = make_ast_node(NODE_CMD);
+	ast->pipe.right = make_ast_node(NODE_UNKNOWN);
+	if (!ast->pipe.left || !ast->pipe.right)
 	{
 		printf("*** ERROR *** Failed to allocate AST nodes\n");
 		return ;
 	}
-	parse_cmd(ast->data.pipe.left, tokens, start, end);
+	parse_cmd(ast->pipe.left, tokens, start, end);
 	return ;
 }
 
@@ -249,11 +249,11 @@ void	scan_pipe(t_ast_node *ast, t_token *tokens, int *i)
 	}
 	if (has_pipe(tokens, *i, end))
 	{
-		ast->data.pipe.right->nty = NODE_PIPE;
-		scan_tokens(ast->data.pipe.right, tokens, *i, end);
+		ast->pipe.right->nty = NODE_PIPE;
+		scan_tokens(ast->pipe.right, tokens, *i, end);
 	}
 	else if (tokens[*i].word)
-		parse_cmd(ast->data.pipe.right, tokens, *i, end);
+		parse_cmd(ast->pipe.right, tokens, *i, end);
 	return ;
 }
 
@@ -305,17 +305,17 @@ void	print_ast_helper(t_ast_node *node, int depth)
 	if (node->nty == NODE_CMD)
 	{
 		printf("CMD: ");
-		if (node->data.cmd.argv && node->data.cmd.argv[0])
+		if (node->cmd.argv && node->cmd.argv[0])
 		{
 			i = -1;
-			while (node->data.cmd.argv[++i])
+			while (node->cmd.argv[++i])
 			{
-				printf("%s", node->data.cmd.argv[i]);
-				if (node->data.cmd.argv[i + 1])
+				printf("%s", node->cmd.argv[i]);
+				if (node->cmd.argv[i + 1])
 					printf(" ");
 			}
 		}
-		redir = node->data.cmd.redir;
+		redir = node->cmd.redir;
 		while (redir)
 		{
 			printf(" [%s%s]", get_redir_symbol(redir->type),
@@ -327,8 +327,8 @@ void	print_ast_helper(t_ast_node *node, int depth)
 	else if (node->nty == NODE_PIPE)
 	{
 		printf("PIPE\n");
-		print_ast_helper(node->data.pipe.left, depth + 1);
-		print_ast_helper(node->data.pipe.right, depth + 1);
+		print_ast_helper(node->pipe.left, depth + 1);
+		print_ast_helper(node->pipe.right, depth + 1);
 	}
 }
 
@@ -361,14 +361,14 @@ void free_ast(t_ast_node *node)
 		return ;
 	if (node->nty == NODE_CMD)
 	{
-		if (node->data.cmd.argv)
+		if (node->cmd.argv)
 		{
 			i = -1;
-			while (node->data.cmd.argv[++i])
-				free(node->data.cmd.argv[i]);
-			free(node->data.cmd.argv);
+			while (node->cmd.argv[++i])
+				free(node->cmd.argv[i]);
+			free(node->cmd.argv);
 		}
-		redir = node->data.cmd.redir;
+		redir = node->cmd.redir;
 		while (redir)
 		{
 			next = redir->next;
@@ -379,8 +379,8 @@ void free_ast(t_ast_node *node)
 	}
 	else if (node->nty == NODE_PIPE)
 	{
-		free_ast(node->data.pipe.left);
-		free_ast(node->data.pipe.right);
+		free_ast(node->pipe.left);
+		free_ast(node->pipe.right);
 	}
 	free(node);
 }
