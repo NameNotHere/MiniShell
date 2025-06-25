@@ -12,23 +12,13 @@ void	is_closed(char *str, int i, char quote)
 	printf("unclosed quotes\n");
 }
 
-void	*ft_malloc(size_t amount, size_t size)
-{
-	void	*mal;
-
-	mal = malloc(amount * size);
-	if (!mal)
-		printf("malloc failed\n");
-	return (mal);
-}
-
-
 /*
 malloc_check is a malloc wrapper with error return
 
 Returns:
 - 0 (EXIT_SUCCESS) if allocation worked.
 - 12 (ENOMEM) if allocation failed.
+- 34 (ERANGE) or "value out of range" (nmemb * size would exceed SIZE_MAX)
 
 NOTE: if allocation fails, also sets errno to ENOMEM
 
@@ -51,8 +41,8 @@ int	malloc_check(void **ptr, size_t nmemb, size_t size)
 	if (nmemb && size > SIZE_MAX / nmemb)
 	{
 		*ptr = NULL;
-		errno = ENOMEM;
-		return (ENOMEM);
+		errno = ERANGE;
+		return (ERANGE);
 	}
 	*ptr = malloc(nmemb * size);
 	if (!(*ptr))
@@ -62,7 +52,6 @@ int	malloc_check(void **ptr, size_t nmemb, size_t size)
 	}
 	return (EXIT_SUCCESS);
 }
-
 
 /*
 calloc_check: same as malloc_check, but on successful allocation,
@@ -73,8 +62,8 @@ int	calloc_check(void **ptr, size_t nmemb, size_t size)
 	if (nmemb && size > SIZE_MAX / nmemb)
 	{
 		*ptr = NULL;
-		errno = ENOMEM;
-		return (ENOMEM);
+		errno = ERANGE;
+		return (ERANGE);
 	}
 	*ptr = malloc(nmemb * size);
 	if (!(*ptr))
@@ -85,3 +74,14 @@ int	calloc_check(void **ptr, size_t nmemb, size_t size)
 	ft_bzero(*ptr, nmemb * size);
 	return (EXIT_SUCCESS);
 }
+
+// a nice error-printing malloc (may be useful somewhere)
+// void	*ft_malloc(size_t amount, size_t size)
+// {
+// 	void	*mal;
+
+// 	mal = malloc(amount * size);
+// 	if (!mal)
+// 		printf("malloc failed\n");
+// 	return (mal);
+// }

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 01:27:25 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 02:12:12 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ typedef struct s_ast_node
 }	t_ast_node;
 
 
-// parser/AST.c
+// parser/ast.c
 void		build_ast(t_ast_node *ast, t_token *tokens);
 
 void		free_ast(t_ast_node *node);

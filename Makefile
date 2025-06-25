@@ -35,11 +35,11 @@ all:
 SRCS = minishell_main.c \
 	exec/utils_free.c \
 	exec/utils_readline.c \
-	parser/AST.c \
+	parser/ast.c \
+	parser/errors.c \
 	parser/lex.c \
 	parser/tokenize.c \
 	parser/utils/isminioperator.c\
-	parser/errors.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
@@ -48,11 +48,11 @@ $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDE) -o $(NAME) $(OBJS) $(LDFLAGS)
 
 # ***** PARSER SRCS *****
-PARSER_SRCS = parser/AST.c \
-	parser/main.c \
-	parser/lex.c \
-	parser/tokenize.c \
+PARSER_SRCS = parser/ast.c \
 	parser/errors.c \
+	parser/lex.c \
+	parser/main.c \
+	parser/tokenize.c \
 	parser/utils/isminioperator.c
 
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
