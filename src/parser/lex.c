@@ -44,8 +44,7 @@ int	count_tokens(char *str)
 		else if (str[i] && (str[i] == '\'' || str[i] == '\"'))
 		{
 			quote = str[i++];
-			is_closed(str, i, quote);
-			while (str[i] && str[i] != quote)
+			while ((str[i] && str[i] != quote) || (is_closed(str, i, quote) == 1 && !ft_isspace(str[i])))
 				i++;
 			if (str[i] == quote)
 				i++;
@@ -91,8 +90,7 @@ void	parse_word(char *str, int i, int *len)
 		(*len)++;
 		i++;
 	}
-	while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' && \
-		str[i] != '\"' && !isminioperator(str, i))
+	while (str[i] && !ft_isspace(str[i]) && !isminioperator(str, i))
 	{
 		if (str[i] == '\\' && str[i + 1])
 		{

@@ -39,7 +39,9 @@ typedef enum e_token_type
 	TOKEN_AND,
 	TOKEN_OR,
 	TOKEN_EQUAL,
-	TOKEN_LAST
+	TOKEN_LAST,
+	UNCLOSED_DOUBLE_QUOTE,
+	UNCLOSED_SINGLE_QUOTE
 }	t_token_type;
 
 typedef struct s_token
@@ -203,12 +205,16 @@ void		free_tokens(t_token *tokens, int amount);
 int			isminioperator(char *token, int i);
 
 // errors
-void		is_closed(char *str, int i, char quote);
+void		int_closed(char *str, int i, char quote);
 
 void		*ft_malloc(size_t amount, size_t size);
 
 int			callo_x(void **ptr, size_t nmemb, size_t size);
 
 int			mallo_x(void **ptr, size_t nmemb, size_t size);
+
+int			is_closed(char *str, int i, char quote);
+
+int			unclosed_token(char *str, char token);
 
 #endif

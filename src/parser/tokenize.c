@@ -86,6 +86,13 @@ t_token	ft_token(char *str)
 			i++;
 		}
 	}
+	else if (unclosed_token(str, 0) > 0)
+	{
+		if (unclosed_token(str, '\'') == 2)
+			output.ty = UNCLOSED_SINGLE_QUOTE;
+		else if (unclosed_token(str, '\"') == 3)
+			output.ty = UNCLOSED_DOUBLE_QUOTE;
+	}
 	else
 		output.ty = TOKEN_WORD;
 	return (output);

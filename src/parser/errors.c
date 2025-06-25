@@ -1,15 +1,29 @@
 
 #include <minishell.h>
 
-void	is_closed(char *str, int i, char quote)
+int	is_closed(char *str, int i, char quote)
 {
 	while (str[i])
 	{
 		if (str[i] == quote)
-			return ;
+			return (0);
 		i++;
 	}
-	printf("unclosed quotes\n");
+	return (1);
+}
+
+int	unclosed_token(char *str, char token)
+{
+	if (token == 0)
+	{
+		if (!is_closed(str, 0, '\''))
+			return (2);
+		if (!is_closed(str, 0, '\"'))
+			return (3);
+	}
+	if (!is_closed(str, 0, token))
+		return (1);
+	return (0);
 }
 
 /*
@@ -85,3 +99,4 @@ int	callo_x(void **ptr, size_t nmemb, size_t size)
 // 		printf("malloc failed\n");
 // 	return (mal);
 // }
+
