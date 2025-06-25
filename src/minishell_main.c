@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/23 14:59:22 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 04:40:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,26 @@ void	test_parsing(char *string)
 {
 	int			i;
 	int			token_count;
-	t_token		*output;
+	t_token		*tokens;
+	int			err;
 
 	printf("Input string: %s\n", string);
 	printf("Expected token count: %d\n", count_tokens(string));
-	output = tokenize(string, &token_count);
+	tokens = tokenize(string, &token_count, &err);
+	if (!tokens)
+	{
+		printf("tokenizer failed with error #%d\n", err);
+		return ;
+	}
 	printf("Actual token count: %d\n", token_count);
 	i = -1;
 	while (token_count > ++i)
 		printf("%2d %12s  %s \n",
-			output[i].ty,
-			get_token_name(output[i].ty),
-			output[i].word);
-	test_build_ast(output);
-	free_tokens(output, token_count);
+			tokens[i].ty,
+			get_token_name(tokens[i].ty),
+			tokens[i].word);
+	test_build_ast(tokens);
+	free_tokens(tokens, token_count);
 	return ;
 }
 

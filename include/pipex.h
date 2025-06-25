@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:13:01 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/20 08:58:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 03:26:45 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <unistd.h>
 # include <sys/wait.h>
 # include <errno.h>
+# include "libft.h"
 
 // 0644: user can read/write, others can read. reasonable/safe setting.
 # define PIPEX_CREATE_PERMISSIONS 0644
@@ -82,24 +83,6 @@ int		run_pipex_interactive(const char *argv_0, char **envp);
 
 bool	get_args_from_line(char *line, const char *arg_0, \
 			int *argc, char ***argv);
-
-// ft_mem_utils.c
-
-void	ft_bzero(void *s, size_t n);
-
-void	*ft_calloc(size_t nmemb, size_t size);
-
-void	*ft_memcpy(void *dst, const void *src, size_t n);
-
-// ft_str_utils.c
-
-char	*ft_strdup(char const *src);
-
-char	*ft_strjoin(char const *s1, char const *s2);
-
-size_t	ft_strlen(const char *str);
-
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
 
 // utils_error.c
 

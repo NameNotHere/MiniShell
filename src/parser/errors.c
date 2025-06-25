@@ -13,7 +13,7 @@ void	is_closed(char *str, int i, char quote)
 }
 
 /*
-malloc_check is a malloc wrapper with error return
+mallo_x is a malloc wrapper with error return
 
 Returns:
 - 0 (EXIT_SUCCESS) if allocation worked.
@@ -33,10 +33,10 @@ usage example:
 
 	char	*word;
 
-	if (malloc_check((void **)&word, 11, sizeof(char)))
+	if (mallo_x((void **)&word, 11, sizeof(char)))
 		return (EXIT_FAILURE);
 */
-int	malloc_check(void **ptr, size_t nmemb, size_t size)
+int	mallo_x(void **ptr, size_t nmemb, size_t size)
 {
 	if (nmemb && size > SIZE_MAX / nmemb)
 	{
@@ -54,10 +54,10 @@ int	malloc_check(void **ptr, size_t nmemb, size_t size)
 }
 
 /*
-calloc_check: same as malloc_check, but on successful allocation,
+callo_x: same as mallo_x, but on successful allocation,
 	zero initializes the allocated memory with ft_bzero.
 */
-int	calloc_check(void **ptr, size_t nmemb, size_t size)
+int	callo_x(void **ptr, size_t nmemb, size_t size)
 {
 	if (nmemb && size > SIZE_MAX / nmemb)
 	{

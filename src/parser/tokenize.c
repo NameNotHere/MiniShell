@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 01:51:00 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 03:50:08 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,32 +162,37 @@ int	is_builtin(char *str)
 	return (0);
 }
 
-t_token	*tokenize(char *input, int *token_count)
+/*
+TODO: delete this comment
+Added error code for caller to receive.
+call with &err on an int err variable.
+renamed output for res (short for result for norminette lines)
+*/
+t_token	*tokenize(char *input, int *token_count, int *err)
 {
-	t_token			*output;
+	t_token			*res;
 	int				i;
 	char			*token;
 	int				id;
 
 	i = 0;
 	id = 0;
-	output = ft_malloc(sizeof(t_token), (count_tokens(input) + 2));
-	if (!output)
+	*err = callo_x((void **)&res, sizeof(t_token), (count_tokens(input) + 2));
+	if (*err)
 		return (NULL);
 	while (input[i])
 	{
 		skip_spaces(&i, input);
 		if (!input[i])
 			break ;
-		token = make_word(input, &i);
+		token = make_word(input, &i, err);
 		if (token)
-			output[id++] = ft_token(token);
+			res[id++] = ft_token(token);
 		else
-			return (free(output), NULL);
+			return (free(res), NULL);
 	}
-	output[id] = (t_token){0};
 	*token_count = id;
-	return (output);
+	return (res);
 }
 
 void	free_tokens(t_token *tokens, int amount)

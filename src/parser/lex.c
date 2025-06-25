@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 01:49:22 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 03:59:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,10 +108,13 @@ void	parse_word(char *str, int i, int *len)
 }
 
 /*
-TODO:use instead something like the function defined below (make_word_error)
-to catch errors in the calling function.
+TODO: delete this comment
+NOTE: reduced one line and all char comparisons with ft_strchr, before it was:
+else if (str[*i] && (ft_isalpha(str[*i]) || ft_strchr() str[*i] == '.' || \
+		ft_isdigit(str[*i + len]) || str[*i] == '$' || str[*i] == '~' || \
+		str[*i] == '*' || str[*i] == '-'))
 */
-char	*make_word(char *str, int *i)
+char	*make_word(char *str, int *i, int *err)
 {
 	int		len;
 	char	*word;
@@ -120,9 +123,8 @@ char	*make_word(char *str, int *i)
 	len = 0;
 	if (str[*i] && (str[*i] == '\'' || str[*i] == '\"'))
 		make_string(str, &len, *i);
-	else if (str[*i] && (ft_isalpha(str[*i]) || str[*i] == '.' || \
-			ft_isdigit(str[*i + len]) || str[*i] == '$' || str[*i] == '~' || \
-			str[*i] == '*' || str[*i] == '-'))
+	else if (str[*i] && (ft_isalpha(str[*i]) || ft_strchr(".$~*-", str[*i])
+			|| ft_isdigit(str[*i + len])))
 		parse_word(str, *i, &len);
 	else if (str[*i] && isminioperator(str, *i))
 		len += isminioperator(str, *i);
@@ -130,46 +132,14 @@ char	*make_word(char *str, int *i)
 		len = 1;
 	(*i) += len;
 	if (len == 0)
+		*err = EXIT_FAILURE;
+	if (len == 0)
 		return (NULL);
-	if (malloc_check((void **)&word, (len + 1), sizeof(char)))
+	*err = mallo_x((void **)&word, (len + 1), sizeof(char));
+	if (*err)
 		return (NULL);
 	ft_memcpy(word, str + (*i - len), len);
 	word[len] = '\0';
 	return (word);
 }
 
-
-/*
-ALTERNATIVE (CURRENTLY NOT BEING USED) returns int > 0 for errors.
-TODO: consider this alternative for make_word to be able to pass errors down
-the stack. two types of errors possible here: no len (empty word)
-and allocation error on malloc_check.
-*/
-int	make_word_check(char **word, char *str, int *i)
-{
-	int		len;
-
-	skip_spaces(i, str);
-	len = 0;
-	if (str[*i] && (str[*i] == '\'' || str[*i] == '\"'))
-		make_string(str, &len, *i);
-	else if (str[*i] && (ft_isalpha(str[*i]) || str[*i] == '.' || \
-			ft_isdigit(str[*i + len]) || str[*i] == '$' || str[*i] == '~' || \
-			str[*i] == '*' || str[*i] == '-'))
-		parse_word(str, *i, &len);
-	else if (str[*i] && isminioperator(str, *i))
-		len += isminioperator(str, *i);
-	else if (str[*i])
-		len = 1;
-	(*i) += len;
-	if (len == 0)
-	{
-		*word = NULL;
-		return (EXIT_FAILURE);
-	}
-	if (malloc_check((void **)word, (len + 1), sizeof(char)))
-		return (ENOMEM);
-	ft_memcpy(*word, str + (*i - len), len);
-	*word[len] = '\0';
-	return (EXIT_SUCCESS);
-}
