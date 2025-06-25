@@ -6,7 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 12:49:46 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/25 15:10:35 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,16 @@ int	skip_spaces(int *i, char *str)
 	return (y);
 }
 
-int	count_tokens(char *str)
+int	count_tokens(char *str, int i)
 {
 	int		count;
-	int		i;
 	char	quote;
 
-	i = 0;
 	count = 0;
 	while (str[i])
 	{
 		skip_spaces(&i, str);
-		if (str[i] && str[i +1] && isminioperator(str, i) > 0)
+		if (str[i] && str[i + 1] && isminioperator(str, i) > 0)
 		{
 			count++;
 			i += isminioperator(str, i);
@@ -44,7 +42,6 @@ int	count_tokens(char *str)
 		else if (str[i] && (str[i] == '\'' || str[i] == '\"'))
 		{
 			quote = str[i++];
-			is_closed(str, i, quote);
 			while (str[i] && str[i] != quote)
 				i++;
 			if (str[i] == quote)
@@ -53,8 +50,8 @@ int	count_tokens(char *str)
 		}
 		else
 		{
-			while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' \
-				&& str[i] != '\"' && isminioperator(str, i) == 0)
+			while (str[i] && !ft_isspace(str[i]) && /*str[i] != '\'' \
+				&& str[i] != '\"' &&*/ isminioperator(str, i) == 0)
 				i++;
 			count++;
 		}

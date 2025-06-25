@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 05:13:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 15:00:38 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ void		parse_redir(t_ast_node *ast, t_token *tokens, int *start, int *end);
 
 // parser/lex.c
 
-int			count_tokens(char *str);
+int			count_tokens(char *str, int i);
 
 const char	*get_token_name(t_token_type type);
 
