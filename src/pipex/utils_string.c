@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 01:17:38 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/04/14 21:14:08 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 03:31:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*get_empty_string(void)
 }
 
 /*
-Returns true if char found in a string.
+Returns 1 if char found in a string.
 
 Parameters:
 	c_to_find: The char to be found

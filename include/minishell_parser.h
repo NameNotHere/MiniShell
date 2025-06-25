@@ -6,15 +6,17 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/23 15:24:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 05:13:23 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_PARSER_H
 # define MINISHELL_PARSER_H
 
+# include <errno.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <stdint.h>
 # include <stdbool.h>
 # include "libft.h"
 
@@ -66,7 +68,7 @@ typedef enum e_redir_type
 	REDIR_OUTPUT,
 	REDIR_APPEND,
 	REDIR_UNKNOWN
-}	t_redir_type;
+}	t_redir_ty;
 
 # define REDIR_INPUT_SYMBOL "<"
 # define REDIR_OUTPUT_SYMBOL ">"
@@ -79,7 +81,7 @@ typedef enum e_redir_type
 */
 typedef struct s_redir_node
 {
-	t_redir_type		type;
+	t_redir_ty		type;
 	char				*string;
 	struct s_redir_node	*next;
 }	t_redir_node;
@@ -127,31 +129,64 @@ typedef struct s_ast_node
 }	t_ast_node;
 
 
-// parser/AST.c
+// parser/ast.c
 void		build_ast(t_ast_node *ast, t_token *tokens);
-
-void		free_ast(t_ast_node *node);
-
-t_ast_node	*make_ast_node(t_node_type type);
-
-t_ast_node	*parse_command_tokens(t_token *tokens, int start, int end);
-
-int			last_token(t_token *tokens);
 
 void		scan_tokens(t_ast_node *ast, t_token *tokens, int start, int end);
 
-// parser/AST.c CONTINUED
-// TODO: REMOVE THIS FUNCTION PROTOTYPE BEFORE EVALUATION
-// TODO: MAYBE KEEP IN A SEPARATE (NOT SUBMITTED TEST SUITE, FOR DEBUGGING)
+void		scan_pipe(t_ast_node *ast, t_token *tokens, int *i);
+
+void		parse_pipe(t_ast_node *ast, t_token *tokens, int start, int end);
+
+// t_ast_node	*parse_command_tokens(t_token *tokens, int start, int end);
+
+
+// parser/ast_cmd.c
+
+void		parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end);
+
+char		**token_words_to_argv(t_token *tokens, int start, int end);
+
+// parser/ast_helper.c
+
+void		free_ast(t_ast_node *node);
+
+void		free_ast_cmd(t_ast_node *node);
+
+bool		has_pipe(t_token *tokens, int start, int end);
+
+int			last_token(t_token *tokens);
+
+t_ast_node	*make_ast_node(t_node_type type);
+
+// parser/ast_print.c
+char		*get_redir_symbol(t_redir_ty ty);
+
 void		print_ast(t_ast_node *root);
+
+void		print_ast_cmd(t_ast_node *node);
+
+void		print_ast_node(t_ast_node *node, int depth);
+
+// parser/ast_redir.c
+
+void		add_redir(t_ast_node *ast, t_token_type token_type, char *word);
+
+t_redir_ty	get_redir_type(t_token_type ty);
+
+void		parse_redir(t_ast_node *ast, t_token *tokens, int *start, int *end);
 
 // parser/lex.c
 
 int			count_tokens(char *str);
 
-int			skip_spaces(int *i, char *str);
+const char	*get_token_name(t_token_type type);
 
-char		*make_word(char *str, int *i);
+const char	*get_token_name_continued(t_token_type type);
+
+char		*make_word(char *str, int *i, int *err);
+
+int			skip_spaces(int *i, char *str);
 
 // parser/tokenize.c
 
@@ -159,7 +194,7 @@ const char	*get_token_name(t_token_type type);
 
 int			is_builtin(char *str);
 
-t_token		*tokenize(char *input, int *token_count);
+t_token		*tokenize(char *input, int *token_count, int *err);
 
 void		free_tokens(t_token *tokens, int amount);
 
@@ -167,9 +202,13 @@ void		free_tokens(t_token *tokens, int amount);
 
 int			isminioperator(char *token, int i);
 
-// errors 
-void    is_closed(char *str, int i, char quote);
+// errors
+void		is_closed(char *str, int i, char quote);
 
-void *ft_malloc(size_t amount, size_t size);
+void		*ft_malloc(size_t amount, size_t size);
+
+int			callo_x(void **ptr, size_t nmemb, size_t size);
+
+int			mallo_x(void **ptr, size_t nmemb, size_t size);
 
 #endif

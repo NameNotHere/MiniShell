@@ -35,11 +35,15 @@ all:
 SRCS = minishell_main.c \
 	exec/utils_free.c \
 	exec/utils_readline.c \
-	parser/AST.c \
+	parser/ast.c \
+	parser/ast_cmd.c \
+	parser/ast_helper.c \
+	parser/ast_print.c \
+	parser/ast_redir.c \
+	parser/errors.c \
 	parser/lex.c \
 	parser/tokenize.c \
 	parser/utils/isminioperator.c\
-	parser/errors.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
@@ -48,11 +52,15 @@ $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDE) -o $(NAME) $(OBJS) $(LDFLAGS)
 
 # ***** PARSER SRCS *****
-PARSER_SRCS = parser/AST.c \
-	parser/main.c \
-	parser/lex.c \
-	parser/tokenize.c \
+PARSER_SRCS = parser/ast.c \
+	parser/ast_cmd.c \
+	parser/ast_helper.c \
+	parser/ast_print.c \
+	parser/ast_redir.c \
 	parser/errors.c \
+	parser/lex.c \
+	parser/main.c \
+	parser/tokenize.c \
 	parser/utils/isminioperator.c
 
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
@@ -62,9 +70,7 @@ $(PARSER): $(LIBFT) $(PARSER_OBJS)
 	$(CC) $(CFLAGS) $(INCLUDE) -o $(PARSER) $(PARSER_OBJS) $(LDFLAGS)
 
 # ***** PIPEX SRCS *****
-PIPEX_SRCS = pipex/ft_mem_utils.c \
-		pipex/ft_str_utils.c \
-		pipex/pipex.c \
+PIPEX_SRCS = pipex/pipex.c \
 		pipex/pipex_main.c \
 		pipex/pipex_process.c \
 		pipex/pipex_heredoc.c \
@@ -78,6 +84,11 @@ PIPEX_SRCS = pipex/ft_mem_utils.c \
 		pipex/utils_split_quotes.c \
 		pipex/utils_split_single_delimiter.c \
 		pipex/utils_string.c
+
+# REMOVED:
+# pipex/ft_str_utils.c
+# pipex/ft_mem_utils.c
+
 PIPEX_OBJS = $(PIPEX_SRCS:.c=.o)
 PIPEX_OBJS := $(addprefix $(OBJDIR)/, $(PIPEX_OBJS))
 
