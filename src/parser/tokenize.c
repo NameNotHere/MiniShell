@@ -92,11 +92,9 @@ t_token	ft_token(char *str)
 			output.ty = UNCLOSED_SINGLE_QUOTE;
 		else if (unclosed_token(str, '\"') == 0)
 			output.ty = UNCLOSED_DOUBLE_QUOTE;
-	//	else
-		//	output.ty = TOKEN_WORD;
+		else
+			output.ty = TOKEN_WORD;
 	}
-	else
-		output.ty = TOKEN_WORD;
 	return (output);
 }
 
