@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 03:59:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 15:10:35 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,16 @@ int	skip_spaces(int *i, char *str)
 	return (y);
 }
 
-int	count_tokens(char *str)
+int	count_tokens(char *str, int i)
 {
 	int		count;
-	int		i;
 	char	quote;
 
-	i = 0;
 	count = 0;
 	while (str[i])
 	{
 		skip_spaces(&i, str);
-		if (str[i] && str[i+1] && isminioperator(str, i) > 0)
+		if (str[i] && str[i + 1] && isminioperator(str, i) > 0)
 		{
 			count++;
 			i += isminioperator(str, i);
@@ -44,7 +42,6 @@ int	count_tokens(char *str)
 		else if (str[i] && (str[i] == '\'' || str[i] == '\"'))
 		{
 			quote = str[i++];
-			is_closed(str, i, quote);
 			while (str[i] && str[i] != quote)
 				i++;
 			if (str[i] == quote)
@@ -53,8 +50,8 @@ int	count_tokens(char *str)
 		}
 		else
 		{
-			while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' \
-				&& str[i] != '\"' && isminioperator(str, i) == 0)
+			while (str[i] && !ft_isspace(str[i]) && /*str[i] != '\'' \
+				&& str[i] != '\"' &&*/ isminioperator(str, i) == 0)
 				i++;
 			count++;
 		}
@@ -107,13 +104,6 @@ void	parse_word(char *str, int i, int *len)
 	}
 }
 
-/*
-TODO: delete this comment
-NOTE: reduced one line and all char comparisons with ft_strchr, before it was:
-else if (str[*i] && (ft_isalpha(str[*i]) || ft_strchr() str[*i] == '.' || \
-		ft_isdigit(str[*i + len]) || str[*i] == '$' || str[*i] == '~' || \
-		str[*i] == '*' || str[*i] == '-'))
-*/
 char	*make_word(char *str, int *i, int *err)
 {
 	int		len;
@@ -128,7 +118,7 @@ char	*make_word(char *str, int *i, int *err)
 		parse_word(str, *i, &len);
 	else if (str[*i] && isminioperator(str, *i))
 		len += isminioperator(str, *i);
-	else if (str[*i])  // Fallback for any other character
+	else if (str[*i])
 		len = 1;
 	(*i) += len;
 	if (len == 0)
@@ -142,4 +132,3 @@ char	*make_word(char *str, int *i, int *err)
 	word[len] = '\0';
 	return (word);
 }
-
