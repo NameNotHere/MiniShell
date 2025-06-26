@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:13:01 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/25 03:26:45 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 12:13:57 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,13 @@ void	exit_free_with_code(t_pipex *px, int exit_code);
 
 void	free_everything(t_pipex *px);
 
-void	safe_free(char **ptr);
+void	safe_free(void **ptr);
 
-void	safe_free_2d(char ***ptr);
+void	safe_free_string(char **ptr);
 
-void	safe_free_3d(char ****ptr);
+void	safe_free_2d_string(char ***ptr);
+
+void	safe_free_3d_string(char ****ptr);
 
 void	safe_free_bool(bool **ptr);
 

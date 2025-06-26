@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 17:07:24 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/20 17:10:03 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 11:45:19 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,12 @@ with the standard input/output pipes.
      │  │
      │  └── stdout → /dev/tty (the terminal)
      └───── stdin  → /dev/tty (the keyboard)
+
+TODO: maybe check if we can just use the regular plain readline without
+issues with interference with pipes and heredocs.
+TODO: check if we can use this wrapper (just) for heredocs (if it is advantage)
+TODO: check if the shell of minishell is supposed to receive information from
+	STDIN (not tty) anyway (then we CANNOT wrap/protect it).
 */
 bool	readline_on_tty(const char *prompt, char **line)
 {

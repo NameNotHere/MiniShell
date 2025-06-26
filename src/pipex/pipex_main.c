@@ -6,13 +6,11 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:01:43 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/20 17:05:49 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 11:48:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-
 
 int	main(int argc, char **argv, char **envp)
 {
