@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:53:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/13 00:14:47 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 12:15:10 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	init_heredoc(t_heredoc_pipex *hdoc)
 
 void	free_heredoc_line(t_heredoc_pipex *hdoc)
 {
-	safe_free((void *)hdoc->line);
+	safe_free_string((void *)hdoc->line);
 	hdoc->line = NULL;
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_main.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/25 04:40:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 15:01:42 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	test_parsing(char *string)
 	int			err;
 
 	printf("Input string: %s\n", string);
-	printf("Expected token count: %d\n", count_tokens(string));
+	printf("Expected token count: %d\n", count_tokens(string, 0));
 	tokens = tokenize(string, &token_count, &err);
 	if (!tokens)
 	{
@@ -77,13 +77,21 @@ int	main(void)
 			add_history(line);
 		if (ft_strncmp(line, "exit", 4) == 0)
 		{
-			safe_free(&line);
+			safe_free_string(&line);
 			break ;
 		}
 		if (ft_strlen(line))
 			test_parsing(line);
-		safe_free(&line);
+		safe_free_string(&line);
 	}
 	rl_clear_history();
 	return (EXIT_SUCCESS);
 }
+
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	if (argc == 2 && (ft_strncmp(argv[1], "-i", 2) == 0))
+// 		return (run_pipex_interactive(argv[0], envp));
+// 	else
+// 		return (run_pipex_once(argc, argv, envp));
+// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 14:44:57 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 03:23:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 15:00:54 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(void)
 	char *string = "VAR 55hello  ec\"ho  66 \"Double quotes\"  echo \'Single quotes\'  echo Unquoted  grep quotes  out.txt cat out.txt  echo $VAR echo \\$HOME && cd pwd  ls *.c  wc -l  echo done cat EOF\nThis is a heredoc\n$HOME should not expand\nEOF\n";
 
 	printf("Input string: %s\n", string);
-	printf("Expected token count: %d\n", count_tokens(string));
+	printf("Expected token count: %d\n", count_tokens(string, 0));
 	tokens = tokenize(string, &token_count, &err);
 	if (!tokens)
 	{

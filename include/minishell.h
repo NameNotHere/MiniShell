@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/25 01:38:24 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 14:59:00 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@
 
 // utils_free.c
 
-void	safe_free(char **ptr);
+void	safe_free_string(char **ptr);
 
-void	safe_free_2d(char ***ptr);
+void	safe_free_2d_string(char ***ptr);
 
-void	safe_free_3d(char ****ptr);
+void	safe_free_3d_string(char ****ptr);
 
 void	safe_free_bool(bool **ptr);
 
