@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_main.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/25 15:01:42 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:11:44 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	test_parsing(char *string)
 	int			err;
 
 	printf("Input string: %s\n", string);
-	printf("Expected token count: %d\n", count_tokens(string, 0));
+	printf("Expected token count: %d\n", count_tokens(string));
 	tokens = tokenize(string, &token_count, &err);
 	if (!tokens)
 	{
