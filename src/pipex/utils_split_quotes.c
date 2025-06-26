@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 18:52:06 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/16 06:05:33 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 12:04:44 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	**split_charset_using_quote(char *str, char *charset)
 		result[str_count] = getnextstr_q(&str_i, str, charset, 0);
 		if (result[str_count] == NULL)
 		{
-			safe_free_2d(&result);
+			safe_free_2d_string(&result);
 			return (NULL);
 		}
 		str_count++;

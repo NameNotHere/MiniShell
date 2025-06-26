@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:18:36 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/04/12 20:28:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 12:14:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*get_valid_cmd_full_path(char **path_dirs, char *cmd)
 			continue ;
 		if (!access(full_path, X_OK))
 			return (full_path);
-		safe_free(&full_path);
+		safe_free_string(&full_path);
 	}
 	return (NULL);
 }

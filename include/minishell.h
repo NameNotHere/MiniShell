@@ -29,11 +29,11 @@
 
 // utils_free.c
 
-void	safe_free(char **ptr);
+void	safe_free_string(char **ptr);
 
-void	safe_free_2d(char ***ptr);
+void	safe_free_2d_string(char ***ptr);
 
-void	safe_free_3d(char ****ptr);
+void	safe_free_3d_string(char ****ptr);
 
 void	safe_free_bool(bool **ptr);
 

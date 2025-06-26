@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 17:58:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/18 17:46:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 12:15:02 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	run_pipex_interactive(const char *arg_0, char **envp)
 			add_history(line);
 		if (ft_strncmp(line, "exit", 4) == 0)
 		{
-			safe_free(&line);
+			safe_free_string(&line);
 			break ;
 		}
 		run_it = true;
@@ -83,10 +83,10 @@ int	run_pipex_interactive(const char *arg_0, char **envp)
 			run_it = false;
 		if (run_it)
 			run_pipex_once(argc, argv, envp);
-		safe_free_2d(&argv);
-		safe_free(&line);
+		safe_free_2d_string(&argv);
+		safe_free_string(&line);
 	}
-	safe_free(&line);
+	safe_free_string(&line);
 	// free(line = readline(""));
 	rl_clear_history();
 	return (0);
@@ -96,7 +96,7 @@ bool	get_args_allocation_error(char *reason, char ***line_argv)
 {
 	put_stderr("memory allocation failed for ");
 	put_stderr(reason);
-	safe_free_2d(line_argv);
+	safe_free_2d_string(line_argv);
 	return (false);
 }
 
@@ -122,6 +122,6 @@ bool	get_args_from_line(char *line, const char *arg_0, \
 		(*argv)[i + 1] = ft_strdup(line_argv[i]);
 	(*argv)[line_argc + 1] = NULL;
 	*argc = line_argc + 1;
-	safe_free_2d(&line_argv);
+	safe_free_2d_string(&line_argv);
 	return (true);
 }

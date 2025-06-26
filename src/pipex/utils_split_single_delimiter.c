@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 18:52:06 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/04/15 14:12:19 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/25 12:04:44 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ char	**split_single_delimiter(char const *s, const char c)
 		result[str_count] = get_next_str(&str_i, s, c);
 		if (!result[str_count])
 		{
-			safe_free_2d(&result);
+			safe_free_2d_string(&result);
 			return (NULL);
 		}
 		str_count++;

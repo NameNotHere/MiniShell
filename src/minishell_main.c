@@ -77,13 +77,21 @@ int	main(void)
 			add_history(line);
 		if (ft_strncmp(line, "exit", 4) == 0)
 		{
-			safe_free(&line);
+			safe_free_string(&line);
 			break ;
 		}
 		if (ft_strlen(line))
 			test_parsing(line);
-		safe_free(&line);
+		safe_free_string(&line);
 	}
 	rl_clear_history();
 	return (EXIT_SUCCESS);
 }
+
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	if (argc == 2 && (ft_strncmp(argv[1], "-i", 2) == 0))
+// 		return (run_pipex_interactive(argv[0], envp));
+// 	else
+// 		return (run_pipex_once(argc, argv, envp));
+// }
