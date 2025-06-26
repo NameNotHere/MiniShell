@@ -16,12 +16,12 @@ int	unclosed_token(char *str, char token)
 {
 	if (token == 0)
 	{
-		if (!is_closed(str, 0, '\''))
+		if (is_closed(str, 0, '\'') == 1)
 			return (2);
-		if (!is_closed(str, 0, '\"'))
+		if (is_closed(str, 0, '\"') == 1)
 			return (3);
 	}
-	if (!is_closed(str, 0, token))
+	else if (is_closed(str, 0, token) == 1)
 		return (1);
 	return (0);
 }

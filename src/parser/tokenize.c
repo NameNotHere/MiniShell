@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 03:50:08 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/26 13:58:10 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,12 @@ t_token	ft_token(char *str)
 	}
 	else if (unclosed_token(str, 0) > 0)
 	{
-		if (unclosed_token(str, '\'') == 2)
+		if (unclosed_token(str, '\'') == 0)
 			output.ty = UNCLOSED_SINGLE_QUOTE;
-		else if (unclosed_token(str, '\"') == 3)
+		else if (unclosed_token(str, '\"') == 0)
 			output.ty = UNCLOSED_DOUBLE_QUOTE;
+	//	else
+		//	output.ty = TOKEN_WORD;
 	}
 	else
 		output.ty = TOKEN_WORD;
@@ -119,7 +121,8 @@ const char	*get_token_name(t_token_type type)
 	if (type == TOKEN_SINGLE_QUOTE)
 		return ("SINGLE_QUOTE");
 	if (type == TOKEN_DOUBLE_QUOTE)
-		return ("DOUBLE_QUOTE");
+		return ("TOKEN_DOUBLE_QUOTE");
+
 	return (get_token_name_continued(type));
 }
 
@@ -141,6 +144,10 @@ const char	*get_token_name_continued(t_token_type type)
 		return ("OR");
 	if (type == TOKEN_EQUAL)
 		return ("EQUAL");
+	if (type == UNCLOSED_SINGLE_QUOTE)
+		return ("UNCLOSED_SINGLE_QUOTE");
+	if (type == UNCLOSED_DOUBLE_QUOTE)
+		return ("UNCLOSED_DOUBLE_QUOTE");
 	return ("UNKNOWN");
 }
 

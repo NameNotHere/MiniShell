@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 03:59:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/26 13:44:25 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ char	*make_word(char *str, int *i, int *err)
 		parse_word(str, *i, &len);
 	else if (str[*i] && isminioperator(str, *i))
 		len += isminioperator(str, *i);
-	else if (str[*i])  // Fallback for any other character
+	else if (str[*i])
 		len = 1;
 	(*i) += len;
 	if (len == 0)

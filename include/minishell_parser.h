@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 05:13:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/26 13:33:25 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ typedef enum e_token_type
 	TOKEN_AND,
 	TOKEN_OR,
 	TOKEN_EQUAL,
-	TOKEN_LAST,
 	UNCLOSED_DOUBLE_QUOTE,
-	UNCLOSED_SINGLE_QUOTE
+	UNCLOSED_SINGLE_QUOTE,
+	TOKEN_LAST
 }	t_token_type;
 
 typedef struct s_token
