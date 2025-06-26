@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_parser.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 15:00:38 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/26 13:33:25 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ typedef enum e_token_type
 	TOKEN_AND,
 	TOKEN_OR,
 	TOKEN_EQUAL,
+	UNCLOSED_DOUBLE_QUOTE,
+	UNCLOSED_SINGLE_QUOTE,
 	TOKEN_LAST
 }	t_token_type;
 
@@ -178,7 +180,7 @@ void		parse_redir(t_ast_node *ast, t_token *tokens, int *start, int *end);
 
 // parser/lex.c
 
-int			count_tokens(char *str, int i);
+int			count_tokens(char *str);
 
 const char	*get_token_name(t_token_type type);
 
@@ -203,12 +205,16 @@ void		free_tokens(t_token *tokens, int amount);
 int			isminioperator(char *token, int i);
 
 // errors
-void		is_closed(char *str, int i, char quote);
+void		int_closed(char *str, int i, char quote);
 
 void		*ft_malloc(size_t amount, size_t size);
 
 int			callo_x(void **ptr, size_t nmemb, size_t size);
 
 int			mallo_x(void **ptr, size_t nmemb, size_t size);
+
+int			is_closed(char *str, int i, char quote);
+
+int			unclosed_token(char *str, char token);
 
 #endif

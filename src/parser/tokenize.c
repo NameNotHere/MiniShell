@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 15:02:17 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/26 13:58:10 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,21 @@ t_token	ft_token(char *str)
 			if (ft_isdigit(str[i]))
 				output.ty = TOKEN_NUMBER;
 			else
+			{
+				output.ty = TOKEN_WORD;
 				break ;
+			}
 			i++;
 		}
-		if (output.ty != TOKEN_NUMBER)
-			output.ty = TOKEN_WORD;
+	}
+	else if (unclosed_token(str, 0) > 0)
+	{
+		if (unclosed_token(str, '\'') == 0)
+			output.ty = UNCLOSED_SINGLE_QUOTE;
+		else if (unclosed_token(str, '\"') == 0)
+			output.ty = UNCLOSED_DOUBLE_QUOTE;
+	//	else
+		//	output.ty = TOKEN_WORD;
 	}
 	else
 		output.ty = TOKEN_WORD;
@@ -111,7 +121,8 @@ const char	*get_token_name(t_token_type type)
 	if (type == TOKEN_SINGLE_QUOTE)
 		return ("SINGLE_QUOTE");
 	if (type == TOKEN_DOUBLE_QUOTE)
-		return ("DOUBLE_QUOTE");
+		return ("TOKEN_DOUBLE_QUOTE");
+
 	return (get_token_name_continued(type));
 }
 
@@ -133,6 +144,10 @@ const char	*get_token_name_continued(t_token_type type)
 		return ("OR");
 	if (type == TOKEN_EQUAL)
 		return ("EQUAL");
+	if (type == UNCLOSED_SINGLE_QUOTE)
+		return ("UNCLOSED_SINGLE_QUOTE");
+	if (type == UNCLOSED_DOUBLE_QUOTE)
+		return ("UNCLOSED_DOUBLE_QUOTE");
 	return ("UNKNOWN");
 }
 
@@ -161,6 +176,12 @@ int	is_builtin(char *str)
 	return (0);
 }
 
+/*
+TODO: delete this comment
+Added error code for caller to receive.
+call with &err on an int err variable.
+renamed output for res (short for result for norminette lines)
+*/
 t_token	*tokenize(char *input, int *token_count, int *err)
 {
 	t_token			*res;
@@ -170,7 +191,7 @@ t_token	*tokenize(char *input, int *token_count, int *err)
 
 	i = 0;
 	id = 0;
-	*err = callo_x((void **)&res, sizeof(t_token), (count_tokens(input, 0) + 2));
+	*err = callo_x((void **)&res, sizeof(t_token), (count_tokens(input) + 2));
 	if (*err)
 		return (NULL);
 	while (input[i])
@@ -186,4 +207,20 @@ t_token	*tokenize(char *input, int *token_count, int *err)
 	}
 	*token_count = id;
 	return (res);
+}
+
+void	free_tokens(t_token *tokens, int amount)
+{
+	int	i;
+
+	if (!tokens)
+		return ;
+	i = 0;
+	while (amount--)
+	{
+		free(tokens[i].word);
+		i++;
+	}
+	if (tokens)
+		free(tokens);
 }

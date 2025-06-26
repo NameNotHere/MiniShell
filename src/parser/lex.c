@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 15:10:35 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/26 13:44:25 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,18 @@ int	skip_spaces(int *i, char *str)
 	return (y);
 }
 
-int	count_tokens(char *str, int i)
+int	count_tokens(char *str)
 {
 	int		count;
+	int		i;
 	char	quote;
 
+	i = 0;
 	count = 0;
 	while (str[i])
 	{
 		skip_spaces(&i, str);
-		if (str[i] && str[i + 1] && isminioperator(str, i) > 0)
+		if (str[i] && str[i+1] && isminioperator(str, i) > 0)
 		{
 			count++;
 			i += isminioperator(str, i);
@@ -42,7 +44,7 @@ int	count_tokens(char *str, int i)
 		else if (str[i] && (str[i] == '\'' || str[i] == '\"'))
 		{
 			quote = str[i++];
-			while (str[i] && str[i] != quote)
+			while ((str[i] && str[i] != quote) || (is_closed(str, i, quote) == 1 && !ft_isspace(str[i])))
 				i++;
 			if (str[i] == quote)
 				i++;
@@ -50,8 +52,8 @@ int	count_tokens(char *str, int i)
 		}
 		else
 		{
-			while (str[i] && !ft_isspace(str[i]) && /*str[i] != '\'' \
-				&& str[i] != '\"' &&*/ isminioperator(str, i) == 0)
+			while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' \
+				&& str[i] != '\"' && isminioperator(str, i) == 0)
 				i++;
 			count++;
 		}
@@ -88,8 +90,7 @@ void	parse_word(char *str, int i, int *len)
 		(*len)++;
 		i++;
 	}
-	while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' && \
-		str[i] != '\"' && !isminioperator(str, i))
+	while (str[i] && !ft_isspace(str[i]) && !isminioperator(str, i))
 	{
 		if (str[i] == '\\' && str[i + 1])
 		{
@@ -104,6 +105,13 @@ void	parse_word(char *str, int i, int *len)
 	}
 }
 
+/*
+TODO: delete this comment
+NOTE: reduced one line and all char comparisons with ft_strchr, before it was:
+else if (str[*i] && (ft_isalpha(str[*i]) || ft_strchr() str[*i] == '.' || \
+		ft_isdigit(str[*i + len]) || str[*i] == '$' || str[*i] == '~' || \
+		str[*i] == '*' || str[*i] == '-'))
+*/
 char	*make_word(char *str, int *i, int *err)
 {
 	int		len;
@@ -132,3 +140,4 @@ char	*make_word(char *str, int *i, int *err)
 	word[len] = '\0';
 	return (word);
 }
+

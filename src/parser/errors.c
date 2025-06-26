@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   errors.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/25 12:46:52 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/25 15:08:32 by otanovic         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include <minishell.h>
 
@@ -20,8 +9,21 @@ int	is_closed(char *str, int i, char quote)
 			return (0);
 		i++;
 	}
-	printf("unclosed quotes\n");
 	return (1);
+}
+
+int	unclosed_token(char *str, char token)
+{
+	if (token == 0)
+	{
+		if (is_closed(str, 0, '\'') == 1)
+			return (2);
+		if (is_closed(str, 0, '\"') == 1)
+			return (3);
+	}
+	else if (is_closed(str, 0, token) == 1)
+		return (1);
+	return (0);
 }
 
 /*
@@ -98,18 +100,3 @@ int	callo_x(void **ptr, size_t nmemb, size_t size)
 // 	return (mal);
 // }
 
-void	free_tokens(t_token *tokens, int amount)
-{
-	int	i;
-
-	if (!tokens)
-		return ;
-	i = 0;
-	while (amount--)
-	{
-		free(tokens[i].word);
-		i++;
-	}
-	if (tokens)
-		free(tokens);
-}
