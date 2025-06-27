@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/26 13:58:10 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/27 13:46:24 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ t_token	ft_token(char *str)
 			output.ty = UNCLOSED_SINGLE_QUOTE;
 		else if (unclosed_token(str, '\"') == 0)
 			output.ty = UNCLOSED_DOUBLE_QUOTE;
-	//	else
-		//	output.ty = TOKEN_WORD;
+		else
+			output.ty = TOKEN_WORD;
 	}
 	else
 		output.ty = TOKEN_WORD;
