@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 06:09:20 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/27 10:40:08 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,9 @@ int	main(int argc, char **argv, char **envp)
 		if (ft_strlen(sh.line))
 		{
 			test_parsing(sh.ast, sh.line);
-			printf(" *checking command paths*\n\n");
+			printf("\n***checking command paths***\n");
 			lookup_all_cmd_fullpaths(&sh, sh.ast);
-			// execute_ast(&sh, sh.ast);
+			execute_ast_node(&sh, sh.ast, false);
 		}
 		free_ast(sh.ast);
 		safe_free_string(&sh.line);

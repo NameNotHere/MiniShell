@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/27 05:37:28 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/27 10:29:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,10 @@ typedef enum e_redir_ty
 	REDIR_UNKNOWN
 }	t_redir_ty;
 
-# define REDIR_INPUT_SYMBOL "<"
-# define REDIR_OUTPUT_SYMBOL ">"
-# define REDIR_APPEND_SYMBOL ">>"
-# define REDIR_HEREDOC_SYMBOL "<<"
+# define REDIR_INPUT_PRINT "< INPUT"
+# define REDIR_OUTPUT_PRINT "> OUTPUT"
+# define REDIR_APPEND_PRINT ">> APPEND"
+# define REDIR_HEREDOC_PRINT "<< HEREDOC"
 
 /*
 * TYPE (t_redir_type)

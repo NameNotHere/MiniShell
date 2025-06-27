@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 04:29:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/27 09:08:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	build_ast(t_ast *ast, t_token *tokens)
 	scan_tokens(ast, tokens, 0, last_token(tokens));
 	return ;
 }
-
 void	scan_tokens(t_ast *ast, t_token *tokens, int start, int end)
 {
 	int		i;

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 06:12:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/27 10:39:01 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,11 @@ typedef struct s_msh
 int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 
 // exec/process.c
+// TODO: remove debug functions before eval.
 
+void	debug_print_one_redir(t_redir *redir);
 
+void	execute_ast_node(t_msh *sh, t_ast *node, bool from_pipe);
 
 // exec/lookup_cmd_fullpath.c
 

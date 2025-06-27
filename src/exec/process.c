@@ -6,35 +6,72 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 06:25:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/27 10:51:30 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-		MINISHELL EXECUTION CODE COMMENTED OUT BELOW
+		pseudo execution, with printfs
 */
-// void	execute_cmd_node(t_msh *sh, t_cmd *cmd, bool from_pipe)
-// {
-// 	printf("execute cmd");
-// }
+void	execute_cmd_node(t_msh *sh, t_cmd *cmd, t_redir *redir, bool from_pipe)
+{
+	int	i;
 
-// void	execute_ast_node(t_msh *sh, t_ast *node, bool from_pipe)
-// {
-// 	if (!node)
-// 	{
-// 		printf("error: on execute, ast node is NULL");
-// 		return ;
-// 	}
-// 	if (node->nty == NODE_CMD)
-// 		execute_cmd_node(sh, &node->cmd, from_pipe);
-// 	else if (node->nty == NODE_PIPE)
-// 	{
-// 		execute_ast_node(sh, node->pipe.left, true);
-// 		execute_ast_node(sh, node->pipe.right, true);
-// 	}
-// }
+	(void)sh;
+	if (!from_pipe)
+		printf("no pipe found, just one command!\n");
+	if (!redir)
+		printf(" -> no redirections found for this command\n");
+	else
+		debug_print_one_redir(redir);
+	printf("pseudo executing cmd: %s\n", cmd->full_cmd);
+	i = 0;
+	while (cmd->argv[i] != NULL)
+	{
+		printf("  arg[%d] %s\n", i, cmd->argv[i]);
+		i++;
+	}
+}
+
+/*
+This just prints a debug print to check redir received at execution
+TODO: REMOVE THIS FUNCTION BEFORE EVAL
+*/
+void	debug_print_one_redir(t_redir *redir)
+{
+	if (redir && redir->string)
+	{
+		printf("redir type: %s string: |%s|\n",
+			get_redir_symbol(redir->ty),
+			redir->string);
+		debug_print_one_redir(redir->next);
+	}
+}
+
+void	execute_pipe_node(t_msh *sh)
+{
+	(void)sh;
+	printf("setting up a pipe\n");
+}
+
+void	execute_ast_node(t_msh *sh, t_ast *node, bool from_pipe)
+{
+	if (!node)
+	{
+		printf("error: on execute, ast node is NULL");
+		return ;
+	}
+	if (node->nty == NODE_CMD)
+		execute_cmd_node(sh, &node->cmd, node->cmd.redir, from_pipe);
+	else if (node->nty == NODE_PIPE)
+	{
+		execute_pipe_node(sh);
+		execute_ast_node(sh, node->pipe.left, true);
+		execute_ast_node(sh, node->pipe.right, true);
+	}
+}
 /*
 		PIPEX EXECUTION CODE COMMENTED OUT BELOW
 */

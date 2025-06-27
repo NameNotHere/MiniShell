@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:18:05 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 05:55:51 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/27 10:45:52 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	print_ast_cmd(t_ast *node)
 	redir = node->cmd.redir;
 	while (redir)
 	{
-		printf(" [%s%s]", get_redir_symbol(redir->ty),
+		printf(" [%s: %s]", get_redir_symbol(redir->ty),
 			redir->string);
 		redir = redir->next;
 	}
@@ -83,12 +83,12 @@ void	print_ast_cmd(t_ast *node)
 char	*get_redir_symbol(t_redir_ty ty)
 {
 	if (ty == REDIR_INPUT)
-		return (REDIR_INPUT_SYMBOL);
+		return (REDIR_INPUT_PRINT);
 	if (ty == REDIR_OUTPUT)
-		return (REDIR_OUTPUT_SYMBOL);
+		return (REDIR_OUTPUT_PRINT);
 	if (ty == REDIR_APPEND)
-		return (REDIR_APPEND_SYMBOL);
+		return (REDIR_APPEND_PRINT);
 	if (ty == REDIR_HEREDOC)
-		return (REDIR_HEREDOC_SYMBOL);
-	return (REDIR_INPUT_SYMBOL);
+		return (REDIR_HEREDOC_PRINT);
+	return (REDIR_INPUT_PRINT);
 }
