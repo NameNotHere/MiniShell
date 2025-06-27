@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/26 13:33:25 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/27 05:37:28 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <stdbool.h>
 # include "libft.h"
 
-typedef enum e_token_type
+typedef enum e_token_ty
 {
 	TOKEN_WORD,
 	TOKEN_INBUILT,
@@ -42,12 +42,12 @@ typedef enum e_token_type
 	UNCLOSED_DOUBLE_QUOTE,
 	UNCLOSED_SINGLE_QUOTE,
 	TOKEN_LAST
-}	t_token_type;
+}	t_token_ty;
 
 typedef struct s_token
 {
-	t_token_type	ty;
-	char			*word;
+	t_token_ty	ty;
+	char		*word;
 }	t_token;
 
 /*
@@ -56,14 +56,14 @@ AST DATA STRUCTURE:
 
 /* shell node type, not sure im needing this enum
 	removed redir nodes, they enter into cmd only*/
-typedef enum e_node_type
+typedef enum e_node_ty
 {
 	NODE_CMD,
 	NODE_PIPE,
 	NODE_UNKNOWN,
-}	t_node_type;
+}	t_node_ty;
 
-typedef enum e_redir_type
+typedef enum e_redir_ty
 {
 	REDIR_INPUT,
 	REDIR_HEREDOC,
@@ -81,17 +81,17 @@ typedef enum e_redir_type
 * TYPE (t_redir_type)
 * STRING → (char *)string = file to be opened or delimiter if heredoc
 */
-typedef struct s_redir_node
+typedef struct s_redir
 {
-	t_redir_ty		type;
-	char				*string;
-	struct s_redir_node	*next;
-}	t_redir_node;
+	t_redir_ty		ty;
+	char			*string;
+	struct s_redir	*next;
+}	t_redir;
 
 
 /*
 * 	(REMOVED PATH)
-* (char *) cmd (cmd name or cmd file name with or without path: absolute, 
+* (char *) cmd (cmd name or cmd file name with or without path: absolute,
 	relative, etc
 		TODO: check if I can get rid of cmd, use argv[0] instead.
 * (bool) built-in → defaults to false
@@ -100,91 +100,89 @@ typedef struct s_redir_node
 		→ DEFAULTS to NULL
 * REDIR → DEFAULTS TO STDIN & STDOUT -> (basic linked list)
 */
-typedef struct s_cmd_node
+typedef struct s_cmd
 {
-	char				*cmd;
-	char				**argv;
-	bool				built_in;
-	t_redir_node		*redir;
-}	t_cmd_node;
+	char		*full_cmd;
+	char		**argv;
+	bool		built_in;
+	bool		not_found;
+	t_redir		*redir;
+}	t_cmd;
 
-typedef struct s_ast_node	t_shell_node;
+struct	s_ast;
 
-typedef struct s_pipe_node
+typedef struct s_pipe
 {
-	t_shell_node	*left;
-	t_shell_node	*right;
-}	t_pipe_node;
+	struct s_ast	*left;
+	struct s_ast	*right;
+}	t_pipe;
 
 /*
 AST node for shell commands & pipes,
-	- includes a data-named-union of two subtypes: cmd or pipe
+	- includes anonymous union of two subtypes: cmd and pipe
 */
-typedef struct s_ast_node
+typedef struct s_ast
 {
-	t_node_type	nty;
+	t_node_ty	nty;
 	union
 	{
-		t_cmd_node			cmd;
-		t_pipe_node			pipe;
+		t_cmd	cmd;
+		t_pipe	pipe;
 	};
-}	t_ast_node;
+}	t_ast;
 
 
 // parser/ast.c
-void		build_ast(t_ast_node *ast, t_token *tokens);
+void		build_ast(t_ast *ast, t_token *tokens);
 
-void		scan_tokens(t_ast_node *ast, t_token *tokens, int start, int end);
+void		scan_tokens(t_ast *ast, t_token *tokens, int start, int end);
 
-void		scan_pipe(t_ast_node *ast, t_token *tokens, int *i);
+void		scan_pipe(t_ast *ast, t_token *tokens, int *i);
 
-void		parse_pipe(t_ast_node *ast, t_token *tokens, int start, int end);
-
-// t_ast_node	*parse_command_tokens(t_token *tokens, int start, int end);
-
+void		parse_pipe(t_ast *ast, t_token *tokens, int start, int end);
 
 // parser/ast_cmd.c
 
-void		parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end);
+void		parse_cmd(t_ast *ast, t_token *tokens, int start, int end);
 
 char		**token_words_to_argv(t_token *tokens, int start, int end);
 
 // parser/ast_helper.c
 
-void		free_ast(t_ast_node *node);
+void		free_ast(t_ast *node);
 
-void		free_ast_cmd(t_ast_node *node);
+void		free_ast_cmd(t_ast *node);
 
 bool		has_pipe(t_token *tokens, int start, int end);
 
 int			last_token(t_token *tokens);
 
-t_ast_node	*make_ast_node(t_node_type type);
+t_ast		*make_ast_node(t_node_ty ty);
 
 // parser/ast_print.c
 char		*get_redir_symbol(t_redir_ty ty);
 
-void		print_ast(t_ast_node *root);
+void		print_ast(t_ast *root);
 
-void		print_ast_cmd(t_ast_node *node);
+void		print_ast_cmd(t_ast *node);
 
-void		print_ast_node(t_ast_node *node, int depth);
+void		print_ast_node(t_ast *node, int depth);
 
 // parser/ast_redir.c
 
-void		add_redir(t_ast_node *ast, t_token_type token_type, char *word);
+void		add_redir(t_ast *ast, t_token_ty token_type, char *word);
 
-t_redir_ty	get_redir_type(t_token_type ty);
+t_redir_ty	get_redir_type(t_token_ty ty);
 
-void		parse_redir(t_ast_node *ast, t_token *tokens, int *start, int *end);
+void		parse_redir(t_ast *ast, t_token *tokens, int *start, int *end);
 
 // parser/lex.c
 
 int			count_tokens(char *str);
 
-const char	*get_token_name(t_token_type type);
+const char	*get_token_name(t_token_ty type);
 
-const char	*get_token_name_continued(t_token_type type);
+const char	*get_token_name_continued(t_token_ty type);
 
 char		*make_word(char *str, int *i, int *err);
 
@@ -192,7 +190,7 @@ int			skip_spaces(int *i, char *str);
 
 // parser/tokenize.c
 
-const char	*get_token_name(t_token_type type);
+const char	*get_token_name(t_token_ty type);
 
 int			is_builtin(char *str);
 

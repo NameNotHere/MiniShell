@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:18:05 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/25 05:13:02 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/27 05:55:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@
 TODO: REMOVE THIS WHEN FINISHED DEBUGGING, BEFORE SUBMITTING!
 MAYBE ADD PRINT AST FUNCTIONS TO A SEPARATE TEST SUITE
 */
-void	print_ast(t_ast_node *root)
+void	print_ast(t_ast *root)
 {
 	if (!root)
 	{
-		printf("AST: (empty)\n");
+		printf("\n\nAST: (empty)\n");
 		return ;
 	}
-	printf("AST:\n");
+	printf("\n\nAST:\n");
 	print_ast_node(root, 0);
 }
 
@@ -35,7 +35,7 @@ NOTE: Uses indentation (updating depth var) to represent tree structure
 TODO: REMOVE THIS WHEN FINISHED DEBUGGING, BEFORE SUBMITTING!
 MAYBE ADD PRINT AST FUNCTIONS TO A SEPARATE TEST SUITE
 */
-void	print_ast_node(t_ast_node *node, int depth)
+void	print_ast_node(t_ast *node, int depth)
 {
 	int	i;
 
@@ -54,10 +54,10 @@ void	print_ast_node(t_ast_node *node, int depth)
 	}
 }
 
-void	print_ast_cmd(t_ast_node *node)
+void	print_ast_cmd(t_ast *node)
 {
 	int				i;
-	t_redir_node	*redir;
+	t_redir	*redir;
 
 	printf("CMD: ");
 	if (node->cmd.argv && node->cmd.argv[0])
@@ -73,7 +73,7 @@ void	print_ast_cmd(t_ast_node *node)
 	redir = node->cmd.redir;
 	while (redir)
 	{
-		printf(" [%s%s]", get_redir_symbol(redir->type),
+		printf(" [%s%s]", get_redir_symbol(redir->ty),
 			redir->string);
 		redir = redir->next;
 	}

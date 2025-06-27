@@ -6,29 +6,29 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:04:16 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/25 04:55:21 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/27 02:54:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 #include <errno.h>
 
-t_ast_node	*make_ast_node(t_node_type type)
+t_ast	*make_ast_node(t_node_ty type)
 {
-	t_ast_node	*new_node;
+	t_ast	*new_node;
 
-	new_node = ft_calloc(1, sizeof(t_ast_node));
+	new_node = ft_calloc(1, sizeof(t_ast));
 	if (!new_node)
 		return (NULL);
 	new_node->nty = type;
 	return (new_node);
 }
 
-void	free_ast_cmd(t_ast_node *node)
+void	free_ast_cmd(t_ast *node)
 {
 	int				i;
-	t_redir_node	*redir;
-	t_redir_node	*next;
+	t_redir	*redir;
+	t_redir	*next;
 
 	if (node->cmd.argv)
 	{
@@ -51,7 +51,7 @@ void	free_ast_cmd(t_ast_node *node)
 TODO: REMOVE THIS WHEN FINISHED DEBUGGING, BEFORE SUBMITTING!
 MAYBE ADD PRINT AST FUNCTIONS TO A SEPARATE TEST SUITE
 */
-void	free_ast(t_ast_node *node)
+void	free_ast(t_ast *node)
 {
 	if (!node)
 		return ;
