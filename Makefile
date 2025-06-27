@@ -33,8 +33,9 @@ all:
 
 # ***** MINISHELL SRCS *****
 SRCS = minishell_main.c \
-	exec/utils_free.c \
-	exec/utils_readline.c \
+	exec/lookup_cmd_fullpath.c \
+	exec/process.c \
+	exec/utils/utils_path.c \
 	parser/ast.c \
 	parser/ast_cmd.c \
 	parser/ast_helper.c \
@@ -44,6 +45,8 @@ SRCS = minishell_main.c \
 	parser/lex.c \
 	parser/tokenize.c \
 	parser/utils/isminioperator.c\
+	utils/utils_free.c \
+	utils/utils_readline.c \
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
