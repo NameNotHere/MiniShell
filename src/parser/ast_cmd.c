@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/25 12:58:55 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/27 04:31:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 	// 4. remove quotes if needed & expand vars,
 	// 5. cleanup
 */
-void	parse_cmd(t_ast_node *ast, t_token *tokens, int start, int end)
+void	parse_cmd(t_ast *ast, t_token *tokens, int start, int end)
 {
 	printf("cmd node->ADD\n" \
 		"	start cmd tk: %d, end cmd tk: %d\n",

@@ -21,7 +21,7 @@ int	unclosed_token(char *str, char token)
 		if (is_closed(str, 0, '\"') == 1)
 			return (3);
 	}
-	else if (is_closed(str, 0, token) == 1)
+	else if (token && is_closed(str, 0, token) == 1)
 		return (1);
 	return (0);
 }

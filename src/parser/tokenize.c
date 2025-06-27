@@ -95,12 +95,10 @@ t_token	ft_token(char *str)
 		else
 			output.ty = TOKEN_WORD;
 	}
-	else
-		output.ty = TOKEN_WORD;
 	return (output);
 }
 
-const char	*get_token_name(t_token_type type)
+const char	*get_token_name(t_token_ty type)
 {
 	if (type < 0 || type > TOKEN_LAST)
 		return ("UNKNOWN");
@@ -126,7 +124,7 @@ const char	*get_token_name(t_token_type type)
 	return (get_token_name_continued(type));
 }
 
-const char	*get_token_name_continued(t_token_type type)
+const char	*get_token_name_continued(t_token_ty type)
 {
 	if (type == TOKEN_VARIABLE)
 		return ("VARIABLE");
