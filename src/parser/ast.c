@@ -6,16 +6,14 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 09:08:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/27 18:35:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parser.h"
+#include "minishell.h"
 
 /*
-creates the ast node pointer then starts scan
-keeps scanning while there are tokens in line
---> using iterative instead of recursive approach - safer? probably
+TODO: change return value for a custom one? (will count as exit code)
 */
 void	build_ast(t_ast *ast, t_token *tokens)
 {

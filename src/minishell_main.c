@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 10:40:08 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/27 15:53:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	test_build_ast(t_ast *ast, t_token *tokens)
 TODO: REMOVE TEST BEFORE EVALUATION
 This test runs every time a line is sent to readline.
 */
-void	test_parsing(t_ast *ast, char *string)
+void	parse(t_ast *ast, char *string)
 {
 	int			i;
 	int			token_count;
@@ -91,7 +91,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (ft_strlen(sh.line))
 		{
-			test_parsing(sh.ast, sh.line);
+			parse(sh.ast, sh.line);
 			printf("\n***checking command paths***\n");
 			lookup_all_cmd_fullpaths(&sh, sh.ast);
 			execute_ast_node(&sh, sh.ast, false);
