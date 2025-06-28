@@ -107,10 +107,7 @@ void	parse_word(char *str, int i, int *len)
 
 /*
 TODO: delete this comment
-NOTE: reduced one line and all char comparisons with ft_strchr, before it was:
-else if (str[*i] && (ft_isalpha(str[*i]) || ft_strchr() str[*i] == '.' || \
-		ft_isdigit(str[*i + len]) || str[*i] == '$' || str[*i] == '~' || \
-		str[*i] == '*' || str[*i] == '-'))
+NOTE:
 */
 char	*make_word(char *str, int *i, int *err)
 {
@@ -121,7 +118,7 @@ char	*make_word(char *str, int *i, int *err)
 	len = 0;
 	if (str[*i] && (str[*i] == '\'' || str[*i] == '\"'))
 		make_string(str, &len, *i);
-	else if (str[*i] && (ft_isalpha(str[*i]) || ft_strchr(".$~*-", str[*i])
+	else if (str[*i] && (ft_isalpha(str[*i]) || ft_strchr("/.$~*-", str[*i])
 			|| ft_isdigit(str[*i + len])))
 		parse_word(str, *i, &len);
 	else if (str[*i] && isminioperator(str, *i))
@@ -138,6 +135,7 @@ char	*make_word(char *str, int *i, int *err)
 		return (NULL);
 	ft_memcpy(word, str + (*i - len), len);
 	word[len] = '\0';
+    printf("make_word: extracted word '%s' at position %d\n", word, *i - len);
 	return (word);
 }
 

@@ -18,11 +18,7 @@ int	is_file_path(char *str, int *y)
 
 	i = *y;
 	if (str[0] == '.' || str[0] == '/' || str[0] == '~')
-	{
-		while (str[(*y)] != ' ')
-			(*y)++;
 		return (1);
-	}
 	else
 	{
 		while (str[i] && str[i] != ' ' && str[i] != '\n')
@@ -53,7 +49,7 @@ t_token	ft_token(char *str)
 	else if (ft_strncmp(str, ">", 1) == 0)
 		output.ty = TOKEN_OUTPUT;
 	else if (ft_strncmp(str, "\"", 1) == 0)
-		output.ty = TOKEN_DOUBLE_QUOTE;
+		output.ty = TOKEN_DOUBLE_QUOTE; // check if there is a single quote inside this
 	else if (ft_strncmp(str, "\'", 1) == 0)
 		output.ty = TOKEN_SINGLE_QUOTE;
 	else if (str[0] == '-')
