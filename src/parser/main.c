@@ -14,8 +14,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// make a function to check the words and tokens
-// double array
 int	check_token(char *mini_string, char **mini_token)
 {
 	int token_count;

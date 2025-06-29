@@ -107,6 +107,7 @@ void	parse_word(char *str, int i, int *len)
 
 /*
 TODO: delete this comment
+	- somehow remove the starting quote but still tokenise we can remove the ending on by changing len in string function
 NOTE:
 */
 char	*make_word(char *str, int *i, int *err)

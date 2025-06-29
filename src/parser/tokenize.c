@@ -33,24 +33,64 @@ int	is_file_path(char *str, int *y)
 	return (0);
 }
 
-t_token	ft_token(char *str)
+int	search_for_singlequote(char *s)
+{
+	while (*s)
+	{
+		if (*s == '\'')
+		{
+			if (unclosed_token(s, 0) == 2) // we need to set 0 to a value
+			{
+			if (is_closed(s, 0, '\''))
+					return (1); // is closzd
+			}
+			else if (unclosed_token(s, 0) == 0)
+				return (2); // not closed
+		}
+		s++;
+	}
+	return (0);
+}
+
+void	tokenise_quotes(char *str, t_token *output)
+{
+	if (ft_strncmp(str, "\"", 1) == 0)
+	{
+		output->ty = TOKEN_SINGLE_QUOTE;
+		str++;
+		if (search_for_singlequote(str) == 0)
+			output->ty = UNCLOSED_DOUBLE_QUOTE;
+		else if (search_for_singlequote(str) == 2)
+			output->ty = TOKEN_DOUBLE_QUOTE; // doesnt work
+	}
+	else
+		output->ty = TOKEN_SINGLE_QUOTE;
+}
+
+void	tokenise_redirs(char *str, t_token *output)
+{
+	if (ft_strncmp(str, "<<", 2) == 0)
+		output->ty = TOKEN_HEREDOC;
+	else if (ft_strncmp(str, ">>", 2) == 0)
+		output->ty = TOKEN_APPEND;
+	else if (ft_strncmp(str, "<", 1) == 0)
+		output->ty = TOKEN_INPUT;
+	else if (ft_strncmp(str, ">", 1) == 0)
+		output->ty = TOKEN_OUTPUT;
+	else if (str[0] == '|')
+		output->ty = TOKEN_PIPE;
+}
+
+// not handling " in '
+t_token	ft_token(char *str) // seg faults somehow
 {
 	t_token	output;
 	int		i;
 
 	i = 0;
 	output.word = str;
-	if (ft_strncmp(str, "<<", 2) == 0)
-		output.ty = TOKEN_HEREDOC;
-	else if (ft_strncmp(str, ">>", 2) == 0)
-		output.ty = TOKEN_APPEND;
-	else if (ft_strncmp(str, "<", 1) == 0)
-		output.ty = TOKEN_INPUT;
-	else if (ft_strncmp(str, ">", 1) == 0)
-		output.ty = TOKEN_OUTPUT;
-	else if (ft_strncmp(str, "\"", 1) == 0)
-		output.ty = TOKEN_DOUBLE_QUOTE; // check if there is a single quote inside this
-	else if (ft_strncmp(str, "\'", 1) == 0)
+	output.ty = TOKEN_WORD;
+	if (ft_strncmp(str, "\'", 1) == 0)
 		output.ty = TOKEN_SINGLE_QUOTE;
 	else if (str[0] == '-')
 		output.ty = TOKEN_DASH_PARAM;
@@ -60,8 +100,6 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_AND;
 	else if (ft_strncmp(str, "||", 2) == 0)
 		output.ty = TOKEN_OR;
-	else if (str[0] == '|')
-		output.ty = TOKEN_PIPE;
 	else if (str[0] == '=')
 		output.ty = TOKEN_EQUAL;
 	else if (is_file_path(str, &i))
@@ -74,23 +112,11 @@ t_token	ft_token(char *str)
 		{
 			if (ft_isdigit(str[i]))
 				output.ty = TOKEN_NUMBER;
-			else
-			{
-				output.ty = TOKEN_WORD;
-				break ;
-			}
 			i++;
 		}
 	}
-	else if (unclosed_token(str, 0) > 0)
-	{
-		if (unclosed_token(str, '\'') == 0)
-			output.ty = UNCLOSED_SINGLE_QUOTE;
-		else if (unclosed_token(str, '\"') == 0)
-			output.ty = UNCLOSED_DOUBLE_QUOTE;
-		else
-			output.ty = TOKEN_WORD;
-	}
+	tokenise_redirs(str, &output);
+	tokenise_quotes(str, &output);
 	return (output);
 }
 
