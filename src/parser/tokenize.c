@@ -33,35 +33,37 @@ int	is_file_path(char *str, int *y)
 	return (0);
 }
 
-int	search_for_singlequote(char *s)
+int	search_for_singlequote(char *str)
 {
+	char *s;
+
+	s = str;
+	s++;
 	while (*s)
 	{
 		if (*s == '\'')
 		{
-			if (unclosed_token(s, 0) == 2) // we need to set 0 to a value
-			{
-			if (is_closed(s, 0, '\''))
-					return (1); // is closzd
-			}
-			else if (unclosed_token(s, 0) == 0)
-				return (2); // not closed
+			if (is_closed(s, 1, '\'') == 0)
+				return (1);
 		}
 		s++;
 	}
 	return (0);
 }
 
+// "zz'zz" is not properly tokenisisng
 void	tokenise_quotes(char *str, t_token *output)
 {
 	if (ft_strncmp(str, "\"", 1) == 0)
 	{
 		output->ty = TOKEN_SINGLE_QUOTE;
-		str++;
-		if (search_for_singlequote(str) == 0)
-			output->ty = UNCLOSED_DOUBLE_QUOTE;
-		else if (search_for_singlequote(str) == 2)
-			output->ty = TOKEN_DOUBLE_QUOTE; // doesnt work
+		if (search_for_singlequote(str) == 1)
+		{
+			if (search_for_singlequote(str) == 0)
+				output->ty = UNCLOSED_DOUBLE_QUOTE;
+			else 
+				output->ty = TOKEN_DOUBLE_QUOTE;
+		}
 	}
 	else
 		output->ty = TOKEN_SINGLE_QUOTE;
@@ -81,7 +83,6 @@ void	tokenise_redirs(char *str, t_token *output)
 		output->ty = TOKEN_PIPE;
 }
 
-// not handling " in '
 t_token	ft_token(char *str) // seg faults somehow
 {
 	t_token	output;
