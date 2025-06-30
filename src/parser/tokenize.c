@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/30 13:40:54 by otanovic         ###   ########.fr       */                                                          */
+/*   Updated: 2025/06/30 16:39:08 by tda-roch         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parser.h"
+# include "minishell.h"
 
 int	is_file_path(char *str, int *y)
 {
