@@ -6,8 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/30 13:40:54 by otanovic         ###   ########.fr       */
-/*                                                                            */
+/*   Updated: 2025/06/30 13:40:54 by otanovic         ###   ########.fr       */                                                          */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
@@ -119,7 +118,7 @@ t_token	ft_token(char *str) // seg faults somehow
 	return (output);
 }
 
-const char	*get_token_name(t_token_type type)
+const char	*get_token_name(t_token_ty type)
 {
 	if (type < 0 || type > TOKEN_LAST)
 		return ("UNKNOWN");
@@ -144,7 +143,7 @@ const char	*get_token_name(t_token_type type)
 	return (get_token_name_continued(type));
 }
 
-const char	*get_token_name_continued(t_token_type type)
+const char	*get_token_name_continued(t_token_ty type)
 {
 	if (type == TOKEN_VARIABLE)
 		return ("VARIABLE");
