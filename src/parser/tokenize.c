@@ -6,8 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/27 13:46:24 by otanovic         ###   ########.fr       */
-/*                                                                            */
+/*   Updated: 2025/06/30 13:40:54 by otanovic         ###   ########.fr       */                                                          */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
@@ -18,11 +17,7 @@ int	is_file_path(char *str, int *y)
 
 	i = *y;
 	if (str[0] == '.' || str[0] == '/' || str[0] == '~')
-	{
-		while (str[(*y)] != ' ')
-			(*y)++;
 		return (1);
-	}
 	else
 	{
 		while (str[i] && str[i] != ' ' && str[i] != '\n')
@@ -37,24 +32,63 @@ int	is_file_path(char *str, int *y)
 	return (0);
 }
 
-t_token	ft_token(char *str)
+int	search_for_singlequote(char *str)
+{
+	char *s;
+
+	s = str;
+	s++;
+	while (*s)
+	{
+		if (*s == '\'')
+		{
+			if (is_closed(s, 1, '\'') == 0)
+				return (1);
+		}
+		s++;
+	}
+	return (0);
+}
+
+// "zz'zz" is not properly tokenisisng
+void	tokenise_quotes(char *str, t_token *output)
+{
+	if (ft_strncmp(str, "\"", 1) == 0)
+	{
+		output->ty = TOKEN_SINGLE_QUOTE;
+		if (search_for_singlequote(str) == 1)
+		{
+			if (search_for_singlequote(str) == 0)
+				output->ty = UNCLOSED_DOUBLE_QUOTE;
+			else
+				output->ty = TOKEN_DOUBLE_QUOTE;
+		}
+	}
+}
+
+void	tokenise_redirs(char *str, t_token *output)
+{
+	if (ft_strncmp(str, "<<", 2) == 0)
+		output->ty = TOKEN_HEREDOC;
+	else if (ft_strncmp(str, ">>", 2) == 0)
+		output->ty = TOKEN_APPEND;
+	else if (ft_strncmp(str, "<", 1) == 0)
+		output->ty = TOKEN_INPUT;
+	else if (ft_strncmp(str, ">", 1) == 0)
+		output->ty = TOKEN_OUTPUT;
+	else if (str[0] == '|')
+		output->ty = TOKEN_PIPE;
+}
+
+t_token	ft_token(char *str) // seg faults somehow
 {
 	t_token	output;
 	int		i;
 
 	i = 0;
 	output.word = str;
-	if (ft_strncmp(str, "<<", 2) == 0)
-		output.ty = TOKEN_HEREDOC;
-	else if (ft_strncmp(str, ">>", 2) == 0)
-		output.ty = TOKEN_APPEND;
-	else if (ft_strncmp(str, "<", 1) == 0)
-		output.ty = TOKEN_INPUT;
-	else if (ft_strncmp(str, ">", 1) == 0)
-		output.ty = TOKEN_OUTPUT;
-	else if (ft_strncmp(str, "\"", 1) == 0)
-		output.ty = TOKEN_DOUBLE_QUOTE;
-	else if (ft_strncmp(str, "\'", 1) == 0)
+	output.ty = TOKEN_WORD;
+	if (ft_strncmp(str, "\'", 1) == 0)
 		output.ty = TOKEN_SINGLE_QUOTE;
 	else if (str[0] == '-')
 		output.ty = TOKEN_DASH_PARAM;
@@ -64,8 +98,6 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_AND;
 	else if (ft_strncmp(str, "||", 2) == 0)
 		output.ty = TOKEN_OR;
-	else if (str[0] == '|')
-		output.ty = TOKEN_PIPE;
 	else if (str[0] == '=')
 		output.ty = TOKEN_EQUAL;
 	else if (is_file_path(str, &i))
@@ -78,23 +110,11 @@ t_token	ft_token(char *str)
 		{
 			if (ft_isdigit(str[i]))
 				output.ty = TOKEN_NUMBER;
-			else
-			{
-				output.ty = TOKEN_WORD;
-				break ;
-			}
 			i++;
 		}
 	}
-	else if (unclosed_token(str, 0) > 0)
-	{
-		if (unclosed_token(str, '\'') == 0)
-			output.ty = UNCLOSED_SINGLE_QUOTE;
-		else if (unclosed_token(str, '\"') == 0)
-			output.ty = UNCLOSED_DOUBLE_QUOTE;
-		else
-			output.ty = TOKEN_WORD;
-	}
+	tokenise_redirs(str, &output);
+	tokenise_quotes(str, &output);
 	return (output);
 }
 
@@ -120,7 +140,6 @@ const char	*get_token_name(t_token_ty type)
 		return ("SINGLE_QUOTE");
 	if (type == TOKEN_DOUBLE_QUOTE)
 		return ("TOKEN_DOUBLE_QUOTE");
-
 	return (get_token_name_continued(type));
 }
 
