@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/26 13:58:10 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/30 13:39:54 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,12 @@ void	tokenise_quotes(char *str, t_token *output)
 		{
 			if (search_for_singlequote(str) == 0)
 				output->ty = UNCLOSED_DOUBLE_QUOTE;
-			else 
+			else
 				output->ty = TOKEN_DOUBLE_QUOTE;
 		}
 	}
-	else
-		output->ty = TOKEN_SINGLE_QUOTE;
+	// else
+	// 	output->ty = TOKEN_SINGLE_QUOTE;
 }
 
 void	tokenise_redirs(char *str, t_token *output)

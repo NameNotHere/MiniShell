@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/26 13:44:25 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/30 13:36:20 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	skip_spaces(int *i, char *str)
 	return (y);
 }
 
-int	count_tokens(char *str)
+int	count_tokens(char *str) // does not matter and is broken
 {
 	int		count;
 	int		i;
@@ -36,7 +36,7 @@ int	count_tokens(char *str)
 	while (str[i])
 	{
 		skip_spaces(&i, str);
-		if (str[i] && str[i+1] && isminioperator(str, i) > 0)
+		if (str[i] && str[i + 1] && isminioperator(str, i) > 0)
 		{
 			count++;
 			i += isminioperator(str, i);
@@ -44,7 +44,8 @@ int	count_tokens(char *str)
 		else if (str[i] && (str[i] == '\'' || str[i] == '\"'))
 		{
 			quote = str[i++];
-			while ((str[i] && str[i] != quote) || (is_closed(str, i, quote) == 1 && !ft_isspace(str[i])))
+			while ((str[i] && str[i] != quote) || \
+					(is_closed(str, i, quote) == 1 && !ft_isspace(str[i])))
 				i++;
 			if (str[i] == quote)
 				i++;
@@ -90,7 +91,8 @@ void	parse_word(char *str, int i, int *len)
 		(*len)++;
 		i++;
 	}
-	while (str[i] && !ft_isspace(str[i]) && !isminioperator(str, i))
+	while (str[i] && !ft_isspace(str[i]) && !isminioperator(str, i) \
+			&& str[i] != '\'' && str[i] != '\"')
 	{
 		if (str[i] == '\\' && str[i + 1])
 		{
