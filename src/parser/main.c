@@ -6,7 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 14:44:57 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/30 15:32:51 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/06/27 15:32:54 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,7 @@ void test_tokens()
 
 int	main(void)
 {
+	// write a function to test token fully all cases 
 	compare_mini_n_bash();
 	test_tokens();
 	return (0);

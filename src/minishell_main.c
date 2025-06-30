@@ -6,63 +6,13 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 10:40:08 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/30 16:19:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <readline/readline.h>
 #include <readline/history.h>
-
-
-
-/*
-TODO: REMOVE TEST BEFORE EVALUATION
-*/
-void	test_build_ast(t_ast *ast, t_token *tokens)
-{
-	// t_ast	*ast;
-
-
-	// ast = make_ast_node(NODE_UNKNOWN);
-	if (!ast)
-		return ;
-	build_ast(ast, tokens);
-	print_ast(ast);
-	// free_ast(ast);
-	return ;
-}
-
-/*
-TODO: REMOVE TEST BEFORE EVALUATION
-This test runs every time a line is sent to readline.
-*/
-void	test_parsing(t_ast *ast, char *string)
-{
-	int			i;
-	int			token_count;
-	t_token		*tokens;
-	int			err;
-
-	printf("Input string: %s\n", string);
-	printf("Expected token count: %d\n", count_tokens(string));
-	tokens = tokenize(string, &token_count, &err);
-	if (!tokens)
-	{
-		printf("tokenizer failed with error #%d\n", err);
-		return ;
-	}
-	printf("Actual token count: %d\n", token_count);
-	i = -1;
-	while (token_count > ++i)
-		printf("%2d %12s  %s \n",
-			tokens[i].ty,
-			get_token_name(tokens[i].ty),
-			tokens[i].word);
-	test_build_ast(ast, tokens);
-	free_tokens(tokens, token_count);
-	return ;
-}
 
 /*
 TODO: check if regular readline will work fine.
@@ -75,49 +25,85 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_msh	sh;
 
-	if (initialize_minishell(&sh, argc, argv, envp))
-		return (EXIT_FAILURE);
-	while (1)
+	(void)argc;
+	(void)argv;
+	if (envp[0] == NULL)
 	{
-		sh.line = readline(MINISHELL_PROMPT);
-		if (!sh.line)
-			break ;
-		if (*sh.line)
-			add_history(sh.line);
-		if (ft_strncmp(sh.line, "exit", 4) == 0)
-		{
-			safe_free_string(&sh.line);
-			break ;
-		}
-		if (ft_strlen(sh.line))
-		{
-			test_parsing(sh.ast, sh.line);
-			printf("\n***checking command paths***\n");
-			lookup_all_cmd_fullpaths(&sh, sh.ast);
-			execute_ast_node(&sh, sh.ast, false);
-		}
-		free_ast(sh.ast);
-		safe_free_string(&sh.line);
+		printf("empty environment variable\n");
+		return (EXIT_FAILURE);
 	}
-	rl_clear_history();
+	if (initialize_minishell(&sh, envp) != EXIT_SUCCESS)
+	{
+		printf("TODO: handle shell initialize error here");
+		return (sh.exit_code);
+	}
+
+	if (minishell_mainloop(&sh) != EXIT_SUCCESS)
+		return (sh.exit_code);
 	return (EXIT_SUCCESS);
 }
 
 /*
-TODO: handle allocation error for path dirs
+TODO: handle ENOMEM (Out of memory) error for path dirs
 */
-int	initialize_minishell(t_msh *sh, int argc, char **argv, char **envp)
+int	initialize_minishell(t_msh *sh, char **envp)
 {
 	ft_bzero(sh, sizeof(*sh));
-	sh->argc = argc;
-	sh->argv = argv;
-	sh->envp = envp;
+	sh->envp = copy_string_array(envp);
 	sh->ast = make_ast_node(NODE_UNKNOWN);
-	sh->path_dirs = ft_split(get_path_from_env(envp), ':');
-	if (!sh->path_dirs)
+	sh->path_dirs = ft_split(get_path_from_env(sh->envp), ':');
+	if (!sh->path_dirs || !sh->envp)
 	{
-		printf("memory allocation failed for path diretories");
-		return (EXIT_FAILURE);
+		printf("TODO: Out of memory error here");
+		return (ENOMEM);
 	}
 	return (EXIT_SUCCESS);
+}
+
+int	expand_line(t_msh *sh)
+{
+	if (ft_strlen(sh->line) == 0)
+		return (EXIT_FAILURE);
+	printf("line before expanding is:%s\n", sh->line);
+	return (EXIT_SUCCESS);
+}
+
+int	minishell_mainloop(t_msh *sh)
+{
+	while (1)
+	{
+		sh->line = readline(MINISHELL_PROMPT);
+		if (!sh->line)
+			continue ;
+		if (*sh->line)
+			add_history(sh->line);
+		if (expand_line(sh) != EXIT_SUCCESS)
+		{
+			printf("TODO: Error expanding line here");
+			continue ;
+		}
+		if (ft_strncmp(sh->line, "exit", 4) == 0)
+		{
+			// ADD CHECK FOR PIPE, with pipe it does not exit!
+			sh->exit_code = EXIT_SUCCESS;
+			break ;
+		}
+		if (parse_line_and_execute_ast(sh) != EXIT_SUCCESS)
+		{
+			printf("TODO: handle parse error here\n");
+			continue ;
+		}
+		free_ast(sh->ast);
+		safe_free_string(&sh->line);
+	}
+	free_everything(sh);
+	return (sh->exit_code);
+}
+
+void	free_everything(t_msh *sh)
+{
+	free_ast(sh->ast);
+	safe_free_string(&sh->line);
+	safe_free_2d_string(&sh->argv);
+	rl_clear_history();
 }

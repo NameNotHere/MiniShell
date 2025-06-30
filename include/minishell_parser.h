@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/27 10:29:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/29 23:49:00 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,19 +131,54 @@ typedef struct s_ast
 	};
 }	t_ast;
 
+/*
+TODO: remove comments
+Removed from the pipex struct:
+typedef struct s_pipex
+{
+	int		argc; -> REMOVED -> not needed unless we have options or scripts
+	char	**argv; -> REMOVED -> not needed unless we have options or scripts
+	char	**envp;
+	char	***cmd_arg; -> REMOVED -> ast cmd nodes have them
+	bool	*cmd_not_found; -> REMOVED -> ast cmd nodes SHOULD have them
+	char	**cmd_path; -> REMOVED -> ast cmd nodes should have them
+	char	**path_dirs;
+	size_t	cmd_offset; -> REMOVED (NOT NEEDED) -> this is for pipex logic
+	size_t	cmd_total; -> REMOVED (NOT NEEDED) -> this is for pipex logic
+	int		fdin; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
+	int		fdout; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
+	int		outfile_flags; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
+	bool	hdoc; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
+	char	*infile; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
+	char	*outfile; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
+	int		exit_code;
+}	t_pipex;
+*/
+typedef struct s_msh
+{
+	t_ast	*ast;
+	t_token	*tokens;
+	char	**argv;
+	char	**envp;
+	char	**path_dirs;
+	char	*line;
+	int		argc;
+	int		err;
+	int		exit_code;
+}	t_msh;
 
 // parser/ast.c
-void		build_ast(t_ast *ast, t_token *tokens);
+int			build_ast(t_msh *sh, t_ast *ast, t_token *tokens);
 
-void		scan_tokens(t_ast *ast, t_token *tokens, int start, int end);
+int			scan_tokens(t_msh *sh, t_ast *ast, int start, int end);
 
-void		scan_pipe(t_ast *ast, t_token *tokens, int *i);
+void		scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i);
 
-void		parse_pipe(t_ast *ast, t_token *tokens, int start, int end);
+void		parse_pipe(t_msh *sh, t_ast *ast, int start, int end);
 
 // parser/ast_cmd.c
 
-void		parse_cmd(t_ast *ast, t_token *tokens, int start, int end);
+void		parse_cmd(t_msh *sh, t_ast *ast, int start, int end);
 
 char		**token_words_to_argv(t_token *tokens, int start, int end);
 
@@ -159,6 +194,7 @@ int			last_token(t_token *tokens);
 
 t_ast		*make_ast_node(t_node_ty ty);
 
+// TODO: REMOVE ALL FUNCS AND FILES FOR AST PRINT BEFORE EVAL
 // parser/ast_print.c
 char		*get_redir_symbol(t_redir_ty ty);
 
@@ -168,13 +204,15 @@ void		print_ast_cmd(t_ast *node);
 
 void		print_ast_node(t_ast *node, int depth);
 
+int			print_build_ast(t_msh *sh, t_ast *ast, t_token *tokens);
+
 // parser/ast_redir.c
 
 void		add_redir(t_ast *ast, t_token_ty token_type, char *word);
 
 t_redir_ty	get_redir_type(t_token_ty ty);
 
-void		parse_redir(t_ast *ast, t_token *tokens, int *start, int *end);
+void		parse_redir(t_msh *sh, t_ast *ast, int *start, int *end);
 
 // parser/lex.c
 
