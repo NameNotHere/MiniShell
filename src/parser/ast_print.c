@@ -6,11 +6,24 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:18:05 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 10:45:52 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/29 23:47:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parser.h"
+#include "minishell.h"
+
+char	*get_redir_symbol(t_redir_ty ty)
+{
+	if (ty == REDIR_INPUT)
+		return (REDIR_INPUT_PRINT);
+	if (ty == REDIR_OUTPUT)
+		return (REDIR_OUTPUT_PRINT);
+	if (ty == REDIR_APPEND)
+		return (REDIR_APPEND_PRINT);
+	if (ty == REDIR_HEREDOC)
+		return (REDIR_HEREDOC_PRINT);
+	return (REDIR_INPUT_PRINT);
+}
 
 /*
 TODO: REMOVE THIS WHEN FINISHED DEBUGGING, BEFORE SUBMITTING!
@@ -56,7 +69,7 @@ void	print_ast_node(t_ast *node, int depth)
 
 void	print_ast_cmd(t_ast *node)
 {
-	int				i;
+	int		i;
 	t_redir	*redir;
 
 	printf("CMD: ");
@@ -80,15 +93,14 @@ void	print_ast_cmd(t_ast *node)
 	printf("\n");
 }
 
-char	*get_redir_symbol(t_redir_ty ty)
+/*
+TODO: REMOVE TEST BEFORE EVALUATION
+*/
+int	print_build_ast(t_msh *sh,  t_ast *ast, t_token *tokens)
 {
-	if (ty == REDIR_INPUT)
-		return (REDIR_INPUT_PRINT);
-	if (ty == REDIR_OUTPUT)
-		return (REDIR_OUTPUT_PRINT);
-	if (ty == REDIR_APPEND)
-		return (REDIR_APPEND_PRINT);
-	if (ty == REDIR_HEREDOC)
-		return (REDIR_HEREDOC_PRINT);
-	return (REDIR_INPUT_PRINT);
+	if (!ast)
+		return (EXIT_SUCCESS);
+	build_ast(sh, ast, tokens);
+	print_ast(ast);
+	return (EXIT_SUCCESS);
 }

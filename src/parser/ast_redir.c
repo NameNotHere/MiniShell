@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:13:32 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 02:55:14 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/30 00:20:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 TODO: remove printfs, add error handling
 TODO: check when empty command is valid, if always (redir only is valid in bash)s
 */
-void	parse_redir(t_ast *ast, t_token *tokens, int *start, int *end)
+void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 {
 	int				i;
 	int				last_node_token;
@@ -29,16 +29,18 @@ void	parse_redir(t_ast *ast, t_token *tokens, int *start, int *end)
 	before_cmd = true;
 	while (++i < last_node_token)
 	{
-		if (tokens[i].ty == TOKEN_INPUT || tokens[i].ty == TOKEN_HEREDOC \
-			|| tokens[i].ty == TOKEN_APPEND || tokens[i].ty == TOKEN_OUTPUT)
+		if (sh->tokens[i].ty == TOKEN_INPUT || \
+			sh->tokens[i].ty == TOKEN_HEREDOC || \
+			sh->tokens[i].ty == TOKEN_APPEND || \
+			sh->tokens[i].ty == TOKEN_OUTPUT)
 		{
 			if (i == *end)
 				printf(" ***ERROR*** " \
-					"invalid redirection, needs a file or delimiter\n");
+					"invalid redirection, missing string\n");
 			if (!before_cmd)
 				*end = i;
 			before_cmd = true;
-			add_redir(ast, tokens[i].ty, tokens[i + 1].word);
+			add_redir(ast, sh->tokens[i].ty, sh->tokens[i + 1].word);
 			i++;
 		}
 		else

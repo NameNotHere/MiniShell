@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 04:31:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/29 23:42:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,22 @@
 	// 4. remove quotes if needed & expand vars,
 	// 5. cleanup
 */
-void	parse_cmd(t_ast *ast, t_token *tokens, int start, int end)
+void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 {
 	printf("cmd node->ADD\n" \
 		"	start cmd tk: %d, end cmd tk: %d\n",
 		start,
 		end);
 	ast->nty = NODE_CMD;
-	parse_redir(ast, tokens, &start, &end);
+	parse_redir(sh, ast, &start, &end);
 	if (end > start)
 		printf("		$ cmd is:%s, ends with %s\n",
-			tokens[start].word, tokens[end - 1].word);
+			sh->tokens[start].word, sh->tokens[end - 1].word);
 	else
 		printf("		$ cmd is:%s, ends with (none)\n",
-			tokens[start].word);
+			sh->tokens[start].word);
 	ast->cmd.built_in = false;
-	ast->cmd.argv = token_words_to_argv(tokens, start, end);
+	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end);
 	return ;
 }
 

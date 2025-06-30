@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:04:16 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 02:54:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/29 18:29:34 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_ast	*make_ast_node(t_node_ty type)
 
 void	free_ast_cmd(t_ast *node)
 {
-	int				i;
+	int		i;
 	t_redir	*redir;
 	t_redir	*next;
 
@@ -63,6 +63,7 @@ void	free_ast(t_ast *node)
 		free_ast(node->pipe.right);
 	}
 	free(node);
+	node = NULL;
 }
 
 int	last_token(t_token *tokens)

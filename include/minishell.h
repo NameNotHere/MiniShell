@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 15:58:15 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:34:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,51 +26,35 @@
 # include "minishell_parser.h"
 
 /*
-	\033[96m meanss cyan
-	colors need to be wrapped in \001 and \002 for readline to calculate prompt
-	lenght correctly
-	prompt is: star+arrow(cyan) followed by user input (default term color)
+	\033[96m = cyan
+	colors need to be wrapped in \001 and \002
+		for readline to calculate prompt lenght correctly
+	prompt is: star+arrow(cyan)
+	user input has default term color
 */
 # define MINISHELL_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
 
-/*
-TODO: remove comments
-Removed from the pipex struct:
-typedef struct s_pipex
+typedef enum e_err_code
 {
-	int		argc; -> TODO: check if ever needed?
-	char	**argv;
-	char	**envp;
-	char	***cmd_arg; -> REMOVED -> ast cmd nodes have them
-	bool	*cmd_not_found; -> REMOVED -> ast cmd nodes SHOULD have them
-	char	**cmd_path; -> REMOVED -> ast cmd nodes should have them
-	char	**path_dirs;
-	size_t	cmd_offset; -> REMOVED (NOT NEEDED) -> this is for pipex logic
-	size_t	cmd_total; -> REMOVED (NOT NEEDED) -> this is for pipex logic
-	int		fdin; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
-	int		fdout; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
-	int		outfile_flags; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
-	bool	hdoc; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
-	char	*infile; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
-	char	*outfile; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
-	int		exit_code;
-}	t_pipex;
-*/
-typedef struct s_msh
-{
-	t_ast	*ast;
-	char	**argv;
-	char	**envp;
-	char	**path_dirs;
-	char	*line;
-	int		argc;
-	int		err;
-	int		exit_code;
-}	t_msh;
+	E_INVALID_REDIR = 200,
+	E_MULTIPLE_CMD
+}	t_err_code;
 
+# define E_INVALID_REDIR_MSG "syntax error: invalid redirection, missing string"
+# define E_MULTIPLE_MSG "syntax error: multiple commands"
 // minishell_main.c
 
-int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
+int		initialize_minishell(t_msh *sh, char **envp);
+
+void	free_everything(t_msh *sh);
+
+int		minishell_mainloop(t_msh *sh);
+
+// minishell_line.c
+
+int		parse_line_and_execute_ast(t_msh *sh);
+
+int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
 
 // exec/process.c
 // TODO: remove debug functions before eval.
@@ -81,7 +65,7 @@ void	execute_ast_node(t_msh *sh, t_ast *node, bool from_pipe);
 
 // exec/lookup_cmd_fullpath.c
 
-void	lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);
+int		lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);
 
 // exec/utils/utils_path.c
 
@@ -90,6 +74,10 @@ char	*make_cmd_full_path(const char *dir, const char *cmd);
 char	*get_valid_cmd_full_path(char **path_dirs, char *cmd);
 
 char	*get_path_from_env(char **envp);
+
+// utils/utils_copy.c
+
+char	**copy_string_array(char **strings);
 
 // utils/utils_free.c
 

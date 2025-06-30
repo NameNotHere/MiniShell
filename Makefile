@@ -33,6 +33,7 @@ all:
 
 # ***** MINISHELL SRCS *****
 SRCS = minishell_main.c \
+	minishell_line.c \
 	exec/lookup_cmd_fullpath.c \
 	exec/process.c \
 	exec/utils/utils_path.c \
@@ -45,6 +46,7 @@ SRCS = minishell_main.c \
 	parser/lex.c \
 	parser/tokenize.c \
 	parser/utils/isminioperator.c\
+	utils/utils_copy.c \
 	utils/utils_free.c \
 	utils/utils_readline.c \
 

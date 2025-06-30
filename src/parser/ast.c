@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 18:35:37 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/06/29 23:49:17 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,32 @@
 /*
 TODO: change return value for a custom one? (will count as exit code)
 */
-void	build_ast(t_ast *ast, t_token *tokens)
+int	build_ast(t_msh *sh, t_ast *ast, t_token *tokens)
 {
 	if (tokens == NULL || tokens[0].word == NULL)
-		return ;
-	scan_tokens(ast, tokens, 0, last_token(tokens));
-	return ;
+		return (EXIT_SUCCESS);
+	scan_tokens(sh, ast, 0, last_token(tokens));
+	return (EXIT_SUCCESS);
 }
-void	scan_tokens(t_ast *ast, t_token *tokens, int start, int end)
+
+int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 {
 	int		i;
 	t_ast	*current_node;
 
 	current_node = ast;
 	i = start;
-	if (has_pipe(tokens, start, end))
-		scan_pipe(current_node, tokens, &i);
+	if (has_pipe(sh->tokens, start, end))
+		scan_pipe(sh, current_node, sh->tokens, &i);
 	else
-		parse_cmd(current_node, tokens, start, end);
+		parse_cmd(sh, current_node, start, end);
+	if (sh->err != EXIT_SUCCESS)
+		return (sh->err);
+	return (EXIT_SUCCESS);
 }
 
 /*scanning if pipe is found, if yes, call parsing with start/end */
-void	scan_pipe(t_ast *ast, t_token *tokens, int *i)
+void	scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i)
 {
 	int			start;
 	int			end;
@@ -50,16 +54,16 @@ void	scan_pipe(t_ast *ast, t_token *tokens, int *i)
 	{
 		if (tokens[*i].ty == TOKEN_PIPE)
 		{
-			parse_pipe(ast, tokens, start, *i);
+			parse_pipe(sh, ast, start, *i);
 			(*i)++;
 			break ;
 		}
 		(*i)++;
 	}
 	if (has_pipe(tokens, *i, end))
-		scan_tokens(ast->pipe.right, tokens, *i, end);
+		scan_tokens(sh, ast->pipe.right, *i, end);
 	else if (tokens[*i].word)
-		parse_cmd(ast->pipe.right, tokens, *i, end);
+		parse_cmd(sh, ast->pipe.right, *i, end);
 	return ;
 }
 
@@ -67,9 +71,9 @@ void	scan_pipe(t_ast *ast, t_token *tokens, int *i)
 TODO: REMOVE PRINTF DEBUGS (ADD ERROR CATCH)
 TODO: ADD ERROR CATCHING
 */
-void	parse_pipe(t_ast *ast, t_token *tokens, int start, int end)
+void	parse_pipe(t_msh *sh, t_ast *ast, int start, int end)
 {
-	if (!(tokens && tokens[0].word))
+	if (!(sh->tokens && sh->tokens[0].word))
 		return ;
 	printf("pipe node->ADD\n");
 	printf("	start pipe tk: %d, end pipe tk: %d\n",
@@ -82,6 +86,6 @@ void	parse_pipe(t_ast *ast, t_token *tokens, int start, int end)
 		printf("*** ERROR *** Failed to allocate AST nodes\n");
 		return ;
 	}
-	parse_cmd(ast->pipe.left, tokens, start, end);
+	parse_cmd(sh, ast->pipe.left, start, end);
 	return ;
 }
