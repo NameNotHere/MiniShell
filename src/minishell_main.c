@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/30 16:19:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/01 14:48:12 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int	minishell_mainloop(t_msh *sh)
 		}
 		if (ft_strncmp(sh->line, "exit", 4) == 0)
 		{
+			if 
 			// ADD CHECK FOR PIPE, with pipe it does not exit!
 			sh->exit_code = EXIT_SUCCESS;
 			break ;
