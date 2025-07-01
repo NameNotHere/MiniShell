@@ -99,4 +99,6 @@ char    *cd(char *path, char *new_path);
 
 void    pwd(char **path_dirs);
 
+void    exit();
+
 #endif
