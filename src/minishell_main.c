@@ -13,6 +13,7 @@
 #include "minishell.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <signal.h>
 
 /*
 TODO: check if regular readline will work fine.
@@ -21,6 +22,9 @@ otherwise, get this code back, to run with /dev/tty instead of stdin/stdout:
 	// 	return (ft_putstr_fd("terminal (tty) not available\n", \
 	// 		STDERR_FILENO), EXIT_FAILURE);
 */
+
+int	MINI_SIGNAL = 0;
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_msh	sh;
@@ -68,18 +72,44 @@ int	expand_line(t_msh *sh)
 	return (EXIT_SUCCESS);
 }
 
+void	ctrl_c(int sig)
+{
+	(void)sig;
+	MINI_SIGNAL = 1;
+	write(1, "\n", 1); // Print a newline
+	rl_replace_line("", 0); // Clear the current input line
+	rl_on_new_line();       // Move to a new line
+	rl_redisplay();         // Redisplay the prompt
+}
+
 int	minishell_mainloop(t_msh *sh)
 {
+   struct sigaction sa;
+
+	rl_catch_signals = 0;
+	sa.sa_handler = ctrl_c;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	sigaction(SIGINT, &sa, NULL);
+
 	while (1)
 	{
 		sh->line = readline(MINISHELL_PROMPT);
 		if (!sh->line)
+		{
+			write(1, "exit\n", 5);
+			sh->exit_code = EXIT_SUCCESS;
+			free(sh->line);
+			break ;
+		}
+		if (MINI_SIGNAL == 1)
 			continue ;
 		if (*sh->line)
 			add_history(sh->line);
 		if (expand_line(sh) != EXIT_SUCCESS)
 		{
 			printf("TODO: Error expanding line here");
+			safe_free_string(&sh->line);
 			continue ;
 		}
 		if (ft_strncmp(sh->line, "exit", 4) == 0)
@@ -90,7 +120,8 @@ int	minishell_mainloop(t_msh *sh)
 		}
 		if (parse_line_and_execute_ast(sh) != EXIT_SUCCESS)
 		{
-			printf("TODO: handle parse error here\n");
+		//	printf("TODO: handle parse error here\n");
+			safe_free_string(&sh->line);
 			continue ;
 		}
 		free_ast(sh->ast);
