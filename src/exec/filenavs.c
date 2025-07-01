@@ -28,3 +28,9 @@ void    pwd(char **path_dirs)
 {
     ft_printf("%s\n", path_dirs); // need to add prtinf
 }
+
+// ahahahahaah
+void    exit()
+{
+    exit(0);
+}
