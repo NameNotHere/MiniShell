@@ -99,7 +99,7 @@ int	minishell_mainloop(t_msh *sh)
 		{
 			write(1, "exit\n", 5);
 			sh->exit_code = EXIT_SUCCESS;
-			free(sh->line);
+			safe_free_string(&sh->line);
 			break ;
 		}
 		if (MINI_SIGNAL == 1)
@@ -127,7 +127,7 @@ int	minishell_mainloop(t_msh *sh)
 		free_ast(sh->ast);
 		safe_free_string(&sh->line);
 	}
-	free_everything(sh);
+	free_everything(sh); //this is making a double free error
 	return (sh->exit_code);
 }
 
