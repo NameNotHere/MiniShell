@@ -76,11 +76,12 @@ void	ctrl_c(int sig)
 {
 	(void)sig;
 	MINI_SIGNAL = 1;
-	write(1, "\n", 1); // Print a newline
-	rl_replace_line("", 0); // Clear the current input line
-	rl_on_new_line();       // Move to a new line
-	rl_redisplay();         // Redisplay the prompt
+	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
 }
+
 
 int	minishell_mainloop(t_msh *sh)
 {
