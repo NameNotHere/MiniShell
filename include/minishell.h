@@ -93,4 +93,10 @@ void	safe_free_bool(bool **ptr);
 
 bool	readline_on_tty(const char *prompt, char **line);
 
+// filenavs.c
+
+char    *cd(char *path, char *new_path);
+
+void    pwd(char **path_dirs);
+
 #endif
