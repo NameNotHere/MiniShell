@@ -93,4 +93,9 @@ void	safe_free_bool(bool **ptr);
 
 bool	readline_on_tty(const char *prompt, char **line);
 
+// signams/signal.c
+
+void	ctrl_c(int sig);
+
+
 #endif
