@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/30 15:34:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/02 16:43:00 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,5 +92,17 @@ void	safe_free_bool(bool **ptr);
 // utils/utils_readine
 
 bool	readline_on_tty(const char *prompt, char **line);
+
+// filenavs.c
+
+char    *cd(char *path, char *new_path);
+
+void    pwd(char **path_dirs);
+
+void    minishell_exit();
+
+// signams/signal.c
+
+void	ctrl_c(int sig);
 
 #endif

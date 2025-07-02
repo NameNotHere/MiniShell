@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/03 00:14:39 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 00:30:02 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,11 +158,9 @@ typedef struct s_msh
 {
 	t_ast	*ast;
 	t_token	*tokens;
-	char	**argv;
 	char	**envp;
 	char	**path_dirs;
 	char	*line;
-	int		argc;
 	int		err;
 	int		exit_code;
 }	t_msh;
