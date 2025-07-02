@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/01 14:48:12 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/02 13:38:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	expand_line(t_msh *sh)
 
 int	minishell_mainloop(t_msh *sh)
 {
-	while (1)
+	while (true)
 	{
 		sh->line = readline(MINISHELL_PROMPT);
 		if (!sh->line)
@@ -82,10 +82,8 @@ int	minishell_mainloop(t_msh *sh)
 			printf("TODO: Error expanding line here");
 			continue ;
 		}
-		if (ft_strncmp(sh->line, "exit", 4) == 0)
+		if (ft_strncmp(sh->line, "exit", 4) == 0 && !piped(sh->line))
 		{
-			if 
-			// ADD CHECK FOR PIPE, with pipe it does not exit!
 			sh->exit_code = EXIT_SUCCESS;
 			break ;
 		}
