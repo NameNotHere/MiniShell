@@ -93,9 +93,16 @@ void	safe_free_bool(bool **ptr);
 
 bool	readline_on_tty(const char *prompt, char **line);
 
+// filenavs.c
+
+char    *cd(char *path, char *new_path);
+
+void    pwd(char **path_dirs);
+
+void    exit();
+
 // signams/signal.c
 
 void	ctrl_c(int sig);
-
 
 #endif
