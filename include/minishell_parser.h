@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/29 23:49:00 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 00:14:39 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,10 @@ void		free_tokens(t_token *tokens, int amount);
 // parser/utils/isminioperator.c
 
 int			isminioperator(char *token, int i);
+
+// parser/utils/utils_line.c
+
+bool		piped_line(char *line);
 
 // errors
 void		int_closed(char *str, int i, char quote);

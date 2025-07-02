@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/02 13:38:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 00:12:04 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	minishell_mainloop(t_msh *sh)
 			printf("TODO: Error expanding line here");
 			continue ;
 		}
-		if (ft_strncmp(sh->line, "exit", 4) == 0 && !piped(sh->line))
+		if (ft_strncmp(sh->line, "exit", 4) == 0 && !piped_line(sh->line))
 		{
 			sh->exit_code = EXIT_SUCCESS;
 			break ;

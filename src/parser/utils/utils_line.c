@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit_piped.c                                       :+:      :+:    :+:   */
+/*   utils_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 14:49:57 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/02 13:32:05 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 00:12:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ helper function for minishell_mainloop, to check if commands are piped or not.
 		true if piped
 		false if not
 */
-bool	piped(char *line)
+bool	piped_line(char *line)
 {
 	int		i;
 	char	quote;
