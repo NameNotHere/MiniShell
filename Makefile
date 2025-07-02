@@ -50,6 +50,7 @@ SRCS = minishell_main.c \
 	utils/utils_free.c \
 	utils/utils_readline.c \
 	exec/filenavs.c \
+	signals/signals.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))

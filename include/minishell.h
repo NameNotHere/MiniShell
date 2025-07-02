@@ -101,4 +101,8 @@ void    pwd(char **path_dirs);
 
 void    exit();
 
+// signams/signal.c
+
+void	ctrl_c(int sig);
+
 #endif
