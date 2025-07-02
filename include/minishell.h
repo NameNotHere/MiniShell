@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/30 15:34:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/02 16:43:00 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ char    *cd(char *path, char *new_path);
 
 void    pwd(char **path_dirs);
 
-void    exit();
+void    minishell_exit();
 
 // signams/signal.c
 

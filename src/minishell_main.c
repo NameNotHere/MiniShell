@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/30 16:19:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/02 18:08:19 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,22 @@
 #include <readline/history.h>
 #include <signal.h>
 
-/*
-TODO: check if regular readline will work fine.
-otherwise, get this code back, to run with /dev/tty instead of stdin/stdout:
-	// if (!readline_on_tty(MINISHELL_PROMPT, &line))
-	// 	return (ft_putstr_fd("terminal (tty) not available\n", \
-	// 		STDERR_FILENO), EXIT_FAILURE);
-*/
-
-int	MINI_SIGNAL = 0;
+// user defined variable (including global) must be lowercase. 
+//global must start with g_
+int	g_mini_signal = 0;
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_msh	sh;
+	t_msh				sh;
+	struct sigaction	sa;
 
 	(void)argc;
 	(void)argv;
+	rl_catch_signals = 0;
+	sa.sa_handler = ctrl_c;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	sigaction(SIGINT, &sa, NULL);
 	if (envp[0] == NULL)
 	{
 		printf("empty environment variable\n");
@@ -41,7 +41,6 @@ int	main(int argc, char **argv, char **envp)
 		printf("TODO: handle shell initialize error here");
 		return (sh.exit_code);
 	}
-
 	if (minishell_mainloop(&sh) != EXIT_SUCCESS)
 		return (sh.exit_code);
 	return (EXIT_SUCCESS);
@@ -75,24 +74,15 @@ int	expand_line(t_msh *sh)
 void	ctrl_c(int sig)
 {
 	(void)sig;
-	MINI_SIGNAL = 1;
+	g_mini_signal = 1;
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
 }
 
-
 int	minishell_mainloop(t_msh *sh)
 {
-   struct sigaction sa;
-
-	rl_catch_signals = 0;
-	sa.sa_handler = ctrl_c;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
-	sigaction(SIGINT, &sa, NULL);
-
 	while (1)
 	{
 		sh->line = readline(MINISHELL_PROMPT);
@@ -103,7 +93,7 @@ int	minishell_mainloop(t_msh *sh)
 			safe_free_string(&sh->line);
 			break ;
 		}
-		if (MINI_SIGNAL == 1)
+		if (g_mini_signal == 1)
 			continue ;
 		if (*sh->line)
 			add_history(sh->line);
@@ -136,6 +126,6 @@ void	free_everything(t_msh *sh)
 {
 	free_ast(sh->ast);
 	safe_free_string(&sh->line);
-	safe_free_2d_string(&sh->argv);
+	safe_free_2d_string(&sh->envp);
 	rl_clear_history();
 }
