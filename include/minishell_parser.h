@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/03 11:43:08 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 13:00:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,19 @@
 # include <stdint.h>
 # include <stdbool.h>
 # include "libft.h"
+
+/*
+
+this is a rather permissive variable name size
+there is no defined POSIX standard on that
+bash rejects variable names larger than 1024
+*/
+# define ENV_VAR_NAME_MAX 1024
+
+# define REDIR_INPUT_PRINT "< INPUT"
+# define REDIR_OUTPUT_PRINT "> OUTPUT"
+# define REDIR_APPEND_PRINT ">> APPEND"
+# define REDIR_HEREDOC_PRINT "<< HEREDOC"
 
 typedef enum e_token_ty
 {
@@ -71,11 +84,6 @@ typedef enum e_redir_ty
 	REDIR_APPEND,
 	REDIR_UNKNOWN
 }	t_redir_ty;
-
-# define REDIR_INPUT_PRINT "< INPUT"
-# define REDIR_OUTPUT_PRINT "> OUTPUT"
-# define REDIR_APPEND_PRINT ">> APPEND"
-# define REDIR_HEREDOC_PRINT "<< HEREDOC"
 
 /*
 * TYPE (t_redir_type)
@@ -135,11 +143,13 @@ typedef struct s_ast
 /* struct for processing variable expansions before tokenizing */
 typedef struct s_var_expand
 {
+	char	var_name_buffer[BUFSIZ]
 	int		line_len;
-	int		var_count;
+	int		var_total;
 	int		var_i;
 	int		line_i;
 	bool	single_quote;
+	bool	var_lookup;
 	char	**var_names;
 	char	**var_expansions;
 }	t_var_expand;
