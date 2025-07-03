@@ -44,6 +44,7 @@ SRCS = minishell_main.c \
 	parser/ast_redir.c \
 	parser/errors.c \
 	parser/lex.c \
+	parser/line_var_expand.c \
 	parser/tokenize.c \
 	parser/utils/isminioperator.c\
 	parser/utils/utils_line.c \

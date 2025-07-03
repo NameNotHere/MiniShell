@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/03 01:51:19 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 02:57:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,6 +223,10 @@ const char	*get_token_name_continued(t_token_ty type);
 char		*make_word(char *str, int *i, int *err);
 
 int			skip_spaces(int *i, char *str);
+
+// parser/line_var_expand.c
+
+int			expand_line(t_msh *sh);
 
 // parser/tokenize.c
 

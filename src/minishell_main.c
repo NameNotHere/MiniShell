@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/03 02:41:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 02:55:57 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,6 @@ int	initialize_minishell(t_msh *sh, char **envp)
 	return (EXIT_SUCCESS);
 }
 
-int	expand_line(t_msh *sh)
-{
-	if (ft_strlen(sh->line) == 0)
-		return (EXIT_FAILURE);
-	printf("line before expanding is:%s\n", sh->line);
-	return (EXIT_SUCCESS);
-}
-
 void	ctrl_c(int sig)
 {
 	(void)sig;
@@ -91,12 +83,14 @@ int	minishell_mainloop(t_msh *sh)
 	while (true)
 	{
 		sh->line = readline(MINISHELL_PROMPT);
-		if (!sh->line)
+		if (!sh->line || !*sh->line)
+		{
+			safe_free_string(&sh->line);
 			continue ;
+		}
 		// if (g_mini_signal == 1)  // this was stopping the shell here forever
 		// 	continue ;
-		if (*sh->line)
-			add_history(sh->line);
+		add_history(sh->line);
 		if (expand_line(sh) != EXIT_SUCCESS)
 		{
 			printf("TODO: Error expanding line here");

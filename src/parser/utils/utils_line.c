@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 14:49:57 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/03 00:12:38 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 03:17:50 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ bool	piped_line(char *line)
 			;
 		else if (ft_strchr("\'\"", line[i]))
 			quote = line[i];
-		else if (line[i] == '|')
+		else if ('|' == line[i])
 			return (true);
 		i++;
 	}
