@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/03 14:40:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 14:42:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,18 @@ int	catch_vars(t_msh *sh, t_var_expand *ve, char *line)
 		if (ve->single_quote && ft_is_singlequote(line[i]))
 			ve->single_quote = false;
 		else if (ve->single_quote)
+		{
 			if (ve->var_lookup)
 			{
 				ve->var_lookup = false;
-				
 			}
+		}
 		else if ('\'' == line[i])
 			ve->single_quote = true;
-		else if ('$' == line[i] && line[i + 1] && '$' != line[i + 1] && \
-				ft_isprint(line[i + 1]) && !ft_isspace(line[i + 1]))
+		else if ('$' == line[i] && line[i + 1]
+			&& '$' != line[i + 1]
+			&& ft_isprint(line[i + 1])
+			&& !ft_isspace(line[i + 1]))
 			ve->var_i++;
 		i++;
 	}
@@ -105,6 +108,5 @@ int	expand_line(t_msh *sh)
 	// 	printf("error on variable expansion");
 	// 	return (EXIT_FAILURE);
 	// }
-
 	return (EXIT_SUCCESS);
 }
