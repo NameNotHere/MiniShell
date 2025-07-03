@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/03 00:37:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 02:07:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,20 +105,20 @@ int	minishell_mainloop(t_msh *sh)
 		}
 		if (parse_line_and_execute_ast(sh) != EXIT_SUCCESS)
 		{
-		//	printf("TODO: handle parse error here\n");
 			safe_free_string(&sh->line);
 			continue ;
 		}
-		free_ast(sh->ast);
+		free_ast(&sh->ast);
+		sh->ast = make_ast_node(NODE_UNKNOWN);
 		safe_free_string(&sh->line);
 	}
-	free_everything(sh); //this is making a double free error
+	free_everything(sh);
 	return (sh->exit_code);
 }
 
 void	free_everything(t_msh *sh)
 {
-	free_ast(sh->ast);
+	free_ast(&sh->ast);
 	safe_free_string(&sh->line);
 	safe_free_2d_string(&sh->envp);
 	rl_clear_history();

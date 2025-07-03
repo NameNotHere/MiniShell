@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/03 00:30:02 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 01:51:19 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ char		**token_words_to_argv(t_token *tokens, int start, int end);
 
 // parser/ast_helper.c
 
-void		free_ast(t_ast *node);
+void		free_ast(t_ast **node);
 
 void		free_ast_cmd(t_ast *node);
 
@@ -232,7 +232,7 @@ int			is_builtin(char *str);
 
 t_token		*tokenize(char *input, int *token_count, int *err);
 
-void		free_tokens(t_token *tokens, int amount);
+void		free_tokens(t_token **tokens, int amount);
 
 // parser/utils/isminioperator.c
 

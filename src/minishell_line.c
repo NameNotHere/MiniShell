@@ -48,6 +48,6 @@ int	parse_line_to_ast(t_msh *sh, t_ast *ast, char *string)
 			get_token_name(tokens[i].ty),
 			tokens[i].word);
 	print_build_ast(sh, ast, tokens);
-	free_tokens(tokens, token_count);
+	free_tokens(&sh->tokens, token_count);
 	return (EXIT_SUCCESS);
 }

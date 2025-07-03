@@ -51,19 +51,19 @@ void	free_ast_cmd(t_ast *node)
 TODO: REMOVE THIS WHEN FINISHED DEBUGGING, BEFORE SUBMITTING!
 MAYBE ADD PRINT AST FUNCTIONS TO A SEPARATE TEST SUITE
 */
-void	free_ast(t_ast *node)
+void	free_ast(t_ast **node)
 {
-	if (!node)
+	if (!node || !*node)
 		return ;
-	if (node->nty == NODE_CMD)
-		free_ast_cmd(node);
-	else if (node->nty == NODE_PIPE)
+	if ((*node)->nty == NODE_CMD)
+		free_ast_cmd(*node);
+	else if ((*node)->nty == NODE_PIPE)
 	{
-		free_ast(node->pipe.left);
-		free_ast(node->pipe.right);
+		free_ast(&(*node)->pipe.left);
+		free_ast(&(*node)->pipe.right);
 	}
-	free(node);
-	node = NULL;
+	free(*node);
+	*node = NULL;  // This properly sets the caller's pointer to NULL
 }
 
 int	last_token(t_token *tokens)
