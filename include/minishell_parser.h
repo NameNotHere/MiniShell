@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/03 13:00:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 14:40:07 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,11 @@
 # include "libft.h"
 
 /*
-
-this is a rather permissive variable name size
-there is no defined POSIX standard on that
-bash rejects variable names larger than 1024
+no (POSIX or otherwise) standard on enviroment variable name size limit
+larger than 256: hard to use and read.
+larger than 2048: arbitrarily high soft limit: avoids truncation
 */
-# define ENV_VAR_NAME_MAX 1024
+# define ENV_VAR_NAME_MAX 2048
 
 # define REDIR_INPUT_PRINT "< INPUT"
 # define REDIR_OUTPUT_PRINT "> OUTPUT"
@@ -143,7 +142,7 @@ typedef struct s_ast
 /* struct for processing variable expansions before tokenizing */
 typedef struct s_var_expand
 {
-	char	var_name_buffer[BUFSIZ]
+	char	var_name_buffer[ENV_VAR_NAME_MAX];
 	int		line_len;
 	int		var_total;
 	int		var_i;
@@ -151,7 +150,7 @@ typedef struct s_var_expand
 	bool	single_quote;
 	bool	var_lookup;
 	char	**var_names;
-	char	**var_expansions;
+	char	**var_values;
 }	t_var_expand;
 
 /*
@@ -268,6 +267,14 @@ int			isminioperator(char *token, int i);
 // parser/utils/utils_line.c
 
 bool		piped_line(char *line);
+
+int			ft_isalnum_underscore(int c);
+
+int			ft_is_singlequote(int c);
+
+int			ft_is_doublequote(int c);
+
+int			ft_is_quote(int c);
 
 // errors
 void		int_closed(char *str, int i, char quote);

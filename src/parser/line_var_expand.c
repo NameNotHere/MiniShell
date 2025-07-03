@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/03 12:37:17 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 14:40:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,13 @@ int	get_var_count(char *line)
 	var_count = 0;
 	while (line[i])
 	{
-		if (single_quote && '\'' == line[i])
+		if (single_quote && ft_is_singlequote(line[i]))
 			single_quote = false;
 		else if (single_quote)
 			;
-		else if ('\'' == line[i])
+		else if (ft_is_singlequote(line[i]))
 			single_quote = true;
-		else if ('$' == line[i] && line[i + 1] && '$' != line[i + 1] && \
-				ft_isprint(line[i + 1]) && !ft_isspace(line[i + 1]))
+		else if ('$' == line[i] && ft_isalnum_underscore(line[i + 1]))
 			var_count++;
 		i++;
 	}
@@ -48,10 +47,10 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 		sh->exit_code = errno;
 		return (errno);
 	}
-	ve->var_expansions = ft_calloc((ve->var_total + 1), sizeof(char *));
-	if (!ve->var_expansions)
+	ve->var_values = ft_calloc((ve->var_total + 1), sizeof(char *));
+	if (!ve->var_values)
 	{
-		printf("allocation error on var names");
+		printf("allocation error on var values");
 		sh->err = errno;
 		sh->exit_code = errno;
 		return (errno);
@@ -66,12 +65,14 @@ int	catch_vars(t_msh *sh, t_var_expand *ve, char *line)
 	i = 0;
 	while (line[i])
 	{
-		if (ve->single_quote && '\'' == line[i])
+		if (ve->single_quote && ft_is_singlequote(line[i]))
 			ve->single_quote = false;
 		else if (ve->single_quote)
 			if (ve->var_lookup)
+			{
+				ve->var_lookup = false;
 				
-			;
+			}
 		else if ('\'' == line[i])
 			ve->single_quote = true;
 		else if ('$' == line[i] && line[i + 1] && '$' != line[i + 1] && \
