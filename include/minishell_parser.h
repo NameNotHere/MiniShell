@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/02 16:52:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 13:00:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,19 @@
 # include <stdint.h>
 # include <stdbool.h>
 # include "libft.h"
+
+/*
+
+this is a rather permissive variable name size
+there is no defined POSIX standard on that
+bash rejects variable names larger than 1024
+*/
+# define ENV_VAR_NAME_MAX 1024
+
+# define REDIR_INPUT_PRINT "< INPUT"
+# define REDIR_OUTPUT_PRINT "> OUTPUT"
+# define REDIR_APPEND_PRINT ">> APPEND"
+# define REDIR_HEREDOC_PRINT "<< HEREDOC"
 
 typedef enum e_token_ty
 {
@@ -71,11 +84,6 @@ typedef enum e_redir_ty
 	REDIR_APPEND,
 	REDIR_UNKNOWN
 }	t_redir_ty;
-
-# define REDIR_INPUT_PRINT "< INPUT"
-# define REDIR_OUTPUT_PRINT "> OUTPUT"
-# define REDIR_APPEND_PRINT ">> APPEND"
-# define REDIR_HEREDOC_PRINT "<< HEREDOC"
 
 /*
 * TYPE (t_redir_type)
@@ -131,6 +139,21 @@ typedef struct s_ast
 	};
 }	t_ast;
 
+
+/* struct for processing variable expansions before tokenizing */
+typedef struct s_var_expand
+{
+	char	var_name_buffer[BUFSIZ]
+	int		line_len;
+	int		var_total;
+	int		var_i;
+	int		line_i;
+	bool	single_quote;
+	bool	var_lookup;
+	char	**var_names;
+	char	**var_expansions;
+}	t_var_expand;
+
 /*
 TODO: remove comments
 Removed from the pipex struct:
@@ -182,7 +205,7 @@ char		**token_words_to_argv(t_token *tokens, int start, int end);
 
 // parser/ast_helper.c
 
-void		free_ast(t_ast *node);
+void		free_ast(t_ast **node);
 
 void		free_ast_cmd(t_ast *node);
 
@@ -224,6 +247,10 @@ char		*make_word(char *str, int *i, int *err);
 
 int			skip_spaces(int *i, char *str);
 
+// parser/line_var_expand.c
+
+int			expand_line(t_msh *sh);
+
 // parser/tokenize.c
 
 const char	*get_token_name(t_token_ty type);
@@ -232,11 +259,15 @@ int			is_builtin(char *str);
 
 t_token		*tokenize(char *input, int *token_count, int *err);
 
-void		free_tokens(t_token *tokens, int amount);
+void		free_tokens(t_token **tokens, int amount);
 
 // parser/utils/isminioperator.c
 
 int			isminioperator(char *token, int i);
+
+// parser/utils/utils_line.c
+
+bool		piped_line(char *line);
 
 // errors
 void		int_closed(char *str, int i, char quote);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/06/30 16:39:08 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 02:07:03 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	tokenise_redirs(char *str, t_token *output)
 		output->ty = TOKEN_PIPE;
 }
 
-t_token	ft_token(char *str) // seg faults somehow
+t_token	ft_token(char *str)
 {
 	t_token	output;
 	int		i;
@@ -227,18 +227,18 @@ t_token	*tokenize(char *input, int *token_count, int *err)
 	return (res);
 }
 
-void	free_tokens(t_token *tokens, int amount)
+void	free_tokens(t_token **tokens, int amount)
 {
 	int	i;
 
-	if (!tokens)
+	if (!tokens || !*tokens)
 		return ;
 	i = 0;
 	while (amount--)
 	{
-		free(tokens[i].word);
+		free((*tokens)[i].word);
 		i++;
 	}
-	if (tokens)
-		free(tokens);
+	free(*tokens);
+	*tokens = NULL;
 }

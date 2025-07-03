@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 06:11:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/28 11:00:34 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 01:34:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	lookup_cmd_fullpath(t_msh *sh, t_cmd *cmd)
 	cmd->full_cmd = get_valid_cmd_full_path(sh->path_dirs, cmd->argv[0]);
 	if (cmd->full_cmd == NULL)
 	{
-		printf("cmd |%s| not found\n", cmd->argv[0]);
+		cmd->full_cmd = ft_strdup(cmd->argv[0]);
+		printf("cmd |%s| not found\n", cmd->full_cmd);
 		cmd->not_found = true;
 	}
 	else

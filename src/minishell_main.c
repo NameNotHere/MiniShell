@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/02 18:08:19 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 02:55:57 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <readline/history.h>
 #include <signal.h>
 
-// user defined variable (including global) must be lowercase. 
+// user defined variable (including global) must be lowercase.
 //global must start with g_
 int	g_mini_signal = 0;
 
@@ -63,14 +63,6 @@ int	initialize_minishell(t_msh *sh, char **envp)
 	return (EXIT_SUCCESS);
 }
 
-int	expand_line(t_msh *sh)
-{
-	if (ft_strlen(sh->line) == 0)
-		return (EXIT_FAILURE);
-	printf("line before expanding is:%s\n", sh->line);
-	return (EXIT_SUCCESS);
-}
-
 void	ctrl_c(int sig)
 {
 	(void)sig;
@@ -81,50 +73,51 @@ void	ctrl_c(int sig)
 	rl_redisplay();
 }
 
+/*
+commented out the check for the global signal int. it was stopping the lines
+to be processed, including "exit", so we get stuck otherwise.
+even if you set to 0 before the "continue", we loose one command-line
+*/
 int	minishell_mainloop(t_msh *sh)
 {
-	while (1)
+	while (true)
 	{
 		sh->line = readline(MINISHELL_PROMPT);
-		if (!sh->line)
+		if (!sh->line || !*sh->line)
 		{
-			write(1, "exit\n", 5);
-			sh->exit_code = EXIT_SUCCESS;
 			safe_free_string(&sh->line);
-			break ;
-		}
-		if (g_mini_signal == 1)
 			continue ;
-		if (*sh->line)
-			add_history(sh->line);
+		}
+		// if (g_mini_signal == 1)  // this was stopping the shell here forever
+		// 	continue ;
+		add_history(sh->line);
 		if (expand_line(sh) != EXIT_SUCCESS)
 		{
 			printf("TODO: Error expanding line here");
 			safe_free_string(&sh->line);
 			continue ;
 		}
-		if (ft_strncmp(sh->line, "exit", 4) == 0)
+		if (ft_strncmp(sh->line, "exit", 4) == 0 && !piped_line(sh->line))
 		{
-			// ADD CHECK FOR PIPE, with pipe it does not exit!
 			sh->exit_code = EXIT_SUCCESS;
 			break ;
 		}
 		if (parse_line_and_execute_ast(sh) != EXIT_SUCCESS)
 		{
-		//	printf("TODO: handle parse error here\n");
 			safe_free_string(&sh->line);
 			continue ;
 		}
-		free_ast(sh->ast);
+		free_ast(&sh->ast);
+		sh->ast = make_ast_node(NODE_UNKNOWN);
 		safe_free_string(&sh->line);
 	}
-	free_everything(sh); //this is making a double free error
+	free_everything(sh);
 	return (sh->exit_code);
 }
 
 void	free_everything(t_msh *sh)
 {
-	free_ast(sh->ast);
+	free_ast(&sh->ast);
 	safe_free_string(&sh->line);
 	safe_free_2d_string(&sh->envp);
 	rl_clear_history();
