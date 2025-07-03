@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/03 18:01:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 22:29:54 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ typedef struct s_var_expand
 	int		var_i;
 	int		line_i;
 	int		var_name_i;
+	int		envp_var_i;
 	bool	single_quote;
 	bool	var_lookup;
 	char	**var_names;

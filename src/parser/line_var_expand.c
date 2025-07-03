@@ -6,11 +6,45 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/03 18:21:13 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 22:42:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*if true, sets also the env_var_location, to find the var index in envp*/
+bool	is_var_in_env(t_msh *sh, t_var_expand *ve, char *var)
+{
+	int	i;
+	int	var_len;
+
+	i = 0;
+	var_len = ft_strlen(var);
+	while (sh->envp[i])
+	{
+		if ((ft_strncmp(sh->envp[i], var, var_len) == 0)
+			&& sh->envp[i][var_len + 1] == '=')
+		{
+			ve->envp_var_i = i;
+			return (true);
+		}
+		i++;
+	}
+	return (false);
+}
+
+char	*get_var_value(t_msh *sh, t_var_expand *ve, char *var)
+{
+	char	*var_value;
+
+	var_value = ft_strdup(sh->envp[ve->envp_var_i] + ft_strlen(var));
+	if (!var_value)
+	{
+		sh->exit_code = errno;
+		return (NULL);
+	}
+	return (var_value);
+}
 
 /*Returns an empty string
 TODO: use our custom callo_x instead to catch error
@@ -49,9 +83,16 @@ int	get_var_count(char *line)
 	return (var_count);
 }
 
+void	reset_var_expand(t_msh *sh, t_var_expand *ve)
+{
+	(void)sh;
+	ve->var_lookup = false;
+	bzero(ve->var_name_buffer, sizeof(ve->var_name_buffer));
+	ve->var_name_i = 0;
+}
+
 int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 {
-	ft_bzero (ve->var_name_buffer, sizeof(ve->var_name_buffer));
 	ve->var_names = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_names)
 	{
@@ -69,30 +110,40 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 		return (errno);
 	}
 	return (EXIT_SUCCESS);
+	reset_var_expand(sh, ve);
 }
 
-int	catch_absent_var(t_msh *sh, t_var_expand *ve, char *line)
+int	catch_absent_var(t_msh *sh, t_var_expand *ve)
 {
+
 	ve->var_names[ve->var_i] = ft_strdup(ve->var_name_buffer);
 	ve->var_values[ve->var_i] = get_empty_string();
-	// resets
-	ve->var_lookup = false;
-	bzero(ve->var_name_buffer, sizeof(ve->var_name_buffer));
-	ve->var_name_i = 0;
+	reset_var_expand(sh, ve);
+	if (!ve->var_names[ve->var_i] || !ve->var_values[ve->var_i])
+	{
+		printf("allocation error on absent var\n");
+		sh->exit_code = errno;
+		return (errno);
+	}
 	return (EXIT_SUCCESS);
 }
 
-int	catch_var(t_msh *sh, t_var_expand *ve, char *line, char c)
+int	catch_var(t_msh *sh, t_var_expand *ve, char c)
 {
 	if (!ft_isalnum_underscore(c))
 	{
 		ve->var_names[ve->var_i] = ft_strdup(ve->var_name_buffer);
 		ve->var_values[ve->var_i] = get_empty_string();
-		return (catch_absent_var(sh, ve, line));
+		return (catch_absent_var(sh, ve));
 	}
 	ve->var_name_buffer[ve->var_name_i] = c;
-	// check if exists now
-	// if yes, get the value and its done (run resets)
+	if (is_var_in_env(sh, ve, ve->var_name_buffer))
+	{
+		ve->var_names[ve->var_i] = ft_strdup(ve->var_name_buffer);
+		ve->var_values[ve->var_i] = get_var_value(sh, ve, ve->var_name_buffer);
+		if (!ve->var_values[ve->var_i])
+			return (sh->exit_code);
+	}
 	return (EXIT_SUCCESS);
 }
 
@@ -104,7 +155,7 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *line)
 	ve->var_i = -1;
 	while (line[i])
 	{
-		if (ve->var_lookup && catch_var(sh, ve, line, line[i]) != EXIT_SUCCESS)
+		if (ve->var_lookup && catch_var(sh, ve, line[i]) != EXIT_SUCCESS)
 		{
 			printf("error with catch_var on expansion\n");
 			return (sh->exit_code);
