@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/03 02:07:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 02:41:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ void	ctrl_c(int sig)
 	rl_redisplay();
 }
 
+/*
+commented out the check for the global signal int. it was stopping the lines
+to be processed, including "exit", so we get stuck otherwise.
+even if you set to 0 before the "continue", we loose one command-line
+*/
 int	minishell_mainloop(t_msh *sh)
 {
 	while (true)
@@ -88,8 +93,8 @@ int	minishell_mainloop(t_msh *sh)
 		sh->line = readline(MINISHELL_PROMPT);
 		if (!sh->line)
 			continue ;
-		if (g_mini_signal == 1)
-			continue ;
+		// if (g_mini_signal == 1)  // this was stopping the shell here forever
+		// 	continue ;
 		if (*sh->line)
 			add_history(sh->line);
 		if (expand_line(sh) != EXIT_SUCCESS)
