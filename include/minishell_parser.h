@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/03 02:57:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 11:43:08 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,19 @@ typedef struct s_ast
 		t_pipe	pipe;
 	};
 }	t_ast;
+
+
+/* struct for processing variable expansions before tokenizing */
+typedef struct s_var_expand
+{
+	int		line_len;
+	int		var_count;
+	int		var_i;
+	int		line_i;
+	bool	single_quote;
+	char	**var_names;
+	char	**var_expansions;
+}	t_var_expand;
 
 /*
 TODO: remove comments
