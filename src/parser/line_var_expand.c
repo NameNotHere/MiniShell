@@ -6,58 +6,31 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/04 16:35:07 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/04 18:52:23 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_strlen_array(char **array)
-{
-	int	count;
+// /*
+// Returns value from an environment variable
+// Needs both the var name and the index.
 
-	count = 0;
-	while (*array)
-	{
-		count += ft_strlen(*array);
-		array++;
-	}
-	return (count);
-}
+// TODO: probably redundant to pass both... 
+// TODO: check maybe separate in two kinds of lookup
+// */
+// char	*get_env_value(t_msh *sh, char *var_name, int envp_index)
+// {
+// 	char	*var_value;
 
-/*if true, sets also the env_var_location, to find the var index in envp*/
-bool	is_var_in_env(t_msh *sh, t_var_expand *ve, char *var)
-{
-	int	i;
-	int	var_len;
-
-	i = 0;
-	var_len = ft_strlen(var);
-	while (sh->envp[i])
-	{
-		if ((ft_strncmp(sh->envp[i], var, var_len) == 0)
-			&& sh->envp[i][var_len] == '=')
-		{
-			ve->envp_var_i = i;
-			return (true);
-		}
-		i++;
-	}
-	return (false);
-}
-
-char	*get_var_value(t_msh *sh, t_var_expand *ve, char *var)
-{
-	char	*var_value;
-
-	var_value = ft_strdup(sh->envp[ve->envp_var_i] + ft_strlen(var) + 1);
-	if (!var_value)
-	{
-		sh->exit_code = errno;
-		return (NULL);
-	}
-	return (var_value);
-}
+// 	var_value = ft_strdup(sh->envp[envp_index] + ft_strlen(var_name) + 1);
+// 	if (!var_value)
+// 	{
+// 		sh->exit_code = errno;
+// 		return (NULL);
+// 	}
+// 	return (var_value);
+// }
 
 /*Returns an empty string
 TODO: use our custom callo_x instead to catch error
@@ -155,7 +128,9 @@ int catch_var(t_msh *sh, t_var_expand *ve)
 {
 	printf("var %s was caught!\n", ve->var_name_buffer);
 	ve->var_names[ve->var_i] = ft_strdup(ve->var_name_buffer);
-	ve->var_values[ve->var_i] = get_var_value(sh, ve, ve->var_name_buffer);
+	ve->var_values[ve->var_i] = get_env_value(sh, \
+									ve->var_name_buffer, \
+									ve->envp_var_i);
 	reset_var_lookup(sh, ve);
 	if (!ve->var_names[ve->var_i] || !ve->var_values[ve->var_i])
 	{
@@ -179,7 +154,7 @@ int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 	ve->var_name_buffer[ve->var_name_i] = c;
 	ve->var_name_i++;
 	printf("Current var_name_buffer: '%s'\n", ve->var_name_buffer);
-	if (is_var_in_env(sh, ve, ve->var_name_buffer))
+	if (is_var_in_env(sh, ve->var_name_buffer, &ve->envp_var_i))
 		return (catch_var(sh, ve));
 	else if (next_c == '\0')
 	{
@@ -291,6 +266,8 @@ int	expand_line(t_msh *sh)
 		sh->exit_code = EXIT_FAILURE;
 		return (sh->exit_code);
 	}
+	if (is_var_in_env(sh, "HOME", NULL))
+		printf("HOME in envp");
 	printf("new_line made: %s\n", ve.newline);
 	safe_free_string(&sh->line);
 	sh->line = ve.newline;

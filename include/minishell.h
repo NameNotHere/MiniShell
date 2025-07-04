@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/03 01:08:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/04 18:55:23 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,14 @@ char	*get_path_from_env(char **envp);
 // utils/utils_copy.c
 
 char	**copy_string_array(char **strings);
+
+int		ft_strlen_array(char **array);
+
+// utils/utils_env.c
+
+bool	is_var_in_env(t_msh *sh, char *var, int *envp_index);
+
+char	*get_env_value(t_msh *sh, char *var_name, int envp_index);
 
 // utils/utils_free.c
 
