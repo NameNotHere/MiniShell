@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/04 06:54:39 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:16:28 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	get_var_count(char *line)
 	return (var_count);
 }
 
-void	reset_var_expand(t_msh *sh, t_var_expand *ve)
+void	reset_var_lookup(t_msh *sh, t_var_expand *ve)
 {
 	(void)sh;
 	ve->var_lookup = false;
@@ -123,7 +123,7 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 		return (errno);
 	}
 	return (EXIT_SUCCESS);
-	reset_var_expand(sh, ve);
+	reset_var_lookup(sh, ve);
 }
 
 int	catch_absent_var(t_msh *sh, t_var_expand *ve)
@@ -131,7 +131,7 @@ int	catch_absent_var(t_msh *sh, t_var_expand *ve)
 
 	ve->var_names[ve->var_i] = ft_strdup(ve->var_name_buffer);
 	ve->var_values[ve->var_i] = get_empty_string();
-	reset_var_expand(sh, ve);
+	reset_var_lookup(sh, ve);
 	if (!ve->var_names[ve->var_i] || !ve->var_values[ve->var_i])
 	{
 		printf("allocation error on catch_absent_var\n");
@@ -146,7 +146,7 @@ int catch_var(t_msh *sh, t_var_expand *ve)
 	printf("var %s was caught!\n", ve->var_name_buffer);
 	ve->var_names[ve->var_i] = ft_strdup(ve->var_name_buffer);
 	ve->var_values[ve->var_i] = get_var_value(sh, ve, ve->var_name_buffer);
-	reset_var_expand(sh, ve);
+	reset_var_lookup(sh, ve);
 	if (!ve->var_names[ve->var_i] || !ve->var_values[ve->var_i])
 	{
 		printf("allocation error on catch_var\n");
@@ -154,7 +154,6 @@ int catch_var(t_msh *sh, t_var_expand *ve)
 		return (errno);
 	}
 	printf("%s=%s\n", ve->var_names[ve->var_i], ve->var_values[ve->var_i]);
-	ve->var_lookup = false;
 	return (EXIT_SUCCESS);
 }
 
@@ -210,6 +209,65 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *line)
 	return (EXIT_SUCCESS);
 }
 
+int	expand_vars(t_msh *sh, t_var_expand *ve, char *line)
+{
+	int	i;
+	int skipped_chars;
+	int exp_i;
+	char *value;
+
+	(void)sh;
+	i = 0;
+	skipped_chars = 0;
+	exp_i = 0;
+	ve->var_i = -1;
+	while (line[i])
+	{
+		if (ve->single_quote && ft_is_singlequote(line[i]))
+			ve->single_quote = false;
+		else if (ve->single_quote)
+			;
+		else if (ft_is_singlequote(line[i]))
+			ve->single_quote = true;
+		else if ('$' == line[i] && ft_isalnum_underscore(line[i + 1]))
+		{
+			printf("Found $ at position %d, next char: %c\n", i, line[i + 1]);
+			ve->var_i++;
+			value = ve->var_values[ve->var_i];
+			skipped_chars++;
+			while (*value)
+			{
+				exp_i++;
+				ve->new_line[i + exp_i - skipped_chars] = *value;
+				value++;
+			}
+		}
+		ve->new_line[i + exp_i] = line[i];
+		i++;
+	}
+	printf("new_line made: %s\n", ve->new_line);
+	return (EXIT_SUCCESS);
+}
+
+int	allocate_new_line(t_msh *sh, t_var_expand *ve)
+{
+	int	new_line_len;
+
+	new_line_len = ve->line_len + ft_strlen_array(ve->var_values)
+		- (ft_strlen_array(ve->var_names) + ve->var_total);
+	if (callo_x((void *)ve->new_line, new_line_len, sizeof(char))
+		!= EXIT_SUCCESS)
+	{
+		printf("new_line allocation failed\n");
+		sh->exit_code = ENOMEM;
+		if (errno)
+			sh->exit_code = errno;
+		return (sh->exit_code);
+	}
+	printf("line allocated!\n");
+	return (EXIT_SUCCESS);
+}
+
 int	expand_line(t_msh *sh)
 {
 	t_var_expand	ve;
@@ -229,10 +287,14 @@ int	expand_line(t_msh *sh)
 		return (sh->exit_code);
 	printf("variable names size: %d\n", ft_strlen_array(ve.var_names));
 	printf("variable values size: %d\n", ft_strlen_array(ve.var_values));
-	// if (expand_vars(sh, ve) != EXIT_SUCCESS)
-	// {
-	// 	printf("error on variable expansion");
-	// 	return (EXIT_FAILURE);
-	// }
+	if (allocate_new_line(sh, &ve) != EXIT_SUCCESS)
+		return (sh->exit_code);
+	if (expand_vars(sh, &ve, sh->line) != EXIT_SUCCESS)
+	{
+		printf("error on variable expansion");
+		printf("this function should not fail though\n");
+		sh->exit_code = EXIT_FAILURE;
+		return (sh->exit_code);
+	}
 	return (EXIT_SUCCESS);
 }

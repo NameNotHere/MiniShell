@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/03 22:29:54 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/04 12:06:44 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdio.h>
 # include <stdint.h>
 # include <stdbool.h>
+# include <limits.h>
 # include "libft.h"
 
 /*
@@ -143,7 +144,9 @@ typedef struct s_ast
 typedef struct s_var_expand
 {
 	char	var_name_buffer[ENV_VAR_NAME_MAX];
+	char 	*new_line;
 	int		line_len;
+	int		new_line_len;
 	int		var_total;
 	int		var_i;
 	int		line_i;
