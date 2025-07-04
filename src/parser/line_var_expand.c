@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/04 14:48:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/04 16:35:07 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,19 @@ char	*get_empty_string(void)
 	return (empty_string);
 }
 
+bool	handle_single_quote(char *line, bool *single_quote, int i)
+{
+	if (*single_quote && ft_is_singlequote(line[i]))
+		*single_quote = false;
+	else if (*single_quote)
+		;
+	else if (ft_is_singlequote(line[i]))
+		*single_quote = true;
+	else
+		return (false);
+	return (true);
+}
+
 int	get_var_count(char *line)
 {
 	int		var_count;
@@ -83,12 +96,8 @@ int	get_var_count(char *line)
 	var_count = 0;
 	while (line[i])
 	{
-		if (single_quote && ft_is_singlequote(line[i]))
-			single_quote = false;
-		else if (single_quote)
+		if (handle_single_quote(line, &single_quote, i))
 			;
-		else if (ft_is_singlequote(line[i]))
-			single_quote = true;
 		else if ('$' == line[i] && ft_isalnum_underscore(line[i + 1]))
 			var_count++;
 		i++;
@@ -138,6 +147,7 @@ int	catch_absent_var(t_msh *sh, t_var_expand *ve)
 		sh->exit_code = errno;
 		return (errno);
 	}
+	ve->var_i++;
 	return (EXIT_SUCCESS);
 }
 
@@ -154,6 +164,7 @@ int catch_var(t_msh *sh, t_var_expand *ve)
 		return (errno);
 	}
 	printf("%s=%s\n", ve->var_names[ve->var_i], ve->var_values[ve->var_i]);
+	ve->var_i++;
 	return (EXIT_SUCCESS);
 }
 
@@ -162,7 +173,7 @@ int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 	printf("lookup_var called with char: '%c'\n", c);
 	if (!ft_isalnum_underscore(c))
 	{
-		printf("character '%c' is not alphanum/underscore, catching absent var\n", c);
+		printf("character '%c' is not valid, catching absent var\n", c);
 		return (catch_absent_var(sh, ve));
 	}
 	ve->var_name_buffer[ve->var_name_i] = c;
@@ -183,7 +194,6 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *line)
 	int	i;
 
 	i = 0;
-	ve->var_i = -1;
 	while (line[i])
 	{
 		if (ve->var_lookup
@@ -192,66 +202,46 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *line)
 			printf("error with catch_var on expansion\n");
 			return (sh->exit_code);
 		}
-		if (ve->single_quote && ft_is_singlequote(line[i]))
-			ve->single_quote = false;
-		else if (ve->single_quote)
+		if (handle_single_quote(line, &ve->single_quote, i))
 			;
-		else if (ft_is_singlequote(line[i]))
-			ve->single_quote = true;
 		else if ('$' == line[i] && ft_isalnum_underscore(line[i + 1]))
 		{
 			printf("Found $ at position %d, next char: %c\n", i, line[i + 1]);
-			ve->var_i++;
 			ve->var_lookup = true;
 		}
 		i++;
 	}
+	ve->var_i = 0;
+	ve->var_lookup = false;
 	return (EXIT_SUCCESS);
 }
 
 int	expand_vars(t_msh *sh, t_var_expand *ve, char *line)
 {
-	int	i;
-	int skipped_chars;
-	int exp_i;
-	char *value;
-
-	(void)sh;
-	i = 0;
-	skipped_chars = 0;
-	exp_i = 0;
-	ve->var_i = -1;
-	while (line[i])
+	while (line[ve->i])
 	{
-		ve->var_lookup = false;
-		if (ve->single_quote && ft_is_singlequote(line[i]))
-			ve->single_quote = false;
-		else if (ve->single_quote)
+		if (handle_single_quote(line, &ve->single_quote, ve->i))
 			;
-		else if (ft_is_singlequote(line[i]))
-			ve->single_quote = true;
-		else if ('$' == line[i] && ft_isalnum_underscore(line[i + 1]))
+		else if ('$' == line[ve->i] && ft_isalnum_underscore(line[ve->i + 1]))
 		{
 			ve->var_lookup = true;
-			printf("Found $ at position %d, next char: %c\n", i, line[i + 1]);
-			ve->var_i++;
-			value = ve->var_values[ve->var_i];
-			while (*value)
+			ve->value = ve->var_values[ve->var_i];
+			while (*ve->value)
 			{
-				ve->new_line[i + exp_i - skipped_chars] = *value;
-				exp_i++;
-				value++;
+				ve->newline[ve->i + ve->exp_i - ve->skipped_chars] = *ve->value;
+				ve->exp_i++;
+				ve->value++;
 			}
-			i += ft_strlen(ve->var_names[ve->var_i]);
-			skipped_chars += ft_strlen(ve->var_names[ve->var_i]) + 1;
+			ve->i += ft_strlen(ve->var_names[ve->var_i]);
+			ve->skipped_chars += ft_strlen(ve->var_names[ve->var_i]) + 1;
+			ve->var_i++;
 		}
-		if (!ve->var_lookup)
-			ve->new_line[i + exp_i - skipped_chars] = line[i];
-		i++;
+		if (ve->var_lookup == false)
+			ve->newline[ve->i + ve->exp_i - ve->skipped_chars] = line[ve->i];
+		ve->var_lookup = false;
+		ve->i++;
 	}
-	ve->new_line[i + exp_i - skipped_chars] = '\0';
-	printf("new_line made: %s\n", ve->new_line);
-	return (EXIT_SUCCESS);
+	return (sh->exit_code);
 }
 
 int	allocate_new_line(t_msh *sh, t_var_expand *ve)
@@ -260,7 +250,7 @@ int	allocate_new_line(t_msh *sh, t_var_expand *ve)
 
 	new_line_len = ve->line_len + ft_strlen_array(ve->var_values)
 		- (ft_strlen_array(ve->var_names) + ve->var_total);
-	if (callo_x((void **)&ve->new_line, new_line_len, sizeof(char))
+	if (callo_x((void **)&ve->newline, new_line_len + 1, sizeof(char))
 		!= EXIT_SUCCESS)
 	{
 		printf("new_line allocation failed\n");
@@ -301,7 +291,11 @@ int	expand_line(t_msh *sh)
 		sh->exit_code = EXIT_FAILURE;
 		return (sh->exit_code);
 	}
-	free(sh->line);
-	sh->line = ve.new_line;
+	printf("new_line made: %s\n", ve.newline);
+	safe_free_string(&sh->line);
+	sh->line = ve.newline;
+	ve.newline = NULL;
+	safe_free_2d_string(&ve.var_names);
+	safe_free_2d_string(&ve.var_values);
 	return (EXIT_SUCCESS);
 }
