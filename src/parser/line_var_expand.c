@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/04 13:16:28 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/04 14:48:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,8 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 		sh->exit_code = errno;
 		return (errno);
 	}
-	return (EXIT_SUCCESS);
 	reset_var_lookup(sh, ve);
+	return (EXIT_SUCCESS);
 }
 
 int	catch_absent_var(t_msh *sh, t_var_expand *ve)
@@ -223,6 +223,7 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *line)
 	ve->var_i = -1;
 	while (line[i])
 	{
+		ve->var_lookup = false;
 		if (ve->single_quote && ft_is_singlequote(line[i]))
 			ve->single_quote = false;
 		else if (ve->single_quote)
@@ -231,20 +232,24 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *line)
 			ve->single_quote = true;
 		else if ('$' == line[i] && ft_isalnum_underscore(line[i + 1]))
 		{
+			ve->var_lookup = true;
 			printf("Found $ at position %d, next char: %c\n", i, line[i + 1]);
 			ve->var_i++;
 			value = ve->var_values[ve->var_i];
-			skipped_chars++;
 			while (*value)
 			{
-				exp_i++;
 				ve->new_line[i + exp_i - skipped_chars] = *value;
+				exp_i++;
 				value++;
 			}
+			i += ft_strlen(ve->var_names[ve->var_i]);
+			skipped_chars += ft_strlen(ve->var_names[ve->var_i]) + 1;
 		}
-		ve->new_line[i + exp_i] = line[i];
+		if (!ve->var_lookup)
+			ve->new_line[i + exp_i - skipped_chars] = line[i];
 		i++;
 	}
+	ve->new_line[i + exp_i - skipped_chars] = '\0';
 	printf("new_line made: %s\n", ve->new_line);
 	return (EXIT_SUCCESS);
 }
@@ -255,7 +260,7 @@ int	allocate_new_line(t_msh *sh, t_var_expand *ve)
 
 	new_line_len = ve->line_len + ft_strlen_array(ve->var_values)
 		- (ft_strlen_array(ve->var_names) + ve->var_total);
-	if (callo_x((void *)ve->new_line, new_line_len, sizeof(char))
+	if (callo_x((void **)&ve->new_line, new_line_len, sizeof(char))
 		!= EXIT_SUCCESS)
 	{
 		printf("new_line allocation failed\n");
@@ -296,5 +301,7 @@ int	expand_line(t_msh *sh)
 		sh->exit_code = EXIT_FAILURE;
 		return (sh->exit_code);
 	}
+	free(sh->line);
+	sh->line = ve.new_line;
 	return (EXIT_SUCCESS);
 }
