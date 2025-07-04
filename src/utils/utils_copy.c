@@ -6,17 +6,17 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 23:22:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/28 10:01:54 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/04 18:25:02 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char **copy_string_array(char **strings)
+char	**copy_string_array(char **strings)
 {
 	int		i;
 	int		len;
-	char 	**copy;
+	char	**copy;
 
 	if (!strings || !strings[0])
 		return (NULL);
@@ -39,4 +39,17 @@ char **copy_string_array(char **strings)
 		i++;
 	}
 	return (copy);
+}
+
+int	ft_strlen_array(char **array)
+{
+	int	count;
+
+	count = 0;
+	while (*array)
+	{
+		count += ft_strlen(*array);
+		array++;
+	}
+	return (count);
 }

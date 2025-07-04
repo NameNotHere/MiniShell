@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 14:49:57 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/03 03:17:50 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/03 14:17:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,3 +41,36 @@ bool	piped_line(char *line)
 	}
 	return (false);
 }
+
+int	ft_isalnum_underscore(int c)
+{
+	if (ft_isalnum(c))
+		return (1);
+	if ('_' == c)
+		return (1);
+	return (0);
+}
+
+int	ft_is_singlequote(int c)
+{
+	if ('\'' == c)
+		return (1);
+	return (0);
+}
+
+int	ft_is_doublequote(int c)
+{
+	if ('\"' == c)
+		return (1);
+	return (0);
+}
+
+int	ft_is_quote(int c)
+{
+	if (ft_is_singlequote(c))
+		return (1);
+	if (ft_is_doublequote(c))
+		return (1);
+	return (0);
+}
+
