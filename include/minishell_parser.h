@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/04 16:04:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/05 10:42:25 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ typedef struct s_ast
 typedef struct s_var_expand
 {
 	char	var_name_buffer[ENV_VAR_NAME_MAX];
-	char 	*newline;
+	char	*newline;
 	char	*value;
 	int		i;
 	int		line_len;
@@ -253,9 +253,27 @@ char		*make_word(char *str, int *i, int *err);
 
 int			skip_spaces(int *i, char *str);
 
+// parser/line_var_expand_catch.c
+
+int			get_var_count(char *line);
+
+int			catch_all_vars(t_msh *sh, t_var_expand *ve, char *line);
+
 // parser/line_var_expand.c
 
 int			expand_line(t_msh *sh);
+
+// parser/line_var_expand_helper.c
+
+bool		handle_single_quote(char *line, bool *single_quote, int i);
+
+int			init_var_expand_arrays(t_msh *sh, t_var_expand *ve);
+
+int			allocate_new_line(t_msh *sh, t_var_expand *ve);
+
+void		reset_var_lookup(t_var_expand *ve);
+
+void		replace_line_and_cleanup(t_msh *sh, t_var_expand *ve);
 
 // parser/tokenize.c
 
@@ -274,14 +292,6 @@ int			isminioperator(char *token, int i);
 // parser/utils/utils_line.c
 
 bool		piped_line(char *line);
-
-int			ft_isalnum_underscore(int c);
-
-int			ft_is_singlequote(int c);
-
-int			ft_is_doublequote(int c);
-
-int			ft_is_quote(int c);
 
 // errors
 void		int_closed(char *str, int i, char quote);
