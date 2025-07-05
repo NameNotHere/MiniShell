@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/04 18:55:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/05 12:10:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,17 @@ void	execute_ast_node(t_msh *sh, t_ast *node, bool from_pipe);
 
 int		lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);
 
-// exec/utils/utils_path.c
+// utils/utils_char.c
 
-char	*make_cmd_full_path(const char *dir, const char *cmd);
+int		ft_isalnum_underscore(int c);
 
-char	*get_valid_cmd_full_path(char **path_dirs, char *cmd);
+int		ft_is_singlequote(int c);
 
-char	*get_path_from_env(char **envp);
+int		ft_is_doublequote(int c);
 
-// utils/utils_copy.c
+int		ft_is_quote(int c);
+
+// utils/utils_string_array.c
 
 char	**copy_string_array(char **strings);
 
@@ -97,9 +99,21 @@ void	safe_free_3d_string(char ****ptr);
 
 void	safe_free_bool(bool **ptr);
 
+// utils/utils_path.c
+
+char	*make_cmd_full_path(const char *dir, const char *cmd);
+
+char	*get_valid_cmd_full_path(char **path_dirs, char *cmd);
+
+char	*get_path_from_env(char **envp);
+
 // utils/utils_readine
 
 bool	readline_on_tty(const char *prompt, char **line);
+
+// utils/utils_string.c
+
+char	*get_empty_string(void);
 
 // filenavs.c
 

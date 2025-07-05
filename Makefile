@@ -34,9 +34,9 @@ all:
 # ***** MINISHELL SRCS *****
 SRCS = minishell_main.c \
 	minishell_line.c \
+	exec/filenavs.c \
 	exec/lookup_cmd_fullpath.c \
 	exec/process.c \
-	exec/utils/utils_path.c \
 	parser/ast.c \
 	parser/ast_cmd.c \
 	parser/ast_helper.c \
@@ -45,14 +45,18 @@ SRCS = minishell_main.c \
 	parser/errors.c \
 	parser/lex.c \
 	parser/line_var_expand.c \
+	parser/line_var_expand_catch.c \
+	parser/line_var_expand_helper.c \
 	parser/tokenize.c \
-	parser/utils/isminioperator.c\
-	parser/utils/utils_line.c \
-	utils/utils_copy.c \
+	utils/parser_isminioperator.c \
+	utils/parser_line.c \
+	utils/utils_char.c \
+	utils/utils_string_array.c \
 	utils/utils_env.c \
 	utils/utils_free.c \
+	utils/utils_path.c \
 	utils/utils_readline.c \
-	exec/filenavs.c \
+	utils/utils_string.c \
 	signals/signals.c
 
 OBJS = $(SRCS:.c=.o)
@@ -71,7 +75,7 @@ PARSER_SRCS = parser/ast.c \
 	parser/lex.c \
 	parser/main.c \
 	parser/tokenize.c \
-	parser/utils/isminioperator.c
+	utils/parser_isminioperator.c
 
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
 PARSER_OBJS := $(addprefix $(OBJDIR)/, $(PARSER_OBJS))
