@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/05 12:05:04 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/05 12:10:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,15 @@ int		lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);
 
 // utils/utils_char.c
 
-int			ft_isalnum_underscore(int c);
+int		ft_isalnum_underscore(int c);
 
-int			ft_is_singlequote(int c);
+int		ft_is_singlequote(int c);
 
-int			ft_is_doublequote(int c);
+int		ft_is_doublequote(int c);
 
-int			ft_is_quote(int c);
+int		ft_is_quote(int c);
 
-// utils/utils_copy.c
+// utils/utils_string_array.c
 
 char	**copy_string_array(char **strings);
 

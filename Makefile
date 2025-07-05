@@ -51,7 +51,7 @@ SRCS = minishell_main.c \
 	utils/parser_isminioperator.c \
 	utils/parser_line.c \
 	utils/utils_char.c \
-	utils/utils_copy.c \
+	utils/utils_string_array.c \
 	utils/utils_env.c \
 	utils/utils_free.c \
 	utils/utils_path.c \
