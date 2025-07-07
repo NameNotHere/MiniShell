@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/05 10:43:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 19:14:02 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *line)
 		ve->var_lookup = false;
 		ve->i++;
 	}
-	printf("new_line made: %s\n", ve->newline);
+	d_print("new_line made: %s\n", ve->newline);
 	return (sh->exit_code);
 }
 
@@ -54,14 +54,14 @@ int	expand_line(t_msh *sh)
 		return (EXIT_SUCCESS);
 	if (init_var_expand_arrays(sh, &ve) != EXIT_SUCCESS)
 		return (sh->exit_code);
-	printf("line before expanding is:%s\n", sh->line);
+	d_print("line before expanding is:%s\n", sh->line);
 	if (catch_all_vars(sh, &ve, sh->line) != EXIT_SUCCESS)
 		return (sh->exit_code);
 	if (allocate_new_line(sh, &ve) != EXIT_SUCCESS)
 		return (sh->exit_code);
 	if (expand_vars(sh, &ve, sh->line) != EXIT_SUCCESS)
 	{
-		printf("error on variable expansion");
+		d_print("error on variable expansion");
 		sh->exit_code = EXIT_FAILURE;
 		return (sh->exit_code);
 	}

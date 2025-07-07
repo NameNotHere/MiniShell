@@ -1,16 +1,18 @@
 # THIS MAKEFILE COMPILES 3 separate executables:
 # parser, pipex (interactive) and minishell
 # TODO: minishell not implemented yet, parser is the minishell parser
-# TODO: before eval, this makefile will only compile minishell (cleanup before eval)
+# TODO: before eval, this makefile will only compile minishell (cleanup b4 eval)
+# TODO: remove all debug folder references in sources.
 
 # executables
 NAME = minishell
 PIPEX = pipex
 PARSER = parser
 
+#TODO: remove -g before submitting
 # compiler settings
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g
 # LDFLAGS = -lreadline
 LDFLAGS = -lreadline -Llibft -lft
 
@@ -40,7 +42,6 @@ SRCS = minishell_main.c \
 	parser/ast.c \
 	parser/ast_cmd.c \
 	parser/ast_helper.c \
-	parser/ast_print.c \
 	parser/ast_redir.c \
 	parser/errors.c \
 	parser/lex.c \
@@ -58,7 +59,9 @@ SRCS = minishell_main.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
 	utils/utils_string.c \
-	signals/signals.c
+	signals/signals.c \
+	debug/utils_debug.c \
+	debug/ast_print.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
@@ -70,14 +73,14 @@ $(NAME): $(LIBFT) $(OBJS)
 PARSER_SRCS = parser/ast.c \
 	parser/ast_cmd.c \
 	parser/ast_helper.c \
-	parser/ast_print.c \
 	parser/ast_redir.c \
 	parser/errors.c \
 	parser/lex.c \
 	parser/main.c \
 	parser/tokenize.c \
-	utils/parser_isminioperator.c
-
+	utils/parser_isminioperator.c \
+	debug/utils_debug.c \
+	debug/ast_print.c
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
 PARSER_OBJS := $(addprefix $(OBJDIR)/, $(PARSER_OBJS))
 

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:18:05 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/29 23:47:37 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 22:13:14 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ void	print_ast(t_ast *root)
 {
 	if (!root)
 	{
-		printf("\n\nAST: (empty)\n");
+		a_print("\n\nAST: (empty)\n");
 		return ;
 	}
-	printf("\n\nAST:\n");
+	a_print("\n\nAST:\n");
 	print_ast_node(root, 0);
 }
 
@@ -56,12 +56,12 @@ void	print_ast_node(t_ast *node, int depth)
 		return ;
 	i = -1;
 	while (++i < depth)
-		printf("  ");
+		a_print("  ");
 	if (node->nty == NODE_CMD)
 		print_ast_cmd(node);
 	else if (node->nty == NODE_PIPE)
 	{
-		printf("PIPE\n");
+		a_print("PIPE\n");
 		print_ast_node(node->pipe.left, depth + 1);
 		print_ast_node(node->pipe.right, depth + 1);
 	}
@@ -72,25 +72,25 @@ void	print_ast_cmd(t_ast *node)
 	int		i;
 	t_redir	*redir;
 
-	printf("CMD: ");
+	a_print("CMD: ");
 	if (node->cmd.argv && node->cmd.argv[0])
 	{
 		i = -1;
 		while (node->cmd.argv[++i])
 		{
-			printf("%s", node->cmd.argv[i]);
+			a_print("%s", node->cmd.argv[i]);
 			if (node->cmd.argv[i + 1])
-				printf(" ");
+				a_print(" ");
 		}
 	}
 	redir = node->cmd.redir;
 	while (redir)
 	{
-		printf(" [%s: %s]", get_redir_symbol(redir->ty),
+		a_print(" [%s: %s]", get_redir_symbol(redir->ty),
 			redir->string);
 		redir = redir->next;
 	}
-	printf("\n");
+	a_print("\n");
 }
 
 /*
@@ -101,6 +101,7 @@ int	print_build_ast(t_msh *sh,  t_ast *ast, t_token *tokens)
 	if (!ast)
 		return (EXIT_SUCCESS);
 	build_ast(sh, ast, tokens);
-	print_ast(ast);
+	if (DEBUG_MINISHELL)
+		print_ast(ast);
 	return (EXIT_SUCCESS);
 }

@@ -19,8 +19,8 @@ char	*cd(char *path, char *new_path)
 		free(path); // not sure if I need this
 		return (output);
 	}
-	else
-		printf("access error\n");
+	// else
+	// 	d_print("access error\n");
 	return (path);
 }
 

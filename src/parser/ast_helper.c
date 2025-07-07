@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:04:16 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/29 18:29:34 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 22:09:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	free_ast(t_ast **node)
 		free_ast(&(*node)->pipe.right);
 	}
 	free(*node);
-	*node = NULL;  // This properly sets the caller's pointer to NULL
+	*node = NULL;
 }
 
 int	last_token(t_token *tokens)

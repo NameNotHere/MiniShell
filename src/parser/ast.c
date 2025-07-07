@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/29 23:49:17 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 22:12:05 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,15 +75,15 @@ void	parse_pipe(t_msh *sh, t_ast *ast, int start, int end)
 {
 	if (!(sh->tokens && sh->tokens[0].word))
 		return ;
-	printf("pipe node->ADD\n");
-	printf("	start pipe tk: %d, end pipe tk: %d\n",
+	a_print("pipe node->ADD\n");
+	a_print("	start pipe tk: %d, end pipe tk: %d\n",
 		start,
 		end);
 	ast->pipe.left = make_ast_node(NODE_CMD);
 	ast->pipe.right = make_ast_node(NODE_UNKNOWN);
 	if (!ast->pipe.left || !ast->pipe.right)
 	{
-		printf("*** ERROR *** Failed to allocate AST nodes\n");
+		a_print("*** ERROR *** Failed to allocate AST nodes\n");
 		return ;
 	}
 	parse_cmd(sh, ast->pipe.left, start, end);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:17:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 02:27:54 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 19:11:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	parse_line_and_execute_ast(t_msh *sh)
 {
 	if (parse_line_to_ast(sh, sh->ast, sh->line) != EXIT_SUCCESS)
 		return (sh->exit_code);
-	printf("\n***checking command paths***\n");
+	d_print("\n***checking command paths***\n");
 	lookup_all_cmd_fullpaths(sh, sh->ast);
 	sh->exit_code = execute_ast_node(sh, sh->ast, STDIN_FILENO, STDOUT_FILENO);
 	return (sh->exit_code);
@@ -36,19 +36,19 @@ int	parse_line_to_ast(t_msh *sh, t_ast *ast, char *string)
 	int			token_count;
 	t_token		*tokens;
 
-	printf("Input string: %s\n", string);
-	printf("Expected token count: %d\n", count_tokens(string));
+	d_print("Input string: %s\n", string);
+	d_print("Expected token count: %d\n", count_tokens(string));
 	tokens = tokenize(string, &token_count, &sh->err);
 	if (!tokens)
 	{
-		printf("tokenizer failed with error #%d\n", sh->exit_code);
+		d_print("tokenizer failed with error #%d\n", sh->exit_code);
 		return (sh->exit_code);
 	}
-	printf("Actual token count: %d\n", token_count);
+	d_print("Actual token count: %d\n", token_count);
 	i = -1;
 	sh->tokens = tokens;
 	while (token_count > ++i)
-		printf("%2d %12s  %s \n",
+		d_print("%2d %12s  %s \n",
 			tokens[i].ty,
 			get_token_name(tokens[i].ty),
 			tokens[i].word);

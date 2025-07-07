@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/05 10:38:01 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 19:13:57 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 	ve->var_names = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_names)
 	{
-		printf("allocation error on var names");
+		d_print("allocation error on var names");
 		sh->err = errno;
 		sh->exit_code = errno;
 		return (errno);
@@ -38,7 +38,7 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 	ve->var_values = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_values)
 	{
-		printf("allocation error on var values");
+		d_print("allocation error on var values");
 		sh->err = errno;
 		sh->exit_code = errno;
 		return (errno);
@@ -63,7 +63,7 @@ int	allocate_new_line(t_msh *sh, t_var_expand *ve)
 	if (callo_x((void **)&ve->newline, new_line_len + 1, sizeof(char))
 		!= EXIT_SUCCESS)
 	{
-		printf("new_line allocation failed\n");
+		d_print("new_line allocation failed\n");
 		sh->exit_code = ENOMEM;
 		if (errno)
 			sh->exit_code = errno;

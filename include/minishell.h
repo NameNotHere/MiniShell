@@ -6,13 +6,14 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 04:16:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 12:42:39 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "minishell_parser.h"
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdbool.h>
@@ -23,7 +24,7 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include "libft.h"
-# include "minishell_parser.h"
+
 
 /*
 	\033[96m = cyan
@@ -62,6 +63,8 @@ int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
 void	debug_print_one_redir(t_redir *redir);
 
 int		execute_ast_node(t_msh *sh, t_ast *node, int fd_in, int fd_out);
+
+int		execute_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out);
 
 // exec/lookup_cmd_fullpath.c
 
