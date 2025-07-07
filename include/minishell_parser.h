@@ -192,6 +192,7 @@ typedef struct s_msh
 	char	*line;
 	int		err;
 	int		exit_code;
+	pid_t	last_pid;
 }	t_msh;
 
 // parser/ast.c

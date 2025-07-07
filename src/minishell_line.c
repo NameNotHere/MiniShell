@@ -6,20 +6,25 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:17:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/30 15:44:28 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 02:27:54 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+
+/*
+TODO: we are returning either sh->err or sh-exit_code.
+need to decide what (if what) something exits.
+*/
 int	parse_line_and_execute_ast(t_msh *sh)
 {
 	if (parse_line_to_ast(sh, sh->ast, sh->line) != EXIT_SUCCESS)
-		return (sh->err);
+		return (sh->exit_code);
 	printf("\n***checking command paths***\n");
 	lookup_all_cmd_fullpaths(sh, sh->ast);
-	execute_ast_node(sh, sh->ast, false);
-	return (EXIT_SUCCESS);
+	sh->exit_code = execute_ast_node(sh, sh->ast, STDIN_FILENO, STDOUT_FILENO);
+	return (sh->exit_code);
 }
 
 /*
@@ -36,8 +41,8 @@ int	parse_line_to_ast(t_msh *sh, t_ast *ast, char *string)
 	tokens = tokenize(string, &token_count, &sh->err);
 	if (!tokens)
 	{
-		printf("tokenizer failed with error #%d\n", sh->err);
-		return (sh->err);
+		printf("tokenizer failed with error #%d\n", sh->exit_code);
+		return (sh->exit_code);
 	}
 	printf("Actual token count: %d\n", token_count);
 	i = -1;

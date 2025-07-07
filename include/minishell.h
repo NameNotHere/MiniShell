@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/05 12:10:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 04:16:42 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
 
 void	debug_print_one_redir(t_redir *redir);
 
-void	execute_ast_node(t_msh *sh, t_ast *node, bool from_pipe);
+int		execute_ast_node(t_msh *sh, t_ast *node, int fd_in, int fd_out);
 
 // exec/lookup_cmd_fullpath.c
 
@@ -88,6 +88,14 @@ int		ft_strlen_array(char **array);
 bool	is_var_in_env(t_msh *sh, char *var, int *envp_index);
 
 char	*get_env_value(t_msh *sh, char *var_name, int envp_index);
+
+// utils/utils_error.c
+
+void	put_stderr(const char *error);
+
+void	put_stderr_2(const char *str1, const char *str2);
+
+void	put_stderr_3(const char *str1, const char *str2, const char *str3);
 
 // utils/utils_free.c
 
