@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 19:12:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/08 14:49:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,17 @@ int	handle_execute_command_errors(t_msh *sh, t_cmd *cmd)
 	(void)cmd;
 	if (errno == EACCES)
 	{
-		// if (cmd->full_cmd == NULL)
-		// 	put_stderr("permission denied: (empty command)\n");
-		// else
-		// 	put_stderr_3("permission denied: ", cmd->argv[0], "\n");
+		if (cmd->full_cmd == NULL)
+			put_stderr("permission denied: (empty command)\n");
+		else
+			put_stderr_3("permission denied: ", cmd->argv[0], "\n");
 		sh->exit_code = 126;
 		return (126);
 	}
-	// if (cmd->full_cmd == NULL)
-	// 	put_stderr("command not found: (empty command)\n");
-	// else
-	// 	put_stderr_3("command not found: ", cmd->argv[0], "\n");
+	if (cmd->full_cmd == NULL)
+		put_stderr("command not found: (empty command)\n");
+	else
+		put_stderr_3("command not found: ", cmd->argv[0], "\n");
 	sh->exit_code = 127;
 	return (127);
 }
@@ -93,10 +93,10 @@ int	execute_command(t_msh *sh, t_cmd *cmd)
 {
 	if (cmd->not_found)
 	{
-		// if (cmd->argv[0] == NULL)
-		// 	put_stderr("command not found: (empty command)\n");
-		// else
-		// 	put_stderr_3("command not found: ", cmd->argv[0], "\n");
+		if (cmd->argv[0] == NULL)
+			put_stderr("command not found: (empty command)\n");
+		else
+			put_stderr_3("command not found: ", cmd->argv[0], "\n");
 		sh->exit_code = 127;
 		return (127);
 	}
@@ -104,33 +104,33 @@ int	execute_command(t_msh *sh, t_cmd *cmd)
 	return (handle_execute_command_errors(sh, cmd));
 }
 
-void	try_dup2_stdout(t_msh *sh, int fd_in, int fd_out)
+void	try_dup2_stdout(t_msh *sh, int *fd_in, int *fd_out)
 {
-	if (fd_out != STDOUT_FILENO)
+	if (*fd_out != STDOUT_FILENO)
 	{
-		if (dup2(fd_out, STDOUT_FILENO) == -1)
+		if (dup2(*fd_out, STDOUT_FILENO) == -1)
 		{
 			perror("dup2");
 			close_fds_exit_error_free(sh,
-				"error: failed to redirect output", fd_in, fd_out);
+				"error: failed to redirect output", *fd_in, *fd_out);
 		}
 	}
 }
 
-void	try_dup2_stdin(t_msh *sh, int fd_in, int fd_out)
+void	try_dup2_stdin(t_msh *sh, int *fd_in, int *fd_out)
 {
-	if (fd_in != STDIN_FILENO)
+	if (*fd_in != STDIN_FILENO)
 	{
-		if (dup2(fd_in, STDIN_FILENO) == -1)
+		if (dup2(*fd_in, STDIN_FILENO) == -1)
 		{
 			perror("dup2");
 			close_fds_exit_error_free(sh,
-				"error: failed to redirect input", fd_in, fd_out);
+				"error: failed to redirect input", *fd_in, *fd_out);
 		}
 	}
 }
 
-void	try_dup2(t_msh *sh, int fd_in, int fd_out)
+void	try_dup2(t_msh *sh, int *fd_in, int *fd_out)
 {
 	try_dup2_stdin(sh, fd_in, fd_out);
 	try_dup2_stdout(sh, fd_in, fd_out);
@@ -151,25 +151,7 @@ int	execute_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out)
 	}
 	if (pid == 0)
 	{
-		// if (fd_in != STDIN_FILENO)
-		// {
-		// 	if (dup2(fd_in, STDIN_FILENO) == -1)
-		// 	{
-		// 		perror("dup2");
-		// 		close_fds_exit_error_free(sh,
-		// 			"error: failed to redirect input", fd_in, fd_out);
-		// 	}
-		// }
-		// if (fd_out != STDOUT_FILENO)
-		// {
-		// 	if (dup2(fd_out, STDOUT_FILENO) == -1)
-		// 	{
-		// 		perror("dup2");
-		// 		close_fds_exit_error_free(sh,
-		// 			"error: failed to redirect output", fd_in, fd_out);
-		// 	}
-		// }
-		try_dup2(sh, fd_in, fd_out);
+		try_dup2(sh, &fd_in, &fd_out);
 		safe_close_fds(&fd_in, &fd_out);
 		sh->exit_code = execute_command(sh, cmd);
 		exit_free_with_code(sh, sh->exit_code);
