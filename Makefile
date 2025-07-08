@@ -40,6 +40,8 @@ SRCS = minishell_main.c \
 	exec/lookup_cmd_fullpath.c \
 	exec/execute.c \
 	exec/execute_cmd.c \
+	exec/execute_cmd_redir.c \
+	exec/execute_cmd_redir_open.c \
 	parser/ast.c \
 	parser/ast_cmd.c \
 	parser/ast_helper.c \

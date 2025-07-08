@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/08 23:38:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/09 01:29:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,22 @@ int		parse_line_and_execute_ast(t_msh *sh);
 int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
 
 // exec/execute.c
-// TODO: remove debug functions before eval.
-// void	debug_print_one_redir(t_redir *redir);
 int		execute_ast_node(t_msh *sh, t_ast *node, int fd_in, int fd_out);
 int		execute_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out);
 
 // exec/execute_cmd.c
 int		execute_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
+
+// exec/execute_cmd_redir.c
+// void	execute_redirection_in(t_msh *sh, t_redir *redir);
+// void	execute_redirection_out(t_msh *sh, t_redir *redir);
+void	execute_redirection(t_msh *sh, t_redir *redir);
+
+// exec/execute_cmd_redir_open.c
+// int		failed_open_to_null(t_msh *sh, char *filename, int o_flag);
+int		open_input_redirection(t_msh *sh, char *filename);
+int		open_output_redirection(t_msh *sh, char *filename);
+int		open_append_redirection(t_msh *sh, char *filename);
 
 // exec/lookup_cmd_fullpath.c
 int		lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);
