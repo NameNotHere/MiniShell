@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 19:00:18 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/08 17:05:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/08 20:48:42 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 # define DEBUG_TOKENIZE false
 # define DEBUG_AST false
 # define DEBUG_MINISHELL false
+
+# define REDIR_INPUT_PRINT "< INPUT"
+# define REDIR_OUTPUT_PRINT "> OUTPUT"
+# define REDIR_APPEND_PRINT ">> APPEND"
+# define REDIR_HEREDOC_PRINT "<< HEREDOC"
 
 // forward declarations:
 typedef struct s_ast	t_ast;

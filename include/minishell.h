@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/08 17:36:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/08 23:38:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@
 	user input has default term color
 */
 # define MINISHELL_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
+
+// 0644: user can read/write, others can read. reasonable/safe setting.
+# define OUTPUT_PERMISSIONS 0644
 
 typedef enum e_err_code
 {
@@ -72,8 +75,8 @@ int		ft_is_doublequote(int c);
 int		ft_is_quote(int c);
 
 // utils/utils_dup2.c
-// void	try_dup2_stdout(t_msh *sh, int *fd_in, int *fd_out);
-// void	try_dup2_stdin(t_msh *sh, int *fd_in, int *fd_out);
+void	try_dup2_stdout(t_msh *sh, int *fd_in, int *fd_out);
+void	try_dup2_stdin(t_msh *sh, int *fd_in, int *fd_out);
 void	try_dup2(t_msh *sh, int *fd_in, int *fd_out);
 
 // utils/utils_env.c
