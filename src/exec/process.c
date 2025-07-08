@@ -6,88 +6,11 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/08 14:49:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/08 17:00:12 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	safe_close_fd_in(int *fd_in)
-{
-	if (*fd_in != STDIN_FILENO && *fd_in >= 0)
-	{
-		close(*fd_in);
-		*fd_in = -1;
-	}
-
-}
-
-void	safe_close_fd_out(int *fd_out)
-{
-	if (*fd_out != STDOUT_FILENO && *fd_out >= 0)
-	{
-		close(*fd_out);
-		*fd_out = -1;
-	}
-}
-
-void	safe_close_fds(int *fd_in, int *fd_out)
-{
-	safe_close_fd_in(fd_in);
-	safe_close_fd_out(fd_out);
-}
-
-void	exit_error(const char *error)
-{
-	if (errno)
-		perror(error);
-	else
-		put_stderr_2(error, "\n");
-	if (errno == EACCES)
-		exit(126);
-	else if (errno == ENOENT)
-		exit(127);
-	else
-		exit(EXIT_FAILURE);
-}
-
-void	exit_error_free(t_msh *sh, const char *error)
-{
-	free_everything(sh);
-	exit_error(error);
-}
-
-void	exit_free_with_code(t_msh *sh, int exit_code)
-{
-	free_everything(sh);
-	exit(exit_code);
-}
-
-void	close_fds_exit_error_free(t_msh *sh, const char *error, int fd_in, int fd_out)
-{
-	safe_close_fds(&fd_in, &fd_out);
-	exit_error_free(sh, error);
-}
-
-int	handle_execute_command_errors(t_msh *sh, t_cmd *cmd)
-{
-	(void)cmd;
-	if (errno == EACCES)
-	{
-		if (cmd->full_cmd == NULL)
-			put_stderr("permission denied: (empty command)\n");
-		else
-			put_stderr_3("permission denied: ", cmd->argv[0], "\n");
-		sh->exit_code = 126;
-		return (126);
-	}
-	if (cmd->full_cmd == NULL)
-		put_stderr("command not found: (empty command)\n");
-	else
-		put_stderr_3("command not found: ", cmd->argv[0], "\n");
-	sh->exit_code = 127;
-	return (127);
-}
 
 int	execute_command(t_msh *sh, t_cmd *cmd)
 {
@@ -102,38 +25,6 @@ int	execute_command(t_msh *sh, t_cmd *cmd)
 	}
 	execve(cmd->full_cmd, cmd->argv, sh->envp);
 	return (handle_execute_command_errors(sh, cmd));
-}
-
-void	try_dup2_stdout(t_msh *sh, int *fd_in, int *fd_out)
-{
-	if (*fd_out != STDOUT_FILENO)
-	{
-		if (dup2(*fd_out, STDOUT_FILENO) == -1)
-		{
-			perror("dup2");
-			close_fds_exit_error_free(sh,
-				"error: failed to redirect output", *fd_in, *fd_out);
-		}
-	}
-}
-
-void	try_dup2_stdin(t_msh *sh, int *fd_in, int *fd_out)
-{
-	if (*fd_in != STDIN_FILENO)
-	{
-		if (dup2(*fd_in, STDIN_FILENO) == -1)
-		{
-			perror("dup2");
-			close_fds_exit_error_free(sh,
-				"error: failed to redirect input", *fd_in, *fd_out);
-		}
-	}
-}
-
-void	try_dup2(t_msh *sh, int *fd_in, int *fd_out)
-{
-	try_dup2_stdin(sh, fd_in, fd_out);
-	try_dup2_stdout(sh, fd_in, fd_out);
 }
 
 int	execute_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out)
@@ -156,12 +47,13 @@ int	execute_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out)
 		sh->exit_code = execute_command(sh, cmd);
 		exit_free_with_code(sh, sh->exit_code);
 	}
+	debug_print_one_redir(cmd->redir);
 	safe_close_fd_out(&fd_out);
 	return (EXIT_SUCCESS);
 }
 
-// pipefd[1] is used by the left-side to write to the pipe (STDOUT_FILENO)
-// pipefd[0] is used by the right-side to read from the pipe (STDIN_FILENO)
+// pipefd[1] for left-side to write to the pipe (STDOUT_FILENO)
+// pipefd[0] for right-side to read from the pipe (STDIN_FILENO)
 int	execute_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
 {
 	int		pipefd[2];
@@ -180,21 +72,6 @@ int	execute_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
 	sh->exit_code = execute_ast_node(sh, pipe_node->right, pipefd[0], fd_out);
 	safe_close_fd_in(&pipefd[0]);
 	return (sh->exit_code);
-}
-
-/*
-This just prints a debug print to check redir received at execution
-TODO: REMOVE THIS FUNCTION BEFORE EVAL
-*/
-void	debug_print_one_redir(t_redir *redir)
-{
-	if (redir && redir->string)
-	{
-		d_print("redir type: %s string: |%s|\n",
-			get_redir_symbol(redir->ty),
-			redir->string);
-		debug_print_one_redir(redir->next);
-	}
 }
 
 int	execute_ast_node(t_msh *sh, t_ast *node, int fd_in, int fd_out)

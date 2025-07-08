@@ -52,17 +52,20 @@ SRCS = minishell_main.c \
 	utils/parser_isminioperator.c \
 	utils/parser_line.c \
 	utils/utils_char.c \
+	utils/utils_dup2.c \
 	utils/utils_error.c \
-	utils/utils_string_array.c \
+	utils/utils_exit.c \
+	utils/utils_fd.c \
 	utils/utils_env.c \
 	utils/utils_free.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
 	utils/utils_string.c \
+	utils/utils_string_array.c \
 	signals/signals.c \
-	debug/utils_debug.c \
-	debug/ast_print.c
-
+	debug/ast_print.c \
+	debug/process_debug.c \
+	debug/utils_debug.c
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
 
@@ -102,10 +105,6 @@ PIPEX_SRCS = pipex/pipex.c \
 		pipex/utils_split_quotes.c \
 		pipex/utils_split_single_delimiter.c \
 		pipex/utils_string.c
-
-# REMOVED:
-# pipex/ft_str_utils.c
-# pipex/ft_mem_utils.c
 
 PIPEX_OBJS = $(PIPEX_SRCS:.c=.o)
 PIPEX_OBJS := $(addprefix $(OBJDIR)/, $(PIPEX_OBJS))
