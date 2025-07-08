@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/07 22:17:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/08 20:49:22 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,6 @@ larger than 256: hard to use and read.
 larger than 2048: arbitrarily high soft limit: avoids truncation
 */
 # define ENV_VAR_NAME_MAX 2048
-
-# define REDIR_INPUT_PRINT "< INPUT"
-# define REDIR_OUTPUT_PRINT "> OUTPUT"
-# define REDIR_APPEND_PRINT ">> APPEND"
-# define REDIR_HEREDOC_PRINT "<< HEREDOC"
 
 typedef enum e_token_ty
 {
@@ -97,6 +92,7 @@ typedef struct s_redir
 {
 	t_redir_ty		ty;
 	char			*string;
+	int				fd;
 	struct s_redir	*next;
 }	t_redir;
 

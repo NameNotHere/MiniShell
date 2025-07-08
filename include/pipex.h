@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:13:01 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/25 12:13:57 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/08 16:34:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int		run_pipex_once(int argc, char **argv, char **envp);
 // pipex_interactive.c
 int		run_pipex_interactive(const char *argv_0, char **envp);
 
-bool	get_args_from_line(char *line, const char *arg_0, \
+bool	get_args_from_line(char *line, const char *arg_0,\
 			int *argc, char ***argv);
 
 // utils_error.c
