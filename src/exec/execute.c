@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/08 17:38:30 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/08 17:41:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 // pipefd[1] for left-side to write to the pipe (STDOUT_FILENO)
 // pipefd[0] for right-side to read from the pipe (STDIN_FILENO)
+// TODO: check if leave in case exit code is returned on the left or not.
 int	execute_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
 {
 	int		pipefd[2];
@@ -27,7 +28,7 @@ int	execute_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
 	sh->exit_code = execute_cmd_node(sh, &pipe_node->left->cmd,
 			fd_in, pipefd[1]);
 	safe_close_fd_out(&pipefd[1]);
-	if (sh->exit_code)
+	if (sh->exit_code) // CHECK HERE MAYBE SHOULD NOT LEAVE....
 		return (sh->exit_code);
 	sh->exit_code = execute_ast_node(sh, pipe_node->right, pipefd[0], fd_out);
 	safe_close_fd_in(&pipefd[0]);
