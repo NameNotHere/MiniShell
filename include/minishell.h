@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/08 17:31:48 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/08 17:36:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,9 @@ int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
 // void	debug_print_one_redir(t_redir *redir);
 int		execute_ast_node(t_msh *sh, t_ast *node, int fd_in, int fd_out);
 int		execute_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out);
+
+// exec/execute_cmd.c
+int		execute_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
 
 // exec/lookup_cmd_fullpath.c
 int		lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);
