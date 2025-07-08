@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/08 16:55:04 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/08 17:31:48 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int		minishell_mainloop(t_msh *sh);
 int		parse_line_and_execute_ast(t_msh *sh);
 int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
 
-// exec/process.c
+// exec/execute.c
 // TODO: remove debug functions before eval.
 // void	debug_print_one_redir(t_redir *redir);
 int		execute_ast_node(t_msh *sh, t_ast *node, int fd_in, int fd_out);
