@@ -6,20 +6,24 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/05 12:11:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 22:17:29 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_PARSER_H
 # define MINISHELL_PARSER_H
 
-# include <errno.h>
-# include <stdlib.h>
 # include <stdio.h>
-# include <stdint.h>
+# include <stdarg.h>
+# include <stdlib.h>
 # include <stdbool.h>
-# include <limits.h>
+# include <string.h>
+# include <fcntl.h>
+# include <unistd.h>
+# include <sys/wait.h>
+# include <errno.h>
 # include "libft.h"
+# include "minishell_debug.h"
 
 /*
 no (POSIX or otherwise) standard on enviroment variable name size limit
@@ -192,6 +196,7 @@ typedef struct s_msh
 	char	*line;
 	int		err;
 	int		exit_code;
+	pid_t	last_pid;
 }	t_msh;
 
 // parser/ast.c
@@ -220,18 +225,6 @@ bool		has_pipe(t_token *tokens, int start, int end);
 int			last_token(t_token *tokens);
 
 t_ast		*make_ast_node(t_node_ty ty);
-
-// TODO: REMOVE ALL FUNCS AND FILES FOR AST PRINT BEFORE EVAL
-// parser/ast_print.c
-char		*get_redir_symbol(t_redir_ty ty);
-
-void		print_ast(t_ast *root);
-
-void		print_ast_cmd(t_ast *node);
-
-void		print_ast_node(t_ast *node, int depth);
-
-int			print_build_ast(t_msh *sh, t_ast *ast, t_token *tokens);
 
 // parser/ast_redir.c
 

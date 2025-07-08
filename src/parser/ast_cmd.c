@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/29 23:42:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 22:13:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,30 @@
 	// 4. remove quotes if needed & expand vars,
 	// 5. cleanup
 */
+/*
+// void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
+// {
+// 	// a_print("cmd node->ADD\n" \
+// 	// 	"	start cmd tk: %d, end cmd tk: %d\n",
+// 	// 	start,
+// 	// 	end);
+// 	ast->nty = NODE_CMD;
+// 	parse_redir(sh, ast, &start, &end);
+// 	// if (end > start)
+// 	// 	a_print("		$ cmd is:%s, ends with %s\n",
+// 	// 		sh->tokens[start].word, sh->tokens[end - 1].word);
+// 	// else
+// 	// 	a_print("		$ cmd is:%s, ends with (none)\n",
+// 	// 		sh->tokens[start].word);
+// 	ast->cmd.built_in = false;
+// 	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end);
+// 	return ;
+// }
+*/
 void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 {
-	printf("cmd node->ADD\n" \
-		"	start cmd tk: %d, end cmd tk: %d\n",
-		start,
-		end);
 	ast->nty = NODE_CMD;
 	parse_redir(sh, ast, &start, &end);
-	if (end > start)
-		printf("		$ cmd is:%s, ends with %s\n",
-			sh->tokens[start].word, sh->tokens[end - 1].word);
-	else
-		printf("		$ cmd is:%s, ends with (none)\n",
-			sh->tokens[start].word);
 	ast->cmd.built_in = false;
 	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end);
 	return ;
@@ -55,9 +65,9 @@ char	**token_words_to_argv(t_token *tokens, int start, int end)
 	while (++i + start < end)
 		argv[i] = ft_strdup(tokens[i + start].word);
 	i = -1;
-	printf(" :: argv -> ");
+	a_print(" :: argv -> ");
 	while (argv[++i] != NULL)
-		printf("|%s", argv[i]);
-	printf("|\n");
+		a_print("|%s", argv[i]);
+	a_print("|\n");
 	return (argv);
 }

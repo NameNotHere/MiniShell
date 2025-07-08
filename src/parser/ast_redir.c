@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:13:32 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/30 00:20:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 22:11:34 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 			sh->tokens[i].ty == TOKEN_OUTPUT)
 		{
 			if (i == *end)
-				printf(" ***ERROR*** " \
+				a_print(" ***ERROR*** " \
 					"invalid redirection, missing string\n");
 			if (!before_cmd)
 				*end = i;
@@ -49,8 +49,9 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 			{
 				cmd_count++;
 				before_cmd = false;
+				*start = i;
 				if (cmd_count > 1)
-					printf(" *** ERROR *** "\
+					a_print(" *** ERROR *** "\
 					"invalid syntax, multiple commands!\n");
 				else
 					*start = i;
@@ -76,7 +77,7 @@ void	add_redir(t_ast *ast, t_token_ty token_type, char *word)
 		return ;
 	}
 	new_redir->ty = get_redir_type(token_type);
-	printf("__redir: ty %d : %s\n", new_redir->ty, word);
+	a_print("__redir: ty %d : %s\n", new_redir->ty, word);
 	if (!ast->cmd.redir)
 		ast->cmd.redir = new_redir;
 	else

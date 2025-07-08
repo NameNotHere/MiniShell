@@ -6,33 +6,198 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/27 10:51:30 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 19:12:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-		pseudo execution, with printfs
-*/
-void	execute_cmd_node(t_msh *sh, t_cmd *cmd, t_redir *redir, bool from_pipe)
+void	safe_close_fd_in(int *fd_in)
 {
-	int	i;
-
-	(void)sh;
-	if (!from_pipe)
-		printf("no pipe found, just one command!\n");
-	if (!redir)
-		printf(" -> no redirections found for this command\n");
-	else
-		debug_print_one_redir(redir);
-	printf("pseudo executing cmd: %s\n", cmd->full_cmd);
-	i = 0;
-	while (cmd->argv[i] != NULL)
+	if (*fd_in != STDIN_FILENO && *fd_in >= 0)
 	{
-		printf("  arg[%d] %s\n", i, cmd->argv[i]);
-		i++;
+		close(*fd_in);
+		*fd_in = -1;
 	}
+
+}
+
+void	safe_close_fd_out(int *fd_out)
+{
+	if (*fd_out != STDOUT_FILENO && *fd_out >= 0)
+	{
+		close(*fd_out);
+		*fd_out = -1;
+	}
+}
+
+void	safe_close_fds(int *fd_in, int *fd_out)
+{
+	safe_close_fd_in(fd_in);
+	safe_close_fd_out(fd_out);
+}
+
+void	exit_error(const char *error)
+{
+	if (errno)
+		perror(error);
+	else
+		put_stderr_2(error, "\n");
+	if (errno == EACCES)
+		exit(126);
+	else if (errno == ENOENT)
+		exit(127);
+	else
+		exit(EXIT_FAILURE);
+}
+
+void	exit_error_free(t_msh *sh, const char *error)
+{
+	free_everything(sh);
+	exit_error(error);
+}
+
+void	exit_free_with_code(t_msh *sh, int exit_code)
+{
+	free_everything(sh);
+	exit(exit_code);
+}
+
+void	close_fds_exit_error_free(t_msh *sh, const char *error, int fd_in, int fd_out)
+{
+	safe_close_fds(&fd_in, &fd_out);
+	exit_error_free(sh, error);
+}
+
+int	handle_execute_command_errors(t_msh *sh, t_cmd *cmd)
+{
+	(void)cmd;
+	if (errno == EACCES)
+	{
+		// if (cmd->full_cmd == NULL)
+		// 	put_stderr("permission denied: (empty command)\n");
+		// else
+		// 	put_stderr_3("permission denied: ", cmd->argv[0], "\n");
+		sh->exit_code = 126;
+		return (126);
+	}
+	// if (cmd->full_cmd == NULL)
+	// 	put_stderr("command not found: (empty command)\n");
+	// else
+	// 	put_stderr_3("command not found: ", cmd->argv[0], "\n");
+	sh->exit_code = 127;
+	return (127);
+}
+
+int	execute_command(t_msh *sh, t_cmd *cmd)
+{
+	if (cmd->not_found)
+	{
+		// if (cmd->argv[0] == NULL)
+		// 	put_stderr("command not found: (empty command)\n");
+		// else
+		// 	put_stderr_3("command not found: ", cmd->argv[0], "\n");
+		sh->exit_code = 127;
+		return (127);
+	}
+	execve(cmd->full_cmd, cmd->argv, sh->envp);
+	return (handle_execute_command_errors(sh, cmd));
+}
+
+void	try_dup2_stdout(t_msh *sh, int fd_in, int fd_out)
+{
+	if (fd_out != STDOUT_FILENO)
+	{
+		if (dup2(fd_out, STDOUT_FILENO) == -1)
+		{
+			perror("dup2");
+			close_fds_exit_error_free(sh,
+				"error: failed to redirect output", fd_in, fd_out);
+		}
+	}
+}
+
+void	try_dup2_stdin(t_msh *sh, int fd_in, int fd_out)
+{
+	if (fd_in != STDIN_FILENO)
+	{
+		if (dup2(fd_in, STDIN_FILENO) == -1)
+		{
+			perror("dup2");
+			close_fds_exit_error_free(sh,
+				"error: failed to redirect input", fd_in, fd_out);
+		}
+	}
+}
+
+void	try_dup2(t_msh *sh, int fd_in, int fd_out)
+{
+	try_dup2_stdin(sh, fd_in, fd_out);
+	try_dup2_stdout(sh, fd_in, fd_out);
+}
+
+int	execute_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out)
+{
+	pid_t	pid;
+
+	sh->last_pid = fork();
+	pid = sh->last_pid;
+	if (pid == -1)
+	{
+		safe_close_fds(&fd_in, &fd_out);
+		perror("fork");
+		sh->exit_code = errno;
+		return (sh->exit_code);
+	}
+	if (pid == 0)
+	{
+		// if (fd_in != STDIN_FILENO)
+		// {
+		// 	if (dup2(fd_in, STDIN_FILENO) == -1)
+		// 	{
+		// 		perror("dup2");
+		// 		close_fds_exit_error_free(sh,
+		// 			"error: failed to redirect input", fd_in, fd_out);
+		// 	}
+		// }
+		// if (fd_out != STDOUT_FILENO)
+		// {
+		// 	if (dup2(fd_out, STDOUT_FILENO) == -1)
+		// 	{
+		// 		perror("dup2");
+		// 		close_fds_exit_error_free(sh,
+		// 			"error: failed to redirect output", fd_in, fd_out);
+		// 	}
+		// }
+		try_dup2(sh, fd_in, fd_out);
+		safe_close_fds(&fd_in, &fd_out);
+		sh->exit_code = execute_command(sh, cmd);
+		exit_free_with_code(sh, sh->exit_code);
+	}
+	safe_close_fd_out(&fd_out);
+	return (EXIT_SUCCESS);
+}
+
+// pipefd[1] is used by the left-side to write to the pipe (STDOUT_FILENO)
+// pipefd[0] is used by the right-side to read from the pipe (STDIN_FILENO)
+int	execute_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
+{
+	int		pipefd[2];
+
+	if (pipe(pipefd) == -1)
+	{
+		perror("pipe");
+		sh->exit_code = errno;
+		return (sh->exit_code);
+	}
+	sh->exit_code = execute_cmd_node(sh, &pipe_node->left->cmd,
+			fd_in, pipefd[1]);
+	safe_close_fd_out(&pipefd[1]);
+	if (sh->exit_code)
+		return (sh->exit_code);
+	sh->exit_code = execute_ast_node(sh, pipe_node->right, pipefd[0], fd_out);
+	safe_close_fd_in(&pipefd[0]);
+	return (sh->exit_code);
 }
 
 /*
@@ -43,128 +208,59 @@ void	debug_print_one_redir(t_redir *redir)
 {
 	if (redir && redir->string)
 	{
-		printf("redir type: %s string: |%s|\n",
+		d_print("redir type: %s string: |%s|\n",
 			get_redir_symbol(redir->ty),
 			redir->string);
 		debug_print_one_redir(redir->next);
 	}
 }
 
-void	execute_pipe_node(t_msh *sh)
-{
-	(void)sh;
-	printf("setting up a pipe\n");
-}
-
-void	execute_ast_node(t_msh *sh, t_ast *node, bool from_pipe)
+int	execute_ast_node(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 {
 	if (!node)
 	{
-		printf("error: on execute, ast node is NULL");
-		return ;
+		put_stderr("error: on execute, ast node is NULL");
+		return (EXIT_FAILURE);
 	}
 	if (node->nty == NODE_CMD)
-		execute_cmd_node(sh, &node->cmd, node->cmd.redir, from_pipe);
+		sh->exit_code = execute_cmd_node(sh, &node->cmd, fd_in, fd_out);
 	else if (node->nty == NODE_PIPE)
-	{
-		execute_pipe_node(sh);
-		execute_ast_node(sh, node->pipe.left, true);
-		execute_ast_node(sh, node->pipe.right, true);
-	}
+		sh->exit_code = execute_pipe_node(sh, &node->pipe, fd_in, fd_out);
+	return (sh->exit_code);
 }
-/*
-		PIPEX EXECUTION CODE COMMENTED OUT BELOW
-*/
-// int	handle_execute_command_errors(t_pipex *px, size_t cmd_i)
-// {
-// 	if (errno == EACCES)
-// 	{
-// 		if (px->cmd_arg[cmd_i][0] == NULL)
-// 			put_stderr("permission denied: (empty command)\n");
-// 		else
-// 			put_stderr_3("permission denied: ", px->cmd_arg[cmd_i][0], "\n");
-// 		return (126);
-// 	}
-// 	if (px->cmd_arg[cmd_i][0] == NULL)
-// 		put_stderr("command not found: (empty command)\n");
-// 	else
-// 		put_stderr_3("command not found: ", px->cmd_arg[cmd_i][0], "\n");
-// 	return (127);
-// }
 
-// int	execute_command(t_pipex *px, size_t cmd_i)
-// {
-// 	if (px->cmd_not_found[cmd_i])
-// 	{
-// 		if (px->cmd_arg[cmd_i][0] == NULL)
-// 			put_stderr("command not found: (empty command)\n");
-// 		else
-// 			put_stderr_3("command not found: ", px->cmd_arg[cmd_i][0], "\n");
-// 		return (127);
-// 	}
-// 	if (px->fdin != STDIN_FILENO)
-// 	{
-// 		if (dup2(px->fdin, STDIN_FILENO) == -1)
-// 		{
-// 			put_stderr("error: failed to redirect input\n");
-// 			return (1);
-// 		}
-// 		close(px->fdin);
-// 	}
-// 	execve(px->cmd_path[cmd_i], px->cmd_arg[cmd_i], px->envp);
-// 	return (handle_execute_command_errors(px, cmd_i));
-// }
+int	execute_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out)
+{
+	int		child_status;
+	pid_t	child_pid;
+	int		last_exit_status;
 
-// void	process_piped_command(t_pipex *px, size_t cmd_i)
-// {
-// 	int		pipefd[2];
-// 	pid_t	pid;
-
-// 	if (pipe(pipefd) == -1)
-// 		exit_error_free(px, "pipe");
-// 	pid = fork();
-// 	if (pid == -1)
-// 		close_fds_exit_error_free(px, "fork", pipefd);
-// 	if (pid == 0)
-// 	{
-// 		close(pipefd[0]);
-// 		if (dup2(pipefd[1], STDOUT_FILENO) == -1)
-// 			close_fds_exit_error_free(px,
-// 				"error: failed to redirect output", pipefd);
-// 		close(pipefd[1]);
-// 		px->exit_code = execute_command(px, cmd_i);
-// 		exit_free_with_code(px, px->exit_code);
-// 	}
-// 	close(pipefd[1]);
-// 	if (px->fdin != STDIN_FILENO)
-// 		close(px->fdin);
-// 	px->fdin = pipefd[0];
-// }
-
-// pid_t	process_last_command(t_pipex *px, size_t cmd_i)
-// {
-// 	pid_t	pid;
-
-// 	px->fdout = open(px->outfile, px->outfile_flags, PIPEX_CREATE_PERMISSIONS);
-// 	if (px->fdout == -1)
-// 		exit_error_free(px, px->outfile);
-// 	pid = fork();
-// 	if (pid == -1)
-// 		exit_error_free(px, "fork");
-// 	if (pid == 0)
-// 	{
-// 		if (dup2(px->fdout, STDOUT_FILENO) == -1)
-// 		{
-// 			put_stderr("error: failed to redirect output\n");
-// 			close(px->fdout);
-// 			exit_free_with_code(px, EXIT_FAILURE);
-// 		}
-// 		close(px->fdout);
-// 		px->exit_code = execute_command(px, cmd_i);
-// 		exit_free_with_code(px, px->exit_code);
-// 	}
-// 	if (px->fdin != STDIN_FILENO)
-// 		close(px->fdin);
-// 	close(px->fdout);
-// 	return (pid);
-// }
+	if (!node)
+	{
+		put_stderr("error: on execute, ast root node is NULL");
+		return (EXIT_FAILURE);
+	}
+	last_exit_status = sh->exit_code;
+	if (execute_ast_node(sh, sh->ast,
+			fd_in, fd_out) != EXIT_SUCCESS)
+	{
+		last_exit_status = sh->exit_code;
+		perror("execute root ast node");
+	}
+	child_pid = 1;
+	while (child_pid > 0)
+	{
+		child_pid = wait(&child_status);
+		if (child_pid == sh->last_pid)
+		{
+			if (WIFEXITED(child_status))
+				last_exit_status = WEXITSTATUS(child_status);
+			else if (WIFSIGNALED(child_status))
+				last_exit_status = 128 + WTERMSIG(child_status);
+		}
+	}
+	if (child_pid == -1 && (errno != ECHILD && errno != EINTR))
+		perror("wait error");
+	sh->exit_code = last_exit_status;
+	return (sh->exit_code);
+}

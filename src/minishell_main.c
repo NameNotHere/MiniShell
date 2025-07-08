@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/03 02:55:57 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/07 19:10:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ int	main(int argc, char **argv, char **envp)
 	sigaction(SIGINT, &sa, NULL);
 	if (envp[0] == NULL)
 	{
-		printf("empty environment variable\n");
+		d_print("empty environment variable\n");
 		return (EXIT_FAILURE);
 	}
 	if (initialize_minishell(&sh, envp) != EXIT_SUCCESS)
 	{
-		printf("TODO: handle shell initialize error here");
+		d_print("TODO: handle shell initialize error here");
 		return (sh.exit_code);
 	}
 	if (minishell_mainloop(&sh) != EXIT_SUCCESS)
@@ -57,7 +57,7 @@ int	initialize_minishell(t_msh *sh, char **envp)
 	sh->path_dirs = ft_split(get_path_from_env(sh->envp), ':');
 	if (!sh->path_dirs || !sh->envp)
 	{
-		printf("TODO: Out of memory error here");
+		d_print("TODO: Out of memory error here");
 		return (ENOMEM);
 	}
 	return (EXIT_SUCCESS);
@@ -93,7 +93,7 @@ int	minishell_mainloop(t_msh *sh)
 		add_history(sh->line);
 		if (expand_line(sh) != EXIT_SUCCESS)
 		{
-			printf("TODO: Error expanding line here");
+			d_print("TODO: Error expanding line here");
 			safe_free_string(&sh->line);
 			continue ;
 		}
@@ -102,11 +102,22 @@ int	minishell_mainloop(t_msh *sh)
 			sh->exit_code = EXIT_SUCCESS;
 			break ;
 		}
-		if (parse_line_and_execute_ast(sh) != EXIT_SUCCESS)
+		// if (parse_line_and_execute_ast(sh) != EXIT_SUCCESS)
+		// {
+		// 	safe_free_string(&sh->line);
+		// 	continue ;
+		// }
+		if (parse_line_to_ast(sh, sh->ast, sh->line) != EXIT_SUCCESS)
 		{
+			perror("parse line");
 			safe_free_string(&sh->line);
 			continue ;
 		}
+		if (lookup_all_cmd_fullpaths(sh, sh->ast) != EXIT_SUCCESS)
+			perror("lookup_cmds");
+		if (execute_ast_root(sh, sh->ast,
+				STDIN_FILENO, STDOUT_FILENO) != EXIT_SUCCESS)
+			perror("exec ast root");
 		free_ast(&sh->ast);
 		sh->ast = make_ast_node(NODE_UNKNOWN);
 		safe_free_string(&sh->line);
