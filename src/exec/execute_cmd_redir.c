@@ -6,44 +6,44 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 01:22:23 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/09 02:16:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/09 02:29:02 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// TODO: handle error
 void	execute_redirection_in(t_msh *sh, t_redir *redir)
 {
-	int	new_fd_in;
+	int	fd;
 
 	if (redir->ty == REDIR_HEREDOC)
-		new_fd_in = redir->fd;
+		fd = redir->fd;
 	else if (redir->ty == REDIR_INPUT)
-		new_fd_in = open_input_redirection(sh, redir->string);
-	if (new_fd_in != -1)
-	{
-		try_dup2_stdin(sh, &new_fd_in);
-		safe_close_fd_in(&new_fd_in);
-	}
+		fd = open_input_redirection(sh, redir->string);
+	if (fd == -1) // handle error
+		return ;
+	try_dup2_stdin(sh, &fd);
+	safe_close_fd_in(&fd);
 }
-
+// TODO: handle error
 void	execute_redirection_out(t_msh *sh, t_redir *redir)
 {
-	int	new_fd_out;
+	int	fd;
 
 	if (redir->ty == REDIR_OUTPUT)
-		new_fd_out = open_output_redirection(sh, redir->string);
+		fd = open_output_redirection(sh, redir->string);
 	else if (redir->ty == REDIR_APPEND)
-		new_fd_out = open_append_redirection(sh, redir->string);
-	if (new_fd_out != -1)
-	{
-		try_dup2_stdout(sh, &new_fd_out);
-		safe_close_fd_out(&new_fd_out);
-	}
+		fd = open_append_redirection(sh, redir->string);
+	if (fd == -1) // handle error
+		return ;
+	try_dup2_stdout(sh, &fd);
+	safe_close_fd_out(&fd);
 }
 
 /*
 Execute each redirection recursively until redirection list ends.
+TODO: add heredoc case when heredoc ready
 */
 void	execute_redirection(t_msh *sh, t_redir *redir)
 {
