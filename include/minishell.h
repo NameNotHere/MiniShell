@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/09 01:29:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/09 02:14:49 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@ int		ft_is_doublequote(int c);
 int		ft_is_quote(int c);
 
 // utils/utils_dup2.c
-void	try_dup2_stdout(t_msh *sh, int *fd_in, int *fd_out);
-void	try_dup2_stdin(t_msh *sh, int *fd_in, int *fd_out);
+void	try_dup2_stdout(t_msh *sh, int *fd_out);
+void	try_dup2_stdin(t_msh *sh, int *fd_in);
 void	try_dup2(t_msh *sh, int *fd_in, int *fd_out);
 
 // utils/utils_env.c

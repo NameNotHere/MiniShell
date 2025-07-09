@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 01:22:23 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/09 01:23:05 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/07/09 02:16:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,31 @@
 
 void	execute_redirection_in(t_msh *sh, t_redir *redir)
 {
-	int	new_fd;
-	int	fd_out;
+	int	new_fd_in;
 
-	fd_out = STDOUT_FILENO;
 	if (redir->ty == REDIR_HEREDOC)
-		new_fd = redir->fd;
+		new_fd_in = redir->fd;
 	else if (redir->ty == REDIR_INPUT)
-		new_fd = open_input_redirection(sh, redir->string);
-	if (new_fd != -1)
+		new_fd_in = open_input_redirection(sh, redir->string);
+	if (new_fd_in != -1)
 	{
-		try_dup2_stdin(sh, &new_fd, &fd_out);
-		safe_close_fd_in(&new_fd);
+		try_dup2_stdin(sh, &new_fd_in);
+		safe_close_fd_in(&new_fd_in);
 	}
 }
 
 void	execute_redirection_out(t_msh *sh, t_redir *redir)
 {
-	int	fd_in;
-	int	new_fd;
+	int	new_fd_out;
 
-	fd_in = STDIN_FILENO;
 	if (redir->ty == REDIR_OUTPUT)
-		new_fd = open_output_redirection(sh, redir->string);
+		new_fd_out = open_output_redirection(sh, redir->string);
 	else if (redir->ty == REDIR_APPEND)
-		new_fd = open_append_redirection(sh, redir->string);
-	if (new_fd != -1)
+		new_fd_out = open_append_redirection(sh, redir->string);
+	if (new_fd_out != -1)
 	{
-		try_dup2_stdout(sh, &fd_in, &new_fd);
-		safe_close_fd_out(&new_fd);
+		try_dup2_stdout(sh, &new_fd_out);
+		safe_close_fd_out(&new_fd_out);
 	}
 }
 
