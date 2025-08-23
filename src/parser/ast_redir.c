@@ -16,6 +16,24 @@
 TODO: remove printfs, add error handling
 TODO: check when empty command is valid, if always (redir only is valid in bash)s
 */
+
+int invalid_redir(t_msh *sh, int i)
+{
+	// you need to find the bounds max
+	if (i <= 0 || !sh->tokens[i + 1].word)
+		return (1);
+	if (!sh->tokens[i - 1].word) // need to make sure its a command or arg
+		return (1);
+	i++;
+	if (!sh->tokens[i].word)
+		return (1);
+	if (get_redir_type(sh->tokens[i].ty) != REDIR_UNKNOWN)
+		return (1);
+	if (isminioperator(sh->tokens[i].word, 0))
+		return (1);
+	return (0);
+}
+
 void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 {
 	int				i;
@@ -34,9 +52,9 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 			sh->tokens[i].ty == TOKEN_APPEND || \
 			sh->tokens[i].ty == TOKEN_OUTPUT)
 		{
-			if (i == *end)
+			if (invalid_redir(sh, i) == 1)
 				a_print(" ***ERROR*** " \
-					"invalid redirection, missing string\n");
+					"invalid redirection");
 			if (!before_cmd)
 				*end = i;
 			before_cmd = true;
