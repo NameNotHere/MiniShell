@@ -68,3 +68,18 @@ int	expand_line(t_msh *sh)
 	replace_line_and_cleanup(sh, &ve);
 	return (EXIT_SUCCESS);
 }
+
+char	*expand_envp(s_envp end)
+{
+	//add to the end all of end->prev recursivly
+	char	*ret;
+
+	if (!end.previous)
+		return (end.folder_name);
+
+	end.folder_name = ft_strlcat(end.previous->folder_name, end.folder_name, SIZE);
+	end.previous = end.previous->previous; 
+	end.folder_name = expand_envp(end);
+	return (end.folder_name);
+	// returns this plus the previous folder name and calls this function with the new input this input but changed folder name
+}
