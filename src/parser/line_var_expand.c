@@ -93,7 +93,7 @@ char *expand_envp(t_envp *end) {
 
 	if (!end)
         return NULL;
-    if (!end->previous)
+    if (!end->previous) // might not work as intended and do ././ if envp is ./ only
         return strdup(end->folder_name);
 
     prev_expanded = expand_envp(end->previous);
