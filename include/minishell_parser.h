@@ -139,12 +139,11 @@ typedef struct s_ast
 	};
 }	t_ast;
 
-typedef struct	s_envp;
-typedef struct	s_envp
+typedef struct	t_envp
 {
 	char *folder_name;
-	s_envp	previous;
-} s_envp;
+	struct t_envp	*previous;
+};
 
 /* struct for processing variable expansions before tokenizing */
 typedef struct s_var_expand

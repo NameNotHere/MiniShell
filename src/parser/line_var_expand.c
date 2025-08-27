@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "minishell_parser.h"
 
 int	expand_vars(t_msh *sh, t_var_expand *ve, char *line)
 {
@@ -69,17 +70,34 @@ int	expand_line(t_msh *sh)
 	return (EXIT_SUCCESS);
 }
 
-char	*expand_envp(s_envp end)
-{
-	//add to the end all of end->prev recursivly
-	char	*ret;
+char *join_paths(const char *path1, const char *path2) {
+	char	*joined;
+	size_t	len1;
+	size_t	len2;
 
-	if (!end.previous)
-		return (end.folder_name);
+	len1 = ft_strlen(path1);
+	len2 = ft_strlen(path2);
+	joined = malloc(len1 + len2 + 2);
+    if (!joined)
+		return NULL;
 
-	end.folder_name = ft_strlcat(end.previous->folder_name, end.folder_name, SIZE);
-	end.previous = end.previous->previous; 
-	end.folder_name = expand_envp(end);
-	return (end.folder_name);
-	// returns this plus the previous folder name and calls this function with the new input this input but changed folder name
+    ft_strcpy(joined, path1);
+    if (len1 > 0 && path1[len1 - 1] != '/')
+        ft_strcat(joined, "/");
+    return (ft_strcat(joined, path2));
+}
+
+char *expand_envp(t_envp *end) {
+    char	*prev_expanded;
+    char	*full_path;
+
+	if (!end)
+        return NULL;
+    if (!end->previous)
+        return strdup(end->folder_name);
+
+    prev_expanded = expand_envp(end->previous);
+    full_path = join_paths(prev_expanded, end->folder_name);
+    free(prev_expanded);
+    return (full_path);
 }
