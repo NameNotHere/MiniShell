@@ -6,7 +6,7 @@
 
 # executables
 NAME = minishell
-PIPEX = pipex
+# PIPEX = pipex
 PARSER = parser
 
 #TODO: remove -g before submitting
@@ -30,8 +30,8 @@ OBJDIR = src/obj
 # Default rule
 all:
 	@$(MAKE) $(NAME)
-	@$(MAKE) $(PIPEX)
 	@$(MAKE) $(PARSER)
+# 	@$(MAKE) $(PIPEX)
 
 # ***** MINISHELL SRCS *****
 SRCS = minishell_main.c \
@@ -94,26 +94,26 @@ $(PARSER): $(LIBFT) $(PARSER_OBJS)
 	$(CC) $(CFLAGS) $(INCLUDE) -o $(PARSER) $(PARSER_OBJS) $(LDFLAGS)
 
 # ***** PIPEX SRCS *****
-PIPEX_SRCS = pipex/pipex.c \
-		pipex/pipex_main.c \
-		pipex/pipex_process.c \
-		pipex/pipex_heredoc.c \
-		pipex/pipex_initialize.c \
-		pipex/pipex_interactive.c \
-		pipex/utils_error.c \
-		pipex/utils_exit.c \
-		pipex/utils_free.c \
-		pipex/utils_mem.c \
-		pipex/utils_path.c \
-		pipex/utils_split_quotes.c \
-		pipex/utils_split_single_delimiter.c \
-		pipex/utils_string.c
+# PIPEX_SRCS = pipex/pipex.c \
+# 		pipex/pipex_main.c \
+# 		pipex/pipex_process.c \
+# 		pipex/pipex_heredoc.c \
+# 		pipex/pipex_initialize.c \
+# 		pipex/pipex_interactive.c \
+# 		pipex/utils_error.c \
+# 		pipex/utils_exit.c \
+# 		pipex/utils_free.c \
+# 		pipex/utils_mem.c \
+# 		pipex/utils_path.c \
+# 		pipex/utils_split_quotes.c \
+# 		pipex/utils_split_single_delimiter.c \
+# 		pipex/utils_string.c
 
-PIPEX_OBJS = $(PIPEX_SRCS:.c=.o)
-PIPEX_OBJS := $(addprefix $(OBJDIR)/, $(PIPEX_OBJS))
+# PIPEX_OBJS = $(PIPEX_SRCS:.c=.o)
+# PIPEX_OBJS := $(addprefix $(OBJDIR)/, $(PIPEX_OBJS))
 
-$(PIPEX): $(LIBFT) $(PIPEX_OBJS)
-	$(CC) $(CFLAGS) $(INCLUDE) -o $(PIPEX) $(PIPEX_OBJS) $(LDFLAGS)
+# $(PIPEX): $(LIBFT) $(PIPEX_OBJS)
+# 	$(CC) $(CFLAGS) $(INCLUDE) -o $(PIPEX) $(PIPEX_OBJS) $(LDFLAGS)
 
 # shell commands
 RM = rm -f
@@ -133,10 +133,10 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
-	$(RM) $(PIPEX)
 	$(RM) $(PARSER)
 	$(RM) -r $(OBJDIR)
 	@$(MAKE) -C $(LIBFTDIR) fclean
+# 	$(RM) $(PIPEX)
 
 re: fclean all
 
