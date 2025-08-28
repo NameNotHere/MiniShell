@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/08 20:49:22 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/08/28 12:08:33 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,12 @@ typedef struct s_ast
 	};
 }	t_ast;
 
+typedef struct	s_envp
+{
+	char	*name;
+	char	*value;
+	struct s_envp	*next;
+}	t_envp;
 
 /* struct for processing variable expansions before tokenizing */
 typedef struct s_var_expand

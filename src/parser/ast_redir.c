@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:13:32 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 22:11:34 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/08/28 13:13:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,21 @@
 TODO: remove printfs, add error handling
 TODO: check when empty command is valid, if always (redir only is valid in bash)s
 */
+
+int invalid_redir(t_msh *sh, int i)
+{
+	if (i <= 0 || !sh->tokens[i + 1].word)
+		return (1);
+	if (!sh->tokens[i - 1].word || !sh->tokens[i + 1].word)
+		return (1);
+	i++;
+	if (get_redir_type(sh->tokens[i].ty) != REDIR_UNKNOWN)
+		return (1);
+	if (ft_strchr("&;()*?#",(int)(sh->tokens[i].word[0])))
+		return (1);
+	return (0);
+}
+
 void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 {
 	int				i;
@@ -34,9 +49,11 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 			sh->tokens[i].ty == TOKEN_APPEND || \
 			sh->tokens[i].ty == TOKEN_OUTPUT)
 		{
-			if (i == *end)
-				a_print(" ***ERROR*** " \
-					"invalid redirection, missing string\n");
+			if (invalid_redir(sh, i) == 1)
+			{
+				a_print(" ***ERROR*** \n\t\tinvalid redirection");
+				break ;
+			}
 			if (!before_cmd)
 				*end = i;
 			before_cmd = true;

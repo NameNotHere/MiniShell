@@ -6,11 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 19:14:02 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/08/28 12:09:23 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "minishell_parser.h"
 
 int	expand_vars(t_msh *sh, t_var_expand *ve, char *line)
 {
@@ -68,3 +69,4 @@ int	expand_line(t_msh *sh)
 	replace_line_and_cleanup(sh, &ve);
 	return (EXIT_SUCCESS);
 }
+
