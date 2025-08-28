@@ -6,17 +6,20 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 01:22:23 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/09 02:29:02 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/08/28 12:42:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // TODO: handle error
+// TODO: handle quote removing from redirects (ex: echo "hello" something > filename)
+// filename should contain no quotes: hello something
 void	execute_redirection_in(t_msh *sh, t_redir *redir)
 {
 	int	fd;
 
+	fd = STDIN_FILENO;
 	if (redir->ty == REDIR_HEREDOC)
 		fd = redir->fd;
 	else if (redir->ty == REDIR_INPUT)
@@ -31,6 +34,7 @@ void	execute_redirection_out(t_msh *sh, t_redir *redir)
 {
 	int	fd;
 
+	fd = STDOUT_FILENO;
 	if (redir->ty == REDIR_OUTPUT)
 		fd = open_output_redirection(sh, redir->string);
 	else if (redir->ty == REDIR_APPEND)

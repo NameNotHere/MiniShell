@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 19:14:02 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/08/28 12:09:23 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,34 +70,3 @@ int	expand_line(t_msh *sh)
 	return (EXIT_SUCCESS);
 }
 
-char *join_paths(const char *path1, const char *path2) {
-	char	*joined;
-	size_t	len1;
-	size_t	len2;
-
-	len1 = ft_strlen(path1);
-	len2 = ft_strlen(path2);
-	joined = malloc(len1 + len2 + 2);
-    if (!joined)
-		return NULL;
-
-    ft_strcpy(joined, path1);
-    if (len1 > 0 && path1[len1 - 1] != '/')
-        ft_strcat(joined, "/");
-    return (ft_strcat(joined, path2));
-}
-
-char *expand_envp(t_envp *end) {
-    char	*prev_expanded;
-    char	*full_path;
-
-	if (!end)
-        return NULL;
-    if (!end->previous) // might not work as intended and do ././ if envp is ./ only
-        return strdup(end->folder_name);
-
-    prev_expanded = expand_envp(end->previous);
-    full_path = join_paths(prev_expanded, end->folder_name);
-    free(prev_expanded);
-    return (full_path);
-}
