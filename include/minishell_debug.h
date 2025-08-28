@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 19:00:18 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/08/28 13:11:45 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/08/28 13:30:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include <stdio.h>
 # include <stdarg.h>
 
-# define DEBUG_TOKENIZE true
-# define DEBUG_AST true
-# define DEBUG_MINISHELL true
+# define DEBUG_TOKENIZE false
+# define DEBUG_AST false
+# define DEBUG_MINISHELL false
 
 # define REDIR_INPUT_PRINT "< INPUT"
 # define REDIR_OUTPUT_PRINT "> OUTPUT"
