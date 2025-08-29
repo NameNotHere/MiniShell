@@ -65,6 +65,7 @@ SRCS = minishell_main.c \
 	utils/utils_readline.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
+	utils/envp_assistance_array.c \
 	signals/signals.c \
 	debug/ast_print.c \
 	debug/process_debug.c \
