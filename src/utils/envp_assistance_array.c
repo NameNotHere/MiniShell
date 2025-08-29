@@ -15,13 +15,15 @@ int	search_name(char *name, char **envp)
 {
 	int	i;
 	int	len_name;
+	int	length_envp;
 
 	i = 0;
 	len_name = ft_strlen(name);
 	while (envp[i])
 	{
-		if (ft_strncmp(name, envp[i], length_till_equal(envp[i])) == 0
-			&& len_name == length_till_equal(envp[i]))
+		length_envp = length_till_equal(envp[i]);
+		if (ft_strncmp(name, envp[i], length_envp) == 0
+			&& len_name == length_envp)
 			return (i);
 		i++;
 	}
