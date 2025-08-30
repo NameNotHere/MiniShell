@@ -137,4 +137,8 @@ void	minishell_exit(void);
 // signals/signal.c
 void	ctrl_c(int sig);
 
+//envp assistance
+int	search_name(char *name, char **envp);
+int	length_till_equal(char *str);
+
 #endif
