@@ -78,5 +78,5 @@ int	execute_built_in(t_msh *sh, t_cmd *cmd)
 		ft_echo(cmd->argv[1], 0);
 	else
 		return (-1);
-	return (1);
+	return (EXIT_SUCCESS);
 }
