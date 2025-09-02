@@ -51,6 +51,8 @@ void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 	ast->nty = NODE_CMD;
 	parse_redir(sh, ast, &start, &end);
 	ast->cmd.built_in = false;
+	if (is_builtin(ast->cmd.full_cmd) == 0)
+		ast->cmd.built_in = true;
 	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end);
 	return ;
 }

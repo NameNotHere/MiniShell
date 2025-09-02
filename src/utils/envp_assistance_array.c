@@ -47,9 +47,9 @@ int	change_env_value(char *name, char *new_value, char **envp)
 	if (!new_entry)
 		return (-1);
 
-	ft_strcpy(new_entry, name);
+	ft_strlcpy(new_entry, name, len_name);
 	new_entry[len_name] = '=';
-	ft_strcpy(new_entry + len_name + 1, new_value);
+	ft_strlcpy(new_entry + len_name + 1, new_value, len_value);
 	free(envp[index]);
 
 	envp[index] = new_entry;
@@ -67,27 +67,35 @@ int	envp_len(char **envp)
 	return (i);
 }
 
-// make sure this works I cut a lot
 int	add_env_var(char ***envp, char *name, char *value)
 {
 	char	**new_envp;
 	char	*new_entry;
 	int		name_len;
+	int		value_len;
 	int		i;
+	int		old_len;
 
-	new_envp = malloc(sizeof(char *) * (envp_len(*envp) + 2));
+	old_len = envp_len(*envp);
+	new_envp = malloc(sizeof(char *) * (old_len + 2));
+	if (!new_envp)
+		return (-1);
 	i = 0;
-	while (i < envp_len(*envp) - 1)
-		new_envp[++i] = (*envp)[i];
-	name_len = (int)ft_strlen(name);
-	new_entry = malloc(name_len + (int)ft_strlen(value) + 2);
+	while (i < old_len)
+	{
+		new_envp[i] = (*envp)[i];
+		i++;
+	}
+	name_len = ft_strlen(name);
+	value_len = ft_strlen(value);
+	new_entry = malloc(name_len + value_len + 2);
 	if (!new_entry)
 		return (free(new_envp), -1);
-	ft_strcpy(new_entry, name);
+	ft_strlcpy(new_entry, name, name_len + 1);
 	new_entry[name_len] = '=';
-	ft_strcpy(new_entry + name_len + 1, value);
-	new_envp[i] = new_entry;
-	new_envp[i + 1] = NULL;
+	ft_strlcpy(new_entry + name_len + 1, value, value_len + 1);
+	new_envp[i++] = new_entry;
+	new_envp[i] = NULL;
 	free(*envp);
 	*envp = new_envp;
 	return (0);

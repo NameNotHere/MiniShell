@@ -45,7 +45,10 @@ int	execute_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out)
 		try_dup2(sh, &fd_in, &fd_out);
 		safe_close_fds(&fd_in, &fd_out);
 		execute_redirection(sh, cmd->redir);
-		sh->exit_code = execute_command(sh, cmd);
+		if (cmd->built_in == false)
+			sh->exit_code = execute_command(sh, cmd);
+		else
+			sh->exit_code = execute_built_in(sh, cmd);
 		exit_free_with_code(sh, sh->exit_code);
 	}
 	debug_print_one_redir(cmd->redir);
