@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Built-ins.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/09/05 12:09:29 by tda-roch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include <sys/stat.h>
 
@@ -49,34 +61,32 @@ int	t_cd(char **envp, char *directory)
 		return (ft_echo("Memory error\n", 0));
 	free(envp[i]);
 	envp[i] = temp;
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
-void	ft_pwd(char **envp)
+int	ft_pwd(char **envp)
 {
 	int	i;
 	int	equal;
 
 	i = search_name("PWD", envp);
 	if (i == -1)
-	{
-		ft_echo("PWD not found\n", 0);
-		return ;
-	}
+		return (ft_echo("PWD not found\n", 0));
 	equal = length_till_equal(envp[i]) + 1;
 	ft_echo(envp[i] + equal, 0);
 	write(1, "\n", 1);
+	return (EXIT_SUCCESS);
 }
 
 int	execute_built_in(t_msh *sh, t_cmd *cmd)
 {
-	if (ft_strncmp(cmd->full_cmd, "pwd", 3) == 0)
+	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
 		ft_pwd(sh->envp);
-	else if (ft_strncmp(cmd->full_cmd, "cd", 2) == 0)
-		t_cd(sh->envp, cmd->argv[1]);
-	else if (ft_strncmp(cmd->full_cmd, "echo", 4) == 0)
+	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
+		return (t_cd(sh->envp, cmd->argv[1]));
+	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
 		ft_echo(cmd->argv[1], 0);
 	else
-		return (-1);
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
