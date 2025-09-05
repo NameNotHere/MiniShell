@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/05 12:15:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/05 16:44:15 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,24 +41,34 @@ int	t_cd(char **envp, char *directory)
 
 	i = search_name("PWD", envp);
 	if (i == -1)
-		return (ft_echo("PWD not found\n", 0));
+	{
+		write(STDERR_FILENO, "PWD not found\n", 14);
+		return (EXIT_FAILURE);
+	}
 	pwd_value = envp[i] + length_till_equal(envp[i]) + 1;
 	temp = ft_strjoin(pwd_value, "/");
 	if (!temp)
-		return (ft_echo("Memory error\n", 0));
+		return (perror("cd ft_strjoin 1"), EXIT_FAILURE);
 	new_path = ft_strjoin(temp, directory);
 	free(temp);
 	if (!new_path)
-		return (ft_echo("Memory error\n", 0));
+		return (perror("cd ft_strjoin 2"), EXIT_FAILURE);
 	if (stat(new_path, &st) != 0 || !S_ISDIR(st.st_mode))
 	{
 		free(new_path);
-		return (ft_echo("Invalid directory\n", 0));
+		write(STDERR_FILENO, "Invalid directory\n", 18);
+		return (EXIT_SUCCESS);
+	}
+	if (chdir(new_path) != EXIT_SUCCESS)
+	{
+		free(new_path);
+		perror("chdir");
+		return (EXIT_FAILURE);
 	}
 	temp = ft_strjoin("PWD=", new_path);
 	free(new_path);
 	if (!temp)
-		return (ft_echo("Memory error\n", 0));
+		return (perror("cd ft_strjoin 3"), EXIT_FAILURE);
 	free(envp[i]);
 	envp[i] = temp;
 	return (EXIT_SUCCESS);
@@ -71,7 +81,10 @@ int	ft_pwd(char **envp)
 
 	i = search_name("PWD", envp);
 	if (i == -1)
-		return (ft_echo("PWD not found\n", 0));
+	{
+		write(STDERR_FILENO, "PWD not found\n", 14);
+		return (EXIT_FAILURE);
+	}
 	equal = length_till_equal(envp[i]) + 1;
 	ft_echo(envp[i] + equal, 0);
 	write(1, "\n", 1);
@@ -80,6 +93,7 @@ int	ft_pwd(char **envp)
 
 int	execute_built_in(t_msh *sh, t_cmd *cmd)
 {
+	execute_redirection(sh, cmd->redir);
 	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
 		ft_pwd(sh->envp);
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
