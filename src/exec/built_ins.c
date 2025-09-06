@@ -90,6 +90,21 @@ int	ft_pwd(char **envp)
 	return (EXIT_SUCCESS);
 }
 
+void	ft_env(t_msh sh)
+{
+	int len;
+	int	i;
+
+	i = 0;
+	while (sh.envp[i] != NULL)
+	{
+		len = ft_strlen(sh.envp[i]);
+		write(1, sh.envp[i], len);
+		write(1, "\n", 1);
+		i++;
+	}
+}
+
 int	execute_built_in(t_msh *sh, t_cmd *cmd)
 {
 	execute_redirection(sh, cmd->redir);
@@ -99,6 +114,8 @@ int	execute_built_in(t_msh *sh, t_cmd *cmd)
 		return (t_cd(sh->envp, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
 		ft_echo(cmd->argv[1], 0);
+	else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
+		ft_env(*sh);
 	else
 		return (EXIT_FAILURE);
 	write(1, "\n", 1);
