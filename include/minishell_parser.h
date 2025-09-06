@@ -194,6 +194,7 @@ typedef struct s_msh
 	t_ast	*ast;
 	t_token	*tokens;
 	char	**envp;
+	char	**export_vars;
 	char	**path_dirs;
 	char	*line;
 	int		err;

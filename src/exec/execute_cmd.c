@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:35:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/09 01:31:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/05 16:46:01 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int	execute_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out)
 {
 	pid_t	pid;
 
+	if (cmd->built_in == true)
+		return (execute_built_in(sh, cmd));
 	sh->last_pid = fork();
 	pid = sh->last_pid;
 	if (pid == -1)

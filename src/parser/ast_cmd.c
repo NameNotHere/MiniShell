@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 22:13:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/05 12:12:15 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@ void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 	ast->nty = NODE_CMD;
 	parse_redir(sh, ast, &start, &end);
 	ast->cmd.built_in = false;
+	if (sh->tokens[start].ty == TOKEN_INBUILT)
+	{
+		ast->cmd.built_in = true;
+		// temp_print("built-in found: %s\n", sh->tokens[start].word);
+	}
 	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end);
 	return ;
 }

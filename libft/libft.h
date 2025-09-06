@@ -112,6 +112,7 @@ t_list	*ft_lstlast(t_list *lst);
 
 int		ft_isspace(char c);
 
-int ft_minishellop(char *token, int i);
+int		ft_minishellop(char *token, int i);
+
 
 #endif
