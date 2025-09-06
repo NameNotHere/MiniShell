@@ -31,7 +31,7 @@ int	ft_echo(char *str, int with_arg_n)
 	return (write(1, str, len));
 }
 
-int	t_cd(char **envp, char *directory)
+int	ft_cd(char **envp, char *directory)
 {
 	struct stat	st;
 	char		*pwd_value;
@@ -90,7 +90,7 @@ int	ft_pwd(char **envp)
 	return (EXIT_SUCCESS);
 }
 
-void	ft_env(t_msh sh)
+int	ft_env(t_msh sh)
 {
 	int len;
 	int	i;
@@ -103,6 +103,29 @@ void	ft_env(t_msh sh)
 		write(1, "\n", 1);
 		i++;
 	}
+	return (EXIT_SUCCESS)
+}
+
+int	ft_unset(t_msh **sh, char *name)
+{
+	if (!name)
+		return (perror("no value defined to unset\n"), EXIT_FAILURE);
+	change_env_value(name, "\0", (*sh)->envp);
+	return (EXIT_SUCCESS);
+}
+
+int	ft_export(t_msh **sh, t_cmd cmd)
+{
+	int	i;
+
+	i = search_name(cmd.argv[1], (*sh)->envp);
+	if (i < 0)
+		add_env_var((*sh)->envp, cmd.argv[1], "\0");
+	change_env_value(cmd.argv[1], cmd.argv[2], (*sh)->envp);
+	i = search_name(cmd.argv[1], (*sh)->envp);
+	if (i < 0)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 int	execute_built_in(t_msh *sh, t_cmd *cmd)
@@ -111,11 +134,15 @@ int	execute_built_in(t_msh *sh, t_cmd *cmd)
 	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
 		ft_pwd(sh->envp);
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
-		return (t_cd(sh->envp, cmd->argv[1]));
+		return (ft_cd(sh->envp, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
-		ft_echo(cmd->argv[1], 0);
+		return (ft_echo(cmd->argv[1], 0));
 	else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
-		ft_env(*sh);
+		return (ft_env(*sh));
+	else if (ft_strncmp(cmd->argv[0], "export", 4) == 0)
+		return (ft_export(&sh, *cmd));
+	else if (ft_strncmp(cmd->argv[0], "unset", 4) == 0)
+		return (ft_unset(&sh, cmd->argv[1]));
 	else
 		return (EXIT_FAILURE);
 	write(1, "\n", 1);
