@@ -15,7 +15,7 @@
 
 int	ft_echo(char *str, int with_arg_n)
 {
-	int	len;
+	int		len;
 
 	len = ft_strlen(str);
 	if (with_arg_n == 1)
@@ -87,7 +87,6 @@ int	ft_pwd(char **envp)
 	}
 	equal = length_till_equal(envp[i]) + 1;
 	ft_echo(envp[i] + equal, 0);
-	write(1, "\n", 1);
 	return (EXIT_SUCCESS);
 }
 
@@ -102,5 +101,6 @@ int	execute_built_in(t_msh *sh, t_cmd *cmd)
 		ft_echo(cmd->argv[1], 0);
 	else
 		return (EXIT_FAILURE);
+	write(1, "\n", 1);
 	return (EXIT_SUCCESS);
 }
