@@ -39,7 +39,7 @@ int	change_env_value(char *name, char *new_value, char **envp)
 
 	index = search_name(name, envp);
 	if (index == -1)
-		return (-1);
+		return (EXIT_FAILURE);
 
 	len_name = ft_strlen(name);
 	len_value = ft_strlen(new_value);
@@ -51,10 +51,8 @@ int	change_env_value(char *name, char *new_value, char **envp)
 	new_entry[len_name] = '=';
 	ft_strlcpy(new_entry + len_name + 1, new_value, len_value);
 	free(envp[index]);
-
 	envp[index] = new_entry;
-
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 int	envp_len(char **envp)
@@ -74,14 +72,12 @@ int	add_env_var(char ***envp, char *name, char *value)
 	int		name_len;
 	int		value_len;
 	int		i;
-	int		old_len;
 
-	old_len = envp_len(*envp);
-	new_envp = malloc(sizeof(char *) * (old_len + 2));
+	new_envp = malloc(sizeof(char *) * (envp_len(*envp) + 2));
 	if (!new_envp)
-		return (-1);
+		return (EXIT_FAILURE);
 	i = 0;
-	while (i < old_len)
+	while (i < envp_len(*envp))
 	{
 		new_envp[i] = (*envp)[i];
 		i++;
@@ -90,7 +86,7 @@ int	add_env_var(char ***envp, char *name, char *value)
 	value_len = ft_strlen(value);
 	new_entry = malloc(name_len + value_len + 2);
 	if (!new_entry)
-		return (free(new_envp), -1);
+		return (free(new_envp), EXIT_FAILURE);
 	ft_strlcpy(new_entry, name, name_len + 1);
 	new_entry[name_len] = '=';
 	ft_strlcpy(new_entry + name_len + 1, value, value_len + 1);
@@ -98,5 +94,5 @@ int	add_env_var(char ***envp, char *name, char *value)
 	new_envp[i] = NULL;
 	free(*envp);
 	*envp = new_envp;
-	return (0);
+	return (EXIT_SUCCESS);
 }

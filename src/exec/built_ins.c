@@ -40,6 +40,8 @@ int	ft_cd(char **envp, char *directory)
 	char		*temp;
 	int			i;
 
+	if (!directory)
+		return (EXIT_FAILURE); //need to change thing to something
 	i = search_name("PWD", envp);
 	if (i == -1)
 	{
@@ -109,16 +111,21 @@ int	ft_env(t_msh sh)
 
 int	ft_unset(t_msh **sh, char *name)
 {
+	int ret;
+
+	ret = EXIT_SUCCESS;
 	if (!name)
 		return (perror("no value defined to unset\n"), EXIT_FAILURE);
-	change_env_value(name, "\0", (*sh)->envp);
-	return (EXIT_SUCCESS);
+	ret = change_env_value(name, "\0", (*sh)->envp);
+	return (ret);
 }
 
 int	ft_export(t_msh **sh, t_cmd cmd)
 {
 	int	i;
 
+	if (!cmd.argv[1] || cmd.argv[2])
+		return (EXIT_SUCCESS);
 	i = search_name(cmd.argv[1], (*sh)->envp);
 	if (i < 0)
 		add_env_var(&(*sh)->envp, cmd.argv[1], "\0");
