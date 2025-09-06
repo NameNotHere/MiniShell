@@ -17,8 +17,9 @@ int	ft_echo(char *str, int with_arg_n)
 {
 	int		len;
 
-	len = ft_strlen(str);
-	if (with_arg_n == 1)
+	if (str)
+		len = ft_strlen(str);
+	if (with_arg_n == 1 && str)
 	{
 		while (*str)
 		{
@@ -103,7 +104,7 @@ int	ft_env(t_msh sh)
 		write(1, "\n", 1);
 		i++;
 	}
-	return (EXIT_SUCCESS)
+	return (EXIT_SUCCESS);
 }
 
 int	ft_unset(t_msh **sh, char *name)
@@ -120,7 +121,7 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 
 	i = search_name(cmd.argv[1], (*sh)->envp);
 	if (i < 0)
-		add_env_var((*sh)->envp, cmd.argv[1], "\0");
+		add_env_var(&(*sh)->envp, cmd.argv[1], "\0");
 	change_env_value(cmd.argv[1], cmd.argv[2], (*sh)->envp);
 	i = search_name(cmd.argv[1], (*sh)->envp);
 	if (i < 0)
