@@ -13,24 +13,44 @@
 #include "minishell.h"
 #include <sys/stat.h>
 
-int	ft_echo(char *str, int with_arg_n)
-{
-	int		len;
 
-	if (str)
-		len = ft_strlen(str);
-	if (with_arg_n == 1 && str)
+int	ft_echo_one(t_cmd *cmd, t_msh *sh)
+{
+	int	len;
+	int	var_i;
+
+	if (cmd->argv[1][0] == '$')
 	{
-		while (*str)
-		{
-			if (*str != '\n')
-				write(1, str, 1);
-			str++;
-		}
-		return (len);
+		return (EXIT_SUCCESS);
+		// var_i = search_name(cmd->argv[0][1], sh->envp);
+		// write(1, sear, 3);
 	}
-	return (write(1, str, len));
+	len = ft_strlen(cmd->argv[0]);
+	return (write(1, cmd->argv[1], len));
 }
+
+// int	ft_echo(t_cmd *cmd)//, t_msh *sh)
+// {
+// 	int	newline_param;
+// 	int	i;
+// 	int	len;
+
+// 	i = 1;
+// 	newline_param = 0;
+// 	if (ft_strncmp(cmd->argv[i], "-n", 2))
+// 		newline_param = i++;
+// 	if (cmd->argv[i][0] != '\"')
+// 	{
+// 		if (cmd->argv[i][0] == '$')
+// 			// print var and return
+// 		len = ft_strlen(cmd->argv[i]);
+// 		write(1, cmd->argv[i], len);
+// 	}
+// 	if (newline_param == 100)
+// 		return (EXIT_FAILURE);
+// 	// handle quotes
+// 	return (EXIT_SUCCESS);
+// }
 
 int	ft_cd(char **envp, char *directory)
 {
@@ -77,19 +97,19 @@ int	ft_cd(char **envp, char *directory)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_pwd(char **envp)
+int	ft_pwd(t_msh *sh)
 {
 	int	i;
 	int	equal;
 
-	i = search_name("PWD", envp);
+	i = search_name("PWD", sh->envp);
 	if (i == -1)
 	{
 		write(STDERR_FILENO, "PWD not found\n", 14);
 		return (EXIT_FAILURE);
 	}
-	equal = length_till_equal(envp[i]) + 1;
-	ft_echo(envp[i] + equal, 0);
+	equal = length_till_equal(sh->envp[i]) + 1;
+	write(1, sh->envp[i] + equal, ft_strlen(sh->envp[i] - equal));
 	return (EXIT_SUCCESS);
 }
 
@@ -140,11 +160,11 @@ int	execute_built_in(t_msh *sh, t_cmd *cmd)
 {
 	execute_redirection(sh, cmd->redir);
 	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
-		ft_pwd(sh->envp);
+		ft_pwd(sh);
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 		return (ft_cd(sh->envp, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
-		return (ft_echo(cmd->argv[1], 0));
+		return (ft_echo_one(cmd));
 	else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
 		return (ft_env(*sh));
 	else if (ft_strncmp(cmd->argv[0], "export", 4) == 0)
