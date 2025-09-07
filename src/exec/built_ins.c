@@ -22,8 +22,9 @@ int	ft_echo_one(t_cmd *cmd, t_msh *sh)
 	if (cmd->argv[1][0] == '$')
 	{
 		return (EXIT_SUCCESS);
-		// var_i = search_name(cmd->argv[0][1], sh->envp);
-		// write(1, sear, 3);
+		var_i = search_name(cmd->argv[0], sh->envp);
+		write(1, sh->envp[var_i], \
+			 ft_strlen(sh->envp[var_i]));
 	}
 	len = ft_strlen(cmd->argv[0]);
 	return (write(1, cmd->argv[1], len));
@@ -164,7 +165,7 @@ int	execute_built_in(t_msh *sh, t_cmd *cmd)
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 		return (ft_cd(sh->envp, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
-		return (ft_echo_one(cmd));
+		return (ft_echo_one(cmd, sh));
 	else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
 		return (ft_env(*sh));
 	else if (ft_strncmp(cmd->argv[0], "export", 4) == 0)

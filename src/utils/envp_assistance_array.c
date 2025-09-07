@@ -67,32 +67,28 @@ int	envp_len(char **envp)
 
 int	add_env_var(char ***envp, char *name, char *value)
 {
-	char	**new_envp;
-	char	*new_entry;
-	int		name_len;
-	int		value_len;
-	int		i;
+	int		env_len;
+	char	*new_var;
+	char	**resized_env;
+	char	*tmp;
 
-	new_envp = malloc(sizeof(char *) * (envp_len(*envp) + 2));
-	if (!new_envp)
+	env_len = envp_len(*envp);
+	resized_env = realloc(*envp, sizeof(char *) * (env_len + 2));
+	if (!resized_env)
 		return (EXIT_FAILURE);
-	i = 0;
-	while (i < envp_len(*envp))
-	{
-		new_envp[i] = (*envp)[i];
-		i++;
-	}
-	name_len = ft_strlen(name);
-	value_len = ft_strlen(value);
-	new_entry = malloc(name_len + value_len + 2);
-	if (!new_entry)
-		return (free(new_envp), EXIT_FAILURE);
-	ft_strlcpy(new_entry, name, name_len + 1);
-	new_entry[name_len] = '=';
-	ft_strlcpy(new_entry + name_len + 1, value, value_len + 1);
-	new_envp[i++] = new_entry;
-	new_envp[i] = NULL;
-	free(*envp);
-	*envp = new_envp;
+
+	*envp = resized_env;
+	tmp = ft_strjoin(name, "=");
+	if (!tmp)
+		return (EXIT_FAILURE);
+	new_var = ft_strjoin(tmp, value);
+	free(tmp);
+	if (!new_var)
+		return (EXIT_FAILURE);
+
+	(*envp)[env_len] = new_var;
+	(*envp)[env_len + 1] = NULL;
+
 	return (EXIT_SUCCESS);
 }
+
