@@ -1,6 +1,8 @@
 
 #include "minishell.h"
 
+#include <stdio.h>
+
 int	length_till_equal(char *str)
 {
 	int	i;
@@ -34,26 +36,25 @@ int	change_env_value(char *name, char *new_value, char **envp)
 {
 	int		index;
 	char	*new_entry;
-	int		len_name;
-	int		len_value;
+	char	*tmp;
 
 	index = search_name(name, envp);
 	if (index == -1)
 		return (EXIT_FAILURE);
 
-	len_name = ft_strlen(name);
-	len_value = ft_strlen(new_value);
-	new_entry = malloc(len_name + len_value + 2);
-	if (!new_entry)
-		return (-1);
+	tmp = ft_strjoin(name, "=");
+	if (!tmp)
+		return (EXIT_FAILURE);
 
-	ft_strlcpy(new_entry, name, len_name);
-	new_entry[len_name] = '=';
-	ft_strlcpy(new_entry + len_name + 1, new_value, len_value);
-	free(envp[index]);
+	new_entry = ft_strjoin(tmp, new_value);
+	free(tmp);
+	if (!new_entry)
+		return (EXIT_FAILURE);
+
 	envp[index] = new_entry;
 	return (EXIT_SUCCESS);
 }
+
 
 int	envp_len(char **envp)
 {
@@ -68,27 +69,18 @@ int	envp_len(char **envp)
 int	add_env_var(char ***envp, char *name, char *value)
 {
 	int		env_len;
-	char	*new_var;
 	char	**resized_env;
-	char	*tmp;
 
 	env_len = envp_len(*envp);
 	resized_env = realloc(*envp, sizeof(char *) * (env_len + 2));
 	if (!resized_env)
 		return (EXIT_FAILURE);
 
+
+	resized_env[env_len] = name;
+	resized_env[env_len + 1] = NULL;
+
+	change_env_value(name, value, resized_env);
 	*envp = resized_env;
-	tmp = ft_strjoin(name, "=");
-	if (!tmp)
-		return (EXIT_FAILURE);
-	new_var = ft_strjoin(tmp, value);
-	free(tmp);
-	if (!new_var)
-		return (EXIT_FAILURE);
-
-	(*envp)[env_len] = new_var;
-	(*envp)[env_len + 1] = NULL;
-
 	return (EXIT_SUCCESS);
 }
-

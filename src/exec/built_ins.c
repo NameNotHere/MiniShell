@@ -62,7 +62,7 @@ int	ft_cd(char **envp, char *directory)
 	int			i;
 
 	if (!directory)
-		return (EXIT_FAILURE); //need to change thing to something
+		return (EXIT_FAILURE);
 	i = search_name("PWD", envp);
 	if (i == -1)
 	{
@@ -116,19 +116,18 @@ int	ft_pwd(t_msh *sh)
 
 int	ft_env(t_msh sh)
 {
-	int len;
 	int	i;
 
 	i = 0;
-	while (sh.envp[i] != NULL)
+	while (sh.envp[i])
 	{
-		len = ft_strlen(sh.envp[i]);
-		write(1, sh.envp[i], len);
+		write(1, sh.envp[i], ft_strlen(sh.envp[i]));
 		write(1, "\n", 1);
 		i++;
 	}
 	return (EXIT_SUCCESS);
 }
+
 
 int	ft_unset(t_msh **sh, char *name)
 {
@@ -143,19 +142,26 @@ int	ft_unset(t_msh **sh, char *name)
 
 int	ft_export(t_msh **sh, t_cmd cmd)
 {
-	int	i;
+	char	*name;
+	char	*value;
+	int		i;
 
-	if (!cmd.argv[1] || cmd.argv[2])
+	if (!cmd.argv[1])
 		return (EXIT_SUCCESS);
-	i = search_name(cmd.argv[1], (*sh)->envp);
+	name = cmd.argv[1];
+	value = cmd.argv[2];
+
+	i = search_name(name, (*sh)->envp);
 	if (i < 0)
-		add_env_var(&(*sh)->envp, cmd.argv[1], "\0");
-	change_env_value(cmd.argv[1], cmd.argv[2], (*sh)->envp);
-	i = search_name(cmd.argv[1], (*sh)->envp);
-	if (i < 0)
+		add_env_var(&(*sh)->envp, name, value);
+	else
+		change_env_value(name, value, (*sh)->envp);
+	if (search_name(name, (*sh)->envp) < 0)
 		return (EXIT_FAILURE);
+
 	return (EXIT_SUCCESS);
 }
+
 
 int	execute_built_in(t_msh *sh, t_cmd *cmd)
 {
