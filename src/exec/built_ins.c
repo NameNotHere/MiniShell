@@ -13,45 +13,20 @@
 #include "minishell.h"
 #include <sys/stat.h>
 
-
-int	ft_echo_one(t_cmd *cmd, t_msh *sh)
+int	ft_echo_one(t_cmd *cmd) // we didnt take care of the param
 {
+	int	i;
 	int	len;
-	int	var_i;
 
-	if (cmd->argv[1][0] == '$')
-	{
-		return (EXIT_SUCCESS);
-		var_i = search_name(cmd->argv[0], sh->envp);
-		write(1, sh->envp[var_i], \
-			 ft_strlen(sh->envp[var_i]));
-	}
-	len = ft_strlen(cmd->argv[0]);
-	return (write(1, cmd->argv[1], len));
+	len = ft_strlen(cmd->argv[1]);
+	i = 0;
+	if (cmd->argv[1][i] && cmd->argv[1][0] == '\"')
+		while (cmd->argv[0][i] && cmd->argv[0][i] != '\"')
+			write(1, cmd->argv[i++], 1);
+	else
+		return (write(1, cmd->argv[1], len));
+	return (i);
 }
-
-// int	ft_echo(t_cmd *cmd)//, t_msh *sh)
-// {
-// 	int	newline_param;
-// 	int	i;
-// 	int	len;
-
-// 	i = 1;
-// 	newline_param = 0;
-// 	if (ft_strncmp(cmd->argv[i], "-n", 2))
-// 		newline_param = i++;
-// 	if (cmd->argv[i][0] != '\"')
-// 	{
-// 		if (cmd->argv[i][0] == '$')
-// 			// print var and return
-// 		len = ft_strlen(cmd->argv[i]);
-// 		write(1, cmd->argv[i], len);
-// 	}
-// 	if (newline_param == 100)
-// 		return (EXIT_FAILURE);
-// 	// handle quotes
-// 	return (EXIT_SUCCESS);
-// }
 
 int	ft_cd(char **envp, char *directory)
 {
@@ -136,7 +111,7 @@ int	ft_unset(t_msh **sh, char *name)
 	ret = EXIT_SUCCESS;
 	if (!name)
 		return (perror("no value defined to unset\n"), EXIT_FAILURE);
-	ret = change_env_value(name, "\0", (*sh)->envp);
+	ret = change_env_value(name, "\0", &(*sh)->envp);
 	return (ret);
 }
 
@@ -144,18 +119,17 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 {
 	char	*name;
 	char	*value;
-	int		i;
 
 	if (!cmd.argv[1])
 		return (EXIT_SUCCESS);
 	name = cmd.argv[1];
-	value = cmd.argv[2];
+	value = cmd.argv[3];
 
 	i = search_name(name, (*sh)->envp);
 	if (i < 0)
 		add_env_var(&(*sh)->envp, name, value);
 	else
-		change_env_value(name, value, (*sh)->envp);
+		change_env_value(name, value, &(*sh)->envp);
 	if (search_name(name, (*sh)->envp) < 0)
 		return (EXIT_FAILURE);
 
@@ -171,7 +145,7 @@ int	execute_built_in(t_msh *sh, t_cmd *cmd)
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 		return (ft_cd(sh->envp, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
-		return (ft_echo_one(cmd, sh));
+		return (ft_echo_one(cmd));
 	else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
 		return (ft_env(*sh));
 	else if (ft_strncmp(cmd->argv[0], "export", 4) == 0)

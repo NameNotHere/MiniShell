@@ -32,29 +32,25 @@ int	search_name(char *name, char **envp)
 	return (-1);
 }
 
-int	change_env_value(char *name, char *new_value, char **envp)
+int	change_env_value(char *name, char *new_value, char ***envp)
 {
 	int		index;
 	char	*new_entry;
-	char	*tmp;
+	char	*str;
 
-	index = search_name(name, envp);
+	index = search_name(name, *envp);
 	if (index == -1)
 		return (EXIT_FAILURE);
 
-	tmp = ft_strjoin(name, "=");
-	if (!tmp)
-		return (EXIT_FAILURE);
-
-	new_entry = ft_strjoin(tmp, new_value);
-	free(tmp);
+	str = ft_strjoin(name, "=");
+	new_entry = ft_strjoin(str, new_value);
+	free(str);
 	if (!new_entry)
 		return (EXIT_FAILURE);
 
-	envp[index] = new_entry;
+	(*envp)[index] = new_entry;
 	return (EXIT_SUCCESS);
 }
-
 
 int	envp_len(char **envp)
 {
@@ -69,18 +65,13 @@ int	envp_len(char **envp)
 int	add_env_var(char ***envp, char *name, char *value)
 {
 	int		env_len;
-	char	**resized_env;
 
 	env_len = envp_len(*envp);
-	resized_env = realloc(*envp, sizeof(char *) * (env_len + 2));
-	if (!resized_env)
+	*envp = realloc(*envp, sizeof(char *) * (env_len + 1));
+	if (!(*envp))
 		return (EXIT_FAILURE);
+	(*envp)[env_len] = name;
+	change_env_value(name, value, envp);
 
-
-	resized_env[env_len] = name;
-	resized_env[env_len + 1] = NULL;
-
-	change_env_value(name, value, resized_env);
-	*envp = resized_env;
 	return (EXIT_SUCCESS);
 }
