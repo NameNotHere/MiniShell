@@ -119,6 +119,7 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 {
 	char	*name;
 	char	*value;
+	int		i;
 
 	if (!cmd.argv[1])
 		return (EXIT_SUCCESS);
