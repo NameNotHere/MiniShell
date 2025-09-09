@@ -6,35 +6,80 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/09 09:47:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/09 18:00:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <readline/readline.h>
 
-void	heredoc_redirection(t_msh *sh, t_redir *redir)
+char	*heredoc_loop(t_redir *redir)
 {
-	char	*heredoc_string;
+	char	*hdoc_line;
+	char	*hdoc_string;
+
+	hdoc_string = ft_calloc(1, sizeof(char));
+	if (hdoc_string == NULL)
+		return (NULL);
+	while (true)
+	{
+		hdoc_line = readline("heredoc >");
+		if (!hdoc_line || !*hdoc_line)
+		{
+			safe_free_string(&hdoc_line);
+			continue ;
+		}
+		if (ft_strncmp(redir->string, hdoc_line, ft_strlen(redir->string)) == 0)
+			break ;
+		hdoc_string = ft_strjoin(hdoc_string, hdoc_line);
+		safe_free_string(&hdoc_line);
+		if (hdoc_string == NULL)
+			break ;
+	}
+	if (hdoc_string != NULL)
+		temp_print("heredoc string is:\n%s", hdoc_string);
+	return (hdoc_string);
+}
+
+void	heredoc_redirection(t_msh *sh, t_redir *redir, int previous_hdoc_fd)
+{
+	char	*hdoc_string;
 
 	if (redir && redir->ty == REDIR_HEREDOC)
 	{
 		temp_print("heredoc found\n");
+		if (previous_hdoc_fd)
+			close(previous_hdoc_fd);
 		redir->fd = open("/tmp/myshell_tmp_heredoc",
 				O_RDWR | O_CREAT | O_TRUNC, 0600);
 		if (redir->fd == -1)
 			return (perror("open myshell_tmp_heredoc"));
 		unlink("/tmp/myshell_tmp_heredoc");
-		heredoc_string = readline("heredoc >");
-		write(redir->fd, heredoc_string, ft_strlen(heredoc_string));
-		// close(redir->fd);
-		heredoc_redirection(sh, redir->next);
+		hdoc_string = heredoc_loop(redir);
+		if (hdoc_string == NULL)
+		{
+			sh->exit_code = EXIT_FAILURE;
+			perror("heredoc failed");
+			return ;
+		}
+		if (write(redir->fd, hdoc_string, ft_strlen(hdoc_string)) == -1)
+		{
+			close(redir->fd);
+			safe_free_string(&hdoc_string);
+			sh->exit_code = EXIT_FAILURE;
+			perror("heredoc failed");
+			return ;
+		}
+		safe_free_string(&hdoc_string);
+		heredoc_redirection(sh, redir->next, redir->fd);
 	}
+	else if (redir)
+		heredoc_redirection(sh, redir->next, previous_hdoc_fd);
 }
 
 int	heredoc_cmd_node(t_msh *sh, t_cmd *cmd)
 {
-	heredoc_redirection(sh, cmd->redir);
+	heredoc_redirection(sh, cmd->redir, 0);
 	return (EXIT_SUCCESS);
 }
 
