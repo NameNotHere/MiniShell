@@ -67,10 +67,11 @@ int	add_env_var(char ***envp, char *name, char *value)
 	int		env_len;
 
 	env_len = envp_len(*envp);
-	*envp = realloc(*envp, sizeof(char *) * (env_len + 1));
+	*envp = realloc(*envp, sizeof(char *) * (env_len + 2));
 	if (!(*envp))
 		return (EXIT_FAILURE);
 	(*envp)[env_len] = name;
+	(*envp)[env_len + 1] = NULL;
 	change_env_value(name, value, envp);
 
 	return (EXIT_SUCCESS);
