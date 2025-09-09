@@ -6,22 +6,27 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/09 03:03:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/09 09:47:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <readline/readline.h>
 
 void	heredoc_redirection(t_msh *sh, t_redir *redir)
 {
+	char	*heredoc_string;
+
 	if (redir && redir->ty == REDIR_HEREDOC)
 	{
 		temp_print("heredoc found\n");
 		redir->fd = open("/tmp/myshell_tmp_heredoc",
 				O_RDWR | O_CREAT | O_TRUNC, 0600);
-		// unlink("/tmp/myshell_tmp_heredoc");
-		write(redir->fd, "teste\n", 6);
-		
+		if (redir->fd == -1)
+			return (perror("open myshell_tmp_heredoc"));
+		unlink("/tmp/myshell_tmp_heredoc");
+		heredoc_string = readline("heredoc >");
+		write(redir->fd, heredoc_string, ft_strlen(heredoc_string));
 		// close(redir->fd);
 		heredoc_redirection(sh, redir->next);
 	}
