@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/09 18:00:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/09 18:28:19 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ char	*heredoc_loop(t_redir *redir)
 {
 	char	*hdoc_line;
 	char	*hdoc_string;
+	char	*temp_hdoc_string;
 
 	hdoc_string = ft_calloc(1, sizeof(char));
 	if (hdoc_string == NULL)
@@ -31,7 +32,19 @@ char	*heredoc_loop(t_redir *redir)
 		}
 		if (ft_strncmp(redir->string, hdoc_line, ft_strlen(redir->string)) == 0)
 			break ;
-		hdoc_string = ft_strjoin(hdoc_string, hdoc_line);
+		if (strlen(hdoc_string))
+		{
+			temp_hdoc_string = ft_strjoin(hdoc_string, "\n");
+			safe_free_string(&hdoc_string);
+			hdoc_string = temp_hdoc_string;
+			temp_hdoc_string = NULL;
+		}
+		if (hdoc_string == NULL)
+			break ;
+		temp_hdoc_string = ft_strjoin(hdoc_string, hdoc_line);
+		safe_free_string(&hdoc_string);
+		hdoc_string = temp_hdoc_string;
+		temp_hdoc_string = NULL;
 		safe_free_string(&hdoc_line);
 		if (hdoc_string == NULL)
 			break ;
