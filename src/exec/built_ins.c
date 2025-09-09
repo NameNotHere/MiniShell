@@ -85,7 +85,7 @@ int	ft_pwd(t_msh *sh)
 		return (EXIT_FAILURE);
 	}
 	equal = length_till_equal(sh->envp[i]) + 1;
-	write(1, sh->envp[i] + equal, ft_strlen(sh->envp[i] - equal));
+	write(1, sh->envp[i] + equal, ft_strlen(sh->envp[i] + equal));
 	return (EXIT_SUCCESS);
 }
 
