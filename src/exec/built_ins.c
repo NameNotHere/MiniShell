@@ -20,9 +20,12 @@ int	ft_echo_one(t_cmd *cmd) // we didnt take care of the param
 
 	len = ft_strlen(cmd->argv[1]);
 	i = 0;
-	if (cmd->argv[1][i] && cmd->argv[1][0] == '\"')
+	if (cmd->argv[1][0] == '\"')
+	{
 		while (cmd->argv[0][i] && cmd->argv[0][i] != '\"')
-			write(1, cmd->argv[i++], 1);
+			if (cmd->argv[1][i++] != '"')
+				write(1, &(cmd->argv[1][i]), 1);
+	}
 	else
 		return (write(1, cmd->argv[1], len));
 	return (i);
