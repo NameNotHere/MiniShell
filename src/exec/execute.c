@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/08 17:41:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/09 02:54:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,11 @@ int	execute_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 		return (EXIT_FAILURE);
 	}
 	last_exit_status = sh->exit_code;
+	if (heredoc_ast_node(sh, sh->ast) != EXIT_SUCCESS)
+	{
+		perror("heredoc root ast node");
+		return (sh->exit_code);
+	}
 	if (execute_ast_node(sh, sh->ast,
 			fd_in, fd_out) != EXIT_SUCCESS)
 	{
@@ -81,6 +86,7 @@ int	execute_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 	}
 	if (child_pid == -1 && (errno != ECHILD && errno != EINTR))
 		perror("wait error");
-	sh->exit_code = last_exit_status;
+	if (errno != ECHILD)  // silence no-child error
+		sh->exit_code = last_exit_status;
 	return (sh->exit_code);
 }
