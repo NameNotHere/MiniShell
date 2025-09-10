@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 19:10:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/10 18:28:41 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <signal.h>
+#include <unistd.h>
 
 // user defined variable (including global) must be lowercase.
 //global must start with g_
@@ -73,24 +74,84 @@ void	ctrl_c(int sig)
 	rl_redisplay();
 }
 
-/*
-commented out the check for the global signal int. it was stopping the lines
-to be processed, including "exit", so we get stuck otherwise.
-even if you set to 0 before the "continue", we loose one command-line
-*/
+// int	minishell_mainloop(t_msh *sh)
+// {
+// 	while (true)
+// 	{
+// 		sh->line = readline(MINISHELL_PROMPT);
+// 		if (!sh->line || !*sh->line)
+// 		{
+// 			safe_free_string(&sh->line);
+// 			continue ;
+// 		}
+// 		add_history(sh->line);
+// 		if (expand_line(sh) != EXIT_SUCCESS)
+// 		{
+// 			d_print("TODO: Error expanding line here");
+// 			safe_free_string(&sh->line);
+// 			continue ;
+// 		}
+// 		if (ft_strncmp(sh->line, "exit", 4) == 0 && !piped_line(sh->line))
+// 		{
+// 			sh->exit_code = EXIT_SUCCESS;
+// 			break ;
+// 		}
+// 		if (parse_line_to_ast(sh, sh->ast, sh->line) != EXIT_SUCCESS)
+// 		{
+// 			perror("parse line");
+// 			safe_free_string(&sh->line);
+// 			continue ;
+// 		}
+// 		if (lookup_all_cmd_fullpaths(sh, sh->ast) != EXIT_SUCCESS)
+// 			perror("lookup_cmds");
+// 		if (execute_ast_root(sh, sh->ast,
+// 				STDIN_FILENO, STDOUT_FILENO) != EXIT_SUCCESS)
+// 			perror("exec ast root");
+// 		free_ast(&sh->ast);
+// 		sh->ast = make_ast_node(NODE_UNKNOWN);
+// 		safe_free_string(&sh->line);
+// 	}
+// 	free_everything(sh);
+// 	return (sh->exit_code);
+// }
+
 int	minishell_mainloop(t_msh *sh)
 {
+	bool	is_interactive;
+	char	*buffer;
+	size_t	len;
+	ssize_t	read_bytes;
+
+	is_interactive = isatty(STDIN_FILENO);
+	buffer = NULL;
 	while (true)
 	{
-		sh->line = readline(MINISHELL_PROMPT);
+		if (is_interactive)
+		{
+			sh->line = readline(MINISHELL_PROMPT);
+			if (!sh->line)
+				break ; // EOF = exit
+		}
+		else
+		{
+			len = 0;
+			read_bytes = getline(&buffer, &len, stdin); // TODO: check.
+			if (read_bytes == -1)
+			{
+				free(buffer);
+				break ; // EOF = exit
+			}
+			if (read_bytes > 0 && buffer[read_bytes - 1] == '\n')
+				buffer[read_bytes - 1] = '\0';
+			sh->line = buffer;
+		}
 		if (!sh->line || !*sh->line)
 		{
 			safe_free_string(&sh->line);
 			continue ;
 		}
-		// if (g_mini_signal == 1)  // this was stopping the shell here forever
-		// 	continue ;
-		add_history(sh->line);
+		if (is_interactive)
+			add_history(sh->line);
 		if (expand_line(sh) != EXIT_SUCCESS)
 		{
 			d_print("TODO: Error expanding line here");
@@ -102,11 +163,6 @@ int	minishell_mainloop(t_msh *sh)
 			sh->exit_code = EXIT_SUCCESS;
 			break ;
 		}
-		// if (parse_line_and_execute_ast(sh) != EXIT_SUCCESS)
-		// {
-		// 	safe_free_string(&sh->line);
-		// 	continue ;
-		// }
 		if (parse_line_to_ast(sh, sh->ast, sh->line) != EXIT_SUCCESS)
 		{
 			perror("parse line");
@@ -125,6 +181,8 @@ int	minishell_mainloop(t_msh *sh)
 	free_everything(sh);
 	return (sh->exit_code);
 }
+
+
 
 void	free_everything(t_msh *sh)
 {

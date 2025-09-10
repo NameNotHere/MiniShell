@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/10 12:03:11 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/10 17:29:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,9 @@ int		handle_execute_command_errors(t_msh *sh, t_cmd *cmd);
 void	safe_close_fd_in(int *fd_in);
 void	safe_close_fd_out(int *fd_out);
 void	safe_close_fds(int *fd_in, int *fd_out);
+pid_t	safe_fork(t_msh *sh, int *fd_in, int *fd_out, char *error_msg);
+pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out);
+void	execute_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd);
 
 // utils/utils_free.c
 void	safe_free_string(char **ptr);
@@ -141,6 +144,8 @@ void	ctrl_c(int sig);
 int	search_name(char *name, char **envp);
 int	length_till_equal(char *str);
 
-int		execute_built_in(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
+// int		execute_builtin_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
+int		execute_builtin(t_msh *sh, t_cmd *cmd);
+int		execute_command(t_msh *sh, t_cmd *cmd);
 
 #endif

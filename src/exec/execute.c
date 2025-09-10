@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/09 02:54:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/10 18:10:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,49 @@
 
 // pipefd[1] for left-side to write to the pipe (STDOUT_FILENO)
 // pipefd[0] for right-side to read from the pipe (STDIN_FILENO)
-// TODO: check if leave in case exit code is returned on the left or not.
 int	execute_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
 {
 	int		pipefd[2];
+	pid_t	left_pid;
+	pid_t	right_pid;
 
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe");
 		sh->exit_code = errno;
+		safe_close_fds(&fd_in, &fd_out);
 		return (sh->exit_code);
 	}
-	sh->exit_code = execute_cmd_node(sh, &pipe_node->left->cmd,
-			fd_in, pipefd[1]);
-	safe_close_fd_out(&pipefd[1]);
-	if (sh->exit_code) // CHECK HERE MAYBE SHOULD NOT LEAVE....
+	left_pid = safe_fork_pipe(sh, pipefd, &fd_in, &fd_out);
+	if (left_pid == -1)
 		return (sh->exit_code);
-	sh->exit_code = execute_ast_node(sh, pipe_node->right, pipefd[0], fd_out);
-	safe_close_fd_in(&pipefd[0]);
-	return (sh->exit_code);
+	if (left_pid == 0)
+	{
+		try_dup2(sh, &fd_in, &pipefd[1]);
+		safe_close_fds(&pipefd[0], &pipefd[1]);
+		safe_close_fd_out(&fd_out);
+		sh->exit_code = execute_command(sh, &pipe_node->left->cmd);
+		exit_free_with_code(sh, sh->exit_code);
+	}
+	right_pid = safe_fork_pipe(sh, pipefd, &fd_in, &fd_out);
+	if (right_pid == -1)
+		return (sh->exit_code);
+	if (right_pid == 0)
+	{
+		try_dup2(sh, &pipefd[0], &fd_out);
+		safe_close_fds(&pipefd[0], &pipefd[1]);
+		safe_close_fd_in(&fd_in);
+		if (pipe_node->right->nty == NODE_CMD)
+			sh->exit_code = execute_command(sh, &pipe_node->right->cmd);
+		else
+			sh->exit_code = execute_ast_node(sh, pipe_node->right,
+					STDIN_FILENO, STDOUT_FILENO);
+		exit_free_with_code(sh, sh->exit_code);
+	}
+	safe_close_fds(&pipefd[0], &pipefd[1]);
+	safe_close_fds(&fd_in, &fd_out);
+	sh->last_pid = right_pid;
+	return (EXIT_SUCCESS);
 }
 
 int	execute_ast_node(t_msh *sh, t_ast *node, int fd_in, int fd_out)
