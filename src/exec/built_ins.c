@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/05 16:44:15 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/10 12:07:02 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,50 @@ void	ft_env(t_msh sh)
 	}
 }
 
-int	execute_built_in(t_msh *sh, t_cmd *cmd)
+int	execute_built_in(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out)
 {
-	execute_redirection(sh, cmd->redir);
+	pid_t	pid;
+
+	if (fd_out != STDOUT_FILENO || fd_in != STDIN_FILENO)
+	{
+		sh->last_pid = fork();
+		pid = sh->last_pid;
+		if (pid == -1)
+		{
+			safe_close_fds(&fd_in, &fd_out);
+			perror("fork");
+			sh->exit_code = errno;
+			return (sh->exit_code);
+		}
+		if (pid == 0)
+		{
+			try_dup2(sh, &fd_in, &fd_out);
+			safe_close_fds(&fd_in, &fd_out);
+			execute_redirection(sh, cmd->redir);
+			if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
+				sh->exit_code = ft_pwd(sh->envp);
+			else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
+				sh->exit_code = t_cd(sh->envp, cmd->argv[1]);
+			else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
+			{
+				ft_echo(cmd->argv[1], 0);
+				sh->exit_code = EXIT_SUCCESS;
+			}
+			else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
+			{
+				ft_env(*sh);
+				sh->exit_code = EXIT_SUCCESS;
+			}
+			else
+				sh->exit_code = EXIT_FAILURE;
+			if (sh->exit_code == EXIT_SUCCESS)
+				write(1, "\n", 1);
+			exit_free_with_code(sh, sh->exit_code);
+		}
+		safe_close_fd_out(&fd_out);
+		return (EXIT_SUCCESS);
+	}
+	safe_close_fds(&fd_in, &fd_out);
 	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
 		ft_pwd(sh->envp);
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)

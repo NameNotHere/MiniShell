@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/09 17:25:51 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/10 12:03:11 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,6 @@ void	ctrl_c(int sig);
 int	search_name(char *name, char **envp);
 int	length_till_equal(char *str);
 
-int		execute_built_in(t_msh *sh, t_cmd *cmd);
+int		execute_built_in(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
 
 #endif

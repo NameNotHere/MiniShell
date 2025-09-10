@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/09 18:28:19 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/10 11:06:03 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,10 @@ char	*heredoc_loop(t_redir *redir)
 	char	*hdoc_string;
 	char	*temp_hdoc_string;
 
-	hdoc_string = ft_calloc(1, sizeof(char));
-	if (hdoc_string == NULL)
-		return (NULL);
+	hdoc_string = NULL;
 	while (true)
 	{
-		hdoc_line = readline("heredoc >");
+		hdoc_line = readline("hdoc > ");
 		if (!hdoc_line || !*hdoc_line)
 		{
 			safe_free_string(&hdoc_line);
@@ -32,25 +30,21 @@ char	*heredoc_loop(t_redir *redir)
 		}
 		if (ft_strncmp(redir->string, hdoc_line, ft_strlen(redir->string)) == 0)
 			break ;
-		if (strlen(hdoc_string))
-		{
-			temp_hdoc_string = ft_strjoin(hdoc_string, "\n");
-			safe_free_string(&hdoc_string);
-			hdoc_string = temp_hdoc_string;
-			temp_hdoc_string = NULL;
-		}
-		if (hdoc_string == NULL)
-			break ;
-		temp_hdoc_string = ft_strjoin(hdoc_string, hdoc_line);
+		if (hdoc_string)
+			temp_hdoc_string = ft_strjoin3(hdoc_string, "\n", hdoc_line);
+		else
+			temp_hdoc_string = hdoc_line;
 		safe_free_string(&hdoc_string);
 		hdoc_string = temp_hdoc_string;
 		temp_hdoc_string = NULL;
-		safe_free_string(&hdoc_line);
 		if (hdoc_string == NULL)
+		{
+			perror("heredoc_loop allocation");
 			break ;
+		}
 	}
-	if (hdoc_string != NULL)
-		temp_print("heredoc string is:\n%s", hdoc_string);
+	// if (hdoc_string != NULL)
+	// 	temp_print("heredoc string is:\n%s", hdoc_string);
 	return (hdoc_string);
 }
 

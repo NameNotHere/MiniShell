@@ -1,0 +1,5 @@
+echo hello
+pwd
+env | head -3
+cd /tmp && pwd
+exit
