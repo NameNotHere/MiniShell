@@ -71,8 +71,11 @@ int	ft_cd(char **envp, char *directory)
 	free(new_path);
 	if (!temp)
 		return (perror("cd ft_strjoin 3"), EXIT_FAILURE);
-	free(envp[i]);
-	envp[i] = temp;
+	if (ft_strncmp("..", directory, 2) != 0)
+	{
+		free(envp[i]);
+		envp[i] = temp;
+	}
 	return (EXIT_SUCCESS);
 }
 
