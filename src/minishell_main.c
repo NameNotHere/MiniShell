@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/10 18:28:41 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/10 19:08:03 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,8 +181,6 @@ int	minishell_mainloop(t_msh *sh)
 	free_everything(sh);
 	return (sh->exit_code);
 }
-
-
 
 void	free_everything(t_msh *sh)
 {
