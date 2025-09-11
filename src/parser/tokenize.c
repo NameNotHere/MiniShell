@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/02 16:34:38 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/11 13:22:29 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
 int	is_file_path(char *str, int *y)
 {
@@ -35,7 +35,7 @@ int	is_file_path(char *str, int *y)
 
 int	search_for_singlequote(char *str)
 {
-	char *s;
+	char	*s;
 
 	s = str;
 	s++;

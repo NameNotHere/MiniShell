@@ -3,32 +3,85 @@
 /*                                                        :::      ::::::::   */
 /*   built_ins.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/05 16:44:15 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/11 16:07:32 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <sys/stat.h>
 
-int	ft_echo_one(t_cmd *cmd) // we didnt take care of the param
+char	*write_var(char **envp, char *name)
 {
+	int	len_name;
 	int	i;
-	int	len;
 
-	len = ft_strlen(cmd->argv[1]);
 	i = 0;
-	if (cmd->argv[1][0] == '\"')
+	len_name = ft_strlen(name);
+	while (envp[i])
 	{
-		while (cmd->argv[0][i] && len > i++)
-			if (cmd->argv[1][i] != '"')
-				write(1, &(cmd->argv[1][i]), 1);
+		if (ft_strncmp(envp[i], name, len_name) == 0 && envp[i][len_name] == '=')
+			return (envp[i] + len_name + 1);
+		i++;
 	}
-	else
-		return (write(1, cmd->argv[1], len));
-	return (i);
+	return (NULL);
+}
+
+char	*till_space(char *str)
+{
+	int		i;
+	char	*ret;
+
+	i = 0;
+	if (!str)
+		return (NULL);
+	while (str[i] && str[i] != ' ')
+		i++;
+	ret = malloc(i + 1);
+	if (!ret)
+		return (NULL);
+	ft_strlcpy(ret, str, i + 1);
+	return (ret);
+}
+
+int	ft_echo_one(t_cmd *cmd, t_msh *sh)
+{
+	int		i;
+	int		start;
+	char	*var_value;
+	char	*var_name;
+
+	i = 0;
+	while (cmd->argv[1][i])
+	{
+		if (cmd->argv[1][i] == '"')
+		{
+			i++;
+			continue ;
+		}
+		else if (cmd->argv[1][i] == '$')
+		{
+			start = ++i;
+			while (cmd->argv[1][i] != ' ')
+				i++;
+			var_name = strndup(&cmd->argv[1][start], i - start);
+			if (!var_name)
+				return (1);
+			var_value = write_var(sh->envp, var_name);
+			if (var_value)
+				write(1, var_value, ft_strlen(var_value));
+			free(var_name);
+		}
+		else
+		{
+			write(1, &cmd->argv[1][i], 1);
+			i++;
+		}
+	}
+	write(1, "\n", 1);
+	return (0);
 }
 
 int	ft_cd(char **envp, char *directory)
@@ -150,7 +203,7 @@ int	execute_built_in(t_msh *sh, t_cmd *cmd)
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 		return (ft_cd(sh->envp, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
-		return (ft_echo_one(cmd));
+		return (ft_echo_one(cmd, sh));
 	else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
 		return (ft_env(*sh));
 	else if (ft_strncmp(cmd->argv[0], "export", 4) == 0)
