@@ -141,8 +141,10 @@ void	minishell_exit(void);
 void	ctrl_c(int sig);
 
 //envp assistance
-int	search_name(char *name, char **envp);
-int	length_till_equal(char *str);
+int		search_name(char *name, char **envp);
+int		length_till_equal(char *str);
+int		change_env_value(char *name, char *new_value, char ***envp);
+int		add_env_var(char ***envp, char *name, char *value);
 
 // int		execute_builtin_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
 int		execute_builtin(t_msh *sh, t_cmd *cmd);

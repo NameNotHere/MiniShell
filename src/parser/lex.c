@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/07 22:15:17 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/11 16:08:00 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ int	count_tokens(char *str) // does not matter and is broken
 		}
 		else
 		{
-			while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' \
-				&& str[i] != '\"' && isminioperator(str, i) == 0)
+			while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' && str[i] != '\"' && isminioperator(str, i) == 0)
 				i++;
 			count++;
 		}
