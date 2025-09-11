@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/09 02:14:49 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/11 13:13:28 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,15 @@ int		execute_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out);
 int		execute_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
 
 // exec/execute_cmd_redir.c
-// void	execute_redirection_in(t_msh *sh, t_redir *redir);
-// void	execute_redirection_out(t_msh *sh, t_redir *redir);
 void	execute_redirection(t_msh *sh, t_redir *redir);
 
 // exec/execute_cmd_redir_open.c
-// int		failed_open_to_null(t_msh *sh, char *filename, int o_flag);
 int		open_input_redirection(t_msh *sh, char *filename);
 int		open_output_redirection(t_msh *sh, char *filename);
 int		open_append_redirection(t_msh *sh, char *filename);
+
+// exec/heredoc.c
+int		heredoc_ast_node(t_msh *sh, t_ast *node);
 
 // exec/lookup_cmd_fullpath.c
 int		lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);
@@ -107,6 +107,9 @@ int		handle_execute_command_errors(t_msh *sh, t_cmd *cmd);
 void	safe_close_fd_in(int *fd_in);
 void	safe_close_fd_out(int *fd_out);
 void	safe_close_fds(int *fd_in, int *fd_out);
+pid_t	safe_fork_cmd(t_msh *sh, int *fd_in, int *fd_out);
+pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out);
+void	execute_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd);
 
 // utils/utils_free.c
 void	safe_free_string(char **ptr);
@@ -143,6 +146,8 @@ int		length_till_equal(char *str);
 int		change_env_value(char *name, char *new_value, char ***envp);
 int		add_env_var(char ***envp, char *name, char *value);
 
-int		execute_built_in(t_msh *sh, t_cmd *cmd);
+// int		execute_builtin_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
+int		execute_builtin(t_msh *sh, t_cmd *cmd);
+int		execute_command(t_msh *sh, t_cmd *cmd);
 
 #endif

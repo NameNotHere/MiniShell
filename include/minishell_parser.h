@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/08/28 12:08:33 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:56:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,7 @@ typedef struct s_msh
 	int		err;
 	int		exit_code;
 	pid_t	last_pid;
+	bool	is_interactive;
 }	t_msh;
 
 // parser/ast.c
