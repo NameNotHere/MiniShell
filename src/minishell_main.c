@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/10 19:08:03 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/11 17:01:05 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int	initialize_minishell(t_msh *sh, char **envp)
 	sh->envp = copy_string_array(envp);
 	sh->ast = make_ast_node(NODE_UNKNOWN);
 	sh->path_dirs = ft_split(get_path_from_env(sh->envp), ':');
+	sh->is_interactive = isatty(STDIN_FILENO);
 	if (!sh->path_dirs || !sh->envp)
 	{
 		d_print("TODO: Out of memory error here");
@@ -74,59 +75,17 @@ void	ctrl_c(int sig)
 	rl_redisplay();
 }
 
-// int	minishell_mainloop(t_msh *sh)
-// {
-// 	while (true)
-// 	{
-// 		sh->line = readline(MINISHELL_PROMPT);
-// 		if (!sh->line || !*sh->line)
-// 		{
-// 			safe_free_string(&sh->line);
-// 			continue ;
-// 		}
-// 		add_history(sh->line);
-// 		if (expand_line(sh) != EXIT_SUCCESS)
-// 		{
-// 			d_print("TODO: Error expanding line here");
-// 			safe_free_string(&sh->line);
-// 			continue ;
-// 		}
-// 		if (ft_strncmp(sh->line, "exit", 4) == 0 && !piped_line(sh->line))
-// 		{
-// 			sh->exit_code = EXIT_SUCCESS;
-// 			break ;
-// 		}
-// 		if (parse_line_to_ast(sh, sh->ast, sh->line) != EXIT_SUCCESS)
-// 		{
-// 			perror("parse line");
-// 			safe_free_string(&sh->line);
-// 			continue ;
-// 		}
-// 		if (lookup_all_cmd_fullpaths(sh, sh->ast) != EXIT_SUCCESS)
-// 			perror("lookup_cmds");
-// 		if (execute_ast_root(sh, sh->ast,
-// 				STDIN_FILENO, STDOUT_FILENO) != EXIT_SUCCESS)
-// 			perror("exec ast root");
-// 		free_ast(&sh->ast);
-// 		sh->ast = make_ast_node(NODE_UNKNOWN);
-// 		safe_free_string(&sh->line);
-// 	}
-// 	free_everything(sh);
-// 	return (sh->exit_code);
-// }
-
+// TODO: replace getline - not allowed
 int	minishell_mainloop(t_msh *sh)
 {
-	bool	is_interactive;
 	char	*buffer;
 	size_t	len;
 	ssize_t	read_bytes;
 
-	is_interactive = isatty(STDIN_FILENO);
 	buffer = NULL;
 	while (true)
 	{
-		if (is_interactive)
+		if (sh->is_interactive)
 		{
 			sh->line = readline(MINISHELL_PROMPT);
 			if (!sh->line)
@@ -135,7 +94,7 @@ int	minishell_mainloop(t_msh *sh)
 		else
 		{
 			len = 0;
-			read_bytes = getline(&buffer, &len, stdin); // TODO: check.
+			read_bytes = getline(&buffer, &len, stdin);
 			if (read_bytes == -1)
 			{
 				free(buffer);
@@ -150,7 +109,7 @@ int	minishell_mainloop(t_msh *sh)
 			safe_free_string(&sh->line);
 			continue ;
 		}
-		if (is_interactive)
+		if (sh->is_interactive)
 			add_history(sh->line);
 		if (expand_line(sh) != EXIT_SUCCESS)
 		{

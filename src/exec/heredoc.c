@@ -6,35 +6,76 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/10 11:06:03 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/11 16:56:39 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <readline/readline.h>
 
-char	*heredoc_loop(t_redir *redir)
+char	*heredoc_loop(t_msh *sh, t_redir *redir)
 {
 	char	*hdoc_line;
 	char	*hdoc_string;
 	char	*temp_hdoc_string;
+	char	*buffer;
+	size_t	len;
+	ssize_t	read_bytes;
 
 	hdoc_string = NULL;
+	buffer = NULL;
 	while (true)
 	{
-		hdoc_line = readline("hdoc > ");
-		if (!hdoc_line || !*hdoc_line)
+		if (sh->is_interactive)
 		{
+			hdoc_line = readline("hdoc > ");
+			if (!hdoc_line)
+			{
+				// EOF reached, exit heredoc
+				break ;
+			}
+		}
+		else
+		{
+			// Non-interactive mode: read from stdin
+			len = 0;
+			read_bytes = getline(&buffer, &len, stdin);
+			if (read_bytes == -1)
+			{
+				// EOF reached, exit heredoc
+				free(buffer);
+				break ;
+			}
+			if (read_bytes > 0 && buffer[read_bytes - 1] == '\n')
+				buffer[read_bytes - 1] = '\0';
+			hdoc_line = ft_strdup(buffer);
+			free(buffer);
+			buffer = NULL;
+			if (!hdoc_line)
+			{
+				perror("heredoc_loop strdup failed");
+				break ;
+			}
+		}
+		if (!*hdoc_line)
+		{
+			// Empty line, skip it
 			safe_free_string(&hdoc_line);
 			continue ;
 		}
-		if (ft_strncmp(redir->string, hdoc_line, ft_strlen(redir->string)) == 0)
+		if (ft_strncmp(redir->string, hdoc_line, ft_strlen(redir->string)) == 0
+			&& ft_strlen(redir->string) == ft_strlen(hdoc_line))
+		{
+			// Found delimiter, free the line and exit
+			safe_free_string(&hdoc_line);
 			break ;
+		}
 		if (hdoc_string)
 			temp_hdoc_string = ft_strjoin3(hdoc_string, "\n", hdoc_line);
 		else
-			temp_hdoc_string = hdoc_line;
+			temp_hdoc_string = ft_strdup(hdoc_line);
 		safe_free_string(&hdoc_string);
+		safe_free_string(&hdoc_line);
 		hdoc_string = temp_hdoc_string;
 		temp_hdoc_string = NULL;
 		if (hdoc_string == NULL)
@@ -43,40 +84,52 @@ char	*heredoc_loop(t_redir *redir)
 			break ;
 		}
 	}
-	// if (hdoc_string != NULL)
-	// 	temp_print("heredoc string is:\n%s", hdoc_string);
 	return (hdoc_string);
 }
 
 void	heredoc_redirection(t_msh *sh, t_redir *redir, int previous_hdoc_fd)
 {
 	char	*hdoc_string;
+	int		write_fd;
 
 	if (redir && redir->ty == REDIR_HEREDOC)
 	{
-		temp_print("heredoc found\n");
 		if (previous_hdoc_fd)
 			close(previous_hdoc_fd);
-		redir->fd = open("/tmp/myshell_tmp_heredoc",
-				O_RDWR | O_CREAT | O_TRUNC, 0600);
-		if (redir->fd == -1)
+		write_fd = open("/tmp/myshell_tmp_heredoc",
+				O_WRONLY | O_CREAT | O_TRUNC, 0600);
+		if (write_fd == -1)
 			return (perror("open myshell_tmp_heredoc"));
+		redir->fd = open("/tmp/myshell_tmp_heredoc", O_RDONLY);
+		if (redir->fd == -1)
+		{
+			close(write_fd);
+			return (perror("open heredoc for reading failed"));
+		}
 		unlink("/tmp/myshell_tmp_heredoc");
-		hdoc_string = heredoc_loop(redir);
+		hdoc_string = heredoc_loop(sh, redir);
 		if (hdoc_string == NULL)
 		{
-			sh->exit_code = EXIT_FAILURE;
-			perror("heredoc failed");
-			return ;
+			hdoc_string = ft_strdup("");
+			if (hdoc_string == NULL)
+			{
+				close(write_fd);
+				close(redir->fd);
+				sh->exit_code = EXIT_FAILURE;
+				perror("heredoc empty string allocation failed");
+				return ;
+			}
 		}
-		if (write(redir->fd, hdoc_string, ft_strlen(hdoc_string)) == -1)
+		if (write(write_fd, hdoc_string, ft_strlen(hdoc_string)) == -1)
 		{
+			close(write_fd);
 			close(redir->fd);
 			safe_free_string(&hdoc_string);
 			sh->exit_code = EXIT_FAILURE;
-			perror("heredoc failed");
+			perror("heredoc write failed");
 			return ;
 		}
+		close(write_fd);
 		safe_free_string(&hdoc_string);
 		heredoc_redirection(sh, redir->next, redir->fd);
 	}

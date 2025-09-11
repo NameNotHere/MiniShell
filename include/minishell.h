@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/10 17:29:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/11 13:13:28 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int		handle_execute_command_errors(t_msh *sh, t_cmd *cmd);
 void	safe_close_fd_in(int *fd_in);
 void	safe_close_fd_out(int *fd_out);
 void	safe_close_fds(int *fd_in, int *fd_out);
-pid_t	safe_fork(t_msh *sh, int *fd_in, int *fd_out, char *error_msg);
+pid_t	safe_fork_cmd(t_msh *sh, int *fd_in, int *fd_out);
 pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out);
 void	execute_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd);
 

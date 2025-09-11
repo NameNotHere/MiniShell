@@ -200,6 +200,7 @@ typedef struct s_msh
 	int		err;
 	int		exit_code;
 	pid_t	last_pid;
+	bool	is_interactive;
 }	t_msh;
 
 // parser/ast.c
