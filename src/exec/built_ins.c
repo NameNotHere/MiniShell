@@ -6,7 +6,7 @@
 /*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/11 16:07:32 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/09/11 16:21:54 by otanovic         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,6 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 		return (EXIT_SUCCESS);
 	name = cmd.argv[1];
 	value = cmd.argv[3];
-
 	i = search_name(name, (*sh)->envp);
 	if (i < 0)
 		add_env_var(&(*sh)->envp, name, value);
@@ -191,7 +190,6 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 		change_env_value(name, value, &(*sh)->envp);
 	if (search_name(name, (*sh)->envp) < 0)
 		return (EXIT_FAILURE);
-
 	return (EXIT_SUCCESS);
 }
 
