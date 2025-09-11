@@ -18,12 +18,14 @@ char	*write_var(char **envp, char *name)
 	int	len_name;
 	int	i;
 
+	if (!name)
+		return (NULL);
 	i = 0;
 	len_name = ft_strlen(name);
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], name, len_name) == 0 && envp[i][len_name] == '=')
-			return (envp[i] + len_name + 1);
+			return (envp[i] + len_name);
 		i++;
 	}
 	return (NULL);
@@ -46,7 +48,7 @@ char	*till_space(char *str)
 	return (ret);
 }
 
-int	ft_echo_one(t_cmd *cmd, t_msh *sh)
+int	ft_echo(t_cmd *cmd, t_msh *sh)
 {
 	int		i;
 	int		start;
@@ -201,7 +203,7 @@ int	execute_built_in(t_msh *sh, t_cmd *cmd)
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 		return (ft_cd(sh->envp, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
-		return (ft_echo_one(cmd, sh));
+		return (ft_echo(cmd, sh));
 	else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
 		return (ft_env(*sh));
 	else if (ft_strncmp(cmd->argv[0], "export", 4) == 0)
