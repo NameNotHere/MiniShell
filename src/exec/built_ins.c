@@ -122,53 +122,68 @@ int	ft_echo(t_cmd *cmd, t_msh *sh)
 	return (0);
 }
 
-int	ft_cd(char **envp, char *directory)
+char	*remove_last_folder(char *path)
 {
-	struct stat	st;
-	char		*pwd_value;
-	char		*new_path;
-	char		*temp;
-	int			i;
+	int		i;
+	int		last_slash;
+	char	*ret;
 
-	if (!directory)
-		return (EXIT_FAILURE);
-	i = search_name("PWD", envp);
-	if (i == -1)
+	i = 0;
+	last_slash = -1;
+	while (path[i])
 	{
-		write(STDERR_FILENO, "PWD not found\n", 14);
-		return (EXIT_FAILURE);
+		if (path[i] == '/')
+			last_slash = i;
+		i++;
 	}
-	pwd_value = envp[i] + length_till_equal(envp[i]) + 1;
-	temp = ft_strjoin(pwd_value, "/");
-	if (!temp)
-		return (perror("cd ft_strjoin 1"), EXIT_FAILURE);
-	new_path = ft_strjoin(temp, directory);
-	free(temp);
-	if (!new_path)
-		return (perror("cd ft_strjoin 2"), EXIT_FAILURE);
-	if (stat(new_path, &st) != 0 || !S_ISDIR(st.st_mode))
+	if (last_slash <= 0)
+		return (ft_strdup("/"));
+	ret = malloc(last_slash + 1);
+	if (!ret)
+		return (NULL);
+	ft_strlcpy(ret, path, last_slash + 1);
+
+	return (ret);
+}
+
+int	ft_cd(char ***envp, char *directory)
+{
+	int		pwd;
+	char	*new_dir;
+	char	*free_dir;
+
+	pwd = search_name("PWD", *envp);
+	if (ft_strncmp(directory, "..", 3) == 0)
 	{
-		free(new_path);
-		write(STDERR_FILENO, "Invalid directory\n", 18);
+		new_dir = (*envp)[pwd];
+		(*envp)[pwd] = remove_last_folder((*envp)[pwd]);
+		free(new_dir);
 		return (EXIT_SUCCESS);
 	}
-	if (chdir(new_path) != EXIT_SUCCESS)
+	free_dir = (*envp)[pwd];
+	if (directory[0] == '/' && directory[1] == '\0')
+		(*envp)[pwd] = ft_strjoin("PWD=", "/"); //doesnt work
+	if (directory[0] == '~' && directory[1] == 0)
+		(*envp)[pwd] = ft_strdup((*envp)[search_name("HOME", *envp)]);
+	if ((directory[0] == '/' || directory[0] == '~') && directory[1] == 0)
 	{
-		free(new_path);
-		perror("chdir");
-		return (EXIT_FAILURE);
+		free(free_dir);
+		return (EXIT_SUCCESS);
 	}
-	temp = ft_strjoin("PWD=", new_path);
-	free(new_path);
-	if (!temp)
-		return (perror("cd ft_strjoin 3"), EXIT_FAILURE);
-	if (ft_strncmp("..", directory, 2) != 0)
+	new_dir = ft_strjoin3((ft_strchr((*envp)[pwd], '=') + 1), "/", directory);
+	if (chdir(new_dir) == 0)
 	{
-		free(envp[i]);
-		envp[i] = temp;
+		free_dir = (*envp)[pwd];
+		(*envp)[pwd] = ft_strjoin("PWD=", new_dir);
+		free(free_dir);
+		free(new_dir);
+		return (EXIT_SUCCESS);
 	}
-	return (EXIT_SUCCESS);
+	free(new_dir);
+	perror("Invalid Directory\n");
+	return (EXIT_FAILURE);
 }
+
 
 int	ft_pwd(t_msh *sh)
 {
@@ -237,7 +252,7 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
 		ft_pwd(sh);
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
-		return (ft_cd(sh->envp, cmd->argv[1]));
+		return (ft_cd(&sh->envp, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
 		return (ft_echo(cmd, sh));
 	else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
