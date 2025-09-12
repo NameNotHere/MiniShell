@@ -48,41 +48,77 @@ char	*till_space(char *str)
 	return (ret);
 }
 
+int	ft_nflags(char **args)
+{
+	int	z;
+	int	i;
+
+	z = 1;
+	while (args[z])
+	{
+		if (args[z][0] != '-')
+			break ;
+		i = 1;
+		while (args[z][i] == 'n')
+			i++;
+		if (args[z][i] != '\0')
+			break ;
+		z++;
+	}
+	return (z > 1);
+}
+
+
 int	ft_echo(t_cmd *cmd, t_msh *sh)
 {
 	int		i;
 	int		start;
 	char	*var_value;
 	char	*var_name;
+	int		z;
 
+	z = 1;
 	i = 0;
-	while (cmd->argv[1][i])
+	while (cmd->argv[z])
 	{
-		if (cmd->argv[1][i] == '"')
+		if (ft_strncmp(cmd->argv[z], "-n", 2) == 0)
 		{
-			i++;
+			z++;
 			continue ;
 		}
-		else if (cmd->argv[1][i] == '$')
+		while (cmd->argv[z][i])
 		{
-			start = ++i;
-			while (cmd->argv[1][i] != ' ')
+			if (cmd->argv[z][i] == '"')
+			{
 				i++;
-			var_name = strndup(&cmd->argv[1][start], i - start);
-			if (!var_name)
-				return (1);
-			var_value = write_var(sh->envp, var_name);
-			if (var_value)
-				write(1, var_value, ft_strlen(var_value));
-			free(var_name);
+				continue ;
+			}
+			else if (cmd->argv[z][i] == '$')
+			{
+				start = ++i;
+				while (cmd->argv[z][i] && cmd->argv[z][i] != ' ')
+					i++;
+				var_name = strndup(&cmd->argv[z][start], i - start);
+				if (!var_name)
+					return (1);
+				var_value = write_var(sh->envp, var_name);
+				if (var_value)
+					write(1, var_value, ft_strlen(var_value));
+				free(var_name);
+			}
+			else
+			{
+				write(1, &cmd->argv[z][i], 1);
+				i++;
+			}
 		}
-		else
-		{
-			write(1, &cmd->argv[1][i], 1);
-			i++;
-		}
+		i = 0;
+		z++;
+		if (cmd->argv[z])
+			write(1, " ", 1);
 	}
-	write(1, "\n", 1);
+	if (ft_nflags(cmd->argv) == 0)
+		write(1, "\n", 1);
 	return (0);
 }
 
