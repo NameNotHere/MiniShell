@@ -162,7 +162,7 @@ int	ft_cd(char ***envp, char *directory)
 	}
 	free_dir = (*envp)[pwd];
 	if (directory[0] == '/' && directory[1] == '\0')
-		(*envp)[pwd] = ft_strjoin("PWD=", "/"); //doesnt work
+		(*envp)[pwd] = ft_strjoin("PWD=", "/"); // changes the dir but not pwd ?
 	if (directory[0] == '~' && directory[1] == 0)
 		(*envp)[pwd] = ft_strdup((*envp)[search_name("HOME", *envp)]);
 	if ((directory[0] == '/' || directory[0] == '~') && directory[1] == 0)
