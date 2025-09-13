@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/11 18:21:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/13 00:47:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,6 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 
 int	execute_builtin(t_msh *sh, t_cmd *cmd)
 {
-	execute_redirection(sh, cmd->redir);
 	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
 		ft_pwd(sh);
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)

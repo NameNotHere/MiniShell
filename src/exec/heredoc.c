@@ -120,7 +120,30 @@ void	heredoc_redirection(t_msh *sh, t_redir *redir, int previous_hdoc_fd)
 				return ;
 			}
 		}
+		// Write heredoc content
 		if (write(write_fd, hdoc_string, ft_strlen(hdoc_string)) == -1)
+		{
+			close(write_fd);
+			close(redir->fd);
+			safe_free_string(&hdoc_string);
+			sh->exit_code = EXIT_FAILURE;
+			perror("heredoc write failed");
+			return ;
+		}
+		// Add trailing newline to heredoc content (bash compatibility)
+		// Only add newline if heredoc is not empty
+		if (ft_strlen(hdoc_string) > 0 && write(write_fd, "\n", 1) == -1)
+		{
+			close(write_fd);
+			close(redir->fd);
+			safe_free_string(&hdoc_string);
+			sh->exit_code = EXIT_FAILURE;
+			perror("heredoc write failed");
+			return ;
+		}
+		// Add trailing newline to heredoc content (bash compatibility)
+		// Only add newline if heredoc is not empty
+		if (ft_strlen(hdoc_string) > 0 && write(write_fd, "\n", 1) == -1)
 		{
 			close(write_fd);
 			close(redir->fd);

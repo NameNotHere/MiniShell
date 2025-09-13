@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/11 13:13:28 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/13 00:18:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,19 @@ void	free_everything(t_msh *sh);
 int		minishell_mainloop(t_msh *sh);
 
 // minishell_line.c
-int		parse_line_and_execute_ast(t_msh *sh);
+// int		parse_line_and_execute_ast(t_msh *sh);
 int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
 
 // exec/execute.c
-int		execute_ast_node(t_msh *sh, t_ast *node, int fd_in, int fd_out);
-int		execute_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out);
+int		exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out);
+int		exec_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out);
 
 // exec/execute_cmd.c
-int		execute_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
+int		exec_single_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
+void	exec_single_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd);
+void	exec_left(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2]);
+void	exec_right(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2]);
+
 
 // exec/execute_cmd_redir.c
 void	execute_redirection(t_msh *sh, t_redir *redir);
@@ -76,6 +80,13 @@ int		heredoc_ast_node(t_msh *sh, t_ast *node);
 
 // exec/lookup_cmd_fullpath.c
 int		lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);
+
+// exec/safe_pipe.c
+int		safe_pipe(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
+
+// exec/safe_fork.c
+pid_t	safe_fork_cmd(t_msh *sh, int *fd_in, int *fd_out);
+pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out);
 
 // utils/utils_char.c
 int		ft_isalnum_underscore(int c);
@@ -103,13 +114,12 @@ void	close_fds_exit_error_free(t_msh *sh, const char *error, int *fd_in,
 void	exit_error_free(t_msh *sh, const char *error);
 void	exit_free_with_code(t_msh *sh, int exit_code);
 int		handle_execute_command_errors(t_msh *sh, t_cmd *cmd);
+
 // utils/utils_fd.c
 void	safe_close_fd_in(int *fd_in);
 void	safe_close_fd_out(int *fd_out);
 void	safe_close_fds(int *fd_in, int *fd_out);
-pid_t	safe_fork_cmd(t_msh *sh, int *fd_in, int *fd_out);
-pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out);
-void	execute_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd);
+int		cleanup_all_fds(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
 
 // utils/utils_free.c
 void	safe_free_string(char **ptr);
