@@ -6,92 +6,50 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/11 16:55:13 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/13 00:16:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// TODO: rename file to exec_nodes
-
-void	exec_left(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2])
-{
-	int	*fd_in;
-	int	*fd_out;
-
-	fd_in = fd_in_out[0];
-	fd_out = fd_in_out[1];
-	try_dup2(sh, fd_in, &pipefd[1]);
-	safe_close_fds(&pipefd[0], &pipefd[1]);
-	safe_close_fd_out(fd_out);
-	sh->exit_code = execute_command(sh, &node->cmd);
-	exit_free_with_code(sh, sh->exit_code);
-}
-
-void	exec_right(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2])
-{
-	int	*fd_in;
-	int	*fd_out;
-
-	fd_in = fd_in_out[0];
-	fd_out = fd_in_out[1];
-	try_dup2(sh, &pipefd[0], fd_out);
-	safe_close_fds(&pipefd[0], &pipefd[1]);
-	safe_close_fd_in(fd_in);
-	if (node->nty == NODE_CMD)
-		sh->exit_code = execute_command(sh, &node->cmd);
-	else
-		sh->exit_code = execute_ast_node(sh, node,
-				STDIN_FILENO, STDOUT_FILENO);
-	exit_free_with_code(sh, sh->exit_code);
-}
-
 // pipefd[1] for left-side to write to the pipe (STDOUT_FILENO)
 // pipefd[0] for right-side to read from the pipe (STDIN_FILENO)
-int	execute_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
+int	exec_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
 {
 	int		pipefd[2];
-	pid_t	left_pid;
-	pid_t	right_pid;
 
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		sh->exit_code = errno;
-		safe_close_fds(&fd_in, &fd_out);
+	if (safe_pipe(sh, pipefd, &fd_in, &fd_out) == EXIT_FAILURE)
 		return (sh->exit_code);
-	}
-	left_pid = safe_fork_pipe(sh, pipefd, &fd_in, &fd_out);
-	if (left_pid == -1)
-		return (sh->exit_code);
-	if (left_pid == 0)
+	if (safe_fork_pipe(sh, pipefd, &fd_in, &fd_out) == 0)
 		exec_left(sh, pipe_node->left, pipefd, (int *[2]){&fd_in, &fd_out});
-	right_pid = safe_fork_pipe(sh, pipefd, &fd_in, &fd_out);
-	if (right_pid == -1)
-		return (sh->exit_code);
-	if (right_pid == 0)
+	if (sh->exit_code != EXIT_SUCCESS)
+		return (cleanup_all_fds(sh, pipefd, &fd_in, &fd_out));
+	if (pipe_node->right->nty == NODE_PIPE)
+	{
+		safe_close_fd_in(&fd_in);
+		close(pipefd[1]);
+		return (exec_pipe_node(sh, &pipe_node->right->pipe, pipefd[0], fd_out));
+	}
+	if (safe_fork_pipe(sh, pipefd, &fd_in, &fd_out) == 0)
 		exec_right(sh, pipe_node->right, pipefd, (int *[2]){&fd_in, &fd_out});
-	safe_close_fds(&pipefd[0], &pipefd[1]);
-	safe_close_fds(&fd_in, &fd_out);
-	sh->last_pid = right_pid;
-	return (EXIT_SUCCESS);
+	return (cleanup_all_fds(sh, pipefd, &fd_in, &fd_out));
 }
 
-int	execute_ast_node(t_msh *sh, t_ast *node, int fd_in, int fd_out)
+int	exec_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 {
 	if (!node)
 	{
-		put_stderr("error: on execute, ast node is NULL");
+		put_stderr("error: on exec, ast node is NULL");
 		return (EXIT_FAILURE);
 	}
 	if (node->nty == NODE_CMD)
-		sh->exit_code = execute_cmd_node(sh, &node->cmd, fd_in, fd_out);
+		sh->exit_code = exec_single_cmd_node(sh, &node->cmd, fd_in, fd_out);
 	else if (node->nty == NODE_PIPE)
-		sh->exit_code = execute_pipe_node(sh, &node->pipe, fd_in, fd_out);
+		sh->exit_code = exec_pipe_node(sh, &node->pipe, fd_in, fd_out);
 	return (sh->exit_code);
 }
 
-int	execute_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out)
+int	exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 {
 	int		child_status;
 	pid_t	child_pid;
@@ -99,7 +57,7 @@ int	execute_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 
 	if (!node)
 	{
-		put_stderr("error: on execute, ast root node is NULL");
+		put_stderr("error: on exec, ast root node is NULL");
 		return (EXIT_FAILURE);
 	}
 	last_exit_status = sh->exit_code;
@@ -108,11 +66,11 @@ int	execute_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 		perror("heredoc root ast node");
 		return (sh->exit_code);
 	}
-	if (execute_ast_node(sh, sh->ast,
+	if (exec_ast_root(sh, sh->ast,
 			fd_in, fd_out) != EXIT_SUCCESS)
 	{
 		last_exit_status = sh->exit_code;
-		perror("execute root ast node");
+		perror("exec root ast node");
 	}
 	child_pid = 1;
 	while (child_pid > 0)

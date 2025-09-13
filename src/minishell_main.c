@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/11 17:01:05 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/13 00:10:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int	minishell_mainloop(t_msh *sh)
 		}
 		if (lookup_all_cmd_fullpaths(sh, sh->ast) != EXIT_SUCCESS)
 			perror("lookup_cmds");
-		if (execute_ast_root(sh, sh->ast,
+		if (exec_ast(sh, sh->ast,
 				STDIN_FILENO, STDOUT_FILENO) != EXIT_SUCCESS)
 			perror("exec ast root");
 		free_ast(&sh->ast);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:35:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/11 13:13:28 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/13 00:19:34 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,54 @@ int	execute_command(t_msh *sh, t_cmd *cmd)
 	return (handle_execute_command_errors(sh, cmd));
 }
 
-int	execute_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out)
+void	exec_single_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd)
+{
+	try_dup2(sh, &fd_in, &fd_out);
+	safe_close_fds(&fd_in, &fd_out);
+	sh->exit_code = execute_command(sh, cmd);
+	exit_free_with_code(sh, sh->exit_code);
+}
+
+int	exec_single_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out)
 {
 	if (cmd->built_in == false
 		|| (fd_out != STDOUT_FILENO || fd_in != STDIN_FILENO))
 	{
-		sh->last_pid = safe_fork_cmd(sh, &fd_in, &fd_out);
-		if (sh->last_pid == -1)
-			return (sh->exit_code);
-		if (sh->last_pid == 0)
-			execute_cmd_in_child(sh, fd_in, fd_out, cmd);
+		if (safe_fork_cmd(sh, &fd_in, &fd_out) == 0)
+			exec_single_cmd_in_child(sh, fd_in, fd_out, cmd);
 		safe_close_fd_out(&fd_out);
-		return (EXIT_SUCCESS);
+		return (sh->exit_code);
 	}
 	safe_close_fds(&fd_in, &fd_out);
 	if (cmd->built_in == true)
 		sh->exit_code = execute_builtin(sh, cmd);
 	return (sh->exit_code);
+}
+
+void	exec_left(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2])
+{
+	int	*fd_in;
+	int	*fd_out;
+
+	fd_in = fd_in_out[0];
+	fd_out = fd_in_out[1];
+	try_dup2(sh, fd_in, &pipefd[1]);
+	safe_close_fds(&pipefd[0], &pipefd[1]);
+	safe_close_fd_out(fd_out);
+	sh->exit_code = execute_command(sh, &node->cmd);
+	exit_free_with_code(sh, sh->exit_code);
+}
+
+void	exec_right(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2])
+{
+	int	*fd_in;
+	int	*fd_out;
+
+	fd_in = fd_in_out[0];
+	fd_out = fd_in_out[1];
+	try_dup2(sh, &pipefd[0], fd_out);
+	safe_close_fds(&pipefd[0], &pipefd[1]);
+	safe_close_fd_in(fd_in);
+	sh->exit_code = execute_command(sh, &node->cmd);
+	exit_free_with_code(sh, sh->exit_code);
 }
