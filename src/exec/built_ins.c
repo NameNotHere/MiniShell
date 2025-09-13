@@ -122,66 +122,33 @@ int	ft_echo(t_cmd *cmd, t_msh *sh)
 	return (0);
 }
 
-char	*remove_last_folder(char *path)
-{
-	int		i;
-	int		last_slash;
-	char	*ret;
-
-	i = 0;
-	last_slash = -1;
-	while (path[i])
-	{
-		if (path[i] == '/')
-			last_slash = i;
-		i++;
-	}
-	if (last_slash <= 0)
-		return (ft_strdup("/"));
-	ret = malloc(last_slash + 1);
-	if (!ret)
-		return (NULL);
-	ft_strlcpy(ret, path, last_slash + 1);
-
-	return (ret);
-}
-
 int	ft_cd(char ***envp, char *directory)
 {
-	int		pwd;
-	char	*new_dir;
-	char	*free_dir;
+	int		pwd_index;
+	char	*cwd;
 
-	pwd = search_name("PWD", *envp);
-	if (ft_strncmp(directory, "..", 3) == 0)
+	if (!directory)
+		return (EXIT_FAILURE);
+
+	if (chdir(directory) != 0)
 	{
-		new_dir = (*envp)[pwd];
-		(*envp)[pwd] = remove_last_folder((*envp)[pwd]);
-		free(new_dir);
-		return (EXIT_SUCCESS);
+		perror("cd");
+		return (EXIT_FAILURE);
 	}
-	free_dir = (*envp)[pwd];
-	if (directory[0] == '/' && directory[1] == '\0')
-		(*envp)[pwd] = ft_strjoin("PWD=", "/"); // changes the dir but not pwd ?
-	if (directory[0] == '~' && directory[1] == 0)
-		(*envp)[pwd] = ft_strdup((*envp)[search_name("HOME", *envp)]);
-	if ((directory[0] == '/' || directory[0] == '~') && directory[1] == 0)
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
 	{
-		free(free_dir);
-		return (EXIT_SUCCESS);
+		perror("getcwd");
+		return (EXIT_FAILURE);
 	}
-	new_dir = ft_strjoin3((ft_strchr((*envp)[pwd], '=') + 1), "/", directory);
-	if (chdir(new_dir) == 0)
+	pwd_index = search_name("PWD", *envp);
+	if (pwd_index >= 0)
 	{
-		free_dir = (*envp)[pwd];
-		(*envp)[pwd] = ft_strjoin("PWD=", new_dir);
-		free(free_dir);
-		free(new_dir);
-		return (EXIT_SUCCESS);
+		free((*envp)[pwd_index]);
+		(*envp)[pwd_index] = ft_strjoin("PWD=", cwd);
 	}
-	free(new_dir);
-	perror("Invalid Directory\n");
-	return (EXIT_FAILURE);
+	free(cwd);
+	return (EXIT_SUCCESS);
 }
 
 
