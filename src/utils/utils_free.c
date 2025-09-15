@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:52:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/25 12:10:57 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:33:17 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,6 @@ void	safe_free_string(char **ptr)
 	}
 }
 
-void	safe_free_bool(bool **ptr)
-{
-	if (ptr && *ptr)
-	{
-		free(*ptr);
-		*ptr = NULL;
-	}
-}
-
 void	safe_free_2d_string(char ***ptr)
 {
 	size_t	i;
@@ -73,19 +64,12 @@ void	safe_free_2d_string(char ***ptr)
 	}
 }
 
-void	safe_free_3d_string(char ****ptr)
+/*
+	wrapper to safe_free_string
+	Returns true.
+*/
+bool	make_string_free(char **string)
 {
-	size_t	i;
-
-	if (ptr && *ptr)
-	{
-		i = 0;
-		while ((*ptr)[i])
-		{
-			safe_free_2d_string(&(*ptr)[i]);
-			i++;
-		}
-		free(*ptr);
-		*ptr = NULL;
-	}
+	safe_free_string(string);
+	return (true);
 }

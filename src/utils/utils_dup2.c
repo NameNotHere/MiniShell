@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:45:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/09 02:13:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/13 20:36:52 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	try_dup2_stdout(t_msh *sh, int *fd_out)
 	if (dup2(*fd_out, STDOUT_FILENO) == -1)
 	{
 		perror("dup2");
-		safe_close_fd_out(fd_out);
+		safe_close_fd(fd_out);
 		exit_error_free(sh, "error: failed to redirect output");
 	}
 }
@@ -31,8 +31,8 @@ void	try_dup2_stdin(t_msh *sh, int *fd_in)
 	if (dup2(*fd_in, STDIN_FILENO) == -1)
 	{
 		perror("dup2");
-		safe_close_fd_in(fd_in);
-		exit_error_free(sh, "error: failed to redirect output");
+		safe_close_fd(fd_in);
+		exit_error_free(sh, "error: failed to redirect input");
 	}
 }
 

@@ -6,163 +6,82 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/11 16:56:39 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 14:04:15 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <readline/readline.h>
+// #include <readline/readline.h>
 
-char	*heredoc_loop(t_msh *sh, t_redir *redir)
+char	*hdoc_loop(t_msh *sh, t_redir *redir)
 {
 	char	*hdoc_line;
 	char	*hdoc_string;
-	char	*temp_hdoc_string;
-	char	*buffer;
-	size_t	len;
-	ssize_t	read_bytes;
 
 	hdoc_string = NULL;
-	buffer = NULL;
 	while (true)
 	{
-		if (sh->is_interactive)
+		hdoc_line = get_shell_line(sh->is_interactive, HDOC_PROMPT);
+		if (!hdoc_line || !*hdoc_line)
 		{
-			hdoc_line = readline("hdoc > ");
-			if (!hdoc_line)
-			{
-				// EOF reached, exit heredoc
-				break ;
-			}
-		}
-		else
-		{
-			// Non-interactive mode: read from stdin
-			len = 0;
-			read_bytes = getline(&buffer, &len, stdin);
-			if (read_bytes == -1)
-			{
-				// EOF reached, exit heredoc
-				free(buffer);
-				break ;
-			}
-			if (read_bytes > 0 && buffer[read_bytes - 1] == '\n')
-				buffer[read_bytes - 1] = '\0';
-			hdoc_line = ft_strdup(buffer);
-			free(buffer);
-			buffer = NULL;
-			if (!hdoc_line)
-			{
-				perror("heredoc_loop strdup failed");
-				break ;
-			}
-		}
-		if (!*hdoc_line)
-		{
-			// Empty line, skip it
 			safe_free_string(&hdoc_line);
 			continue ;
 		}
 		if (ft_strncmp(redir->string, hdoc_line, ft_strlen(redir->string)) == 0
 			&& ft_strlen(redir->string) == ft_strlen(hdoc_line))
 		{
-			// Found delimiter, free the line and exit
 			safe_free_string(&hdoc_line);
 			break ;
 		}
-		if (hdoc_string)
-			temp_hdoc_string = ft_strjoin3(hdoc_string, "\n", hdoc_line);
-		else
-			temp_hdoc_string = ft_strdup(hdoc_line);
-		safe_free_string(&hdoc_string);
-		safe_free_string(&hdoc_line);
-		hdoc_string = temp_hdoc_string;
-		temp_hdoc_string = NULL;
-		if (hdoc_string == NULL)
+		if (add_line_to_string(&hdoc_string, &hdoc_line) == EXIT_FAILURE)
 		{
-			perror("heredoc_loop allocation");
+			sh->exit_code = EXIT_FAILURE;
 			break ;
 		}
 	}
 	return (hdoc_string);
 }
 
-void	heredoc_redirection(t_msh *sh, t_redir *redir, int previous_hdoc_fd)
+void	hdoc_err(t_msh *sh, int *write_fd, int *redir_fd, char *hdoc_str)
 {
-	char	*hdoc_string;
+	safe_close_2_fds(write_fd, redir_fd);
+	safe_free_string(&hdoc_str);
+	sh->exit_code = EXIT_FAILURE;
+	put_stderr("heredoc redir failed");
+	return ;
+}
+
+void	hdoc_redir(t_msh *sh, t_redir *redir, int prev_hdoc_fd)
+{
+	char	*hdoc_str;
 	int		write_fd;
 
-	if (redir && redir->ty == REDIR_HEREDOC)
-	{
-		if (previous_hdoc_fd)
-			close(previous_hdoc_fd);
-		write_fd = open("/tmp/myshell_tmp_heredoc",
-				O_WRONLY | O_CREAT | O_TRUNC, 0600);
-		if (write_fd == -1)
-			return (perror("open myshell_tmp_heredoc"));
-		redir->fd = open("/tmp/myshell_tmp_heredoc", O_RDONLY);
-		if (redir->fd == -1)
-		{
-			close(write_fd);
-			return (perror("open heredoc for reading failed"));
-		}
-		unlink("/tmp/myshell_tmp_heredoc");
-		hdoc_string = heredoc_loop(sh, redir);
-		if (hdoc_string == NULL)
-		{
-			hdoc_string = ft_strdup("");
-			if (hdoc_string == NULL)
-			{
-				close(write_fd);
-				close(redir->fd);
-				sh->exit_code = EXIT_FAILURE;
-				perror("heredoc empty string allocation failed");
-				return ;
-			}
-		}
-		// Write heredoc content
-		if (write(write_fd, hdoc_string, ft_strlen(hdoc_string)) == -1)
-		{
-			close(write_fd);
-			close(redir->fd);
-			safe_free_string(&hdoc_string);
-			sh->exit_code = EXIT_FAILURE;
-			perror("heredoc write failed");
-			return ;
-		}
-		// Add trailing newline to heredoc content (bash compatibility)
-		// Only add newline if heredoc is not empty
-		if (ft_strlen(hdoc_string) > 0 && write(write_fd, "\n", 1) == -1)
-		{
-			close(write_fd);
-			close(redir->fd);
-			safe_free_string(&hdoc_string);
-			sh->exit_code = EXIT_FAILURE;
-			perror("heredoc write failed");
-			return ;
-		}
-		// Add trailing newline to heredoc content (bash compatibility)
-		// Only add newline if heredoc is not empty
-		if (ft_strlen(hdoc_string) > 0 && write(write_fd, "\n", 1) == -1)
-		{
-			close(write_fd);
-			close(redir->fd);
-			safe_free_string(&hdoc_string);
-			sh->exit_code = EXIT_FAILURE;
-			perror("heredoc write failed");
-			return ;
-		}
-		close(write_fd);
-		safe_free_string(&hdoc_string);
-		heredoc_redirection(sh, redir->next, redir->fd);
-	}
-	else if (redir)
-		heredoc_redirection(sh, redir->next, previous_hdoc_fd);
+	if (!redir)
+		return ;
+	if (redir && redir->ty != REDIR_HEREDOC)
+		return (hdoc_redir(sh, redir->next, prev_hdoc_fd));
+	safe_close_fd(&prev_hdoc_fd);
+	write_fd = open("/tmp/tmp_hdoc", O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	if (write_fd == -1)
+		return (hdoc_err(sh, NULL, NULL, NULL), perror("open hdoc"));
+	redir->fd = open("/tmp/tmp_hdoc", O_RDONLY);
+	if (redir->fd == -1)
+		return (hdoc_err(sh, &write_fd, NULL, NULL), perror("open hdoc"));
+	unlink("/tmp/tmp_hdoc");
+	hdoc_str = hdoc_loop(sh, redir);
+	if (hdoc_str == NULL && set_empty_string(&hdoc_str) == false)
+		return (hdoc_err(sh, &write_fd, &redir->fd, hdoc_str), perror("alloc"));
+	if ((write(write_fd, hdoc_str, ft_strlen(hdoc_str)) == -1)
+		|| (ft_strlen(hdoc_str) > 0 && write(write_fd, "\n", 1) == -1))
+		return (hdoc_err(sh, &write_fd, &redir->fd, hdoc_str), perror("write"));
+	close(write_fd);
+	safe_free_string(&hdoc_str);
+	hdoc_redir(sh, redir->next, redir->fd);
 }
 
 int	heredoc_cmd_node(t_msh *sh, t_cmd *cmd)
 {
-	heredoc_redirection(sh, cmd->redir, 0);
+	hdoc_redir(sh, cmd->redir, 0);
 	return (EXIT_SUCCESS);
 }
 

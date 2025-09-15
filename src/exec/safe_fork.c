@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 23:07:31 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 00:02:44 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/13 19:32:23 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ pid_t	safe_fork_cmd(t_msh *sh, int *fd_in, int *fd_out)
 	{
 		perror("cmd node fork");
 		if (fd_in && fd_out)
-			safe_close_fds(fd_in, fd_out);
+			safe_close_2_fds(fd_in, fd_out);
 		sh->exit_code = errno;
 	}
 	sh->last_pid = pid;
@@ -48,9 +48,9 @@ pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out)
 	{
 		perror("pipe node fork");
 		if (pipe_fds)
-			safe_close_fds(&pipe_fds[0], &pipe_fds[1]);
+			safe_close_2_fds(&pipe_fds[0], &pipe_fds[1]);
 		if (fd_in && fd_out)
-			safe_close_fds(fd_in, fd_out);
+			safe_close_2_fds(fd_in, fd_out);
 		sh->exit_code = errno;
 		return (pid);
 	}

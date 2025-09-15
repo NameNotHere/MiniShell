@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 14:44:57 by otanovic          #+#    #+#             */
-/*   Updated: 2025/07/07 22:15:54 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:33:35 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 #include <stdio.h>
 #include <string.h>
 
+/*
+	TODO: REMOVE THIS FILE BEFORE RELEASE
+*/
 int	check_token(char *mini_string, char **mini_token)
 {
 	int	token_count;

@@ -1,25 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   safe_pipe.c                                        :+:      :+:    :+:   */
+/*   execute_cleanup.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/12 22:10:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 19:32:23 by tda-roch         ###   ########.fr       */
+/*   Created: 2025/09/15 17:23:15 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/09/15 17:35:03 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	safe_pipe(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out)
+void	free_everything(t_msh *sh)
 {
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		sh->exit_code = errno;
-		safe_close_2_fds(fd_in, fd_out);
-		return (EXIT_FAILURE);
-	}
-	return (EXIT_SUCCESS);
+	free_ast(&sh->ast);
+	safe_free_string(&sh->line);
+	safe_free_2d_string(&sh->envp);
+	rl_clear_history();
+}
+
+/*
+	Shell line cleanup
+	Free/Reset AST and line.
+*/
+void	shell_line_cleanup(t_msh *sh)
+{
+	free_ast(&sh->ast);
+	sh->ast = make_ast_node(NODE_UNKNOWN);
+	safe_free_string(&sh->line);
 }

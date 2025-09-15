@@ -6,18 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 00:10:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 18:15:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <signal.h>
-#include <unistd.h>
 
-// user defined variable (including global) must be lowercase.
-//global must start with g_
 int	g_mini_signal = 0;
 
 int	main(int argc, char **argv, char **envp)
@@ -34,14 +28,12 @@ int	main(int argc, char **argv, char **envp)
 	sigaction(SIGINT, &sa, NULL);
 	if (envp[0] == NULL)
 	{
-		d_print("empty environment variable\n");
-		return (EXIT_FAILURE);
-	}
-	if (initialize_minishell(&sh, envp) != EXIT_SUCCESS)
-	{
-		d_print("TODO: handle shell initialize error here");
+		put_stderr("error: empty environment variables\n");
+		sh.exit_code = EXIT_FAILURE;
 		return (sh.exit_code);
 	}
+	if (initialize_minishell(&sh, envp) != EXIT_SUCCESS)
+		return (sh.exit_code);
 	if (minishell_mainloop(&sh) != EXIT_SUCCESS)
 		return (sh.exit_code);
 	return (EXIT_SUCCESS);
@@ -59,10 +51,10 @@ int	initialize_minishell(t_msh *sh, char **envp)
 	sh->is_interactive = isatty(STDIN_FILENO);
 	if (!sh->path_dirs || !sh->envp)
 	{
-		d_print("TODO: Out of memory error here");
-		return (ENOMEM);
+		put_stderr("initialize_minishell: out of memory error");
+		sh->exit_code = ENOMEM;
 	}
-	return (EXIT_SUCCESS);
+	return (sh->exit_code);
 }
 
 void	ctrl_c(int sig)
@@ -75,55 +67,27 @@ void	ctrl_c(int sig)
 	rl_redisplay();
 }
 
-// TODO: replace getline - not allowed
+/*
+	TODO: Remove the exit handling from mainloop, it needs to run as a builtin.
+*/
 int	minishell_mainloop(t_msh *sh)
 {
-	char	*buffer;
-	size_t	len;
-	ssize_t	read_bytes;
-
-	buffer = NULL;
 	while (true)
 	{
-		if (sh->is_interactive)
-		{
-			sh->line = readline(MINISHELL_PROMPT);
-			if (!sh->line)
-				break ; // EOF = exit
-		}
-		else
-		{
-			len = 0;
-			read_bytes = getline(&buffer, &len, stdin);
-			if (read_bytes == -1)
-			{
-				free(buffer);
-				break ; // EOF = exit
-			}
-			if (read_bytes > 0 && buffer[read_bytes - 1] == '\n')
-				buffer[read_bytes - 1] = '\0';
-			sh->line = buffer;
-		}
-		if (!sh->line || !*sh->line)
-		{
-			safe_free_string(&sh->line);
+		sh->line = get_shell_line(sh->is_interactive, MINISHELL_PROMPT);
+		if ((!sh->line || !*sh->line) && make_string_free(&sh->line))
 			continue ;
-		}
 		if (sh->is_interactive)
 			add_history(sh->line);
-		if (expand_line(sh) != EXIT_SUCCESS)
-		{
-			d_print("TODO: Error expanding line here");
-			safe_free_string(&sh->line);
+		if (expand_line(sh) != EXIT_SUCCESS && make_string_free(&sh->line))
 			continue ;
-		}
-		if (ft_strncmp(sh->line, "exit", 4) == 0 && !piped_line(sh->line))
-		{
-			write(1, "exit\n", 5);
-			free_everything(sh);
-			sh->exit_code = EXIT_SUCCESS;
-			break ;
-		}
+		// if (ft_strncmp(sh->line, "exit", 4) == 0 && !piped_line(sh->line))
+		// {
+		// 	write(1, "exit\n", 5);
+		// 	free_everything(sh);
+		// 	sh->exit_code = EXIT_SUCCESS;
+		// 	break ;
+		// }
 		if (parse_line_to_ast(sh, sh->ast, sh->line) != EXIT_SUCCESS)
 		{
 			perror("parse line");
@@ -135,18 +99,8 @@ int	minishell_mainloop(t_msh *sh)
 		if (exec_ast(sh, sh->ast,
 				STDIN_FILENO, STDOUT_FILENO) != EXIT_SUCCESS)
 			perror("exec ast root");
-		free_ast(&sh->ast);
-		sh->ast = make_ast_node(NODE_UNKNOWN);
-		safe_free_string(&sh->line);
+		shell_line_cleanup(sh);
 	}
 	free_everything(sh);
 	return (sh->exit_code);
-}
-
-void	free_everything(t_msh *sh)
-{
-	free_ast(&sh->ast);
-	safe_free_string(&sh->line);
-	safe_free_2d_string(&sh->envp);
-	rl_clear_history();
 }

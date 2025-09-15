@@ -1,25 +1,21 @@
-# THIS MAKEFILE COMPILES 3 separate executables:
-# parser, pipex (interactive) and minishell
-# TODO: minishell not implemented yet, parser is the minishell parser
+# THIS MAKEFILE COMPILES 2 separate executables:
+# parser and minishell
 # TODO: before eval, this makefile will only compile minishell (cleanup b4 eval)
 # TODO: remove all debug folder references in sources.
 
 # executables
 NAME = minishell
-# PIPEX = pipex
 PARSER = parser
 
 #TODO: remove -g before submitting
 # compiler settings
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g
-# LDFLAGS = -lreadline
 LDFLAGS = -lreadline -Llibft -lft
 
 # LIBFT settings
 LIBFTDIR = libft
 LIBFT = $(LIBFTDIR)/libft.a
-# LIBS = -Llibft -lft
 
 # DIR settings
 INCLUDEDIR = include
@@ -31,7 +27,6 @@ OBJDIR = src/obj
 all:
 	@$(MAKE) $(NAME)
 	@$(MAKE) $(PARSER)
-# 	@$(MAKE) $(PIPEX)
 
 # ***** MINISHELL SRCS *****
 SRCS = minishell_main.c \
@@ -40,6 +35,7 @@ SRCS = minishell_main.c \
 	exec/lookup_cmd_fullpath.c \
 	exec/built_ins.c \
 	exec/execute.c \
+	exec/execute_cleanup.c \
 	exec/execute_cmd.c \
 	exec/execute_cmd_redir.c \
 	exec/execute_cmd_redir_open.c \
@@ -90,6 +86,7 @@ PARSER_SRCS = parser/ast.c \
 	parser/main.c \
 	parser/tokenize.c \
 	utils/parser_isminioperator.c \
+	utils/utils_free.c \
 	debug/utils_debug.c \
 	debug/ast_print.c
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
@@ -97,28 +94,6 @@ PARSER_OBJS := $(addprefix $(OBJDIR)/, $(PARSER_OBJS))
 
 $(PARSER): $(LIBFT) $(PARSER_OBJS)
 	$(CC) $(CFLAGS) $(INCLUDE) -o $(PARSER) $(PARSER_OBJS) $(LDFLAGS)
-
-# ***** PIPEX SRCS *****
-# PIPEX_SRCS = pipex/pipex.c \
-# 		pipex/pipex_main.c \
-# 		pipex/pipex_process.c \
-# 		pipex/pipex_heredoc.c \
-# 		pipex/pipex_initialize.c \
-# 		pipex/pipex_interactive.c \
-# 		pipex/utils_error.c \
-# 		pipex/utils_exit.c \
-# 		pipex/utils_free.c \
-# 		pipex/utils_mem.c \
-# 		pipex/utils_path.c \
-# 		pipex/utils_split_quotes.c \
-# 		pipex/utils_split_single_delimiter.c \
-# 		pipex/utils_string.c
-
-# PIPEX_OBJS = $(PIPEX_SRCS:.c=.o)
-# PIPEX_OBJS := $(addprefix $(OBJDIR)/, $(PIPEX_OBJS))
-
-# $(PIPEX): $(LIBFT) $(PIPEX_OBJS)
-# 	$(CC) $(CFLAGS) $(INCLUDE) -o $(PIPEX) $(PIPEX_OBJS) $(LDFLAGS)
 
 # shell commands
 RM = rm -f
@@ -141,7 +116,6 @@ fclean: clean
 	$(RM) $(PARSER)
 	$(RM) -r $(OBJDIR)
 	@$(MAKE) -C $(LIBFTDIR) fclean
-# 	$(RM) $(PIPEX)
 
 re: fclean all
 

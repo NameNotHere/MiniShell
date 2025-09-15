@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 00:18:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:38:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include "libft.h"
-
-
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <signal.h>
+# include <unistd.h>
 /*
 	\033[96m = cyan
 	colors need to be wrapped in \001 and \002
@@ -34,6 +36,7 @@
 	user input has default term color
 */
 # define MINISHELL_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
+# define HDOC_PROMPT "hdoc > "
 
 // 0644: user can read/write, others can read. reasonable/safe setting.
 # define OUTPUT_PERMISSIONS 0644
@@ -49,23 +52,24 @@ typedef enum e_err_code
 
 // minishell_main.c
 int		initialize_minishell(t_msh *sh, char **envp);
-void	free_everything(t_msh *sh);
 int		minishell_mainloop(t_msh *sh);
 
 // minishell_line.c
-// int		parse_line_and_execute_ast(t_msh *sh);
 int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
 
 // exec/execute.c
 int		exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out);
 int		exec_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out);
 
+// exec/execute_cleanup.c
+void	free_everything(t_msh *sh);
+void	shell_line_cleanup(t_msh *sh);
+
 // exec/execute_cmd.c
 int		exec_single_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
 void	exec_single_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd);
 void	exec_left(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2]);
 void	exec_right(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2]);
-
 
 // exec/execute_cmd_redir.c
 void	execute_redirection(t_msh *sh, t_redir *redir);
@@ -116,16 +120,17 @@ void	exit_free_with_code(t_msh *sh, int exit_code);
 int		handle_execute_command_errors(t_msh *sh, t_cmd *cmd);
 
 // utils/utils_fd.c
-void	safe_close_fd_in(int *fd_in);
-void	safe_close_fd_out(int *fd_out);
-void	safe_close_fds(int *fd_in, int *fd_out);
+void	safe_close_fd(int *fd);
+void	safe_close_2_fds(int *fd_one, int *fd_two);
+void	safe_close_4_fds(int *fd_one, int *fd_two, int *fd_three, int *fd_four);
 int		cleanup_all_fds(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
 
 // utils/utils_free.c
+void	safe_free(void **ptr);
 void	safe_free_string(char **ptr);
 void	safe_free_2d_string(char ***ptr);
-void	safe_free_3d_string(char ****ptr);
-void	safe_free_bool(bool **ptr);
+// void	safe_free_3d_string(char ****ptr);
+// void	safe_free_bool(bool **ptr);
 
 // utils/utils_path.c
 char	*make_cmd_full_path(const char *dir, const char *cmd);
@@ -136,7 +141,11 @@ char	*get_path_from_env(char **envp);
 bool	readline_on_tty(const char *prompt, char **line);
 
 // utils/utils_string.c
+char	*get_shell_line(bool is_interactive, char *prompt);
+int		add_line_to_string(char **string, char **line);
 char	*get_empty_string(void);
+bool	set_empty_string(char **to_empty);
+bool	make_string_free(char **string);
 
 // utils/utils_string_array.c
 char	**copy_string_array(char **strings);
@@ -155,8 +164,6 @@ int		search_name(char *name, char **envp);
 int		length_till_equal(char *str);
 int		change_env_value(char *name, char *new_value, char ***envp);
 int		add_env_var(char ***envp, char *name, char *value);
-
-// int		execute_builtin_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
 int		execute_builtin(t_msh *sh, t_cmd *cmd);
 int		execute_command(t_msh *sh, t_cmd *cmd);
 

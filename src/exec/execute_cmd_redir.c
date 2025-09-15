@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 01:22:23 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/11 16:54:52 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/13 19:30:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	execute_redirection_in(t_msh *sh, t_redir *redir)
 	if (fd == -1) // handle error
 		return ;
 	try_dup2_stdin(sh, &fd);
-	safe_close_fd_in(&fd);
+	safe_close_fd(&fd);
 }
 // TODO: handle error
 void	execute_redirection_out(t_msh *sh, t_redir *redir)
@@ -43,7 +43,7 @@ void	execute_redirection_out(t_msh *sh, t_redir *redir)
 	if (fd == -1) // handle error
 		return ;
 	try_dup2_stdout(sh, &fd);
-	safe_close_fd_out(&fd);
+	safe_close_fd(&fd);
 }
 
 /*
