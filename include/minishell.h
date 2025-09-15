@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/15 14:09:25 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:38:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ typedef enum e_err_code
 
 // minishell_main.c
 int		initialize_minishell(t_msh *sh, char **envp);
-void	free_everything(t_msh *sh);
 int		minishell_mainloop(t_msh *sh);
 
 // minishell_line.c
@@ -61,6 +60,10 @@ int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
 // exec/execute.c
 int		exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out);
 int		exec_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out);
+
+// exec/execute_cleanup.c
+void	free_everything(t_msh *sh);
+void	shell_line_cleanup(t_msh *sh);
 
 // exec/execute_cmd.c
 int		exec_single_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
@@ -123,10 +126,11 @@ void	safe_close_4_fds(int *fd_one, int *fd_two, int *fd_three, int *fd_four);
 int		cleanup_all_fds(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
 
 // utils/utils_free.c
+void	safe_free(void **ptr);
 void	safe_free_string(char **ptr);
 void	safe_free_2d_string(char ***ptr);
-void	safe_free_3d_string(char ****ptr);
-void	safe_free_bool(bool **ptr);
+// void	safe_free_3d_string(char ****ptr);
+// void	safe_free_bool(bool **ptr);
 
 // utils/utils_path.c
 char	*make_cmd_full_path(const char *dir, const char *cmd);
@@ -141,6 +145,7 @@ char	*get_shell_line(bool is_interactive, char *prompt);
 int		add_line_to_string(char **string, char **line);
 char	*get_empty_string(void);
 bool	set_empty_string(char **to_empty);
+bool	make_string_free(char **string);
 
 // utils/utils_string_array.c
 char	**copy_string_array(char **strings);

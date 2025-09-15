@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/15 16:40:21 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:46:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,12 @@ int	main(int argc, char **argv, char **envp)
 	sigaction(SIGINT, &sa, NULL);
 	if (envp[0] == NULL)
 	{
-		d_print("empty environment variable\n");
-		return (EXIT_FAILURE);
-	}
-	if (initialize_minishell(&sh, envp) != EXIT_SUCCESS)
-	{
-		d_print("TODO: handle shell initialize error here");
+		put_stderr("error: empty environment variables\n");
+		sh.exit_code = EXIT_FAILURE;
 		return (sh.exit_code);
 	}
+	if (initialize_minishell(&sh, envp) != EXIT_SUCCESS)
+		return (sh.exit_code);
 	if (minishell_mainloop(&sh) != EXIT_SUCCESS)
 		return (sh.exit_code);
 	return (EXIT_SUCCESS);
@@ -53,10 +51,10 @@ int	initialize_minishell(t_msh *sh, char **envp)
 	sh->is_interactive = isatty(STDIN_FILENO);
 	if (!sh->path_dirs || !sh->envp)
 	{
-		d_print("TODO: Out of memory error here");
-		return (ENOMEM);
+		put_stderr("initialize_minishell: out of memory error");
+		sh->exit_code = ENOMEM;
 	}
-	return (EXIT_SUCCESS);
+	return (sh->exit_code);
 }
 
 void	ctrl_c(int sig)
@@ -67,23 +65,6 @@ void	ctrl_c(int sig)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
-}
-
-bool	make_string_free(char **string)
-{
-	safe_free_string(string);
-	return (true);
-}
-
-/*
-	Shell line cleanup
-	Free/Reset AST and line.
-*/
-void	shell_line_cleanup(t_msh *sh)
-{
-	free_ast(&sh->ast);
-	sh->ast = make_ast_node(NODE_UNKNOWN);
-	safe_free_string(&sh->line);
 }
 
 /*
@@ -120,12 +101,4 @@ int	minishell_mainloop(t_msh *sh)
 	}
 	free_everything(sh);
 	return (sh->exit_code);
-}
-
-void	free_everything(t_msh *sh)
-{
-	free_ast(&sh->ast);
-	safe_free_string(&sh->line);
-	safe_free_2d_string(&sh->envp);
-	rl_clear_history();
 }

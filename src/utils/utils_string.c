@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/15 14:07:02 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:53:03 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,3 +102,4 @@ bool	set_empty_string(char **to_empty)
 		return (false);
 	return (true);
 }
+

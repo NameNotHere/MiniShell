@@ -35,6 +35,7 @@ SRCS = minishell_main.c \
 	exec/lookup_cmd_fullpath.c \
 	exec/built_ins.c \
 	exec/execute.c \
+	exec/execute_cleanup.c \
 	exec/execute_cmd.c \
 	exec/execute_cmd_redir.c \
 	exec/execute_cmd_redir_open.c \
@@ -85,6 +86,7 @@ PARSER_SRCS = parser/ast.c \
 	parser/main.c \
 	parser/tokenize.c \
 	utils/parser_isminioperator.c \
+	utils/utils_free.c \
 	debug/utils_debug.c \
 	debug/ast_print.c
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)

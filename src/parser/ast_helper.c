@@ -6,12 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:04:16 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 22:09:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:21:04 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parser.h"
-#include <errno.h>
+#include "minishell.h"
+// #include <errno.h>
 
 t_ast	*make_ast_node(t_node_ty type)
 {
@@ -26,31 +26,20 @@ t_ast	*make_ast_node(t_node_ty type)
 
 void	free_ast_cmd(t_ast *node)
 {
-	int		i;
 	t_redir	*redir;
 	t_redir	*next;
 
-	if (node->cmd.argv)
-	{
-		i = -1;
-		while (node->cmd.argv[++i])
-			free(node->cmd.argv[i]);
-		free(node->cmd.argv);
-	}
+	safe_free_2d_string(&node->cmd.argv);
 	redir = node->cmd.redir;
 	while (redir)
 	{
 		next = redir->next;
-		free(redir->string);
-		free(redir);
+		safe_free_string(&redir->string);
+		safe_free((void **)&redir);
 		redir = next;
 	}
 }
 
-/*
-TODO: REMOVE THIS WHEN FINISHED DEBUGGING, BEFORE SUBMITTING!
-MAYBE ADD PRINT AST FUNCTIONS TO A SEPARATE TEST SUITE
-*/
 void	free_ast(t_ast **node)
 {
 	if (!node || !*node)
@@ -62,8 +51,7 @@ void	free_ast(t_ast **node)
 		free_ast(&(*node)->pipe.left);
 		free_ast(&(*node)->pipe.right);
 	}
-	free(*node);
-	*node = NULL;
+	safe_free((void **)node);
 }
 
 int	last_token(t_token *tokens)
