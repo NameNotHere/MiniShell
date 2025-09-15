@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 06:11:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 22:24:17 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 16:43:07 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node)
 {
 	if (!node)
 	{
-		a_print("error: on adding paths, ast node is NULL");
+		put_stderr("error: on lookup cmd paths, ast node is NULL");
 		return (EXIT_FAILURE);
 	}
 	if (node->nty == NODE_CMD)

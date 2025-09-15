@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/09 17:56:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 12:41:29 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,18 +96,6 @@ typedef struct s_redir
 	struct s_redir	*next;
 }	t_redir;
 
-
-/*
-* 	(REMOVED PATH)
-* (char *) cmd (cmd name or cmd file name with or without path: absolute,
-	relative, etc
-		TODO: check if I can get rid of cmd, use argv[0] instead.
-* (bool) built-in → defaults to false
-	TODO: also check if we will need this
-* (char **)argv → each  argument in a separate string, NULL terminated.
-		→ DEFAULTS to NULL
-* REDIR → DEFAULTS TO STDIN & STDOUT -> (basic linked list)
-*/
 typedef struct s_cmd
 {
 	char		*full_cmd;

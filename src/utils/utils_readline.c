@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 17:07:24 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/06/25 11:45:19 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 14:03:10 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <readline/history.h>
 
 /*
+TODO: remove this if UNUSED (likely since we never needed to come back to this)
 This function is used to read a line from the terminal and not interfering
 with the standard input/output pipes.
 	opens /dev/tty for reading and writing
@@ -30,8 +31,8 @@ with the standard input/output pipes.
 │     _tty()   │
 └────┬──┬──────┘
      │  │
-     │  └── stdout → /dev/tty (the terminal)
-     └───── stdin  → /dev/tty (the keyboard)
+     │  └── STDOUT_FILENO → /dev/tty (the terminal)
+     └───── STDIN_FILENO  → /dev/tty (the keyboard)
 
 TODO: maybe check if we can just use the regular plain readline without
 issues with interference with pipes and heredocs.

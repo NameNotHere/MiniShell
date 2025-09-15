@@ -6,68 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/15 02:35:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 14:04:15 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <readline/readline.h>
-
-/*
-	Adds a line to a string, after newline char.
-	If string is NULL, string is copy of the line.
-*/
-int	add_line_to_string(char **string, char **line)
-{
-	int		result;
-	char	*updated_string;
-
-	result = EXIT_SUCCESS;
-	if (!(*line) || !*(*line))
-	{
-		put_stderr("add line to string: invalid line");
-		return (EXIT_FAILURE);
-	}
-	if (*string)
-		updated_string = ft_strjoin3(*string, "\n", *line);
-	else
-		updated_string = ft_strdup(*line);
-	if (updated_string == NULL)
-	{
-		perror("add line to string");
-		result = EXIT_FAILURE;
-	}
-	safe_free_string(string);
-	safe_free_string(line);
-	*string = updated_string;
-	updated_string = NULL;
-	return (result);
-}
-
-char	*get_hdoc_line(t_msh *sh)
-{
-	char	*hdoc_line;
-	size_t	cap;
-	ssize_t	read_bytes;
-
-	hdoc_line = NULL;
-	if (sh->is_interactive)
-		hdoc_line = readline("hdoc > ");
-	else
-	{
-		cap = 0;
-		read_bytes = getline(&hdoc_line, &cap, stdin);
-		if (read_bytes == -1)
-		{
-			safe_free_string(&hdoc_line);
-			return (NULL);
-		}
-		if (read_bytes > 0 && hdoc_line[read_bytes - 1] == '\n')
-			hdoc_line[read_bytes - 1] = '\0';
-	}
-	return (hdoc_line);
-
-}
+// #include <readline/readline.h>
 
 char	*hdoc_loop(t_msh *sh, t_redir *redir)
 {
@@ -77,7 +21,7 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 	hdoc_string = NULL;
 	while (true)
 	{
-		hdoc_line = get_hdoc_line(sh);
+		hdoc_line = get_shell_line(sh->is_interactive, HDOC_PROMPT);
 		if (!hdoc_line || !*hdoc_line)
 		{
 			safe_free_string(&hdoc_line);
