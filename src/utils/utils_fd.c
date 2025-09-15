@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:28:55 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/12 23:52:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/13 20:38:00 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,29 @@
 #include <errno.h>
 #include "minishell.h"
 
-void	safe_close_fd_in(int *fd_in)
+/*
+	Closes open fds when they are not STDIN, STDOUT or STDERR
+*/
+void	safe_close_fd(int *fd)
 {
-	if (*fd_in != STDIN_FILENO && *fd_in >= 0)
-	{
-		close(*fd_in);
-		*fd_in = -1;
-	}
+	int	fd_value;
+
+	if (!fd || *fd <= STDERR_FILENO)
+		return ;
+	fd_value = *fd;
+	*fd = -1;
+	close(fd_value);
 }
 
-void	safe_close_fd_out(int *fd_out)
+void	safe_close_2_fds(int *fd_one, int *fd_two)
 {
-	if (*fd_out != STDOUT_FILENO && *fd_out >= 0)
-	{
-		close(*fd_out);
-		*fd_out = -1;
-	}
-}
-
-void	safe_close_fds(int *fd_in, int *fd_out)
-{
-	safe_close_fd_in(fd_in);
-	safe_close_fd_out(fd_out);
+	safe_close_fd(fd_one);
+	safe_close_fd(fd_two);
 }
 
 int	cleanup_all_fds(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out)
 {
-	safe_close_fds(&pipefd[0], &pipefd[1]);
-	safe_close_fds(fd_in, fd_out);
+	safe_close_2_fds(&pipefd[0], &pipefd[1]);
+	safe_close_2_fds(fd_in, fd_out);
 	return (sh->exit_code);
 }

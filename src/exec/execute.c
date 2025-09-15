@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 00:16:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/13 20:34:42 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	exec_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
 		return (cleanup_all_fds(sh, pipefd, &fd_in, &fd_out));
 	if (pipe_node->right->nty == NODE_PIPE)
 	{
-		safe_close_fd_in(&fd_in);
+		safe_close_fd(&fd_in);
 		close(pipefd[1]);
 		return (exec_pipe_node(sh, &pipe_node->right->pipe, pipefd[0], fd_out));
 	}

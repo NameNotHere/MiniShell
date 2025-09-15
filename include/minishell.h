@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 00:18:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/13 23:19:12 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,9 +116,9 @@ void	exit_free_with_code(t_msh *sh, int exit_code);
 int		handle_execute_command_errors(t_msh *sh, t_cmd *cmd);
 
 // utils/utils_fd.c
-void	safe_close_fd_in(int *fd_in);
-void	safe_close_fd_out(int *fd_out);
-void	safe_close_fds(int *fd_in, int *fd_out);
+void	safe_close_fd(int *fd);
+void	safe_close_2_fds(int *fd_one, int *fd_two);
+void	safe_close_4_fds(int *fd_one, int *fd_two, int *fd_three, int *fd_four);
 int		cleanup_all_fds(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
 
 // utils/utils_free.c
@@ -137,6 +137,7 @@ bool	readline_on_tty(const char *prompt, char **line);
 
 // utils/utils_string.c
 char	*get_empty_string(void);
+bool	set_empty_string(char **to_empty);
 
 // utils/utils_string_array.c
 char	**copy_string_array(char **strings);
