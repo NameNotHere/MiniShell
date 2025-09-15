@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 00:47:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 18:24:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,17 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 	return (EXIT_SUCCESS);
 }
 
+int	ft_exit(t_msh *sh)
+{
+	free_everything(sh);
+	exit_free_with_code(sh, EXIT_SUCCESS);
+	sh->exit_code = errno;
+	perror("failed exit");
+	if (sh->exit_code == EXIT_SUCCESS)
+		sh->exit_code = EXIT_FAILURE;
+	return (sh->exit_code);
+}
+
 int	execute_builtin(t_msh *sh, t_cmd *cmd)
 {
 	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
@@ -227,6 +238,8 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 		return (ft_export(&sh, *cmd));
 	else if (ft_strncmp(cmd->argv[0], "unset", 4) == 0)
 		return (ft_unset(&sh, cmd->argv[1]));
+	else if (ft_strncmp(cmd->argv[0], "exit", 4) == 0)
+		return (ft_exit(sh));
 	else
 		return (EXIT_FAILURE);
 	write(1, "\n", 1);
