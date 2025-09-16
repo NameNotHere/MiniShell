@@ -117,5 +117,4 @@ int		ft_isspace(char c);
 
 int		ft_minishellop(char *token, int i);
 
-
 #endif
