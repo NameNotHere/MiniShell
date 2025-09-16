@@ -127,10 +127,10 @@ typedef struct s_ast
 	};
 }	t_ast;
 
-typedef struct	s_envp
+typedef struct s_envp
 {
-	char	*name;
-	char	*value;
+	char			*name;
+	char			*value;
 	struct s_envp	*next;
 }	t_envp;
 
@@ -301,6 +301,5 @@ int			mallo_x(void **ptr, size_t nmemb, size_t size);
 int			is_closed(char *str, int i, char quote);
 
 int			unclosed_token(char *str, char token);
-
 
 #endif
