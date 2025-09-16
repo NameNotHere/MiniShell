@@ -26,7 +26,6 @@ OBJDIR = src/obj
 # Default rule
 all:
 	@$(MAKE) $(NAME)
-	@$(MAKE) $(PARSER)
 
 # ***** MINISHELL SRCS *****
 SRCS = minishell_main.c \
@@ -84,13 +83,13 @@ PARSER_SRCS = parser/ast.c \
 	parser/ast_redir.c \
 	parser/errors.c \
 	parser/lex.c \
-	parser/main.c \
 	parser/tokenise_types.c \
 	parser/tokenize.c \
 	utils/parser_isminioperator.c \
 	utils/utils_free.c \
 	debug/utils_debug.c \
 	debug/ast_print.c
+
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
 PARSER_OBJS := $(addprefix $(OBJDIR)/, $(PARSER_OBJS))
 
