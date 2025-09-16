@@ -6,16 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 01:22:23 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 19:30:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/15 23:57:20 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// TODO: handle error
-// TODO: handle quote removing from redirects
-//    (ex: echo "hello" something > filename)
-// filename should contain no quotes: hello something
 void	execute_redirection_in(t_msh *sh, t_redir *redir)
 {
 	int	fd;
@@ -25,12 +21,12 @@ void	execute_redirection_in(t_msh *sh, t_redir *redir)
 		fd = redir->fd;
 	else if (redir->ty == REDIR_INPUT)
 		fd = open_input_redirection(sh, redir->string);
-	if (fd == -1) // handle error
+	if (fd == -1)
 		return ;
 	try_dup2_stdin(sh, &fd);
 	safe_close_fd(&fd);
 }
-// TODO: handle error
+
 void	execute_redirection_out(t_msh *sh, t_redir *redir)
 {
 	int	fd;
@@ -40,15 +36,14 @@ void	execute_redirection_out(t_msh *sh, t_redir *redir)
 		fd = open_output_redirection(sh, redir->string);
 	else if (redir->ty == REDIR_APPEND)
 		fd = open_append_redirection(sh, redir->string);
-	if (fd == -1) // handle error
+	if (fd == -1)
 		return ;
 	try_dup2_stdout(sh, &fd);
 	safe_close_fd(&fd);
 }
 
 /*
-Execute each redirection recursively until redirection list ends.
-TODO: add heredoc case when heredoc ready
+	Execute each redirection recursively until redirection list ends.
 */
 void	execute_redirection(t_msh *sh, t_redir *redir)
 {

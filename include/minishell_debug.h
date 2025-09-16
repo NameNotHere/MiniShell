@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/07 19:00:18 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/08/28 13:30:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/16 17:36:41 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	a_print(const char *str, ...);
 void	d_print(const char *str, ...);
 void	temp_print(const char *str, ...);
 
+// TODO: remove debug stuff
 // debug/ast_print.c
 char	*get_redir_symbol(t_redir_ty ty);
 void	print_ast(t_ast *root);

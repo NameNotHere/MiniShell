@@ -6,11 +6,13 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 20:34:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/16 17:31:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	wait_children(t_msh *sh, int last_exit_status);
 
 // pipefd[1] for left-side to write to the pipe (STDOUT_FILENO)
 // pipefd[0] for right-side to read from the pipe (STDIN_FILENO)
@@ -51,8 +53,6 @@ int	exec_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 
 int	exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 {
-	int		child_status;
-	pid_t	child_pid;
 	int		last_exit_status;
 
 	if (!node)
@@ -66,16 +66,32 @@ int	exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 		perror("heredoc root ast node");
 		return (sh->exit_code);
 	}
-	if (exec_ast_root(sh, sh->ast,
-			fd_in, fd_out) != EXIT_SUCCESS)
-	{
-		last_exit_status = sh->exit_code;
-		perror("exec root ast node");
-	}
-	child_pid = 1;
-	while (child_pid > 0)
+	if (exec_ast_root(sh, sh->ast, fd_in, fd_out) != EXIT_SUCCESS)
+		put_stderr("exec root ast node failed\n");
+	last_exit_status = sh->exit_code;
+	return (wait_children(sh, last_exit_status));
+}
+
+/*
+	Reap all children and update the shell exit code from the rightmost child.
+	Returns the updated exit code.
+*/
+static int	wait_children(t_msh *sh, int last_exit_status)
+{
+	int		child_status;
+	pid_t	child_pid;
+
+	while (1)
 	{
 		child_pid = wait(&child_status);
+		if (child_pid == -1)
+		{
+			if (errno == EINTR)
+				continue ;
+			if (errno != ECHILD)
+				perror("wait error");
+			break ;
+		}
 		if (child_pid == sh->last_pid)
 		{
 			if (WIFEXITED(child_status))
@@ -84,9 +100,6 @@ int	exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 				last_exit_status = 128 + WTERMSIG(child_status);
 		}
 	}
-	if (child_pid == -1 && (errno != ECHILD && errno != EINTR))
-		perror("wait error");
-	if (errno != ECHILD)
-		sh->exit_code = last_exit_status;
+	sh->exit_code = last_exit_status;
 	return (sh->exit_code);
 }

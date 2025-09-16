@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/15 17:38:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/16 17:37:07 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 	prompt is: star+arrow(cyan)
 	user input has default term color
 */
-# define MINISHELL_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
+# define MSH_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
 # define HDOC_PROMPT "hdoc > "
 
 // 0644: user can read/write, others can read. reasonable/safe setting.
@@ -129,8 +129,6 @@ int		cleanup_all_fds(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
 void	safe_free(void **ptr);
 void	safe_free_string(char **ptr);
 void	safe_free_2d_string(char ***ptr);
-// void	safe_free_3d_string(char ****ptr);
-// void	safe_free_bool(bool **ptr);
 
 // utils/utils_path.c
 char	*make_cmd_full_path(const char *dir, const char *cmd);
@@ -139,9 +137,10 @@ char	*get_path_from_env(char **envp);
 
 // utils/utils_readine
 bool	readline_on_tty(const char *prompt, char **line);
+bool	readline_noninteractive(int fd, t_readbuf *st, char **out);
 
 // utils/utils_string.c
-char	*get_shell_line(bool is_interactive, char *prompt);
+char	*get_shell_line(bool is_interactive, char *prompt, t_readbuf *rb);
 int		add_line_to_string(char **string, char **line);
 char	*get_empty_string(void);
 bool	set_empty_string(char **to_empty);

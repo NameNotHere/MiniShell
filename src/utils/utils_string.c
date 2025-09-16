@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/15 16:53:03 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/16 10:43:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,36 +15,21 @@
 /*
 	Gets a line in two different possible modes depending on is_interactive flag
 	- interactive (with readline)
-	- non-interactive (with getline)
+	- non-interactive (with readline_noninteractive)
 
 	Returns a line string typed in interactive mode, or string passed through
 	pipe (stripped of newline char).
 	If failed, returns NULL.
-
-	TODO: getline system call not allowed in the project, so this will have
-	to be replaced with function using just read instead.
 */
-char	*get_shell_line(bool is_interactive, char *prompt)
+char	*get_shell_line(bool is_interactive, char *prompt, t_readbuf *rb)
 {
 	char	*line;
-	size_t	cap;
-	ssize_t	read_bytes;
 
 	line = NULL;
 	if (is_interactive)
 		line = readline(prompt);
-	else
-	{
-		cap = 0;
-		read_bytes = getline(&line, &cap, stdin);
-		if (read_bytes == -1)
-		{
-			safe_free_string(&line);
-			return (NULL);
-		}
-		if (read_bytes > 0 && line[read_bytes - 1] == '\n')
-			line[read_bytes - 1] = '\0';
-	}
+	else if (readline_noninteractive(STDIN_FILENO, rb, &line) == false)
+		safe_free_string(&line);
 	return (line);
 }
 
