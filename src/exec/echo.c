@@ -97,14 +97,11 @@ int	ft_echo(t_cmd *cmd, t_msh *sh)
 	char	*var_name;
 	int		z;
 
-	z = 1;
-	while (cmd->argv[z])
+	z = 0;
+	while (cmd->argv[++z])
 	{
 		if (ft_strncmp(cmd->argv[z], "-n", 2) == 0)
-		{
-			z++;
 			continue ;
-		}
 		i = 0;
 		while (cmd->argv[z][i])
 		{
@@ -127,14 +124,10 @@ int	ft_echo(t_cmd *cmd, t_msh *sh)
 				free(var_name);
 			}
 			else
-			{
-				write(1, &cmd->argv[z][i], 1);
-				i++;
-			}
+				write(1, &cmd->argv[z][i++], 1);
 		}
 		z++;
-		if (cmd->argv[z])
-			write(1, " ", 1);
+		write(1, " ", 1);
 	}
 	ft_nflags(cmd->argv);
 	return (0);
