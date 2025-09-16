@@ -51,6 +51,7 @@ SRCS = minishell_main.c \
 	parser/line_var_expand.c \
 	parser/line_var_expand_catch.c \
 	parser/line_var_expand_helper.c \
+	parser/tokenise_types.c \
 	parser/tokenize.c \
 	utils/parser_isminioperator.c \
 	utils/parser_line.c \
@@ -84,6 +85,7 @@ PARSER_SRCS = parser/ast.c \
 	parser/errors.c \
 	parser/lex.c \
 	parser/main.c \
+	parser/tokenise_types.c \
 	parser/tokenize.c \
 	utils/parser_isminioperator.c \
 	utils/utils_free.c \
