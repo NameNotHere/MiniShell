@@ -41,5 +41,3 @@ bool	piped_line(char *line)
 	}
 	return (false);
 }
-
-

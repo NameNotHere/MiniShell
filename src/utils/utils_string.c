@@ -102,4 +102,3 @@ bool	set_empty_string(char **to_empty)
 		return (false);
 	return (true);
 }
-

@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   envp_assis.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/08 16:17:51 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/09/13 19:32:23 by tda-roch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -41,13 +52,11 @@ int	change_env_value(char *name, char *new_value, char ***envp)
 	index = search_name(name, *envp);
 	if (index == -1)
 		return (EXIT_FAILURE);
-
 	str = ft_strjoin(name, "=");
 	new_entry = ft_strjoin(str, new_value);
 	free(str);
 	if (!new_entry)
 		return (EXIT_FAILURE);
-
 	(*envp)[index] = new_entry;
 	return (EXIT_SUCCESS);
 }
@@ -73,6 +82,5 @@ int	add_env_var(char ***envp, char *name, char *value)
 	(*envp)[env_len] = name;
 	(*envp)[env_len + 1] = NULL;
 	change_env_value(name, value, envp);
-
 	return (EXIT_SUCCESS);
 }

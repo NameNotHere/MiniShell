@@ -44,4 +44,3 @@ int	ft_is_quote(int c)
 		return (1);
 	return (0);
 }
-
