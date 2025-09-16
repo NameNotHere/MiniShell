@@ -172,7 +172,8 @@ int			is_builtin(char *str);
 int			ft_echo(t_cmd *cmd, t_msh *sh);
 char		*write_var(char **envp, char *name);
 char		*till_space(char *str);
-int			ft_nflags(char **args);
-
+void		ft_nflags(char **args);
+int			ft_export(t_msh **sh, t_cmd cmd);
+int			ft_exit(t_msh *sh);
 
 #endif

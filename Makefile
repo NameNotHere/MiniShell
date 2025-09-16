@@ -42,6 +42,7 @@ SRCS = minishell_main.c \
 	exec/heredoc.c \
 	exec/safe_fork.c \
 	exec/safe_pipe.c \
+	exec/exit_and_export.c \
 	parser/ast.c \
 	parser/ast_cmd.c \
 	parser/ast_helper.c \

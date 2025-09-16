@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 #include <sys/stat.h>
-		
+
 int	ft_cd(char ***envp, char *directory)
 {
 	int		pwd_index;
@@ -20,7 +20,6 @@ int	ft_cd(char ***envp, char *directory)
 
 	if (!directory)
 		return (EXIT_FAILURE);
-
 	if (chdir(directory) != 0)
 	{
 		perror("cd");
@@ -41,7 +40,6 @@ int	ft_cd(char ***envp, char *directory)
 	free(cwd);
 	return (EXIT_SUCCESS);
 }
-
 
 int	ft_pwd(t_msh *sh)
 {
@@ -75,44 +73,13 @@ int	ft_env(t_msh sh)
 
 int	ft_unset(t_msh **sh, char *name)
 {
-	int ret;
+	int	ret;
 
 	ret = EXIT_SUCCESS;
 	if (!name)
 		return (perror("no value defined to unset\n"), EXIT_FAILURE);
 	ret = change_env_value(name, "\0", &(*sh)->envp);
 	return (ret);
-}
-
-int	ft_export(t_msh **sh, t_cmd cmd)
-{
-	char	*name;
-	char	*value;
-	int		i;
-
-	if (!cmd.argv[1])
-		return (EXIT_SUCCESS);
-	name = cmd.argv[1];
-	value = cmd.argv[3];
-	i = search_name(name, (*sh)->envp);
-	if (i < 0)
-		add_env_var(&(*sh)->envp, name, value);
-	else
-		change_env_value(name, value, &(*sh)->envp);
-	if (search_name(name, (*sh)->envp) < 0)
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
-}
-
-int	ft_exit(t_msh *sh)
-{
-	free_everything(sh);
-	exit_free_with_code(sh, EXIT_SUCCESS);
-	sh->exit_code = errno;
-	perror("failed exit");
-	if (sh->exit_code == EXIT_SUCCESS)
-		sh->exit_code = EXIT_FAILURE;
-	return (sh->exit_code);
 }
 
 int	execute_builtin(t_msh *sh, t_cmd *cmd)
