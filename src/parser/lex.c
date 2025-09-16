@@ -127,4 +127,3 @@ char	*make_word(char *str, int *i, int *err)
 	word[len] = '\0';
 	return (word);
 }
-
