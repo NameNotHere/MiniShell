@@ -12,6 +12,22 @@
 
 #include "minishell_parser.h"
 
+void	ft_second_token(char *str, t_token *output)
+{
+	if (ft_strncmp(str, "\'", 1) == 0)
+		output->ty = TOKEN_SINGLE_QUOTE;
+	else if (str[0] == '-')
+		output->ty = TOKEN_DASH_PARAM;
+	else if (str[0] == '$')
+		output->ty = TOKEN_VARIABLE;
+	else if (ft_strncmp(str, "&&", 2) == 0)
+		output->ty = TOKEN_AND;
+	else if (ft_strncmp(str, "||", 2) == 0)
+		output->ty = TOKEN_OR;
+	else if (str[0] == '=')
+		output->ty = TOKEN_EQUAL;
+}
+
 t_token	ft_token(char *str)
 {
 	t_token	output;
@@ -20,18 +36,9 @@ t_token	ft_token(char *str)
 	i = 0;
 	output.word = str;
 	output.ty = TOKEN_WORD;
-	if (ft_strncmp(str, "\'", 1) == 0)
-		output.ty = TOKEN_SINGLE_QUOTE;
-	else if (str[0] == '-')
-		output.ty = TOKEN_DASH_PARAM;
-	else if (str[0] == '$')
-		output.ty = TOKEN_VARIABLE;
-	else if (ft_strncmp(str, "&&", 2) == 0)
-		output.ty = TOKEN_AND;
-	else if (ft_strncmp(str, "||", 2) == 0)
-		output.ty = TOKEN_OR;
-	else if (str[0] == '=')
-		output.ty = TOKEN_EQUAL;
+	ft_second_token(str, &output);
+	if (output.ty != TOKEN_WORD)
+		return (output);
 	else if (is_file_path(str, &i))
 		output.ty = TOKEN_FILE_PATH;
 	else if (is_builtin(str) == 1)
@@ -98,27 +105,6 @@ const char	*get_token_name_continued(t_token_ty type)
 	if (type == UNCLOSED_DOUBLE_QUOTE)
 		return ("UNCLOSED_DOUBLE_QUOTE");
 	return ("UNKNOWN");
-}
-
-int	is_builtin(char *str)
-{
-	if (!str)
-		return (0);
-	if (ft_strncmp(str, "cd", 2) == 0)
-		return (1);
-	else if (ft_strncmp(str, "echo", 4) == 0)
-		return (1);
-	else if (ft_strncmp(str, "pwd", 3) == 0)
-		return (1);
-	else if (ft_strncmp(str, "export", 5) == 0)
-		return (1);
-	else if (ft_strncmp(str, "unset", 5) == 0)
-		return (1);
-	else if (ft_strncmp(str, "env", 3) == 0)
-		return (1);
-	else if (ft_strncmp(str, "exit", 4) == 0)
-		return (1);
-	return (0);
 }
 
 /*

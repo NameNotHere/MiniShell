@@ -47,6 +47,7 @@ SRCS = minishell_main.c \
 	parser/ast_redir.c \
 	parser/errors.c \
 	parser/lex.c \
+	parser/is_builtin.c \
 	parser/line_var_expand.c \
 	parser/line_var_expand_catch.c \
 	parser/line_var_expand_helper.c \
