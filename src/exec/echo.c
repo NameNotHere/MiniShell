@@ -126,7 +126,6 @@ int	ft_echo(t_cmd *cmd, t_msh *sh)
 			else
 				write(1, &cmd->argv[z][i++], 1);
 		}
-		z++;
 		write(1, " ", 1);
 	}
 	ft_nflags(cmd->argv);
