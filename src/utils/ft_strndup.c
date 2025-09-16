@@ -10,10 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
+#include <sys/stat.h>
 
-int ft_isspace(char c)
+char	*ft_strndup(const char *src, int size)
 {
-    return (c == ' ' || c == '\n' || c == '\t'\
-            || c == '\v' || c == '\f' || c == '\r');
+	char	*ret;
+	int		i;
+
+	ret = malloc(sizeof(char) * (size + 1));
+	if (!ret)
+		return (NULL);
+	i = 0;
+	while (i < size && src[i])
+	{
+		ret[i] = src[i];
+		i++;
+	}
+	ret[i] = '\0';
+	return (ret);
 }

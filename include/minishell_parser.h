@@ -127,10 +127,10 @@ typedef struct s_ast
 	};
 }	t_ast;
 
-typedef struct	s_envp
+typedef struct s_envp
 {
-	char	*name;
-	char	*value;
+	char			*name;
+	char			*value;
 	struct s_envp	*next;
 }	t_envp;
 
@@ -267,6 +267,17 @@ const char	*get_token_name(t_token_ty type);
 int			is_builtin(char *str);
 
 t_token		*tokenize(char *input, int *token_count, int *err);
+
+void		free_tokens(t_token **tokens, int amount);
+
+// parser/tokenise.c
+int			is_file_path(char *str, int *y);
+
+int			search_for_singlequote(char *str);
+
+void		tokenise_quotes(char *str, t_token *output);
+
+void		tokenise_redirs(char *str, t_token *output);
 
 void		free_tokens(t_token **tokens, int amount);
 

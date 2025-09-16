@@ -25,7 +25,7 @@ int	skip_spaces(int *i, char *str)
 	return (y);
 }
 
-int	count_tokens(char *str) // does not matter and is broken
+int	count_tokens(char *str)
 {
 	int		count;
 	int		i;
@@ -38,25 +38,18 @@ int	count_tokens(char *str) // does not matter and is broken
 		skip_spaces(&i, str);
 		if (str[i] && str[i + 1] && isminioperator(str, i) > 0)
 		{
-			count++;
 			i += isminioperator(str, i);
 		}
 		else if (str[i] && (str[i] == '\'' || str[i] == '\"'))
 		{
 			quote = str[i++];
-			while ((str[i] && str[i] != quote) || \
-					(is_closed(str, i, quote) == 1 && !ft_isspace(str[i])))
+			while (str[i] && is_closed(str, i, quote) && !ft_isspace(str[i++]))
 				i++;
-			if (str[i] == quote)
-				i++;
-			count++;
 		}
 		else
-		{
-			while (str[i] && !ft_isspace(str[i]) && str[i] != '\'' && str[i] != '\"' && isminioperator(str, i) == 0)
+			while (str[i] && !ft_isspace(str[i]) && !isminioperator(str, i))
 				i++;
-			count++;
-		}
+		count++;
 	}
 	return (count);
 }
@@ -90,8 +83,8 @@ void	parse_word(char *str, int i, int *len)
 		(*len)++;
 		i++;
 	}
-	while (str[i] && !ft_isspace(str[i]) && !isminioperator(str, i) \
-			&& str[i] != '\'' && str[i] != '\"')
+	while (str[i] && !ft_isspace(str[i]) && !isminioperator(str, i) &&\
+            str[i] != '\'' && str[i] != '\"')
 	{
 		if (str[i] == '\\' && str[i + 1])
 		{
@@ -106,11 +99,6 @@ void	parse_word(char *str, int i, int *len)
 	}
 }
 
-/*
-TODO: delete this comment
-	- somehow remove the starting quote but still tokenise we can remove the ending on by changing len in string function
-NOTE:
-*/
 char	*make_word(char *str, int *i, int *err)
 {
 	int		len;
@@ -137,7 +125,5 @@ char	*make_word(char *str, int *i, int *err)
 		return (NULL);
 	ft_memcpy(word, str + (*i - len), len);
 	word[len] = '\0';
-    t_print("make_word: extracted word '%s' at position %d\n", word, *i - len);
 	return (word);
 }
-

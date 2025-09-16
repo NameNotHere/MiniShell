@@ -26,13 +26,12 @@ OBJDIR = src/obj
 # Default rule
 all:
 	@$(MAKE) $(NAME)
-	@$(MAKE) $(PARSER)
 
 # ***** MINISHELL SRCS *****
 SRCS = minishell_main.c \
 	minishell_line.c \
-	exec/filenavs.c \
 	exec/lookup_cmd_fullpath.c \
+	exec/echo.c \
 	exec/built_ins.c \
 	exec/execute.c \
 	exec/execute_cleanup.c \
@@ -42,15 +41,18 @@ SRCS = minishell_main.c \
 	exec/heredoc.c \
 	exec/safe_fork.c \
 	exec/safe_pipe.c \
+	exec/exit_and_export.c \
 	parser/ast.c \
 	parser/ast_cmd.c \
 	parser/ast_helper.c \
 	parser/ast_redir.c \
 	parser/errors.c \
 	parser/lex.c \
+	parser/is_builtin.c \
 	parser/line_var_expand.c \
 	parser/line_var_expand_catch.c \
 	parser/line_var_expand_helper.c \
+	parser/tokenise_types.c \
 	parser/tokenize.c \
 	utils/parser_isminioperator.c \
 	utils/parser_line.c \
@@ -60,6 +62,7 @@ SRCS = minishell_main.c \
 	utils/utils_exit.c \
 	utils/utils_fd.c \
 	utils/utils_env.c \
+	utils/ft_strndup.c \
 	utils/utils_free.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
@@ -83,12 +86,13 @@ PARSER_SRCS = parser/ast.c \
 	parser/ast_redir.c \
 	parser/errors.c \
 	parser/lex.c \
-	parser/main.c \
+	parser/tokenise_types.c \
 	parser/tokenize.c \
 	utils/parser_isminioperator.c \
 	utils/utils_free.c \
 	debug/utils_debug.c \
 	debug/ast_print.c
+
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
 PARSER_OBJS := $(addprefix $(OBJDIR)/, $(PARSER_OBJS))
 
