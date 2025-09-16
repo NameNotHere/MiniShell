@@ -38,7 +38,8 @@ void	exit_free_with_code(t_msh *sh, int exit_code)
 	exit(exit_code);
 }
 
-void	close_fds_exit_error_free(t_msh *sh, const char *error, int *fd_in, int *fd_out)
+void	close_fds_exit_error_free(t_msh *sh, const char *error,\
+	int *fd_in, int *fd_out)
 {
 	safe_close_2_fds(fd_in, fd_out);
 	exit_error_free(sh, error);
@@ -63,4 +64,3 @@ int	handle_execute_command_errors(t_msh *sh, t_cmd *cmd)
 	sh->exit_code = 127;
 	return (127);
 }
-

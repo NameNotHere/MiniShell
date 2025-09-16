@@ -42,7 +42,6 @@ bool	is_var_in_env(t_msh *sh, char *var, int *envp_index)
 	return (false);
 }
 
-
 /*
 Returns value from an environment variable
 Needs both the var name and the index.

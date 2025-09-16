@@ -268,6 +268,17 @@ t_token		*tokenize(char *input, int *token_count, int *err);
 
 void		free_tokens(t_token **tokens, int amount);
 
+// parser/tokenise.c
+int			is_file_path(char *str, int *y);
+
+int			search_for_singlequote(char *str);
+
+void		tokenise_quotes(char *str, t_token *output);
+
+void		tokenise_redirs(char *str, t_token *output);
+
+void		free_tokens(t_token **tokens, int amount);
+
 // utils/parser_isminioperator.c
 
 int			isminioperator(char *token, int i);

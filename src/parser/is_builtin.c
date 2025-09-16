@@ -1,46 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_char.c                                       :+:      :+:    :+:   */
+/*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/05 10:03:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/05 10:05:14 by tda-roch         ###   ########.fr       */
+/*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
+/*   Updated: 2025/09/12 21:38:29 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdbool.h>
-#include "libft.h"
+#include "minishell_parser.h"
 
-int	ft_isalnum_underscore(int c)
+int	is_builtin(char *str)
 {
-	if (ft_isalnum(c))
+	if (!str)
+		return (0);
+	if (ft_strncmp(str, "cd", 2) == 0)
 		return (1);
-	if ('_' == c)
+	else if (ft_strncmp(str, "echo", 4) == 0)
 		return (1);
-	return (0);
-}
-
-int	ft_is_singlequote(int c)
-{
-	if ('\'' == c)
+	else if (ft_strncmp(str, "pwd", 3) == 0)
 		return (1);
-	return (0);
-}
-
-int	ft_is_doublequote(int c)
-{
-	if ('\"' == c)
+	else if (ft_strncmp(str, "export", 5) == 0)
 		return (1);
-	return (0);
-}
-
-int	ft_is_quote(int c)
-{
-	if (ft_is_singlequote(c))
+	else if (ft_strncmp(str, "unset", 5) == 0)
 		return (1);
-	if (ft_is_doublequote(c))
+	else if (ft_strncmp(str, "env", 3) == 0)
+		return (1);
+	else if (ft_strncmp(str, "exit", 4) == 0)
 		return (1);
 	return (0);
 }
