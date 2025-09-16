@@ -32,6 +32,7 @@ SRCS = minishell_main.c \
 	minishell_line.c \
 	exec/filenavs.c \
 	exec/lookup_cmd_fullpath.c \
+	exec/echo.c \
 	exec/built_ins.c \
 	exec/execute.c \
 	exec/execute_cleanup.c \

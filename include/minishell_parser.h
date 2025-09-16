@@ -281,9 +281,6 @@ void		tokenise_redirs(char *str, t_token *output);
 
 void		free_tokens(t_token **tokens, int amount);
 
-//is_builtin.c
-int			is_builtin(char *str);
-
 // utils/parser_isminioperator.c
 
 int			isminioperator(char *token, int i);

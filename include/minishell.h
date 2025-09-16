@@ -167,4 +167,12 @@ int		add_env_var(char ***envp, char *name, char *value);
 int		execute_builtin(t_msh *sh, t_cmd *cmd);
 int		execute_command(t_msh *sh, t_cmd *cmd);
 
+//is_builtin.c
+int			is_builtin(char *str);
+int			ft_echo(t_cmd *cmd, t_msh *sh);
+char		*write_var(char **envp, char *name);
+char		*till_space(char *str);
+int			ft_nflags(char **args);
+
+
 #endif
