@@ -27,7 +27,7 @@ char	*ft_strndup(const char *src, int size)
 		ret[i] = src[i];
 		i++;
 	}
-	ret[i] = '\0'; 
+	ret[i] = '\0';
 	return (ret);
 }
 
