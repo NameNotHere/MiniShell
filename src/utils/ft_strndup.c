@@ -10,5 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
+#include <sys/stat.h>
 
+char	*ft_strndup(const char *src, int size)
+{
+	char	*ret;
+	int		i;
+
+	ret = malloc(sizeof(char) * (size + 1));
+	if (!ret)
+		return (NULL);
+	i = 0;
+	while (i < size && src[i])
+	{
+		ret[i] = src[i];
+		i++;
+	}
+	ret[i] = '\0';
+	return (ret);
+}

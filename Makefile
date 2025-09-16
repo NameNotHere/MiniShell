@@ -30,7 +30,6 @@ all:
 # ***** MINISHELL SRCS *****
 SRCS = minishell_main.c \
 	minishell_line.c \
-	exec/filenavs.c \
 	exec/lookup_cmd_fullpath.c \
 	exec/echo.c \
 	exec/built_ins.c \
@@ -63,6 +62,7 @@ SRCS = minishell_main.c \
 	utils/utils_exit.c \
 	utils/utils_fd.c \
 	utils/utils_env.c \
+	utils/ft_strndup.c \
 	utils/utils_free.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \

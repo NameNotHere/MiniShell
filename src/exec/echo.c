@@ -13,25 +13,6 @@
 #include "minishell.h"
 #include <sys/stat.h>
 
-char	*ft_strndup(const char *src, int size)
-{
-	char	*ret;
-	int		i;
-
-	ret = malloc(sizeof(char) * (size + 1));
-	if (!ret)
-		return (NULL);
-	i = 0;
-	while (i < size && src[i])
-	{
-		ret[i] = src[i];
-		i++;
-	}
-	ret[i] = '\0';
-	return (ret);
-}
-
-
 char	*write_var(char **envp, char *name)
 {
 	int	len_name;
@@ -89,42 +70,44 @@ void	ft_nflags(char **args)
 		write(1, "\n", 1);
 }
 
-int	ft_echo(t_cmd *cmd, t_msh *sh)
+int	print_var(int *i, t_cmd *cmd, t_msh sh, int z)
 {
-	int		i;
 	int		start;
 	char	*var_value;
 	char	*var_name;
+
+	start = ++(*i);
+	while (cmd->argv[z][*i] && cmd->argv[z][*i] != ' ')
+		i++;
+	var_name = ft_strndup(&cmd->argv[z][start], (*i) - start);
+	if (!var_name)
+		return (EXIT_FAILURE);
+	var_value = write_var(sh.envp, var_name);
+	if (var_value)
+		write(1, var_value, ft_strlen(var_value));
+	free(var_name);
+	return (EXIT_SUCCESS);
+}
+
+int	ft_echo(t_cmd *cmd, t_msh *sh)
+{
+	int		i;
 	int		z;
 
 	z = 0;
 	while (cmd->argv[++z])
 	{
-		if (ft_strncmp(cmd->argv[z], "-n", 2) == 0)
-			continue ;
 		i = 0;
-		while (cmd->argv[z][i])
+		while (cmd->argv[z][i] && ft_strncmp(cmd->argv[z], "-n", 2) != 0)
 		{
-			if (cmd->argv[z][i] == '"')
+			if (cmd->argv[z][i] == '$')
 			{
-				i++;
-				continue ;
+				if (print_var(&i, cmd, *sh, z) == EXIT_FAILURE)
+					return (EXIT_FAILURE);
 			}
-			else if (cmd->argv[z][i] == '$')
-			{
-				start = ++i;
-				while (cmd->argv[z][i] && cmd->argv[z][i] != ' ')
-					i++;
-				var_name = ft_strndup(&cmd->argv[z][start], i - start);
-				if (!var_name)
-					return (1);
-				var_value = write_var(sh->envp, var_name);
-				if (var_value)
-					write(1, var_value, ft_strlen(var_value));
-				free(var_name);
-			}
-			else
-				write(1, &cmd->argv[z][i++], 1);
+			else if (cmd->argv[z][i] != '"')
+				write(1, &cmd->argv[z][i], 1);
+			i++;
 		}
 		write(1, " ", 1);
 	}
