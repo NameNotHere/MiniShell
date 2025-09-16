@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_parser.h"
 
 int	is_file_path(char *str, int *y)
 {
@@ -79,4 +79,20 @@ void	tokenise_redirs(char *str, t_token *output)
 		output->ty = TOKEN_OUTPUT;
 	else if (str[0] == '|')
 		output->ty = TOKEN_PIPE;
+}
+
+void	free_tokens(t_token **tokens, int amount)
+{
+	int	i;
+
+	if (!tokens || !*tokens)
+		return ;
+	i = 0;
+	while (amount--)
+	{
+		free((*tokens)[i].word);
+		i++;
+	}
+	free(*tokens);
+	*tokens = NULL;
 }

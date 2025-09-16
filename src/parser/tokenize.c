@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_parser.h"
 
 t_token	ft_token(char *str)
 {
@@ -152,20 +152,4 @@ t_token	*tokenize(char *input, int *token_count, int *err)
 	}
 	*token_count = id;
 	return (res);
-}
-
-void	free_tokens(t_token **tokens, int amount)
-{
-	int	i;
-
-	if (!tokens || !*tokens)
-		return ;
-	i = 0;
-	while (amount--)
-	{
-		free((*tokens)[i].word);
-		i++;
-	}
-	free(*tokens);
-	*tokens = NULL;
 }
