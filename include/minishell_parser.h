@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/15 12:41:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/16 17:35:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,27 @@ typedef enum e_token_ty
 	TOKEN_LAST
 }	t_token_ty;
 
+typedef struct s_readbuf
+{
+	char	buf[4096];
+	ssize_t	len;
+	ssize_t	pos;
+}	t_readbuf;
+
+/*
+	Struct to hold per-call state of the readline_noninteractive.
+	- This tracks the accumulating line buffer made and its current length
+	during a single call.
+	- It is initialized fresh each time and freed/returned when the
+	line is emitted. Unlike t_readbuf, this does not persist across calls.
+*/
+typedef struct s_rln_state
+{
+	char	*line_made;
+	size_t	made_len;
+	ssize_t	end;
+}	t_rln_state;
+
 typedef struct s_token
 {
 	t_token_ty	ty;
@@ -66,8 +87,7 @@ typedef struct s_token
 AST DATA STRUCTURE:
 */
 
-/* shell node type, not sure im needing this enum
-	removed redir nodes, they enter into cmd only*/
+/* ast node type enum */
 typedef enum e_node_ty
 {
 	NODE_CMD,
@@ -75,6 +95,7 @@ typedef enum e_node_ty
 	NODE_UNKNOWN,
 }	t_node_ty;
 
+/* redirection types enum */
 typedef enum e_redir_ty
 {
 	REDIR_INPUT,
@@ -84,10 +105,7 @@ typedef enum e_redir_ty
 	REDIR_UNKNOWN
 }	t_redir_ty;
 
-/*
-* TYPE (t_redir_type)
-* STRING → (char *)string = file to be opened or delimiter if heredoc
-*/
+/* redirection struct */
 typedef struct s_redir
 {
 	t_redir_ty		ty;
@@ -96,6 +114,7 @@ typedef struct s_redir
 	struct s_redir	*next;
 }	t_redir;
 
+/* command struct */
 typedef struct s_cmd
 {
 	char		*full_cmd;
@@ -105,6 +124,7 @@ typedef struct s_cmd
 	t_redir		*redir;
 }	t_cmd;
 
+/* AST node struct - forward define */
 struct	s_ast;
 
 typedef struct s_pipe
@@ -154,41 +174,19 @@ typedef struct s_var_expand
 	char	**var_values;
 }	t_var_expand;
 
-/*
-TODO: remove comments
-Removed from the pipex struct:
-typedef struct s_pipex
-{
-	int		argc; -> REMOVED -> not needed unless we have options or scripts
-	char	**argv; -> REMOVED -> not needed unless we have options or scripts
-	char	**envp;
-	char	***cmd_arg; -> REMOVED -> ast cmd nodes have them
-	bool	*cmd_not_found; -> REMOVED -> ast cmd nodes SHOULD have them
-	char	**cmd_path; -> REMOVED -> ast cmd nodes should have them
-	char	**path_dirs;
-	size_t	cmd_offset; -> REMOVED (NOT NEEDED) -> this is for pipex logic
-	size_t	cmd_total; -> REMOVED (NOT NEEDED) -> this is for pipex logic
-	int		fdin; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
-	int		fdout; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
-	int		outfile_flags; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
-	bool	hdoc; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
-	char	*infile; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
-	char	*outfile; -> REMOVED -> ast cmd nodes SHOULD have them (redir)
-	int		exit_code;
-}	t_pipex;
-*/
 typedef struct s_msh
 {
-	t_ast	*ast;
-	t_token	*tokens;
-	char	**envp;
-	char	**export_vars;
-	char	**path_dirs;
-	char	*line;
-	int		err;
-	int		exit_code;
-	pid_t	last_pid;
-	bool	is_interactive;
+	t_ast		*ast;
+	t_token		*tokens;
+	char		**envp;
+	char		**export_vars;
+	char		**path_dirs;
+	char		*line;
+	int			err;
+	int			exit_code;
+	pid_t		last_pid;
+	bool		is_interact;
+	t_readbuf	readbuf;
 }	t_msh;
 
 // parser/ast.c

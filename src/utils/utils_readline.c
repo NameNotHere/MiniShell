@@ -6,61 +6,142 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 17:07:24 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/15 14:03:10 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/16 17:32:13 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdbool.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#include "minishell.h"
 
-/*
-TODO: remove this if UNUSED (likely since we never needed to come back to this)
-This function is used to read a line from the terminal and not interfering
-with the standard input/output pipes.
-	opens /dev/tty for reading and writing
-	replaces stdin and stdout with /dev/tty
-	uses the readline library to read a line from the terminal
-		passes a string or NULL to the line pointer;
-	restores stdin and stdout to their original values (protects pipes)
-	returns 0 on success
-┌──────────────┐
-│ readline_on_ │
-│     _tty()   │
-└────┬──┬──────┘
-     │  │
-     │  └── STDOUT_FILENO → /dev/tty (the terminal)
-     └───── STDIN_FILENO  → /dev/tty (the keyboard)
 
-TODO: maybe check if we can just use the regular plain readline without
-issues with interference with pipes and heredocs.
-TODO: check if we can use this wrapper (just) for heredocs (if it is advantage)
-TODO: check if the shell of minishell is supposed to receive information from
-	STDIN (not tty) anyway (then we CANNOT wrap/protect it).
-*/
-bool	readline_on_tty(const char *prompt, char **line)
+bool	add_part(t_rln_state *st, const char *src, size_t n)
 {
-	int		fd_tty_in;
-	int		fd_tty_out;
-	int		duped_stdin;
-	int		duped_stdout;
+	char	*new_line_made;
+	size_t	new_len;
 
-	fd_tty_in = open("/dev/tty", O_RDONLY);
-	fd_tty_out = open("/dev/tty", O_WRONLY);
-	if (fd_tty_in == -1 || fd_tty_out == -1)
+	if (n == 0)
+		return (true);
+	new_len = st->made_len + n;
+	new_line_made = ft_calloc(new_len + 1, sizeof(char));
+	if (!new_line_made)
+	{
+		perror("add part");
 		return (false);
-	duped_stdin = dup(STDIN_FILENO);
-	duped_stdout = dup(STDOUT_FILENO);
-	dup2(fd_tty_in, STDIN_FILENO);
-	dup2(fd_tty_out, STDOUT_FILENO);
-	*line = readline(prompt);
-	dup2(duped_stdin, STDIN_FILENO);
-	dup2(duped_stdout, STDOUT_FILENO);
-	close(fd_tty_in);
-	close(fd_tty_out);
-	close(duped_stdin);
-	close(duped_stdout);
+	}
+	if (st->made_len > 0 && st->line_made)
+		memcpy(new_line_made, st->line_made, st->made_len);
+	memcpy(new_line_made + st->made_len, src, n);
+	new_line_made[new_len] = '\0';
+	free(st->line_made);
+	st->line_made = new_line_made;
+	st->made_len = new_len;
 	return (true);
 }
+
+/*
+	Set line to partial line built so far, or NULL if nothing available.
+	Return: true
+*/
+static inline bool	flush_line_build(t_rln_state *st, char **line)
+{
+	if (!(st->line_made && st->made_len > 0))
+	{
+		*line = NULL;
+		return (true);
+	}
+	st->line_made[st->made_len] = '\0';
+	*line = st->line_made;
+	st->line_made = NULL;
+	st->made_len = 0;
+	return (true);
+}
+
+/*
+	Initialize line read state and return true
+	If null read buffer or line pointer: return false
+*/
+static inline bool	rln_init(t_rln_state *st, t_readbuf *rb, char **line)
+{
+	if (!rb || !line)
+		return (false);
+	st->line_made = NULL;
+	st->made_len = 0;
+	st->end = 0;
+	*line = NULL;
+	return (true);
+}
+
+/*
+	If newline char found, returns offset from buffer all the way to the nl char
+	found (calculated using pointer arithmetic);
+	If no nl char found, returns full lenght of the buffer so far (end)
+*/
+static inline ssize_t	rbuf_find_nl_or_end(const t_readbuf *rb)
+{
+	const char	*nl;
+
+	nl = ft_memchr(rb->buf + rb->pos, '\n', (size_t)(rb->len - rb->pos));
+	if (nl)
+		return ((ssize_t)(nl - rb->buf));
+	return (rb->len);
+}
+
+
+/*
+	Newline found: advance read buffer position past it.
+	Set line to the accumulated line_build.
+*/
+bool	rln_emit_line(t_rln_state *st, t_readbuf *rb, char **line)
+{
+	rb->pos = st->end + 1;
+	if (!st->line_made)
+	{
+		*line = ft_calloc(1, sizeof(char));
+		return (*line != NULL);
+	}
+	*line = st->line_made;
+	return (true);
+}
+
+/*
+Non-interactive line reader using read().
+Contract:
+- Input: fd to read from; rb is the read_buffer to be used, either the one for
+shell line, or the one for heredocs; line is pointer to line to be extracted
+from reading.
+- Returns: true on success (line set or NULL on EOF), false on error (errno set).
+- Uses a caller-provided persistent buffer (rb) to keep leftovers between calls,
+  so data after a newline is preserved for the next invocation.
+
+Notes:
+- This implementation intentionally avoids getline().
+- Lines are returned without the trailing newline. Empty lines yield "".
+*/
+bool	readline_noninteractive(int fd, t_readbuf *rb, char **line)
+{
+	t_rln_state	st;
+
+	if (rln_init(&st, rb, line) == false)
+		return (false);
+	while (true)
+	{
+		if (rb->pos >= rb->len)
+		{
+			rb->len = read(fd, rb->buf, sizeof(rb->buf));
+			rb->pos = 0;
+			if (rb->len == 0)
+				return (flush_line_build(&st, line));
+			if (rb->len < 0 && (errno == EINTR))
+				continue ;
+			if (rb->len < 0)
+				return (safe_free_string(&st.line_made), false);
+		}
+		st.end = rbuf_find_nl_or_end(rb);
+		if ((st.end > rb->pos)
+			&& !add_part(&st, rb->buf + rb->pos, (size_t)(st.end - rb->pos)))
+			return (safe_free_string(&st.line_made), false);
+		if (st.end < rb->len && rb->buf[st.end] == '\n')
+			return (rln_emit_line(&st, rb, line));
+		rb->pos = st.end;
+	}
+}
+
