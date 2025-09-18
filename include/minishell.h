@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/18 09:49:37 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 11:16:39 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 # include <unistd.h>
 # include <sys/wait.h>
 # include <errno.h>
-# include "libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>

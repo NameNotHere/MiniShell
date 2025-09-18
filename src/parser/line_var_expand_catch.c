@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:12:44 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 19:13:45 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 10:51:50 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,17 +97,11 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *line)
 	{
 		if (ve->var_lookup
 			&& lookup_var(sh, ve, line[i], line[i + 1]) != EXIT_SUCCESS)
-		{
-			d_print("error with catch_var on expansion\n");
 			return (sh->exit_code);
-		}
 		if (handle_single_quote(line, &ve->single_quote, i))
 			;
 		else if ('$' == line[i] && ft_isalnum_underscore(line[i + 1]))
-		{
-			d_print("Found $ at position %d, next char: %c\n", i, line[i + 1]);
 			ve->var_lookup = true;
-		}
 		i++;
 	}
 	ve->var_i = 0;

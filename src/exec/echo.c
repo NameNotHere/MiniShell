@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/18 10:16:15 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 11:05:02 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	print_var(int *i, t_cmd *cmd, t_msh sh, int z)
 
 	start = ++(*i);
 	while (cmd->argv[z][*i] && cmd->argv[z][*i] != ' ')
-		i++;
+		(*i)++;
 	var_name = ft_strndup(&cmd->argv[z][start], (*i) - start);
 	if (!var_name)
 		return (EXIT_FAILURE);
@@ -72,19 +72,14 @@ int	ft_echo_arg(t_msh *sh, t_cmd *cmd, int *arg_i, bool *first_content)
 {
 	int		content_i;
 
+	(void)sh;
 	if (!*first_content)
 		write(1, " ", 1);
 	*first_content = false;
 	content_i = 0;
 	while (cmd->argv[*arg_i][content_i])
 	{
-		if (cmd->argv[*arg_i][content_i] == '$')
-		{
-			if (print_var(&content_i, cmd, *sh, *arg_i) == EXIT_FAILURE)
-				return (EXIT_FAILURE);
-		}
-		else if (cmd->argv[*arg_i][content_i] != '"')
-			write(1, &cmd->argv[*arg_i][content_i], 1);
+		write(1, &cmd->argv[*arg_i][content_i], 1);
 		content_i++;
 	}
 	(*arg_i)++;
