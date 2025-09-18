@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/16 10:43:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 09:17:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@
 	pipe (stripped of newline char).
 	If failed, returns NULL.
 */
-char	*get_shell_line(bool is_interactive, char *prompt, t_readbuf *rb)
+char	*get_shell_line(t_msh *sh, char *prompt)
 {
 	char	*line;
 
 	line = NULL;
-	if (is_interactive)
+	if (sh->is_interact)
 		line = readline(prompt);
-	else if (readline_noninteractive(STDIN_FILENO, rb, &line) == false)
+	else if (readline_noninteract(STDIN_FILENO, &sh->readbuf, &line) == false)
 		safe_free_string(&line);
 	return (line);
 }

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/16 17:35:00 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 09:17:23 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	minishell_mainloop(t_msh *sh)
 {
 	while (true)
 	{
-		sh->line = get_shell_line(sh->is_interact, MSH_PROMPT, &sh->readbuf);
+		sh->line = get_shell_line(sh, MSH_PROMPT);
 		if (sh->line == NULL && sh->is_interact)
 			write(1, "exit\n", 5);
 		if (sh->line == NULL)

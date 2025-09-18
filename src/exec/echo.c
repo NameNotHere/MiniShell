@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_ins.c                                        :+:      :+:    :+:   */
+/*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/15 18:24:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 10:16:15 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,27 +49,6 @@ char	*till_space(char *str)
 	return (ret);
 }
 
-void	ft_nflags(char **args)
-{
-	int	z;
-	int	i;
-
-	z = 1;
-	while (args[z])
-	{
-		if (args[z][0] != '-')
-			break ;
-		i = 1;
-		while (args[z][i] == 'n')
-			i++;
-		if (args[z][i] != '\0')
-			break ;
-		z++;
-	}
-	if (z > i)
-		write(1, "\n", 1);
-}
-
 int	print_var(int *i, t_cmd *cmd, t_msh sh, int z)
 {
 	int		start;
@@ -89,28 +68,48 @@ int	print_var(int *i, t_cmd *cmd, t_msh sh, int z)
 	return (EXIT_SUCCESS);
 }
 
+int	ft_echo_arg(t_msh *sh, t_cmd *cmd, int *arg_i, bool *first_content)
+{
+	int		content_i;
+
+	if (!*first_content)
+		write(1, " ", 1);
+	*first_content = false;
+	content_i = 0;
+	while (cmd->argv[*arg_i][content_i])
+	{
+		if (cmd->argv[*arg_i][content_i] == '$')
+		{
+			if (print_var(&content_i, cmd, *sh, *arg_i) == EXIT_FAILURE)
+				return (EXIT_FAILURE);
+		}
+		else if (cmd->argv[*arg_i][content_i] != '"')
+			write(1, &cmd->argv[*arg_i][content_i], 1);
+		content_i++;
+	}
+	(*arg_i)++;
+	return (EXIT_SUCCESS);
+}
+
 int	ft_echo(t_cmd *cmd, t_msh *sh)
 {
-	int		i;
-	int		z;
+	int		res;
+	int		arg_i;
+	bool	first_content;
+	bool	has_n_flag;
 
-	z = 0;
-	while (cmd->argv[++z])
+	res = EXIT_SUCCESS;
+	first_content = true;
+	has_n_flag = false;
+	arg_i = 1;
+	while (cmd->argv[arg_i] && ft_strncmp(cmd->argv[arg_i], "-n", 2) == 0)
 	{
-		i = 0;
-		while (cmd->argv[z][i] && ft_strncmp(cmd->argv[z], "-n", 2) != 0)
-		{
-			if (cmd->argv[z][i] == '$')
-			{
-				if (print_var(&i, cmd, *sh, z) == EXIT_FAILURE)
-					return (EXIT_FAILURE);
-			}
-			else if (cmd->argv[z][i] != '"')
-				write(1, &cmd->argv[z][i], 1);
-			i++;
-		}
-		write(1, " ", 1);
+		has_n_flag = true;
+		arg_i++;
 	}
-	ft_nflags(cmd->argv);
-	return (0);
+	while (cmd->argv[arg_i] && res == EXIT_SUCCESS)
+		res = ft_echo_arg(sh, cmd, &arg_i, &first_content);
+	if (!has_n_flag)
+		write(1, "\n", 1);
+	return (res);
 }
