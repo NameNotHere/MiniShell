@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/18 11:16:39 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 12:10:47 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,10 +170,7 @@ char	*ft_strndup(const char *src, int size);
 
 //is_builtin.c
 int		is_builtin(char *str);
-int		ft_echo(t_cmd *cmd, t_msh *sh);
-char	*write_var(char **envp, char *name);
-char	*till_space(char *str);
-// void	ft_nflags(char **args);
+int		ft_echo(char **argv);
 int		ft_export(t_msh **sh, t_cmd cmd);
 int		ft_exit(t_msh *sh);
 

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/15 18:24:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 12:20:14 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 		return (ft_cd(&sh->envp, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
-		return (ft_echo(cmd, sh));
+		return (ft_echo(cmd->argv));
 	else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
 		return (ft_env(*sh));
 	else if (ft_strncmp(cmd->argv[0], "export", 4) == 0)
