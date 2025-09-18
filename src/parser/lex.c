@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lex.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/11 16:08:00 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/09/18 18:23:30 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,14 +106,30 @@ char	*make_word(char *str, int *i, int *err)
 
 	skip_spaces(i, str);
 	len = 0;
-	if (str[*i] && (str[*i] == '\'' || str[*i] == '\"'))
-		make_string(str, &len, *i);
-	else if (str[*i] && (ft_isalpha(str[*i]) || ft_strchr("/.$~*-", str[*i])
-			|| ft_isdigit(str[*i + len])))
-		parse_word(str, *i, &len);
-	else if (str[*i] && isminioperator(str, *i))
+	// parse adjacent quoted and unquoted sections
+	while (str[*i + len] && !ft_isspace(str[*i + len])
+		&& !isminioperator(str, *i + len))
+	{
+		if (str[*i + len] && (str[*i + len] == '\'' || str[*i + len] == '\"'))
+			make_string(str, &len, *i + len);
+		else
+		{
+			// parse unquoted characters until space, operator, or quote
+			while (str[*i + len] && !ft_isspace(str[*i + len])
+				&& !isminioperator(str, *i + len)
+				&& str[*i + len] != '\'' && str[*i + len] != '\"')
+			{
+				if (str[*i + len] == '\\' && str[*i + len + 1])
+					len += 2;
+				else
+					len++;
+			}
+		}
+	}
+	// operators as separate tokens
+	if (len == 0 && str[*i] && isminioperator(str, *i))
 		len += isminioperator(str, *i);
-	else if (str[*i])
+	else if (len == 0 && str[*i])
 		len = 1;
 	(*i) += len;
 	if (len == 0)

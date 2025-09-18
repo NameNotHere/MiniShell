@@ -6,12 +6,11 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/18 12:10:08 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 16:49:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <sys/stat.h>
 
 void	ft_echo_arg(char **argv, int *arg_i, bool *first_content)
 {
