@@ -1,116 +1,50 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_ins.c                                        :+:      :+:    :+:   */
+/*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/15 18:24:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 16:49:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <sys/stat.h>
 
-char	*write_var(char **envp, char *name)
+void	ft_echo_arg(char **argv, int *arg_i, bool *first_content)
 {
-	int	len_name;
-	int	i;
+	int		content_i;
 
-	if (!name)
-		return (NULL);
-	i = 0;
-	len_name = ft_strlen(name);
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], name, len_name) == 0 &&\
-			envp[i][len_name] == '=')
-			return (envp[i] + len_name);
-		i++;
-	}
-	return (NULL);
-}
-
-char	*till_space(char *str)
-{
-	int		i;
-	char	*ret;
-
-	i = 0;
-	if (!str)
-		return (NULL);
-	while (str[i] && str[i] != ' ')
-		i++;
-	ret = malloc(i + 1);
-	if (!ret)
-		return (NULL);
-	ft_strlcpy(ret, str, i + 1);
-	return (ret);
-}
-
-void	ft_nflags(char **args)
-{
-	int	z;
-	int	i;
-
-	z = 1;
-	while (args[z])
-	{
-		if (args[z][0] != '-')
-			break ;
-		i = 1;
-		while (args[z][i] == 'n')
-			i++;
-		if (args[z][i] != '\0')
-			break ;
-		z++;
-	}
-	if (z > i)
-		write(1, "\n", 1);
-}
-
-int	print_var(int *i, t_cmd *cmd, t_msh sh, int z)
-{
-	int		start;
-	char	*var_value;
-	char	*var_name;
-
-	start = ++(*i);
-	while (cmd->argv[z][*i] && cmd->argv[z][*i] != ' ')
-		i++;
-	var_name = ft_strndup(&cmd->argv[z][start], (*i) - start);
-	if (!var_name)
-		return (EXIT_FAILURE);
-	var_value = write_var(sh.envp, var_name);
-	if (var_value)
-		write(1, var_value, ft_strlen(var_value));
-	free(var_name);
-	return (EXIT_SUCCESS);
-}
-
-int	ft_echo(t_cmd *cmd, t_msh *sh)
-{
-	int		i;
-	int		z;
-
-	z = 0;
-	while (cmd->argv[++z])
-	{
-		i = 0;
-		while (cmd->argv[z][i] && ft_strncmp(cmd->argv[z], "-n", 2) != 0)
-		{
-			if (cmd->argv[z][i] == '$')
-			{
-				if (print_var(&i, cmd, *sh, z) == EXIT_FAILURE)
-					return (EXIT_FAILURE);
-			}
-			else if (cmd->argv[z][i] != '"')
-				write(1, &cmd->argv[z][i], 1);
-			i++;
-		}
+	if (!*first_content)
 		write(1, " ", 1);
+	*first_content = false;
+	content_i = 0;
+	while (argv[*arg_i][content_i])
+	{
+		write(1, &argv[*arg_i][content_i], 1);
+		content_i++;
 	}
-	ft_nflags(cmd->argv);
-	return (0);
+	(*arg_i)++;
+}
+
+int	ft_echo(char **argv)
+{
+	int		arg_i;
+	bool	first_content;
+	bool	has_n_flag;
+
+	first_content = true;
+	has_n_flag = false;
+	arg_i = 1;
+	while (argv[arg_i] && ft_strncmp(argv[arg_i], "-n", 2) == 0)
+	{
+		has_n_flag = true;
+		arg_i++;
+	}
+	while (argv[arg_i])
+		ft_echo_arg(argv, &arg_i, &first_content);
+	if (!has_n_flag)
+		write(1, "\n", 1);
+	return (EXIT_SUCCESS);
 }

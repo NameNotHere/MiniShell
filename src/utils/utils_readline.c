@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 17:07:24 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/16 17:32:13 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 09:15:39 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ bool	add_part(t_rln_state *st, const char *src, size_t n)
 		return (false);
 	}
 	if (st->made_len > 0 && st->line_made)
-		memcpy(new_line_made, st->line_made, st->made_len);
-	memcpy(new_line_made + st->made_len, src, n);
+		ft_memcpy(new_line_made, st->line_made, st->made_len);
+	ft_memcpy(new_line_made + st->made_len, src, n);
 	new_line_made[new_len] = '\0';
 	free(st->line_made);
 	st->line_made = new_line_made;
@@ -104,19 +104,19 @@ bool	rln_emit_line(t_rln_state *st, t_readbuf *rb, char **line)
 
 /*
 Non-interactive line reader using read().
-Contract:
-- Input: fd to read from; rb is the read_buffer to be used, either the one for
-shell line, or the one for heredocs; line is pointer to line to be extracted
-from reading.
-- Returns: true on success (line set or NULL on EOF), false on error (errno set).
+- Parameters: fd to read from; rb is the read_buffer to be used, line is
+	pointer to line to be extracted from read.
+- Returns:
+	- true on success (line set or NULL on EOF)
+	- false on error (errno set).
 - Uses a caller-provided persistent buffer (rb) to keep leftovers between calls,
   so data after a newline is preserved for the next invocation.
 
 Notes:
 - This implementation intentionally avoids getline().
-- Lines are returned without the trailing newline. Empty lines yield "".
+- Lines are returned without the trailing newline. Empty lines get "".
 */
-bool	readline_noninteractive(int fd, t_readbuf *rb, char **line)
+bool	readline_noninteract(int fd, t_readbuf *rb, char **line)
 {
 	t_rln_state	st;
 

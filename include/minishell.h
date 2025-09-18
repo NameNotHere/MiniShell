@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/16 17:37:07 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 12:10:47 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 # include <unistd.h>
 # include <sys/wait.h>
 # include <errno.h>
-# include "libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -137,10 +136,10 @@ char	*get_path_from_env(char **envp);
 
 // utils/utils_readine
 bool	readline_on_tty(const char *prompt, char **line);
-bool	readline_noninteractive(int fd, t_readbuf *st, char **out);
+bool	readline_noninteract(int fd, t_readbuf *st, char **out);
 
 // utils/utils_string.c
-char	*get_shell_line(bool is_interactive, char *prompt, t_readbuf *rb);
+char	*get_shell_line(t_msh *sh, char *prompt);
 int		add_line_to_string(char **string, char **line);
 char	*get_empty_string(void);
 bool	set_empty_string(char **to_empty);
@@ -171,10 +170,7 @@ char	*ft_strndup(const char *src, int size);
 
 //is_builtin.c
 int		is_builtin(char *str);
-int		ft_echo(t_cmd *cmd, t_msh *sh);
-char	*write_var(char **envp, char *name);
-char	*till_space(char *str);
-void	ft_nflags(char **args);
+int		ft_echo(char **argv);
 int		ft_export(t_msh **sh, t_cmd cmd);
 int		ft_exit(t_msh *sh);
 

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/16 17:35:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/18 09:17:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 	hdoc_string = NULL;
 	while (true)
 	{
-		hdoc_line = get_shell_line(sh->is_interact, HDOC_PROMPT, &sh->readbuf);
+		hdoc_line = get_shell_line(sh, HDOC_PROMPT);
 		if (!hdoc_line || !*hdoc_line)
 		{
 			safe_free_string(&hdoc_line);
