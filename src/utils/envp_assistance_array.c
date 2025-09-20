@@ -70,13 +70,13 @@ int	envp_len(char **envp)
 		i++;
 	return (i);
 }
-// TODO: remove not allowed function (realloc)
+
 int	add_env_var(char ***envp, char *name, char *value)
 {
 	int		env_len;
 
 	env_len = envp_len(*envp);
-	*envp = realloc(*envp, sizeof(char *) * (env_len + 2));
+	*envp = ft_realloc(*envp, sizeof(char *) * (env_len + 2), sizeof(*envp));
 	if (!(*envp))
 		return (EXIT_FAILURE);
 	(*envp)[env_len] = name;

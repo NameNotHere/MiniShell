@@ -64,6 +64,7 @@ SRCS = minishell_main.c \
 	utils/utils_env.c \
 	utils/ft_strndup.c \
 	utils/utils_free.c \
+	utils/ft_realloc.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
 	utils/utils_string.c \
