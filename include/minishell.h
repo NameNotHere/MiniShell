@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/20 02:32:57 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/20 20:17:33 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "minishell_parser.h"
+# include "minishell_signal.h"
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdbool.h>

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/16 17:31:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/20 20:54:29 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,13 @@ int	exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 	if (exec_ast_root(sh, sh->ast, fd_in, fd_out) != EXIT_SUCCESS)
 		put_stderr("exec root ast node failed\n");
 	last_exit_status = sh->exit_code;
-	return (wait_children(sh, last_exit_status));
+	if (sh->last_pid != 0)
+	{
+		last_exit_status = wait_children(sh, last_exit_status);
+		sh->last_pid = 0;
+		return (last_exit_status);
+	}
+	return (sh->exit_code);
 }
 
 /*
@@ -80,10 +86,15 @@ static int	wait_children(t_msh *sh, int last_exit_status)
 {
 	int		child_status;
 	pid_t	child_pid;
+	bool	interrupted;
 
+	interrupted = false;
 	while (1)
 	{
 		child_pid = wait(&child_status);
+		if (WIFSIGNALED(child_status)
+			&& (WTERMSIG(child_status) == SIGINT || WCOREDUMP(child_status)))
+			interrupted = true;
 		if (child_pid == -1)
 		{
 			if (errno == EINTR)
@@ -100,6 +111,8 @@ static int	wait_children(t_msh *sh, int last_exit_status)
 				last_exit_status = 128 + WTERMSIG(child_status);
 		}
 	}
+	if (interrupted)
+		put_stderr("\n");
 	sh->exit_code = last_exit_status;
 	return (sh->exit_code);
 }

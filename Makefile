@@ -28,7 +28,8 @@ all:
 	@$(MAKE) $(NAME)
 
 # ***** MINISHELL SRCS *****
-SRCS = minishell_main.c \
+SRCS = 	signals/signals.c \
+	minishell_main.c \
 	minishell_line.c \
 	exec/lookup_cmd_fullpath.c \
 	exec/echo.c \
@@ -70,7 +71,6 @@ SRCS = minishell_main.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
 	utils/envp_assistance_array.c \
-	signals/signals.c \
 	debug/ast_print.c \
 	debug/process_debug.c \
 	debug/utils_debug.c

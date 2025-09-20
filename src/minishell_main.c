@@ -6,18 +6,18 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/18 09:17:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/20 20:56:47 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	g_mini_signal = 0;
+// volatile sig_atomic_t	g_sig = 0;
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_msh				sh;
-	struct sigaction	sa;
+	t_msh	sh;
+	t_sa	sa;
 
 	(void)argc;
 	(void)argv;
@@ -60,16 +60,13 @@ int	initialize_minishell(t_msh *sh, char **envp)
 void	ctrl_c(int sig)
 {
 	(void)sig;
-	g_mini_signal = 1;
+	g_sig = 1;
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
 }
 
-/*
-	TODO: Remove the exit handling from mainloop, it needs to run as a builtin.
-*/
 int	minishell_mainloop(t_msh *sh)
 {
 	while (true)
@@ -87,7 +84,7 @@ int	minishell_mainloop(t_msh *sh)
 			continue ;
 		if (parse_line_to_ast(sh, sh->ast, sh->line) != EXIT_SUCCESS)
 		{
-			perror("parse line");
+			put_stderr("parse line failed\n");
 			safe_free_string(&sh->line);
 			continue ;
 		}
