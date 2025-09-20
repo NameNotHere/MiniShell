@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   envp_assis.c                                       :+:      :+:    :+:   */
+/*   envp_assistance_array.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:17:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 19:32:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/19 20:49:20 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	envp_len(char **envp)
 		i++;
 	return (i);
 }
-
+// TODO: remove not allowed function (realloc)
 int	add_env_var(char ***envp, char *name, char *value)
 {
 	int		env_len;
