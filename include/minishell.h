@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/18 12:10:47 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/20 20:17:33 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "minishell_parser.h"
+# include "minishell_signal.h"
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdbool.h>
@@ -137,6 +138,12 @@ char	*get_path_from_env(char **envp);
 // utils/utils_readine
 bool	readline_on_tty(const char *prompt, char **line);
 bool	readline_noninteract(int fd, t_readbuf *st, char **out);
+
+// utils/utils_readline_state.c
+bool	add_chunk(t_rln_state *st, const char *src, size_t n);
+bool	rln_flush_line(t_rln_state *st, char **line);
+bool	rln_init(t_rln_state *st, t_readbuf *rb, char **line);
+bool	rln_emit_line(t_rln_state *st, t_readbuf *rb, char **line);
 
 // utils/utils_string.c
 char	*get_shell_line(t_msh *sh, char *prompt);

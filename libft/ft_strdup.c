@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 16:57:06 by otanovic          #+#    #+#             */
-/*   Updated: 2024/12/01 12:50:33 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/09/21 02:24:13 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strdup(const char *str)
 	int		size;
 	char	*dup;
 
+	if (!str)
+		return (NULL);
 	size = 0;
 	while (str[size] != '\0')
 		size++;
