@@ -10,7 +10,7 @@ PARSER = parser
 #TODO: remove -g before submitting
 # compiler settings
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -fsanitize=address,undefined,leak -g3 -fno-omit-frame-pointer
 LDFLAGS = -lreadline -Llibft -lft
 
 # LIBFT settings

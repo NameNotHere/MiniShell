@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/20 20:56:47 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/21 02:44:49 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	ctrl_c(int sig)
 	rl_redisplay();
 }
 
+// removed "exec_ast" error message
 int	minishell_mainloop(t_msh *sh)
 {
 	while (true)
@@ -89,7 +90,7 @@ int	minishell_mainloop(t_msh *sh)
 			continue ;
 		}
 		if (exec_ast(sh, sh->ast, STDIN_FILENO, STDOUT_FILENO) != EXIT_SUCCESS)
-			put_stderr("exec ast root failed\n");
+			;
 		shell_line_cleanup(sh);
 	}
 	free_everything(sh);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 06:11:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/16 17:37:17 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/21 02:26:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	lookup_cmd_fullpath(t_msh *sh, t_cmd *cmd)
 	if (cmd->full_cmd == NULL)
 	{
 		cmd->full_cmd = ft_strdup(cmd->argv[0]);
+		if (cmd->full_cmd == NULL)
+			cmd->full_cmd = get_empty_string();
 		cmd->not_found = true;
 	}
 }
