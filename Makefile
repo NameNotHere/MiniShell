@@ -11,6 +11,7 @@ PARSER = parser
 # compiler settings
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -fsanitize=address,undefined,leak -g3 -fno-omit-frame-pointer
+CFLAGS_VALGRIND = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer
 LDFLAGS = -lreadline -Llibft -lft
 
 # LIBFT settings
@@ -21,7 +22,7 @@ LIBFT = $(LIBFTDIR)/libft.a
 INCLUDEDIR = include
 INCLUDE = -I $(INCLUDEDIR) -I $(LIBFTDIR)
 SRCDIR = src/
-OBJDIR = src/obj
+OBJDIR = bin
 
 # Default rule
 all:
@@ -125,5 +126,9 @@ fclean: clean
 re: fclean all
 
 bonus: all
+
+valgrind: fclean
+	$(MAKE) CFLAGS="$(CFLAGS_VALGRIND)" all
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --track-origins=yes --suppressions=minishell.supp ./$(NAME)
 
 .PHONY: all clean fclean re bonus
