@@ -93,5 +93,6 @@ int	add_env_var(char ***envp, char *name, char *value)
 	(*envp)[env_len] = name;
 	(*envp)[env_len + 1] = NULL;
 	change_env_value(name, value, envp);
+	free(new_entry);	
 	return (EXIT_SUCCESS);
 }
