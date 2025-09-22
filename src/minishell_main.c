@@ -89,8 +89,7 @@ int	minishell_mainloop(t_msh *sh)
 			safe_free_string(&sh->line);
 			continue ;
 		}
-		if (exec_ast(sh, sh->ast, STDIN_FILENO, STDOUT_FILENO) != EXIT_SUCCESS)
-			;
+		exec_ast(sh, sh->ast, STDIN_FILENO, STDOUT_FILENO);
 		shell_line_cleanup(sh);
 	}
 	free_everything(sh);

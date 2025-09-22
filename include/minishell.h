@@ -181,4 +181,8 @@ int		ft_echo(char **argv);
 int		ft_export(t_msh **sh, t_cmd cmd);
 int		ft_exit(t_msh *sh);
 
+// utils/ft_realloc
+void	*ft_realloc(void *ptr, size_t new_size, size_t old_size);
+
+
 #endif
