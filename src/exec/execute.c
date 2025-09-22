@@ -6,13 +6,13 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/16 17:31:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/21 01:21:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	wait_children(t_msh *sh, int last_exit_status);
+static int	wait_children(t_msh *sh);
 
 // pipefd[1] for left-side to write to the pipe (STDOUT_FILENO)
 // pipefd[0] for right-side to read from the pipe (STDIN_FILENO)
@@ -53,37 +53,41 @@ int	exec_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 
 int	exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 {
-	int		last_exit_status;
-
+	sh->last_pid = 0;
 	if (!node)
 	{
 		put_stderr("error: on exec, ast root node is NULL");
 		return (EXIT_FAILURE);
 	}
-	last_exit_status = sh->exit_code;
 	if (heredoc_ast_node(sh, sh->ast) != EXIT_SUCCESS)
 	{
-		perror("heredoc root ast node");
+		put_stderr("heredoc root ast node failed\n");
 		return (sh->exit_code);
 	}
 	if (exec_ast_root(sh, sh->ast, fd_in, fd_out) != EXIT_SUCCESS)
 		put_stderr("exec root ast node failed\n");
-	last_exit_status = sh->exit_code;
-	return (wait_children(sh, last_exit_status));
+	if (sh->last_pid != 0)
+		return (wait_children(sh));
+	return (sh->exit_code);
 }
 
 /*
 	Reap all children and update the shell exit code from the rightmost child.
 	Returns the updated exit code.
 */
-static int	wait_children(t_msh *sh, int last_exit_status)
+static int	wait_children(t_msh *sh)
 {
 	int		child_status;
 	pid_t	child_pid;
+	bool	interrupted;
 
+	interrupted = false;
 	while (1)
 	{
 		child_pid = wait(&child_status);
+		if (WIFSIGNALED(child_status)
+			&& (WTERMSIG(child_status) == SIGINT || WCOREDUMP(child_status)))
+			interrupted = true;
 		if (child_pid == -1)
 		{
 			if (errno == EINTR)
@@ -95,11 +99,12 @@ static int	wait_children(t_msh *sh, int last_exit_status)
 		if (child_pid == sh->last_pid)
 		{
 			if (WIFEXITED(child_status))
-				last_exit_status = WEXITSTATUS(child_status);
+				sh->exit_code = WEXITSTATUS(child_status);
 			else if (WIFSIGNALED(child_status))
-				last_exit_status = 128 + WTERMSIG(child_status);
+				sh->exit_code = 128 + WTERMSIG(child_status);
 		}
 	}
-	sh->exit_code = last_exit_status;
+	if (interrupted)
+		put_stderr("\n");
 	return (sh->exit_code);
 }

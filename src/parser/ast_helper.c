@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:04:16 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/15 17:21:04 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/21 02:28:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	free_ast_cmd(t_ast *node)
 	t_redir	*next;
 
 	safe_free_2d_string(&node->cmd.argv);
+	safe_free_string(&node->cmd.full_cmd);
 	redir = node->cmd.redir;
 	while (redir)
 	{

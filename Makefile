@@ -10,7 +10,8 @@ PARSER = parser
 #TODO: remove -g before submitting
 # compiler settings
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -fsanitize=address,undefined,leak -g3 -fno-omit-frame-pointer
+CFLAGS_VALGRIND = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer
 LDFLAGS = -lreadline -Llibft -lft
 
 # LIBFT settings
@@ -21,14 +22,15 @@ LIBFT = $(LIBFTDIR)/libft.a
 INCLUDEDIR = include
 INCLUDE = -I $(INCLUDEDIR) -I $(LIBFTDIR)
 SRCDIR = src/
-OBJDIR = src/obj
+OBJDIR = bin
 
 # Default rule
 all:
 	@$(MAKE) $(NAME)
 
 # ***** MINISHELL SRCS *****
-SRCS = minishell_main.c \
+SRCS = 	signals/signals.c \
+	minishell_main.c \
 	minishell_line.c \
 	exec/lookup_cmd_fullpath.c \
 	exec/echo.c \
@@ -67,10 +69,10 @@ SRCS = minishell_main.c \
 	utils/ft_realloc.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
+	utils/utils_readline_state.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
 	utils/envp_assistance_array.c \
-	signals/signals.c \
 	debug/ast_print.c \
 	debug/process_debug.c \
 	debug/utils_debug.c
@@ -125,5 +127,9 @@ fclean: clean
 re: fclean all
 
 bonus: all
+
+valgrind: fclean
+	$(MAKE) CFLAGS="$(CFLAGS_VALGRIND)" all
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --track-origins=yes --suppressions=minishell.supp ./$(NAME)
 
 .PHONY: all clean fclean re bonus

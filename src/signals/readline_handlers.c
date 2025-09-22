@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   readline_handlers.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/20 20:33:25 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/21 03:25:59 by tda-roch         ###   ########.fr       */
+/*   Created: 2025/09/21 01:27:39 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/09/21 02:46:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_signal.h"
-#include <stdbool.h>
+// #include "minishell_signal.h"
 
-/*
-	g_sig, t_sa and t_handler:
-		- explained in minishell_signal header
-*/
-
-volatile sig_atomic_t	g_sig = 0;
+// static void	interactive_handler(int sig)
+// {
+// 	if (sig == SIGINT)
+// 		handle_sigint();
+// 	else if (sig == SIGQUIT)
+// 		handle_sigquit();
+// 	g_sig = sig;
+// }
