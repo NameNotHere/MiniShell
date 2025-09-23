@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/18 18:23:30 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:22:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	count_tokens(char *str)
 	while (str[i])
 	{
 		skip_spaces(&i, str);
-		if (str[i] && str[i + 1] && isminioperator(str, i) > 0)
+		if (str[i] && isminioperator(str, i) > 0)
 		{
 			i += isminioperator(str, i);
 		}
