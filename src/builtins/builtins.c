@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_ins.c                                        :+:      :+:    :+:   */
+/*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 20:36:45 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 21:01:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,16 @@ int	ft_env(t_msh sh)
 	return (EXIT_SUCCESS);
 }
 
+// TODO: REMOVE VAR, NOT CHANGE VALUE TO "\0" (breaks free)
+// or get_empty_string() (current temporary solution)
 int	ft_unset(t_msh **sh, char *name)
 {
 	int	ret;
 
 	ret = EXIT_SUCCESS;
 	if (!name)
-		return (perror("no value defined to unset\n"), EXIT_FAILURE);
-	ret = change_env_value(name, "\0", &(*sh)->envp);
+		return (put_stderr("no value defined to unset\n"), EXIT_FAILURE);
+	ret = change_env_value(name, get_empty_string(), &(*sh)->envp);
 	return (ret);
 }
 
