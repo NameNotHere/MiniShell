@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 09:10:00 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 20:36:45 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	ft_pwd(t_msh *sh)
 	}
 	equal = length_till_equal(sh->envp[i]) + 1;
 	write(1, sh->envp[i] + equal, ft_strlen(sh->envp[i] + equal));
+	write(1, "\n", 1);
 	return (EXIT_SUCCESS);
 }
 
@@ -98,7 +99,6 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 		return (ft_unset(&sh, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "exit", 4) == 0)
 		return (ft_exit(sh));
-	write(1, "\n", 1);
 	put_stderr("error: unknown built_in");
 	return (EXIT_FAILURE);
 }
