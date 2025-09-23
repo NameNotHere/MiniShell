@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/11 16:08:00 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:48:04 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,3 +110,42 @@ int	callo_x(void **ptr, size_t nmemb, size_t size)
 // 		printf("malloc failed\n");
 // 	return (mal);
 // }
+
+/*
+	validate_pipe_syntax: checks if pipe has valid commands on both sides
+	Returns:
+		- 0 if syntax is valid
+		- 2 if syntax error
+*/
+int	validate_pipe_syntax(t_token *tokens, int start, int end)
+{
+	int		i;
+	bool	found_pipe;
+	bool	has_left_cmd;
+	bool	has_right_cmd;
+
+	i = start;
+	found_pipe = false;
+	has_left_cmd = false;
+	has_right_cmd = false;
+	while (tokens[i].word && i <= end && tokens[i].ty != TOKEN_PIPE)
+	{
+		if (tokens[i].ty == TOKEN_WORD)
+			has_left_cmd = true;
+		i++;
+	}
+	if (tokens[i].ty == TOKEN_PIPE)
+	{
+		found_pipe = true;
+		i++;
+		while (tokens[i].word && i <= end)
+		{
+			if (tokens[i].ty == TOKEN_WORD)
+				has_right_cmd = true;
+			i++;
+		}
+	}
+	if (found_pipe && (!has_left_cmd || !has_right_cmd))
+		return (2);
+	return (0);
+}

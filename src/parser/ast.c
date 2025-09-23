@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 22:12:05 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:42:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,15 @@ int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 	current_node = ast;
 	i = start;
 	if (has_pipe(sh->tokens, start, end))
+	{
+		if (validate_pipe_syntax(sh->tokens, start, end) != 0)
+		{
+			put_stderr("minishell: syntax error near unexpected token `|'\n");
+			sh->exit_code = 2;
+			return (2);
+		}
 		scan_pipe(sh, current_node, sh->tokens, &i);
+	}
 	else
 		parse_cmd(sh, current_node, start, end);
 	if (sh->err != EXIT_SUCCESS)

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/23 16:22:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:48:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ char	*make_word(char *str, int *i, int *err)
 
 	skip_spaces(i, str);
 	len = 0;
-	// parse adjacent quoted and unquoted sections
 	while (str[*i + len] && !ft_isspace(str[*i + len])
 		&& !isminioperator(str, *i + len))
 	{
@@ -114,7 +113,6 @@ char	*make_word(char *str, int *i, int *err)
 			make_string(str, &len, *i + len);
 		else
 		{
-			// parse unquoted characters until space, operator, or quote
 			while (str[*i + len] && !ft_isspace(str[*i + len])
 				&& !isminioperator(str, *i + len)
 				&& str[*i + len] != '\'' && str[*i + len] != '\"')
@@ -126,7 +124,6 @@ char	*make_word(char *str, int *i, int *err)
 			}
 		}
 	}
-	// operators as separate tokens
 	if (len == 0 && str[*i] && isminioperator(str, *i))
 		len += isminioperator(str, *i);
 	else if (len == 0 && str[*i])
