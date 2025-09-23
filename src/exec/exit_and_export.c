@@ -18,16 +18,16 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 	char	*value;
 	int		i;
 
-	if (!cmd.argv[1])
+	if (!cmd.argv[1] || !cmd.argv[3])
 		return (EXIT_SUCCESS);
 	name = cmd.argv[1];
 	value = cmd.argv[3];
 	i = search_name(name, (*sh)->envp);
-	if (i < 0)
+	if (i == -1)
 		add_env_var(&(*sh)->envp, name, value);
 	else
 		change_env_value(name, value, &(*sh)->envp);
-	if (search_name(name, (*sh)->envp) < 0)
+	if (search_name(name, (*sh)->envp) == -1)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

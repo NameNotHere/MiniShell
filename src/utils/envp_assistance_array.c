@@ -30,6 +30,8 @@ int	search_name(char *name, char **envp)
 	int	len_name;
 	int	length_envp;
 
+	if (!name)
+		return (-1);
 	i = 0;
 	len_name = ft_strlen(name);
 	while (envp[i])
@@ -70,17 +72,28 @@ int	envp_len(char **envp)
 		i++;
 	return (i);
 }
-// TODO: remove not allowed function (realloc)
+
 int	add_env_var(char ***envp, char *name, char *value)
 {
 	int		env_len;
+	char	*new_entry;
 
+	new_entry = "\0";
 	env_len = envp_len(*envp);
-	*envp = realloc(*envp, sizeof(char *) * (env_len + 2));
+	if (!name || !value)
+		return (EXIT_FAILURE);
+	*envp = ft_realloc(*envp, sizeof(char *) * (env_len + 2),\
+		sizeof(char *) * env_len);
 	if (!(*envp))
 		return (EXIT_FAILURE);
+	new_entry = malloc(ft_strlen(name) * sizeof(char *));
+	ft_strlcpy(new_entry, name, ft_strlen(name));
+	ft_strlcat(new_entry, "=", 1);
+	ft_strlcat(new_entry, value, sizeof(value) + 1);
 	(*envp)[env_len] = name;
 	(*envp)[env_len + 1] = NULL;
 	change_env_value(name, value, envp);
+	free(new_entry);	
 	return (EXIT_SUCCESS);
 }
+
