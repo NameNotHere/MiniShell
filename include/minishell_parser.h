@@ -188,6 +188,7 @@ typedef struct s_msh
 	int			exit_code;
 	pid_t		last_pid;
 	bool		is_interact;
+	int			script_fd;
 	t_readbuf	readbuf;
 }	t_msh;
 

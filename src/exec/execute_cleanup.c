@@ -17,6 +17,8 @@ void	free_everything(t_msh *sh)
 	free_ast(&sh->ast);
 	safe_free_string(&sh->line);
 	safe_free_2d_string(&sh->envp);
+	if (sh->script_fd >= 0)
+		close(sh->script_fd);
 	rl_clear_history();
 }
 

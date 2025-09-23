@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 13:00:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 13:27:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef enum e_err_code
 # define E_MULTIPLE_MSG "syntax error: multiple commands"
 
 // minishell_main.c
-int		initialize_minishell(t_msh *sh, char **envp);
+int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 int		minishell_mainloop(t_msh *sh);
 
 // minishell_line.c
@@ -164,9 +164,6 @@ int		ft_strlen_array(char **array);
 char	*cd(char *path, char *new_path);
 void	pwd(char **path_dirs);
 void	minishell_exit(void);
-
-// signals/signal.c
-// void	ctrl_c(int sig);
 
 //envp assistance
 int		search_name(char *name, char **envp);

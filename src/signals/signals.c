@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 20:33:25 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 13:03:22 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 13:23:22 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ bool	install_sig_handler(t_sa *sa, int flags, t_handler handler)
 		&& sigaction(SIGQUIT, sa, NULL) != -1
 		&& sigaction(SIGTERM, sa, NULL) != -1);
 }
+
 /*
 	Event hook for rl_event_hook.
 	This event hook makes readline return on ctrl-c,
