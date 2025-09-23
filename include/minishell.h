@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 13:27:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 20:52:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,16 @@ int		minishell_mainloop(t_msh *sh);
 
 // minishell_line.c
 int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
+
+// builtins.c
+int		execute_builtin(t_msh *sh, t_cmd *cmd);
+
+// builtins_echo.c
+int		ft_echo(char **argv);
+
+// builtins_exit_export.c
+int		ft_exit(t_msh *sh);
+int		ft_export(t_msh **sh, t_cmd cmd);
 
 // exec/execute.c
 int		exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out);
@@ -170,7 +180,6 @@ int		search_name(char *name, char **envp);
 int		length_till_equal(char *str);
 int		change_env_value(char *name, char *new_value, char ***envp);
 int		add_env_var(char ***envp, char *name, char *value);
-int		execute_builtin(t_msh *sh, t_cmd *cmd);
 int		execute_command(t_msh *sh, t_cmd *cmd);
 
 // utils/ft_strndup

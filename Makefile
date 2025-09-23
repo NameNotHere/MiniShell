@@ -35,9 +35,10 @@ SRCS = 	signals/signals.c \
 	signals/signals_heredoc.c \
 	minishell_main.c \
 	minishell_line.c \
+	builtins/builtins.c \
+	builtins/builtins_echo.c \
+	builtins/builtins_exit_export.c \
 	exec/lookup_cmd_fullpath.c \
-	exec/echo.c \
-	exec/built_ins.c \
 	exec/execute.c \
 	exec/execute_cleanup.c \
 	exec/execute_cmd.c \
@@ -46,7 +47,6 @@ SRCS = 	signals/signals.c \
 	exec/heredoc.c \
 	exec/safe_fork.c \
 	exec/safe_pipe.c \
-	exec/exit_and_export.c \
 	parser/ast.c \
 	parser/ast_cmd.c \
 	parser/ast_helper.c \
