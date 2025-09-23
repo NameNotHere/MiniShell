@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 21:01:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 21:59:54 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,17 +72,25 @@ int	ft_env(t_msh sh)
 	return (EXIT_SUCCESS);
 }
 
-// TODO: REMOVE VAR, NOT CHANGE VALUE TO "\0" (breaks free)
-// or get_empty_string() (current temporary solution)
 int	ft_unset(t_msh **sh, char *name)
 {
-	int	ret;
+	int	i;
+	int	env_len;
 
-	ret = EXIT_SUCCESS;
 	if (!name)
 		return (put_stderr("no value defined to unset\n"), EXIT_FAILURE);
-	ret = change_env_value(name, get_empty_string(), &(*sh)->envp);
-	return (ret);
+	i = search_name(name, (*sh)->envp);
+	if (i == -1)
+		return (EXIT_SUCCESS);
+	free((*sh)->envp[i]);
+	env_len = envp_len((*sh)->envp);
+	while (i < env_len - 1)
+	{
+		(*sh)->envp[i] = (*sh)->envp[i + 1];
+		i++;
+	}
+	(*sh)->envp[env_len - 1] = NULL;
+	return (EXIT_SUCCESS);
 }
 
 int	execute_builtin(t_msh *sh, t_cmd *cmd)

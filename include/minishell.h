@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 20:52:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 21:25:52 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	free_everything(t_msh *sh);
 void	shell_line_cleanup(t_msh *sh);
 
 // exec/execute_cmd.c
+int		execute_command(t_msh *sh, t_cmd *cmd);
 int		exec_single_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
 void	exec_single_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd);
 void	exec_left(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2]);
@@ -180,7 +181,7 @@ int		search_name(char *name, char **envp);
 int		length_till_equal(char *str);
 int		change_env_value(char *name, char *new_value, char ***envp);
 int		add_env_var(char ***envp, char *name, char *value);
-int		execute_command(t_msh *sh, t_cmd *cmd);
+int		envp_len(char **envp);
 
 // utils/ft_strndup
 char	*ft_strndup(const char *src, int size);
@@ -193,6 +194,5 @@ int		ft_exit(t_msh *sh);
 
 // utils/ft_realloc
 void	*ft_realloc(void *ptr, size_t new_size, size_t old_size);
-
 
 #endif
