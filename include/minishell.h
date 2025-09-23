@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 10:36:21 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 13:00:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,12 @@
 	prompt is: star+arrow(cyan)
 	user input has default term color
 */
-// # define MSH_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
-// # define HDOC_PROMPT "hdoc > "
+# define MSH_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
+# define HDOC_PROMPT "hdoc > "
 
-# define MSH_PROMPT "$ "
-# define HDOC_PROMPT "> "
+// alternative simpler prompts commented out below:
+// # define MSH_PROMPT "$ "
+// # define HDOC_PROMPT "> "
 
 // 0644: user can read/write, others can read. reasonable/safe setting.
 # define OUTPUT_PERMISSIONS 0644

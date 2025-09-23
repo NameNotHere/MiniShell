@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 20:33:25 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 12:53:57 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 13:01:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ bool	install_sig_handler(t_sa *sa, int flags, t_handler handler)
 	This event hook makes readline return on ctrl-c,
 		with newline after SIGINT
 */
-static int	event_hook_sigint_return(void)
+int	event_hook_sigint_return(void)
 {
 	return (EXIT_SUCCESS);
 }
