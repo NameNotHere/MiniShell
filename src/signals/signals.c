@@ -6,11 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 20:33:25 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 05:23:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 12:53:57 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_signal.h"
+#include <stdlib.h>
 
 /*
 	g_sig is a global variable to store last signal received
@@ -39,4 +40,14 @@ bool	install_sig_handler(t_sa *sa, int flags, t_handler handler)
 		&& sigaction(SIGINT, sa, NULL) != -1
 		&& sigaction(SIGQUIT, sa, NULL) != -1
 		&& sigaction(SIGTERM, sa, NULL) != -1);
+}
+
+/*
+	Event hook for rl_event_hook.
+	This event hook makes readline return on ctrl-c,
+		with newline after SIGINT
+*/
+static int	event_hook_sigint_return(void)
+{
+	return (EXIT_SUCCESS);
 }

@@ -6,26 +6,19 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 06:04:05 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 12:58:20 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// volatile sig_atomic_t	g_sig = 0;
-
+// TODO: add script run option
 int	main(int argc, char **argv, char **envp)
 {
 	t_msh	sh;
-	// t_sa	sa;
 
 	(void)argc;
 	(void)argv;
-	// rl_catch_signals = 0;
-	// sa.sa_handler = ctrl_c;
-	// sigemptyset(&sa.sa_mask);
-	// sa.sa_flags = SA_RESTART;
-	// sigaction(SIGINT, &sa, NULL);
 	if (envp[0] == NULL)
 	{
 		put_stderr("error: empty environment variables\n");
@@ -57,17 +50,6 @@ int	initialize_minishell(t_msh *sh, char **envp)
 	return (sh->exit_code);
 }
 
-void	ctrl_c(int sig)
-{
-	(void)sig;
-	g_sig = 1;
-	write(1, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-// removed "exec_ast" error message
 int	minishell_mainloop(t_msh *sh)
 {
 	while (true)
@@ -77,6 +59,12 @@ int	minishell_mainloop(t_msh *sh)
 			write(1, "exit\n", 5);
 		if (sh->line == NULL)
 			break ;
+		if (g_sig == SIGINT)
+		{
+			sh->exit_code = 130;
+			safe_free_string(&sh->line);
+			continue ;
+		}
 		if (!*sh->line && make_string_free(&sh->line))
 			continue ;
 		if (sh->is_interact)

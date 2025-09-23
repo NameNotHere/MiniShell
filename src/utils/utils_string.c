@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 05:45:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 12:56:24 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 			sh->exit_code = EXIT_FAILURE;
 			return (NULL);
 		}
+		rl_event_hook = event_hook_sigint_return;
 		line = readline(prompt);
 	}
 	else if (g_sig != SIGINT && g_sig != SIGQUIT

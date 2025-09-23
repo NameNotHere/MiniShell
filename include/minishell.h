@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/20 20:17:33 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 10:36:21 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,11 @@
 	prompt is: star+arrow(cyan)
 	user input has default term color
 */
-# define MSH_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
-# define HDOC_PROMPT "hdoc > "
+// # define MSH_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
+// # define HDOC_PROMPT "hdoc > "
+
+# define MSH_PROMPT "$ "
+# define HDOC_PROMPT "> "
 
 // 0644: user can read/write, others can read. reasonable/safe setting.
 # define OUTPUT_PERMISSIONS 0644
@@ -162,7 +165,7 @@ void	pwd(char **path_dirs);
 void	minishell_exit(void);
 
 // signals/signal.c
-void	ctrl_c(int sig);
+// void	ctrl_c(int sig);
 
 //envp assistance
 int		search_name(char *name, char **envp);

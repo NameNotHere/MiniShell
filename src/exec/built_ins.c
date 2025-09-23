@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/18 12:20:14 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 09:10:00 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	ft_unset(t_msh **sh, char *name)
 int	execute_builtin(t_msh *sh, t_cmd *cmd)
 {
 	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
-		ft_pwd(sh);
+		return (ft_pwd(sh));
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 		return (ft_cd(&sh->envp, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
@@ -98,8 +98,7 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 		return (ft_unset(&sh, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "exit", 4) == 0)
 		return (ft_exit(sh));
-	else
-		return (EXIT_FAILURE);
 	write(1, "\n", 1);
-	return (EXIT_SUCCESS);
+	put_stderr("error: unknown built_in");
+	return (EXIT_FAILURE);
 }

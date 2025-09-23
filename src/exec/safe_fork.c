@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 23:07:31 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 19:32:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 09:23:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,11 @@ pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out)
 		sh->exit_code = errno;
 		return (pid);
 	}
+	if (pid == 0)
+	{
+		sh->exit_code = EXIT_SUCCESS;
+		set_ignore_sigpipe();
+	}
 	sh->last_pid = pid;
-	sh->exit_code = EXIT_SUCCESS;
 	return (pid);
 }
