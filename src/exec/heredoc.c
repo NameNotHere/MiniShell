@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/18 09:17:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 06:00:11 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,18 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 	char	*hdoc_string;
 
 	hdoc_string = NULL;
+	if (!set_heredoc_sig())
+	{
+		sh->exit_code = EXIT_FAILURE;
+		put_stderr("failed to set heredoc signal handler");
+		return (NULL);
+	}
 	while (true)
 	{
+		g_sig = 0;
 		hdoc_line = get_shell_line(sh, HDOC_PROMPT);
+		if (g_sig == SIGINT)
+			return (safe_free_string(&hdoc_line), NULL);
 		if (!hdoc_line || !*hdoc_line)
 		{
 			safe_free_string(&hdoc_line);

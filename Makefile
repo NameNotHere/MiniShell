@@ -30,6 +30,9 @@ all:
 
 # ***** MINISHELL SRCS *****
 SRCS = 	signals/signals.c \
+	signals/signals_execution.c \
+	signals/signals_interactive.c \
+	signals/signals_heredoc.c \
 	minishell_main.c \
 	minishell_line.c \
 	exec/lookup_cmd_fullpath.c \

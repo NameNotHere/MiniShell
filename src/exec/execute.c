@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/21 01:21:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 06:13:50 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,14 @@ int	exec_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 {
 	if (!node)
 	{
-		put_stderr("error: on exec, ast node is NULL");
+		put_stderr("error: on execution, ast node is NULL");
 		return (EXIT_FAILURE);
+	}
+	if (!set_ignore_sig())
+	{
+		put_stderr("failed to set execution signal handling");
+		sh->exit_code = EXIT_FAILURE;
+		return (sh->exit_code);
 	}
 	if (node->nty == NODE_CMD)
 		sh->exit_code = exec_single_cmd_node(sh, &node->cmd, fd_in, fd_out);
@@ -60,12 +66,8 @@ int	exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 		return (EXIT_FAILURE);
 	}
 	if (heredoc_ast_node(sh, sh->ast) != EXIT_SUCCESS)
-	{
-		put_stderr("heredoc root ast node failed\n");
 		return (sh->exit_code);
-	}
-	if (exec_ast_root(sh, sh->ast, fd_in, fd_out) != EXIT_SUCCESS)
-		put_stderr("exec root ast node failed\n");
+	sh->exit_code = exec_ast_root(sh, sh->ast, fd_in, fd_out);
 	if (sh->last_pid != 0)
 		return (wait_children(sh));
 	return (sh->exit_code);

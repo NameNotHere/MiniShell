@@ -1,0 +1,67 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals_interactive.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 17:15:30 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/09/23 05:15:41 by tda-roch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell_signal.h"
+#include <readline/readline.h>
+
+/*
+	**helper for handler_interactive_sig, on int sig (control-c)
+ 	makes readline to stop input and show new prompt
+
+	note: yes, setting rl_done = 1 does that
+ */
+static void	interactive_sig_int(void)
+{
+	rl_done = 1;
+}
+
+/*
+	helper for handler_interactive_sig, on quit sig (control-\)
+ 	makes readline to redisplay previous input but on a new line
+ */
+static void	interactive_sig_quit(void)
+{
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+/*
+	signal handler for interactive shell
+
+	stores signal and calls handler helper on two cases:
+		signal is SIGINT (control-c)
+		signal is SIGQUIT (control-\)
+ */
+static void	handler_interactive_sig(int sig)
+{
+	g_sig = sig;
+	if (sig == SIGINT)
+		interactive_sig_int();
+	else if (sig == SIGQUIT)
+		interactive_sig_quit();
+}
+
+/*
+	sets: interactive signal handling
+
+	uses install_sig_handler to install interactive signal handler
+
+	Returns:
+	- true if install succeeded
+	- false if install failed
+ */
+bool	set_interactive_sig(void)
+{
+	t_sa	sa;
+
+	return (install_sig_handler(&sa, 0, handler_interactive_sig));
+}

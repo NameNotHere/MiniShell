@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:55:54 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/20 20:25:35 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 05:25:15 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <signal.h>
 # include <stddef.h>
+# include <stdbool.h>
 
 // Signal integer value received by minishell.
 //
@@ -36,4 +37,17 @@ typedef struct sigaction		t_sa;
 // function pointer for signal handlers
 typedef void					(*t_handler)(int);
 
+// signals/signals.c
+bool	install_sig_handler(t_sa *sa, int flags, t_handler handler);
+
+// signals/signals_execution.c
+bool	set_ignore_sig(void);
+bool	set_restore_dfl_sig(void);
+bool	set_ignore_sigpipe(void);
+
+// signals/signals_heredoc.c
+bool	set_heredoc_sig(void);
+
+// signals/signals_interactive.c
+bool	set_interactive_sig(void);
 #endif

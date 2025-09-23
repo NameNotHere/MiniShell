@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/21 02:44:49 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 06:04:05 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_msh	sh;
-	t_sa	sa;
+	// t_sa	sa;
 
 	(void)argc;
 	(void)argv;
-	rl_catch_signals = 0;
-	sa.sa_handler = ctrl_c;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART;
-	sigaction(SIGINT, &sa, NULL);
+	// rl_catch_signals = 0;
+	// sa.sa_handler = ctrl_c;
+	// sigemptyset(&sa.sa_mask);
+	// sa.sa_flags = SA_RESTART;
+	// sigaction(SIGINT, &sa, NULL);
 	if (envp[0] == NULL)
 	{
 		put_stderr("error: empty environment variables\n");
@@ -89,8 +89,7 @@ int	minishell_mainloop(t_msh *sh)
 			safe_free_string(&sh->line);
 			continue ;
 		}
-		if (exec_ast(sh, sh->ast, STDIN_FILENO, STDOUT_FILENO) != EXIT_SUCCESS)
-			;
+		exec_ast(sh, sh->ast, STDIN_FILENO, STDOUT_FILENO);
 		shell_line_cleanup(sh);
 	}
 	free_everything(sh);

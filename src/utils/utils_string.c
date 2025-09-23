@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/18 09:17:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 05:45:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,19 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 
 	line = NULL;
 	if (sh->is_interact)
+	{
+		g_sig = 0;
+		if (!set_interactive_sig())
+		{
+			put_stderr("set interactive signal handling failed");
+			sh->exit_code = EXIT_FAILURE;
+			return (NULL);
+		}
 		line = readline(prompt);
-	else if (readline_noninteract(STDIN_FILENO, &sh->readbuf, &line) == false)
+	}
+	else if (g_sig != SIGINT && g_sig != SIGQUIT
+		&& set_ignore_sig()
+		&& readline_noninteract(STDIN_FILENO, &sh->readbuf, &line) == false)
 		safe_free_string(&line);
 	return (line);
 }
