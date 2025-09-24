@@ -80,6 +80,13 @@ int	minishell_mainloop(t_msh *sh)
 		}
 		if (!*sh->line && make_string_free(&sh->line))
 			continue ;
+		if (unclosed_quotes(sh->line))
+		{
+			put_stderr("error: unclosed quotes\n");
+			sh->exit_code = 2;
+			safe_free_string(&sh->line);
+			continue ;
+		}
 		if (sh->is_interact)
 			add_history(sh->line);
 		if (expand_line(sh) != EXIT_SUCCESS && make_string_free(&sh->line))

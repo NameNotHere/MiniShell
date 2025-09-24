@@ -195,4 +195,7 @@ int		ft_exit(t_msh *sh);
 // utils/ft_realloc
 void	*ft_realloc(void *ptr, size_t new_size, size_t old_size);
 
+// utils/unclosed_quotes.c
+int		unclosed_quotes(const char *line);
+
 #endif
