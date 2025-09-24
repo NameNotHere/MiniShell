@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:35:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 20:37:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 21:25:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	execute_command(t_msh *sh, t_cmd *cmd)
 {
+	errno = 0;
+	set_restore_dfl_sig();
 	execute_redirection(sh, cmd->redir);
 	if (cmd->built_in)
 		return (execute_builtin(sh, cmd));

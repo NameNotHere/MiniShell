@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_ins.c                                        :+:      :+:    :+:   */
+/*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/18 12:20:14 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 21:59:54 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	ft_pwd(t_msh *sh)
 	}
 	equal = length_till_equal(sh->envp[i]) + 1;
 	write(1, sh->envp[i] + equal, ft_strlen(sh->envp[i] + equal));
+	write(1, "\n", 1);
 	return (EXIT_SUCCESS);
 }
 
@@ -73,19 +74,29 @@ int	ft_env(t_msh sh)
 
 int	ft_unset(t_msh **sh, char *name)
 {
-	int	ret;
+	int	i;
+	int	env_len;
 
-	ret = EXIT_SUCCESS;
 	if (!name)
-		return (perror("no value defined to unset\n"), EXIT_FAILURE);
-	ret = change_env_value(name, "\0", &(*sh)->envp);
-	return (ret);
+		return (put_stderr("no value defined to unset\n"), EXIT_FAILURE);
+	i = search_name(name, (*sh)->envp);
+	if (i == -1)
+		return (EXIT_SUCCESS);
+	free((*sh)->envp[i]);
+	env_len = envp_len((*sh)->envp);
+	while (i < env_len - 1)
+	{
+		(*sh)->envp[i] = (*sh)->envp[i + 1];
+		i++;
+	}
+	(*sh)->envp[env_len - 1] = NULL;
+	return (EXIT_SUCCESS);
 }
 
 int	execute_builtin(t_msh *sh, t_cmd *cmd)
 {
 	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
-		ft_pwd(sh);
+		return (ft_pwd(sh));
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
 		return (ft_cd(&sh->envp, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
@@ -98,8 +109,6 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 		return (ft_unset(&sh, cmd->argv[1]));
 	else if (ft_strncmp(cmd->argv[0], "exit", 4) == 0)
 		return (ft_exit(sh));
-	else
-		return (EXIT_FAILURE);
-	write(1, "\n", 1);
-	return (EXIT_SUCCESS);
+	put_stderr("error: unknown built_in");
+	return (EXIT_FAILURE);
 }

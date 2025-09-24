@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/20 20:17:33 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 21:25:52 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@
 # define MSH_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
 # define HDOC_PROMPT "hdoc > "
 
+// alternative simpler prompts commented out below:
+// # define MSH_PROMPT "$ "
+// # define HDOC_PROMPT "> "
+
 // 0644: user can read/write, others can read. reasonable/safe setting.
 # define OUTPUT_PERMISSIONS 0644
 
@@ -51,11 +55,21 @@ typedef enum e_err_code
 # define E_MULTIPLE_MSG "syntax error: multiple commands"
 
 // minishell_main.c
-int		initialize_minishell(t_msh *sh, char **envp);
+int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 int		minishell_mainloop(t_msh *sh);
 
 // minishell_line.c
 int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
+
+// builtins.c
+int		execute_builtin(t_msh *sh, t_cmd *cmd);
+
+// builtins_echo.c
+int		ft_echo(char **argv);
+
+// builtins_exit_export.c
+int		ft_exit(t_msh *sh);
+int		ft_export(t_msh **sh, t_cmd cmd);
 
 // exec/execute.c
 int		exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out);
@@ -66,6 +80,7 @@ void	free_everything(t_msh *sh);
 void	shell_line_cleanup(t_msh *sh);
 
 // exec/execute_cmd.c
+int		execute_command(t_msh *sh, t_cmd *cmd);
 int		exec_single_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
 void	exec_single_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd);
 void	exec_left(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2]);
@@ -161,16 +176,12 @@ char	*cd(char *path, char *new_path);
 void	pwd(char **path_dirs);
 void	minishell_exit(void);
 
-// signals/signal.c
-void	ctrl_c(int sig);
-
 //envp assistance
 int		search_name(char *name, char **envp);
 int		length_till_equal(char *str);
 int		change_env_value(char *name, char *new_value, char ***envp);
 int		add_env_var(char ***envp, char *name, char *value);
-int		execute_builtin(t_msh *sh, t_cmd *cmd);
-int		execute_command(t_msh *sh, t_cmd *cmd);
+int		envp_len(char **envp);
 
 // utils/ft_strndup
 char	*ft_strndup(const char *src, int size);
@@ -183,6 +194,5 @@ int		ft_exit(t_msh *sh);
 
 // utils/ft_realloc
 void	*ft_realloc(void *ptr, size_t new_size, size_t old_size);
-
 
 #endif

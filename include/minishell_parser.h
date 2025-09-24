@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/18 11:17:13 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:42:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,7 @@ typedef struct s_msh
 	int			exit_code;
 	pid_t		last_pid;
 	bool		is_interact;
+	int			script_fd;
 	t_readbuf	readbuf;
 }	t_msh;
 
@@ -301,5 +302,7 @@ int			mallo_x(void **ptr, size_t nmemb, size_t size);
 int			is_closed(char *str, int i, char quote);
 
 int			unclosed_token(char *str, char token);
+
+int			validate_pipe_syntax(t_token *tokens, int start, int end);
 
 #endif
