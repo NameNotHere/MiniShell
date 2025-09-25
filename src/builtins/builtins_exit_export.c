@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 20:50:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:55:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_exit(t_msh *sh, t_cmd cmd)
 	if (cmd.argv[2])
 	{
 		put_stderr("exit: too many arguments\n");
-		sh->exit_code = 1;
+		sh->exit_code = EXIT_FAILURE;
 		return (sh->exit_code);
 	}
 	if (cmd.argv[1] && cmd.argv[1][0] != '\0' && ft_isdigit(cmd.argv[1][0]))

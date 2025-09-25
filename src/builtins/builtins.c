@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 21:59:54 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:22:25 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,9 @@ int	ft_unset(t_msh **sh, char *name)
 
 int	execute_builtin(t_msh **sh, t_cmd *cmd)
 {
-	int	ret;	
+	int	ret;
 
+	ret = EXIT_SUCCESS;
 	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
 		ret = ft_pwd(*sh);
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
@@ -111,6 +112,7 @@ int	execute_builtin(t_msh **sh, t_cmd *cmd)
 		ret = ft_unset(sh, cmd->argv[1]);
 	else if (ft_strncmp(cmd->argv[0], "exit", 4) == 0)
 		ret = ft_exit(*sh, *cmd);
-	(*sh)->exit_code = ret;
+	if (ret != EXIT_SUCCESS)
+		(*sh)->exit_code = ret;
 	return (ret);
 }

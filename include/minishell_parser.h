@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/23 16:42:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:37:34 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ typedef struct s_msh
 	char		*line;
 	int			err;
 	int			exit_code;
+	int			saved_exit_code;
 	pid_t		last_pid;
 	bool		is_interact;
 	int			script_fd;

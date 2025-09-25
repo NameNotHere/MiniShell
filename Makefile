@@ -64,6 +64,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_char.c \
 	utils/utils_dup2.c \
 	utils/utils_error.c \
+	utils/utils_error_shell.c \
 	utils/utils_exit.c \
 	utils/utils_fd.c \
 	utils/utils_env.c \

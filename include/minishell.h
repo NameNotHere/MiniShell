@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 14:44:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/25 17:06:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ typedef enum e_err_code
 
 typedef enum e_flow
 {
-	STAY_FLOW,
+	EXEC_FLOW,
 	CONTINUE_FLOW,
 	BREAK_FLOW
 }	t_flow;
@@ -133,6 +133,9 @@ char	*get_env_value(t_msh *sh, char *var_name, int envp_index);
 void	put_stderr(const char *error);
 void	put_stderr_2(const char *str1, const char *str2);
 void	put_stderr_3(const char *str1, const char *str2, const char *str3);
+
+// utils/utils_error_shell.c
+void	put_stderr_code(t_msh *sh, const char *error, int exit_code);
 
 // utils/utils/exit.c
 void	close_fds_exit_error_free(t_msh *sh, const char *error, int *fd_in,
