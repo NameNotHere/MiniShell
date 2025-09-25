@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 14:27:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/25 14:44:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,13 @@ typedef enum e_err_code
 
 # define E_INVALID_REDIR_MSG "syntax error: invalid redirection, missing string"
 # define E_MULTIPLE_MSG "syntax error: multiple commands"
+
+typedef enum e_flow
+{
+	STAY_FLOW,
+	CONTINUE_FLOW,
+	BREAK_FLOW
+}	t_flow;
 
 // minishell_main.c
 int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
