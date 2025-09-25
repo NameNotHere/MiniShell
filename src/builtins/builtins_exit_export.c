@@ -23,7 +23,7 @@ int	ft_exit(t_msh *sh, t_cmd cmd)
 	if (cmd.argv[1] && cmd.argv[1][0] != '\0' && ft_isdigit(cmd.argv[1][0]))
 		sh->exit_code = ft_atoi(cmd.argv[1]);
 	else if (cmd.argv[1])
-		sh->exit_code = 0;
+		sh->exit_code = EXIT_SUCCESS;
 	exit_free_with_code(sh, sh->exit_code);
 	return (sh->exit_code);
 }
