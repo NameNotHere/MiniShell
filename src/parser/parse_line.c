@@ -6,13 +6,13 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:17:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/21 02:39:01 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/25 14:24:41 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	parse_line_to_ast(t_msh *sh, t_ast *ast, char *string)
+int	parse_line(t_msh *sh, t_ast *ast, char *string)
 {
 	int			token_count;
 	t_token		*tokens;

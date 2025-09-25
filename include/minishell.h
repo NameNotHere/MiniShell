@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 21:25:52 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/25 14:44:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,16 @@ typedef enum e_err_code
 # define E_INVALID_REDIR_MSG "syntax error: invalid redirection, missing string"
 # define E_MULTIPLE_MSG "syntax error: multiple commands"
 
+typedef enum e_flow
+{
+	STAY_FLOW,
+	CONTINUE_FLOW,
+	BREAK_FLOW
+}	t_flow;
+
 // minishell_main.c
 int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 int		minishell_mainloop(t_msh *sh);
-
-// minishell_line.c
-int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
 
 // builtins.c
 int		execute_builtin(t_msh *sh, t_cmd *cmd);
@@ -106,6 +110,9 @@ int		safe_pipe(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
 // exec/safe_fork.c
 pid_t	safe_fork_cmd(t_msh *sh, int *fd_in, int *fd_out);
 pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out);
+
+// parse/parse_line.c
+int		parse_line(t_msh *sh, t_ast *ast, char *string);
 
 // utils/utils_char.c
 int		ft_isalnum_underscore(int c);
