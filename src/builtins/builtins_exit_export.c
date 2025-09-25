@@ -12,14 +12,19 @@
 
 #include <minishell.h>
 
-int	ft_exit(t_msh *sh)
+int	ft_exit(t_msh *sh, t_cmd cmd)
 {
+	if (cmd.argv[2])
+	{
+		put_stderr("exit: too many arguments\n");
+		sh->exit_code = 1;
+		return (sh->exit_code);
+	}
 	free_everything(sh);
 	exit_free_with_code(sh, EXIT_SUCCESS);
 	sh->exit_code = errno;
 	perror("failed exit");
-	if (sh->exit_code == EXIT_SUCCESS)
-		sh->exit_code = EXIT_FAILURE;
+	sh->exit_code = EXIT_FAILURE;
 	return (sh->exit_code);
 }
 

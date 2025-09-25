@@ -19,8 +19,7 @@ int	main(int argc, char **argv, char **envp)
 	if (envp[0] == NULL)
 	{
 		put_stderr("error: empty environment variables\n");
-		sh.exit_code = EXIT_FAILURE;
-		return (sh.exit_code);
+		return (EXIT_FAILURE);
 	}
 	if (initialize_minishell(&sh, argc, argv, envp) != EXIT_SUCCESS)
 		return (sh.exit_code);

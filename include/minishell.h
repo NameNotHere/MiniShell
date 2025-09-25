@@ -62,13 +62,13 @@ int		minishell_mainloop(t_msh *sh);
 int		parse_line_to_ast(t_msh *sh, t_ast *ast, char *string);
 
 // builtins.c
-int		execute_builtin(t_msh *sh, t_cmd *cmd);
+int		execute_builtin(t_msh **sh, t_cmd *cmd);
 
 // builtins_echo.c
 int		ft_echo(char **argv);
 
 // builtins_exit_export.c
-int		ft_exit(t_msh *sh);
+int		ft_exit(t_msh *sh, t_cmd cmd);
 int		ft_export(t_msh **sh, t_cmd cmd);
 
 // exec/execute.c
@@ -190,7 +190,6 @@ char	*ft_strndup(const char *src, int size);
 int		is_builtin(char *str);
 int		ft_echo(char **argv);
 int		ft_export(t_msh **sh, t_cmd cmd);
-int		ft_exit(t_msh *sh);
 
 // utils/ft_realloc
 void	*ft_realloc(void *ptr, size_t new_size, size_t old_size);

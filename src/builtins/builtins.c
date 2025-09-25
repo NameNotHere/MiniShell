@@ -93,22 +93,24 @@ int	ft_unset(t_msh **sh, char *name)
 	return (EXIT_SUCCESS);
 }
 
-int	execute_builtin(t_msh *sh, t_cmd *cmd)
+int	execute_builtin(t_msh **sh, t_cmd *cmd)
 {
+	int	ret;	
+
 	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
-		return (ft_pwd(sh));
+		ret = ft_pwd(*sh);
 	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
-		return (ft_cd(&sh->envp, cmd->argv[1]));
+		ret = ft_cd(&((*sh)->envp), cmd->argv[1]);
 	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
-		return (ft_echo(cmd->argv));
+		ret = ft_echo(cmd->argv);
 	else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
-		return (ft_env(*sh));
+		ret = ft_env(**sh);
 	else if (ft_strncmp(cmd->argv[0], "export", 4) == 0)
-		return (ft_export(&sh, *cmd));
-	else if (ft_strncmp(cmd->argv[0], "unset", 4) == 0)
-		return (ft_unset(&sh, cmd->argv[1]));
+		ret = ft_export(sh, *cmd);
+	else if (ft_strncmp(cmd->argv[0], "unset", 5) == 0)
+		ret = ft_unset(sh, cmd->argv[1]);
 	else if (ft_strncmp(cmd->argv[0], "exit", 4) == 0)
-		return (ft_exit(sh));
-	put_stderr("error: unknown built_in");
-	return (EXIT_FAILURE);
+		ret = ft_exit(*sh, *cmd);
+	(*sh)->exit_code = ret;
+	return (ret);
 }
