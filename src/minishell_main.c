@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 13:28:37 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/25 14:17:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	minishell_mainloop(t_msh *sh)
 			add_history(sh->line);
 		if (expand_line(sh) != EXIT_SUCCESS && make_string_free(&sh->line))
 			continue ;
-		if (parse_line_to_ast(sh, sh->ast, sh->line) != EXIT_SUCCESS)
+		if (parse_line(sh, sh->ast, sh->line) != EXIT_SUCCESS)
 		{
 			put_stderr("parse line failed\n");
 			safe_free_string(&sh->line);

@@ -34,7 +34,6 @@ SRCS = 	signals/signals.c \
 	signals/signals_interactive.c \
 	signals/signals_heredoc.c \
 	minishell_main.c \
-	minishell_line.c \
 	builtins/builtins.c \
 	builtins/builtins_echo.c \
 	builtins/builtins_exit_export.c \
@@ -57,6 +56,7 @@ SRCS = 	signals/signals.c \
 	parser/line_var_expand.c \
 	parser/line_var_expand_catch.c \
 	parser/line_var_expand_helper.c \
+	parser/parse_line.c \
 	parser/tokenise_types.c \
 	parser/tokenize.c \
 	utils/parser_isminioperator.c \
