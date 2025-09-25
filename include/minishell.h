@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 17:06:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/25 18:50:30 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out);
 int		parse_line(t_msh *sh, t_ast *ast, char *string);
 
 // utils/utils_char.c
-int		ft_isalnum_underscore(int c);
+int		ft_valid_var_char(int c);
 int		ft_is_singlequote(int c);
 int		ft_is_doublequote(int c);
 int		ft_is_quote(int c);
@@ -180,6 +180,9 @@ bool	make_string_free(char **string);
 // utils/utils_string_array.c
 char	**copy_string_array(char **strings);
 int		ft_strlen_array(char **array);
+
+// utils/utils_token.c
+bool	is_valid_cmd_token(t_token_ty token_type);
 
 // filenavs.c
 char	*cd(char *path, char *new_path);

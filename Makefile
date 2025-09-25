@@ -77,6 +77,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_readline_state.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
+	utils/utils_token.c \
 	utils/envp_assistance_array.c \
 	debug/ast_print.c \
 	debug/process_debug.c \
