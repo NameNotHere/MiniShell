@@ -18,7 +18,7 @@ int	execute_command(t_msh *sh, t_cmd *cmd)
 	set_restore_dfl_sig();
 	execute_redirection(sh, cmd->redir);
 	if (cmd->built_in)
-		return (execute_builtin(sh, cmd));
+		return (execute_builtin(&sh, cmd));
 	if (cmd->not_found)
 	{
 		if (cmd->argv[0] == NULL)
@@ -52,7 +52,7 @@ int	exec_single_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out)
 	}
 	safe_close_2_fds(&fd_in, &fd_out);
 	if (cmd->built_in == true)
-		sh->exit_code = execute_builtin(sh, cmd);
+		sh->exit_code = execute_builtin(&sh, cmd);
 	return (sh->exit_code);
 }
 
