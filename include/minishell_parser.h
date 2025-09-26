@@ -121,6 +121,7 @@ typedef struct s_cmd
 {
 	char		*full_cmd;
 	char		**argv;
+	int			argc;
 	bool		built_in;
 	bool		not_found;
 	t_redir		*redir;
@@ -293,6 +294,8 @@ bool		piped_line(char *line);
 
 // errors
 void		int_closed(char *str, int i, char quote);
+
+int			ft_strcmp(const char *s1, const char *s2);
 
 void		*ft_malloc(size_t amount, size_t size);
 

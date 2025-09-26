@@ -16,19 +16,19 @@ int	is_builtin(char *str)
 {
 	if (!str)
 		return (0);
-	if (ft_strncmp(str, "cd", 2) == 0 && ft_strlen(str) == 2)
+	if (ft_strcmp(str, "cd") == 0)
 		return (1);
-	else if (ft_strncmp(str, "echo", 4) == 0 && ft_strlen(str) == 4)
+	else if (ft_strcmp(str, "echo") == 0)
 		return (1);
-	else if (ft_strncmp(str, "pwd", 3) == 0 && ft_strlen(str) == 3)
+	else if (ft_strcmp(str, "pwd") == 0)
 		return (1);
-	else if (ft_strncmp(str, "export", 6) == 0 && ft_strlen(str) == 6)
+	else if (ft_strcmp(str, "export") == 0)
 		return (1);
-	else if (ft_strncmp(str, "unset", 5) == 0 && ft_strlen(str) == 5)
+	else if (ft_strcmp(str, "unset") == 0)
 		return (1);
-	else if (ft_strncmp(str, "env", 3) == 0 && ft_strlen(str) == 3)
+	else if (ft_strcmp(str, "env") == 0)
 		return (1);
-	else if (ft_strncmp(str, "exit", 4) == 0 && ft_strlen(str) == 4)
+	else if (ft_strcmp(str, "exit") == 0)
 		return (1);
 	return (0);
 }

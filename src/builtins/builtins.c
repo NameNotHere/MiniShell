@@ -98,21 +98,19 @@ int	execute_builtin(t_msh **sh, t_cmd *cmd)
 	int	ret;
 
 	ret = EXIT_SUCCESS;
-	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
+	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		ret = ft_pwd(*sh);
-	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
+	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
 		ret = ft_cd(&((*sh)->envp), cmd->argv[1]);
-	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
-		ret = ft_echo(cmd->argv);
-	else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
+	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
+		ret = ft_echo(cmd->argv, cmd->argc);
+	else if (ft_strcmp(cmd->argv[0], "env") == 0)
 		ret = ft_env(**sh);
-	else if (ft_strncmp(cmd->argv[0], "export", 4) == 0)
+	else if (ft_strcmp(cmd->argv[0], "export") == 0)
 		ret = ft_export(sh, *cmd);
-	else if (ft_strncmp(cmd->argv[0], "unset", 5) == 0)
+	else if (ft_strcmp(cmd->argv[0], "unset") == 0)
 		ret = ft_unset(sh, cmd->argv[1]);
-	else if (ft_strncmp(cmd->argv[0], "exit", 4) == 0)
+	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
 		ret = ft_exit(*sh, *cmd);
-	if (ret != EXIT_SUCCESS)
-		(*sh)->exit_code = ret;
 	return (ret);
 }

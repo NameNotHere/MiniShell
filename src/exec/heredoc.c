@@ -35,8 +35,7 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 			safe_free_string(&hdoc_line);
 			continue ;
 		}
-		if (ft_strncmp(redir->string, hdoc_line, ft_strlen(redir->string)) == 0
-			&& ft_strlen(redir->string) == ft_strlen(hdoc_line))
+		if (ft_strcmp(redir->string, hdoc_line) == 0)
 		{
 			safe_free_string(&hdoc_line);
 			break ;

@@ -69,7 +69,7 @@ int		minishell_mainloop(t_msh *sh);
 int		execute_builtin(t_msh **sh, t_cmd *cmd);
 
 // builtins_echo.c
-int		ft_echo(char **argv);
+int		ft_echo(char **argv, int argc);
 
 // builtins_exit_export.c
 int		ft_exit(t_msh *sh, t_cmd cmd);
@@ -199,9 +199,12 @@ int		envp_len(char **envp);
 // utils/ft_strndup
 char	*ft_strndup(const char *src, int size);
 
+// utils/ft_strcmp
+int		ft_strcmp(const char *s1, const char *s2);
+
 //is_builtin.c
 int		is_builtin(char *str);
-int		ft_echo(char **argv);
+int		ft_echo(char **argv, int argc);
 int		ft_export(t_msh **sh, t_cmd cmd);
 
 // utils/ft_realloc

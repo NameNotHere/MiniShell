@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 17:11:45 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/26 10:32:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,8 @@ int	minishell_mainloop(t_msh *sh)
 			break ;
 		else if (flow == CONTINUE_FLOW)
 			continue ;
-		exec_ast(sh, sh->ast, STDIN_FILENO, STDOUT_FILENO);
+		sh->exit_code = exec_ast(sh, sh->ast, STDIN_FILENO, STDOUT_FILENO);
+		sh->saved_exit_code = sh->exit_code;
 	}
 	free_everything(sh);
 	return (sh->exit_code);

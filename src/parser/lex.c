@@ -43,7 +43,7 @@ int	count_tokens(char *str)
 		else if (str[i] && (str[i] == '\'' || str[i] == '\"'))
 		{
 			quote = str[i++];
-			while (str[i] && is_closed(str, i, quote) && !ft_isspace(str[i++]))
+			while (str[i] && is_closed(str, i, quote) && !ft_isspace(str[i]))
 				i++;
 		}
 		else

@@ -69,6 +69,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_fd.c \
 	utils/utils_env.c \
 	utils/ft_strndup.c \
+	utils/ft_strcmp.c \
 	utils/utils_free.c \
 	utils/unclosed_quotes.c \
 	utils/ft_realloc.c \
