@@ -16,9 +16,19 @@ int	execute_command(t_msh *sh, t_cmd *cmd)
 {
 	errno = 0;
 	set_restore_dfl_sig();
-	execute_redirection(sh, cmd->redir);
+	if (!execute_redirection(sh, cmd->redir))
+		return (sh->exit_code);
 	if (cmd->built_in)
 		return (execute_builtin(&sh, cmd));
+	if (cmd->permission_denied)
+	{
+		if (cmd->argv[0] == NULL)
+			put_stderr("permission denied: (empty command)\n");
+		else
+			put_stderr_3("permission denied: ", cmd->argv[0], "\n");
+		sh->exit_code = 126;
+		return (126);
+	}
 	if (cmd->not_found)
 	{
 		if (cmd->argv[0] == NULL)
@@ -52,7 +62,11 @@ int	exec_single_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out)
 	}
 	safe_close_2_fds(&fd_in, &fd_out);
 	if (cmd->built_in == true)
+	{
+		if (!execute_redirection(sh, cmd->redir))
+			return (sh->exit_code);
 		sh->exit_code = execute_builtin(&sh, cmd);
+	}
 	return (sh->exit_code);
 }
 

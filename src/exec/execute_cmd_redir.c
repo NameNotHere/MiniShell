@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	execute_redirection_in(t_msh *sh, t_redir *redir)
+bool	execute_redirection_in(t_msh *sh, t_redir *redir)
 {
 	int	fd;
 
@@ -22,12 +22,13 @@ void	execute_redirection_in(t_msh *sh, t_redir *redir)
 	else if (redir->ty == REDIR_INPUT)
 		fd = open_input_redirection(sh, redir->string);
 	if (fd == -1)
-		return ;
+		return (false);
 	try_dup2_stdin(sh, &fd);
 	safe_close_fd(&fd);
+	return (true);
 }
 
-void	execute_redirection_out(t_msh *sh, t_redir *redir)
+bool	execute_redirection_out(t_msh *sh, t_redir *redir)
 {
 	int	fd;
 
@@ -37,22 +38,31 @@ void	execute_redirection_out(t_msh *sh, t_redir *redir)
 	else if (redir->ty == REDIR_APPEND)
 		fd = open_append_redirection(sh, redir->string);
 	if (fd == -1)
-		return ;
+		return (false);
 	try_dup2_stdout(sh, &fd);
 	safe_close_fd(&fd);
+	return (true);
 }
 
 /*
 	Execute each redirection recursively until redirection list ends.
+	Returns true if all redirections succeed, false if any fail.
 */
-void	execute_redirection(t_msh *sh, t_redir *redir)
+bool	execute_redirection(t_msh *sh, t_redir *redir)
 {
 	if (redir && redir->string)
 	{
 		if (redir->ty == REDIR_INPUT || redir->ty == REDIR_HEREDOC)
-			execute_redirection_in(sh, redir);
+		{
+			if (!execute_redirection_in(sh, redir))
+				return (false);
+		}
 		else if (redir->ty == REDIR_OUTPUT || redir->ty == REDIR_APPEND)
-			execute_redirection_out(sh, redir);
-		execute_redirection(sh, redir->next);
+		{
+			if (!execute_redirection_out(sh, redir))
+				return (false);
+		}
+		return (execute_redirection(sh, redir->next));
 	}
+	return (true);
 }

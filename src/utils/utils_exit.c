@@ -53,7 +53,7 @@ int	handle_execute_command_errors(t_msh *sh, t_cmd *cmd)
 		if (cmd->full_cmd == NULL)
 			put_stderr("permission denied: (empty command)\n");
 		else
-			put_stderr_3("permission denied: ", cmd->argv[0], "\n");
+			put_stderr_3("permission denied: ", cmd->full_cmd, "\n");
 		sh->exit_code = 126;
 		return (126);
 	}

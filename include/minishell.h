@@ -91,7 +91,7 @@ void	exec_left(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2]);
 void	exec_right(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2]);
 
 // exec/execute_cmd_redir.c
-void	execute_redirection(t_msh *sh, t_redir *redir);
+bool	execute_redirection(t_msh *sh, t_redir *redir);
 
 // exec/execute_cmd_redir_open.c
 int		open_input_redirection(t_msh *sh, char *filename);
