@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 18:50:30 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/26 16:28:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,13 @@ void	shell_line_cleanup(t_msh *sh);
 
 // exec/execute_cmd.c
 int		execute_command(t_msh *sh, t_cmd *cmd);
-int		exec_single_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
-void	exec_single_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd);
 void	exec_left(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2]);
 void	exec_right(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2]);
+
+// exec/execute_cmd_single.c
+int		exec_single_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
+void	exec_single_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd);
+int		exec_single_builtin(t_msh *sh, t_cmd *cmd);
 
 // exec/execute_cmd_redir.c
 bool	execute_redirection(t_msh *sh, t_redir *redir);
@@ -149,6 +152,8 @@ void	safe_close_fd(int *fd);
 void	safe_close_2_fds(int *fd_one, int *fd_two);
 void	safe_close_4_fds(int *fd_one, int *fd_two, int *fd_three, int *fd_four);
 int		cleanup_all_fds(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
+bool	save_std_fds(int *saved_stdin, int *saved_stdout);
+void	restore_std_fds(int saved_stdin, int saved_stdout);
 
 // utils/utils_free.c
 void	safe_free(void **ptr);
