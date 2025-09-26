@@ -13,11 +13,16 @@
 #include "minishell.h"
 #include <sys/stat.h>
 
-int	ft_cd(char ***envp, char *directory)
+int	ft_cd(char ***envp, char *directory, int argc)
 {
 	int		pwd_index;
 	char	*cwd;
 
+	if (argc > 2)
+	{
+		put_stderr("cd: too many arguments\n");
+		return (EXIT_FAILURE);
+	}
 	if (!directory)
 		return (EXIT_FAILURE);
 	if (chdir(directory) != 0)
@@ -78,7 +83,7 @@ int	ft_unset(t_msh **sh, char *name)
 	int	env_len;
 
 	if (!name)
-		return (put_stderr("no value defined to unset\n"), EXIT_FAILURE);
+		return (EXIT_SUCCESS);
 	i = search_name(name, (*sh)->envp);
 	if (i == -1)
 		return (EXIT_SUCCESS);
@@ -101,7 +106,7 @@ int	execute_builtin(t_msh **sh, t_cmd *cmd)
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		ret = ft_pwd(*sh);
 	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
-		ret = ft_cd(&((*sh)->envp), cmd->argv[1]);
+		ret = ft_cd(&((*sh)->envp), cmd->argv[1], cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		ret = ft_echo(cmd->argv, cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)

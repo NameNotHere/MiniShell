@@ -6,11 +6,31 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/26 12:20:54 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/26 13:18:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+bool	is_valid_exit_code(const char *str)
+{
+	int	i;
+
+	if (!str || !*str)
+		return (false);
+	i = 0;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	if (!str[i])
+		return (false);
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (false);
+		i++;
+	}
+	return (true);
+}
 
 /*
 	TODO: should we handle some kind of error message if the exit
@@ -24,15 +44,20 @@ int	ft_exit(t_msh *sh, t_cmd cmd)
 		sh->exit_code = EXIT_FAILURE;
 		return (sh->exit_code);
 	}
-	if (cmd.argc > 1 && cmd.argv[1]
-		&& cmd.argv[1][0] != '\0'
-		&& ft_isdigit(cmd.argv[1][0]))
-		sh->exit_code = ft_atoi(cmd.argv[1]);
-	else if (cmd.argc > 1)
-		sh->exit_code = EXIT_SUCCESS;
+	if (cmd.argc > 1)
+	{
+		if (is_valid_exit_code(cmd.argv[1]))
+			sh->exit_code = ft_atoi(cmd.argv[1]);
+		else
+		{
+			put_stderr_3("exit: ", cmd.argv[1], ": numeric argument required");
+			sh->exit_code = 2;
+		}
+	}
 	exit_free_with_code(sh, sh->exit_code);
 	return (sh->exit_code);
 }
+
 /*
 	Validates variable names.
 	Returns

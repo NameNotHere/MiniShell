@@ -6,20 +6,13 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/26 12:09:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/26 13:24:35 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 #include "minishell.h"
 
-/*
-	TODO: TOKEN # MUST COINCIDE WITH ARGV #! (so inside cmd, space or quote
-	separated words MUST be equal to token number OR there must be a way to
-	convert tokens to unify the separated ones (so no loss of information about
-	space separation is allowed, or argv is not reacreatable.))
-	TODO: REMOVE PRINTF DEBUGS
-*/
 void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 {
 	ast->nty = NODE_CMD;
@@ -92,7 +85,7 @@ char	**token_words_to_argv(t_token *tokens, int start, int end)
 	i = start;
 	while (i < end)
 	{
-		if (tokens[i].word)
+		if (tokens[i].word && !is_within_redir_tokens(tokens, i))
 			argc++;
 		i++;
 	}
@@ -103,7 +96,7 @@ char	**token_words_to_argv(t_token *tokens, int start, int end)
 	token_i = start;
 	while (token_i < end && i < argc)
 	{
-		if (tokens[token_i].word)
+		if (tokens[token_i].word && !is_within_redir_tokens(tokens, token_i))
 		{
 			word = tokens[token_i].word;
 			argv[i] = remove_quotes(word, ft_strlen(word));

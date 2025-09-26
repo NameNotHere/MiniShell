@@ -209,6 +209,13 @@ void		parse_cmd(t_msh *sh, t_ast *ast, int start, int end);
 
 char		**token_words_to_argv(t_token *tokens, int start, int end);
 
+char		*remove_quotes(char *str, int len);
+
+// utils/utils_token.c
+bool		is_redir_token(t_token_ty token_type);
+bool		is_within_redir_tokens(t_token *tokens, int i);
+bool		is_valid_cmd_token(t_token_ty token_type);
+
 // parser/ast_helper.c
 
 void		free_ast(t_ast **node);
