@@ -6,26 +6,27 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 21:30:51 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/27 21:01:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "minishell_parser.h"
 
-int	expand_vars(t_msh *sh, t_var_expand *ve, char *line)
+int	expand_vars(t_msh *sh, t_var_expand *ve, char *str)
 {
-	while (line[ve->i])
+	while (str[ve->i])
 	{
-		if (handle_quotes_for_expansion(line, &ve->single_quote, &ve->double_quote, ve->i))
+		if (handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, ve->i))
 			;
-		else if ('$' == line[ve->i] && ft_valid_var_char(line[ve->i + 1]) && !ve->single_quote)
+		else if ('$' == str[ve->i] && ft_valid_var_char(str[ve->i + 1])
+			&& !ve->sgl_quote)
 		{
 			ve->var_lookup = true;
 			ve->value = ve->var_values[ve->var_i];
 			while (*ve->value)
 			{
-				ve->newline[ve->i + ve->exp_i - ve->skipped_chars] = *ve->value;
+				ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = *ve->value;
 				ve->exp_i++;
 				ve->value++;
 			}
@@ -34,37 +35,48 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *line)
 			ve->var_i++;
 		}
 		if (ve->var_lookup == false)
-			ve->newline[ve->i + ve->exp_i - ve->skipped_chars] = line[ve->i];
+			ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = str[ve->i];
 		ve->var_lookup = false;
 		ve->i++;
 	}
 	return (sh->exit_code);
 }
 
-int	expand_line(t_msh *sh)
+void	cleanup_ve(t_var_expand *ve)
 {
-	t_var_expand	ve;
-
-	ft_bzero(&ve, sizeof(t_var_expand));
-	ve.line_len = ft_strlen(sh->line);
-	if (!ve.line_len)
-		return (EXIT_SUCCESS);
-	ve.var_total = get_var_count(sh->line);
-	if (!ve.var_total)
-		return (EXIT_SUCCESS);
-	if (init_var_expand_arrays(sh, &ve) != EXIT_SUCCESS)
-		return (sh->exit_code);
-	if (catch_all_vars(sh, &ve, sh->line) != EXIT_SUCCESS)
-		return (sh->exit_code);
-	if (allocate_new_line(sh, &ve) != EXIT_SUCCESS)
-		return (sh->exit_code);
-	if (expand_vars(sh, &ve, sh->line) != EXIT_SUCCESS)
-	{
-		d_print("error on variable expansion");
-		sh->exit_code = EXIT_FAILURE;
-		return (sh->exit_code);
-	}
-	replace_line_and_cleanup(sh, &ve);
-	return (EXIT_SUCCESS);
+	safe_free_2d_string(&ve->var_names);
+	safe_free_2d_string(&ve->var_values);
+	ve->new_str = NULL;
 }
 
+/*
+ * Expand strings in given string in-place
+ * Modifies the string pointer to point to expanded result
+ * Returns true on success, false on error
+ * Caller must free the result string
+ */
+bool	expand_string_variables(t_msh *sh, char **string_ptr)
+{
+	t_var_expand	ve;
+	char			*str;
+
+	if (!string_ptr || !*string_ptr)
+		return (false);
+	str = *string_ptr;
+	ft_bzero(&ve, sizeof(t_var_expand));
+	ve.str_len = ft_strlen(str);
+	if (!ve.str_len)
+		return (true);
+	ve.var_total = get_var_count(str);
+	if (!ve.var_total)
+		return (true);
+	if (init_var_expand_arrays(sh, &ve) != EXIT_SUCCESS
+		|| catch_all_vars(sh, &ve, str) != EXIT_SUCCESS
+		|| allocate_new_str(sh, &ve) != EXIT_SUCCESS
+		|| expand_vars(sh, &ve, str) != EXIT_SUCCESS)
+		return (false);
+	free(*string_ptr);
+	*string_ptr = ve.new_str;
+	cleanup_ve(&ve);
+	return (true);
+}

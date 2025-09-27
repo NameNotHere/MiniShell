@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/26 13:24:35 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:12:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,21 +51,21 @@ char	*remove_quotes(char *str, int len)
 	char	*result;
 	int		str_i;
 	int		res_i;
-	bool	in_single_quote;
-	bool	in_double_quote;
+	bool	in_sgl_quote;
+	bool	in_dbl_quote;
 
 	if (init_remove_quotes(str, &result, len) == false)
 		return (result);
 	str_i = 0;
 	res_i = 0;
-	in_single_quote = false;
-	in_double_quote = false;
+	in_sgl_quote = false;
+	in_dbl_quote = false;
 	while (str[str_i])
 	{
-		if (str[str_i] == '\'' && !in_double_quote)
-			in_single_quote = !in_single_quote;
-		else if (str[str_i] == '"' && !in_single_quote)
-			in_double_quote = !in_double_quote;
+		if (str[str_i] == '\'' && !in_dbl_quote)
+			in_sgl_quote = !in_sgl_quote;
+		else if (str[str_i] == '"' && !in_sgl_quote)
+			in_dbl_quote = !in_dbl_quote;
 		else
 			result[res_i++] = str[str_i];
 		str_i++;

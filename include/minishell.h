@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/26 16:28:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:13:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,10 +118,9 @@ pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out);
 int		parse_line(t_msh *sh, t_ast *ast, char *string);
 
 // utils/utils_char.c
-int		ft_valid_var_char(int c);
-int		ft_is_singlequote(int c);
-int		ft_is_doublequote(int c);
-int		ft_is_quote(int c);
+bool	ft_valid_var_char(int c);
+bool	is_sgl_quote(int c);
+bool	is_dbl_quote(int c);
 
 // utils/utils_dup2.c
 void	try_dup2_stdout(t_msh *sh, int *fd_out);
@@ -166,7 +165,6 @@ char	*get_valid_cmd_full_path(char **path_dirs, char *cmd);
 char	*get_path_from_env(char **envp);
 
 // utils/utils_readine
-bool	readline_on_tty(const char *prompt, char **line);
 bool	readline_noninteract(int fd, t_readbuf *st, char **out);
 
 // utils/utils_readline_state.c

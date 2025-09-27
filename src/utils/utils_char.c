@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:03:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 18:54:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:13:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,41 +16,33 @@
 /*
 	check for valid variable characters
 	Returns
-		1 if valid
-		0 is invalid
+		true if valid
+		false if invalid
 	Note:
 		valid characters are: alphanumeric, underscore and question mark
 */
-int	ft_valid_var_char(int c)
+bool	ft_valid_var_char(int c)
 {
 	if ('?' == c)
-		return (1);
+		return (true);
 	if (ft_isalnum(c))
-		return (1);
+		return (true);
 	if ('_' == c)
-		return (1);
-	return (0);
+		return (true);
+	return (false);
 }
 
-int	ft_is_singlequote(int c)
+bool	is_sgl_quote(int c)
 {
 	if ('\'' == c)
-		return (1);
-	return (0);
+		return (true);
+	return (false);
 }
 
-int	ft_is_doublequote(int c)
+bool	is_dbl_quote(int c)
 {
 	if ('\"' == c)
-		return (1);
-	return (0);
+		return (true);
+	return (false);
 }
 
-int	ft_is_quote(int c)
-{
-	if (ft_is_singlequote(c))
-		return (1);
-	if (ft_is_doublequote(c))
-		return (1);
-	return (0);
-}

@@ -2,7 +2,6 @@
 en.subject.pdf
 *.o
 *.a
-*.out
 /parser
 /pipex
 /minishell

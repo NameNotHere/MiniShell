@@ -6,28 +6,28 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:12:44 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 21:31:05 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:12:14 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	get_var_count(char *line)
+int	get_var_count(char *str)
 {
 	int		var_count;
 	int		i;
-	bool	single_quote;
-	bool	double_quote;
+	bool	sgl_quote;
+	bool	dbl_quote;
 
 	i = 0;
-	single_quote = false;
-	double_quote = false;
+	sgl_quote = false;
+	dbl_quote = false;
 	var_count = 0;
-	while (line[i])
+	while (str[i])
 	{
-		if (handle_quotes_for_expansion(line, &single_quote, &double_quote, i))
+		if (handle_ve_quote(str, &sgl_quote, &dbl_quote, i))
 			;
-		else if ('$' == line[i] && ft_valid_var_char(line[i + 1]) && !single_quote)
+		else if ('$' == str[i] && ft_valid_var_char(str[i + 1]) && !sgl_quote)
 			var_count++;
 		i++;
 	}
@@ -83,22 +83,22 @@ int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 	return (EXIT_SUCCESS);
 }
 
-int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *line)
+int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *str)
 {
 	int	i;
 
 	i = 0;
-	while (line[i])
+	while (str[i])
 	{
-		if (line[i] == '$' && ft_valid_var_char(line[i + 1]) && !ve->single_quote)
+		if (str[i] == '$' && ft_valid_var_char(str[i + 1]) && !ve->sgl_quote)
 		{
 			ve->var_lookup = true;
 			i++;
 		}
 		if (ve->var_lookup
-			&& lookup_var(sh, ve, line[i], line[i + 1]) != EXIT_SUCCESS)
+			&& lookup_var(sh, ve, str[i], str[i + 1]) != EXIT_SUCCESS)
 			return (sh->exit_code);
-		if (handle_quotes_for_expansion(line, &ve->single_quote, &ve->double_quote, i))
+		if (handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, i))
 			;
 		i++;
 	}
