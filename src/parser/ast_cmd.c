@@ -6,20 +6,13 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/18 18:19:39 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/26 13:24:35 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 #include "minishell.h"
 
-/*
-	TODO: TOKEN # MUST COINCIDE WITH ARGV #! (so inside cmd, space or quote
-	separated words MUST be equal to token number OR there must be a way to
-	convert tokens to unify the separated ones (so no loss of information about
-	space separation is allowed, or argv is not reacreatable.))
-	TODO: REMOVE PRINTF DEBUGS
-*/
 void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 {
 	ast->nty = NODE_CMD;
@@ -28,6 +21,9 @@ void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 	if (sh->tokens[start].ty == TOKEN_INBUILT)
 		ast->cmd.built_in = true;
 	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end);
+	ast->cmd.argc = 0;
+	while (ast->cmd.argv && ast->cmd.argv[ast->cmd.argc])
+		ast->cmd.argc++;
 	return ;
 }
 
@@ -80,21 +76,41 @@ char	*remove_quotes(char *str, int len)
 char	**token_words_to_argv(t_token *tokens, int start, int end)
 {
 	int		i;
+	int		argc;
+	int		token_i;
 	char	**argv;
 	char	*word;
 
-	argv = ft_calloc(end - start + 2, sizeof(char *));
-	i = -1;
-	while (++i + start < end)
+	argc = 0;
+	i = start;
+	while (i < end)
 	{
-		word = tokens[i + start].word;
-		argv[i] = remove_quotes(word, ft_strlen(word));
+		if (tokens[i].word && !is_within_redir_tokens(tokens, i))
+			argc++;
+		i++;
 	}
-
-	i = -1;
+	argv = ft_calloc(argc + 1, sizeof(char *));
+	if (!argv)
+		return (NULL);
+	i = 0;
+	token_i = start;
+	while (token_i < end && i < argc)
+	{
+		if (tokens[token_i].word && !is_within_redir_tokens(tokens, token_i))
+		{
+			word = tokens[token_i].word;
+			argv[i] = remove_quotes(word, ft_strlen(word));
+			i++;
+		}
+		token_i++;
+	}
+	i = 0;
 	a_print(" :: argv -> ");
-	while (argv[++i] != NULL)
+	while (argv[i] != NULL)
+	{
 		a_print("|%s", argv[i]);
+		i++;
+	}
 	a_print("|\n");
 	return (argv);
 }

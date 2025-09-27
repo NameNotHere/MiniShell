@@ -1,32 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_error.c                                      :+:      :+:    :+:   */
+/*   utils_error_shell.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/08 15:04:21 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 16:42:53 by tda-roch         ###   ########.fr       */
+/*   Created: 2025/09/25 16:44:00 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/09/25 16:47:05 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "minishell.h"
 
-void	put_stderr(const char *error)
+void	put_stderr_code(t_msh *sh, const char *error, int exit_code)
 {
-	while (*error)
-		write(STDERR_FILENO, error++, 1);
-}
-
-void	put_stderr_2(const char *str1, const char *str2)
-{
-	put_stderr(str1);
-	put_stderr(str2);
-}
-
-void	put_stderr_3(const char *str1, const char *str2, const char *str3)
-{
-	put_stderr(str1);
-	put_stderr(str2);
-	put_stderr(str3);
+	put_stderr(error);
+	sh->exit_code = exit_code;
 }

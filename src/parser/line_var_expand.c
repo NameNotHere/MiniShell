@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/08/28 12:09:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/25 21:30:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *line)
 	{
 		if (handle_single_quote(line, &ve->single_quote, ve->i))
 			;
-		else if ('$' == line[ve->i] && ft_isalnum_underscore(line[ve->i + 1]))
+		else if ('$' == line[ve->i] && ft_valid_var_char(line[ve->i + 1]))
 		{
 			ve->var_lookup = true;
 			ve->value = ve->var_values[ve->var_i];
@@ -38,7 +38,6 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *line)
 		ve->var_lookup = false;
 		ve->i++;
 	}
-	d_print("new_line made: %s\n", ve->newline);
 	return (sh->exit_code);
 }
 
@@ -55,7 +54,6 @@ int	expand_line(t_msh *sh)
 		return (EXIT_SUCCESS);
 	if (init_var_expand_arrays(sh, &ve) != EXIT_SUCCESS)
 		return (sh->exit_code);
-	d_print("line before expanding is:%s\n", sh->line);
 	if (catch_all_vars(sh, &ve, sh->line) != EXIT_SUCCESS)
 		return (sh->exit_code);
 	if (allocate_new_line(sh, &ve) != EXIT_SUCCESS)

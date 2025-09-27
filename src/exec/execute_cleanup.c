@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:23:15 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 15:56:35 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/26 11:17:35 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,5 @@ void	shell_line_cleanup(t_msh *sh)
 	free_ast(&sh->ast);
 	sh->ast = make_ast_node(NODE_UNKNOWN);
 	safe_free_string(&sh->line);
+	sh->saved_exit_code = sh->exit_code;
 }

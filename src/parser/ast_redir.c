@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:13:32 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/08/28 13:13:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/26 13:33:33 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ TODO: remove printfs, add error handling
 TODO: check when empty command is valid, if always (redir only is valid in bash)s
 */
 
-int invalid_redir(t_msh *sh, int i)
+int	invalid_redir(t_msh *sh, int i)
 {
 	if (i <= 0 || !sh->tokens[i + 1].word)
 		return (1);
@@ -26,7 +26,7 @@ int invalid_redir(t_msh *sh, int i)
 	i++;
 	if (get_redir_type(sh->tokens[i].ty) != REDIR_UNKNOWN)
 		return (1);
-	if (ft_strchr("&;()*?#",(int)(sh->tokens[i].word[0])))
+	if (ft_strchr("&;()*?#", (int)(sh->tokens[i].word[0])))
 		return (1);
 	return (0);
 }
@@ -34,45 +34,26 @@ int invalid_redir(t_msh *sh, int i)
 void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 {
 	int				i;
-	int				last_node_token;
-	int				cmd_count;
-	bool			before_cmd;
+	bool			cmd_found;
 
-	cmd_count = 0;
 	i = *start - 1;
-	last_node_token = *end;
-	before_cmd = true;
-	while (++i < last_node_token)
+	cmd_found = false;
+	while (++i < *end)
 	{
-		if (sh->tokens[i].ty == TOKEN_INPUT || \
-			sh->tokens[i].ty == TOKEN_HEREDOC || \
-			sh->tokens[i].ty == TOKEN_APPEND || \
-			sh->tokens[i].ty == TOKEN_OUTPUT)
+		if (is_redir_token(sh->tokens[i].ty))
 		{
 			if (invalid_redir(sh, i) == 1)
 			{
 				a_print(" ***ERROR*** \n\t\tinvalid redirection");
 				break ;
 			}
-			if (!before_cmd)
-				*end = i;
-			before_cmd = true;
 			add_redir(ast, sh->tokens[i].ty, sh->tokens[i + 1].word);
 			i++;
 		}
-		else
+		else if (!cmd_found)
 		{
-			if (before_cmd)
-			{
-				cmd_count++;
-				before_cmd = false;
-				*start = i;
-				if (cmd_count > 1)
-					a_print(" *** ERROR *** "\
-					"invalid syntax, multiple commands!\n");
-				else
-					*start = i;
-			}
+			*start = i;
+			cmd_found = true;
 		}
 	}
 }
@@ -87,7 +68,7 @@ void	add_redir(t_ast *ast, t_token_ty token_type, char *word)
 	new_redir = ft_calloc(1, sizeof(t_redir));
 	if (!new_redir)
 		return ;
-	new_redir->string = ft_strdup(word);
+	new_redir->string = remove_quotes(word, ft_strlen(word));
 	if (!new_redir->string)
 	{
 		free(new_redir);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 14:48:28 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/26 10:32:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int	initialize_minishell(t_msh *sh, int argc, char **argv, char **envp)
 {
 	ft_bzero(sh, sizeof(*sh));
 	sh->envp = copy_string_array(envp);
-	sh->ast = make_ast_node(NODE_UNKNOWN);
 	sh->path_dirs = ft_split(get_path_from_env(sh->envp), ':');
 	if (argc > 1)
 	{
@@ -72,29 +71,20 @@ t_flow	cycle_loop(t_msh *sh)
 	if (g_sig == SIGINT)
 	{
 		sh->exit_code = 130;
-		safe_free_string(&sh->line);
 		return (CONTINUE_FLOW);
 	}
-	if (!*sh->line && make_string_free(&sh->line))
+	if (!*sh->line)
 		return (CONTINUE_FLOW);
 	if (unclosed_quotes(sh->line))
-	{
-		put_stderr("error: unclosed quotes\n");
-		sh->exit_code = 2;
-		safe_free_string(&sh->line);
-		return (CONTINUE_FLOW);
-	}
+		return (put_stderr_code(sh, "error: unclosed quotes\n", 2),
+			CONTINUE_FLOW);
 	if (sh->is_interact)
 		add_history(sh->line);
-	if (expand_line(sh) != EXIT_SUCCESS && make_string_free(&sh->line))
+	if (expand_line(sh) != EXIT_SUCCESS)
 		return (CONTINUE_FLOW);
 	if (parse_line(sh, sh->ast, sh->line) != EXIT_SUCCESS)
-	{
-		put_stderr("parse line failed\n");
-		safe_free_string(&sh->line);
-		return (CONTINUE_FLOW);
-	}
-	return (STAY_FLOW);
+		return (put_stderr("parse line failed\n"), CONTINUE_FLOW);
+	return (EXEC_FLOW);
 }
 
 int	minishell_mainloop(t_msh *sh)
@@ -103,13 +93,14 @@ int	minishell_mainloop(t_msh *sh)
 
 	while (true)
 	{
+		shell_line_cleanup(sh);
 		flow = cycle_loop(sh);
 		if (flow == BREAK_FLOW)
 			break ;
-		if (flow == CONTINUE_FLOW)
+		else if (flow == CONTINUE_FLOW)
 			continue ;
-		exec_ast(sh, sh->ast, STDIN_FILENO, STDOUT_FILENO);
-		shell_line_cleanup(sh);
+		sh->exit_code = exec_ast(sh, sh->ast, STDIN_FILENO, STDOUT_FILENO);
+		sh->saved_exit_code = sh->exit_code;
 	}
 	free_everything(sh);
 	return (sh->exit_code);

@@ -41,6 +41,7 @@ SRCS = 	signals/signals.c \
 	exec/execute.c \
 	exec/execute_cleanup.c \
 	exec/execute_cmd.c \
+	exec/execute_cmd_single.c \
 	exec/execute_cmd_redir.c \
 	exec/execute_cmd_redir_open.c \
 	exec/heredoc.c \
@@ -64,10 +65,12 @@ SRCS = 	signals/signals.c \
 	utils/utils_char.c \
 	utils/utils_dup2.c \
 	utils/utils_error.c \
+	utils/utils_error_shell.c \
 	utils/utils_exit.c \
 	utils/utils_fd.c \
 	utils/utils_env.c \
 	utils/ft_strndup.c \
+	utils/ft_strcmp.c \
 	utils/utils_free.c \
 	utils/unclosed_quotes.c \
 	utils/ft_realloc.c \
@@ -76,6 +79,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_readline_state.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
+	utils/utils_token.c \
 	utils/envp_assistance_array.c \
 	debug/ast_print.c \
 	debug/process_debug.c \

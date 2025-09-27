@@ -6,18 +6,23 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 21:59:54 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:22:25 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <sys/stat.h>
 
-int	ft_cd(char ***envp, char *directory)
+int	ft_cd(char ***envp, char *directory, int argc)
 {
 	int		pwd_index;
 	char	*cwd;
 
+	if (argc > 2)
+	{
+		put_stderr("cd: too many arguments\n");
+		return (EXIT_FAILURE);
+	}
 	if (!directory)
 		return (EXIT_FAILURE);
 	if (chdir(directory) != 0)
@@ -78,7 +83,7 @@ int	ft_unset(t_msh **sh, char *name)
 	int	env_len;
 
 	if (!name)
-		return (put_stderr("no value defined to unset\n"), EXIT_FAILURE);
+		return (EXIT_SUCCESS);
 	i = search_name(name, (*sh)->envp);
 	if (i == -1)
 		return (EXIT_SUCCESS);
@@ -95,22 +100,22 @@ int	ft_unset(t_msh **sh, char *name)
 
 int	execute_builtin(t_msh **sh, t_cmd *cmd)
 {
-	int	ret;	
+	int	ret;
 
-	if (ft_strncmp(cmd->argv[0], "pwd", 3) == 0)
+	ret = EXIT_SUCCESS;
+	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		ret = ft_pwd(*sh);
-	else if (ft_strncmp(cmd->argv[0], "cd", 2) == 0)
-		ret = ft_cd(&((*sh)->envp), cmd->argv[1]);
-	else if (ft_strncmp(cmd->argv[0], "echo", 4) == 0)
-		ret = ft_echo(cmd->argv);
-	else if (ft_strncmp(cmd->argv[0], "env", 3) == 0)
+	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
+		ret = ft_cd(&((*sh)->envp), cmd->argv[1], cmd->argc);
+	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
+		ret = ft_echo(cmd->argv, cmd->argc);
+	else if (ft_strcmp(cmd->argv[0], "env") == 0)
 		ret = ft_env(**sh);
-	else if (ft_strncmp(cmd->argv[0], "export", 4) == 0)
+	else if (ft_strcmp(cmd->argv[0], "export") == 0)
 		ret = ft_export(sh, *cmd);
-	else if (ft_strncmp(cmd->argv[0], "unset", 5) == 0)
+	else if (ft_strcmp(cmd->argv[0], "unset") == 0)
 		ret = ft_unset(sh, cmd->argv[1]);
-	else if (ft_strncmp(cmd->argv[0], "exit", 4) == 0)
+	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
 		ret = ft_exit(*sh, *cmd);
-	(*sh)->exit_code = ret;
 	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/07/07 19:13:57 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/25 21:30:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	allocate_new_line(t_msh *sh, t_var_expand *ve)
 	if (callo_x((void **)&ve->newline, new_line_len + 1, sizeof(char))
 		!= EXIT_SUCCESS)
 	{
-		d_print("new_line allocation failed\n");
+		put_stderr("new_line allocation failed\n");
 		sh->exit_code = ENOMEM;
 		if (errno)
 			sh->exit_code = errno;

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/23 16:42:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:33:25 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,10 @@ typedef struct s_cmd
 {
 	char		*full_cmd;
 	char		**argv;
+	int			argc;
 	bool		built_in;
 	bool		not_found;
+	bool		permission_denied;
 	t_redir		*redir;
 }	t_cmd;
 
@@ -186,6 +188,7 @@ typedef struct s_msh
 	char		*line;
 	int			err;
 	int			exit_code;
+	int			saved_exit_code;
 	pid_t		last_pid;
 	bool		is_interact;
 	int			script_fd;
@@ -194,115 +197,80 @@ typedef struct s_msh
 
 // parser/ast.c
 int			build_ast(t_msh *sh, t_ast *ast, t_token *tokens);
-
 int			scan_tokens(t_msh *sh, t_ast *ast, int start, int end);
-
 void		scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i);
-
 void		parse_pipe(t_msh *sh, t_ast *ast, int start, int end);
 
 // parser/ast_cmd.c
-
 void		parse_cmd(t_msh *sh, t_ast *ast, int start, int end);
-
 char		**token_words_to_argv(t_token *tokens, int start, int end);
+char		*remove_quotes(char *str, int len);
+
+// utils/utils_token.c
+bool		is_redir_token(t_token_ty token_type);
+bool		is_within_redir_tokens(t_token *tokens, int i);
+bool		is_valid_cmd_token(t_token_ty token_type);
 
 // parser/ast_helper.c
-
 void		free_ast(t_ast **node);
-
 void		free_ast_cmd(t_ast *node);
-
 bool		has_pipe(t_token *tokens, int start, int end);
-
 int			last_token(t_token *tokens);
-
 t_ast		*make_ast_node(t_node_ty ty);
 
 // parser/ast_redir.c
-
 void		add_redir(t_ast *ast, t_token_ty token_type, char *word);
-
 t_redir_ty	get_redir_type(t_token_ty ty);
-
 void		parse_redir(t_msh *sh, t_ast *ast, int *start, int *end);
 
 // parser/lex.c
-
 int			count_tokens(char *str);
-
 const char	*get_token_name(t_token_ty type);
-
 const char	*get_token_name_continued(t_token_ty type);
-
 char		*make_word(char *str, int *i, int *err);
-
 int			skip_spaces(int *i, char *str);
 
 // parser/line_var_expand_catch.c
-
 int			get_var_count(char *line);
-
 int			catch_all_vars(t_msh *sh, t_var_expand *ve, char *line);
 
 // parser/line_var_expand.c
-
 int			expand_line(t_msh *sh);
 
 // parser/line_var_expand_helper.c
-
 bool		handle_single_quote(char *line, bool *single_quote, int i);
-
 int			init_var_expand_arrays(t_msh *sh, t_var_expand *ve);
-
 int			allocate_new_line(t_msh *sh, t_var_expand *ve);
-
 void		reset_var_lookup(t_var_expand *ve);
-
 void		replace_line_and_cleanup(t_msh *sh, t_var_expand *ve);
 
 // parser/tokenize.c
-
 const char	*get_token_name(t_token_ty type);
-
 int			is_builtin(char *str);
-
 t_token		*tokenize(char *input, int *token_count, int *err);
-
 void		free_tokens(t_token **tokens, int amount);
 
 // parser/tokenise.c
 int			is_file_path(char *str, int *y);
-
 int			search_for_singlequote(char *str);
-
 void		tokenise_quotes(char *str, t_token *output);
-
 void		tokenise_redirs(char *str, t_token *output);
-
 void		free_tokens(t_token **tokens, int amount);
 
 // utils/parser_isminioperator.c
-
 int			isminioperator(char *token, int i);
 
 // utils/parser_line.c
-
 bool		piped_line(char *line);
 
 // errors
 void		int_closed(char *str, int i, char quote);
-
+int			ft_strcmp(const char *s1, const char *s2);
 void		*ft_malloc(size_t amount, size_t size);
-
 int			callo_x(void **ptr, size_t nmemb, size_t size);
-
 int			mallo_x(void **ptr, size_t nmemb, size_t size);
-
 int			is_closed(char *str, int i, char quote);
-
 int			unclosed_token(char *str, char token);
-
 int			validate_pipe_syntax(t_token *tokens, int start, int end);
 
 #endif

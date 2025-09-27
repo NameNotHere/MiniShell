@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 14:44:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/26 16:28:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ typedef enum e_err_code
 
 typedef enum e_flow
 {
-	STAY_FLOW,
+	EXEC_FLOW,
 	CONTINUE_FLOW,
 	BREAK_FLOW
 }	t_flow;
@@ -69,7 +69,7 @@ int		minishell_mainloop(t_msh *sh);
 int		execute_builtin(t_msh **sh, t_cmd *cmd);
 
 // builtins_echo.c
-int		ft_echo(char **argv);
+int		ft_echo(char **argv, int argc);
 
 // builtins_exit_export.c
 int		ft_exit(t_msh *sh, t_cmd cmd);
@@ -85,13 +85,16 @@ void	shell_line_cleanup(t_msh *sh);
 
 // exec/execute_cmd.c
 int		execute_command(t_msh *sh, t_cmd *cmd);
-int		exec_single_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
-void	exec_single_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd);
 void	exec_left(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2]);
 void	exec_right(t_msh *sh, t_ast *node, int pipefd[2], int *fd_in_out[2]);
 
+// exec/execute_cmd_single.c
+int		exec_single_cmd_node(t_msh *sh, t_cmd *cmd, int fd_in, int fd_out);
+void	exec_single_cmd_in_child(t_msh *sh, int fd_in, int fd_out, t_cmd *cmd);
+int		exec_single_builtin(t_msh *sh, t_cmd *cmd);
+
 // exec/execute_cmd_redir.c
-void	execute_redirection(t_msh *sh, t_redir *redir);
+bool	execute_redirection(t_msh *sh, t_redir *redir);
 
 // exec/execute_cmd_redir_open.c
 int		open_input_redirection(t_msh *sh, char *filename);
@@ -115,7 +118,7 @@ pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out);
 int		parse_line(t_msh *sh, t_ast *ast, char *string);
 
 // utils/utils_char.c
-int		ft_isalnum_underscore(int c);
+int		ft_valid_var_char(int c);
 int		ft_is_singlequote(int c);
 int		ft_is_doublequote(int c);
 int		ft_is_quote(int c);
@@ -134,6 +137,9 @@ void	put_stderr(const char *error);
 void	put_stderr_2(const char *str1, const char *str2);
 void	put_stderr_3(const char *str1, const char *str2, const char *str3);
 
+// utils/utils_error_shell.c
+void	put_stderr_code(t_msh *sh, const char *error, int exit_code);
+
 // utils/utils/exit.c
 void	close_fds_exit_error_free(t_msh *sh, const char *error, int *fd_in,
 			int *fd_out);
@@ -146,6 +152,8 @@ void	safe_close_fd(int *fd);
 void	safe_close_2_fds(int *fd_one, int *fd_two);
 void	safe_close_4_fds(int *fd_one, int *fd_two, int *fd_three, int *fd_four);
 int		cleanup_all_fds(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
+bool	save_std_fds(int *saved_stdin, int *saved_stdout);
+void	restore_std_fds(int saved_stdin, int saved_stdout);
 
 // utils/utils_free.c
 void	safe_free(void **ptr);
@@ -178,6 +186,9 @@ bool	make_string_free(char **string);
 char	**copy_string_array(char **strings);
 int		ft_strlen_array(char **array);
 
+// utils/utils_token.c
+bool	is_valid_cmd_token(t_token_ty token_type);
+
 // filenavs.c
 char	*cd(char *path, char *new_path);
 void	pwd(char **path_dirs);
@@ -193,9 +204,12 @@ int		envp_len(char **envp);
 // utils/ft_strndup
 char	*ft_strndup(const char *src, int size);
 
+// utils/ft_strcmp
+int		ft_strcmp(const char *s1, const char *s2);
+
 //is_builtin.c
 int		is_builtin(char *str);
-int		ft_echo(char **argv);
+int		ft_echo(char **argv, int argc);
 int		ft_export(t_msh **sh, t_cmd cmd);
 
 // utils/ft_realloc

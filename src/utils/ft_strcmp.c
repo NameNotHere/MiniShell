@@ -1,32 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_error.c                                      :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/08 15:04:21 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 16:42:53 by tda-roch         ###   ########.fr       */
+/*   Created: 2025/09/26 10:33:14 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/09/26 11:49:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "minishell.h"
 
-void	put_stderr(const char *error)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	while (*error)
-		write(STDERR_FILENO, error++, 1);
-}
+	int	i;
 
-void	put_stderr_2(const char *str1, const char *str2)
-{
-	put_stderr(str1);
-	put_stderr(str2);
-}
-
-void	put_stderr_3(const char *str1, const char *str2, const char *str3)
-{
-	put_stderr(str1);
-	put_stderr(str2);
-	put_stderr(str3);
+	if (!s1 || !s2)
+		return (s1 - s2);
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

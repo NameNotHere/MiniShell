@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 06:11:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/21 02:26:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/26 14:31:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ void	lookup_cmd_fullpath(t_msh *sh, t_cmd *cmd)
 		cmd->full_cmd = ft_strdup(cmd->argv[0]);
 		if (cmd->full_cmd == NULL)
 			cmd->full_cmd = get_empty_string();
-		cmd->not_found = true;
+		if (ft_strchr(cmd->argv[0], '/') && !access(cmd->argv[0], F_OK))
+			cmd->permission_denied = true;
+		else
+			cmd->not_found = true;
 	}
 }
 

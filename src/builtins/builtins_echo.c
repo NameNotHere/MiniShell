@@ -12,6 +12,22 @@
 
 #include "minishell.h"
 
+static bool	is_valid_n_flag(const char *arg)
+{
+	int	i;
+
+	if (!arg || arg[0] != '-' || arg[1] != 'n')
+		return (false);
+	i = 2;
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
 static void	ft_echo_arg(char **argv, int *arg_i, bool *first_content)
 {
 	int		content_i;
@@ -28,7 +44,7 @@ static void	ft_echo_arg(char **argv, int *arg_i, bool *first_content)
 	(*arg_i)++;
 }
 
-int	ft_echo(char **argv)
+int	ft_echo(char **argv, int argc)
 {
 	int		arg_i;
 	bool	first_content;
@@ -37,12 +53,12 @@ int	ft_echo(char **argv)
 	first_content = true;
 	has_n_flag = false;
 	arg_i = 1;
-	while (argv[arg_i] && ft_strncmp(argv[arg_i], "-n", 2) == 0)
+	while (arg_i < argc && argv[arg_i] && is_valid_n_flag(argv[arg_i]))
 	{
 		has_n_flag = true;
 		arg_i++;
 	}
-	while (argv[arg_i])
+	while (arg_i < argc && argv[arg_i])
 		ft_echo_arg(argv, &arg_i, &first_content);
 	if (!has_n_flag)
 		write(1, "\n", 1);
