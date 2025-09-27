@@ -17,15 +17,17 @@ int	get_var_count(char *line)
 	int		var_count;
 	int		i;
 	bool	single_quote;
+	bool	double_quote;
 
 	i = 0;
 	single_quote = false;
+	double_quote = false;
 	var_count = 0;
 	while (line[i])
 	{
-		if (handle_single_quote(line, &single_quote, i))
+		if (handle_quotes_for_expansion(line, &single_quote, &double_quote, i))
 			;
-		else if ('$' == line[i] && ft_valid_var_char(line[i + 1]))
+		else if ('$' == line[i] && ft_valid_var_char(line[i + 1]) && !single_quote)
 			var_count++;
 		i++;
 	}
@@ -88,7 +90,7 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *line)
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == '$' && ft_valid_var_char(line[i + 1]))
+		if (line[i] == '$' && ft_valid_var_char(line[i + 1]) && !ve->single_quote)
 		{
 			ve->var_lookup = true;
 			i++;
@@ -96,7 +98,7 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *line)
 		if (ve->var_lookup
 			&& lookup_var(sh, ve, line[i], line[i + 1]) != EXIT_SUCCESS)
 			return (sh->exit_code);
-		if (handle_single_quote(line, &ve->single_quote, i))
+		if (handle_quotes_for_expansion(line, &ve->single_quote, &ve->double_quote, i))
 			;
 		i++;
 	}
