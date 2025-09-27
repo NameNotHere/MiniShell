@@ -12,6 +12,34 @@
 
 #include "minishell.h"
 
+bool	handle_quotes_for_expansion(char *line, bool *single_quote, bool *double_quote, int i)
+{
+	bool	handled;
+
+	handled = false;
+	if (*single_quote && ft_is_singlequote(line[i]))
+	{
+		*single_quote = false;
+		handled = true;
+	}
+	else if (*double_quote && ft_is_doublequote(line[i]))
+	{
+		*double_quote = false;
+		handled = true;
+	}
+	else if (!*single_quote && !*double_quote && ft_is_singlequote(line[i]))
+	{
+		*single_quote = true;
+		handled = true;
+	}
+	else if (!*single_quote && ft_is_doublequote(line[i]))
+	{
+		*double_quote = true;
+		handled = true;
+	}
+	return (handled);
+}
+
 bool	handle_single_quote(char *line, bool *single_quote, int i)
 {
 	if (*single_quote && ft_is_singlequote(line[i]))

@@ -173,6 +173,7 @@ typedef struct s_var_expand
 	int		exp_i;
 	int		skipped_chars;
 	bool	single_quote;
+	bool	double_quote;
 	bool	var_lookup;
 	char	**var_names;
 	char	**var_values;
@@ -239,6 +240,7 @@ int			expand_line(t_msh *sh);
 
 // parser/line_var_expand_helper.c
 bool		handle_single_quote(char *line, bool *single_quote, int i);
+bool		handle_quotes_for_expansion(char *line, bool *single_quote, bool *double_quote, int i);
 int			init_var_expand_arrays(t_msh *sh, t_var_expand *ve);
 int			allocate_new_line(t_msh *sh, t_var_expand *ve);
 void		reset_var_lookup(t_var_expand *ve);

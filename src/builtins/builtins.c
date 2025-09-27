@@ -25,6 +25,11 @@ int	ft_cd(char ***envp, char *directory, int argc)
 	}
 	if (!directory)
 		return (EXIT_FAILURE);
+	if (directory[0] == '~')
+	{
+		put_stderr("cd: tilde expansion not supported (use absolute/relative paths)\n");
+		return (EXIT_FAILURE);
+	}
 	if (chdir(directory) != 0)
 	{
 		perror("cd");

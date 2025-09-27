@@ -17,9 +17,9 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *line)
 {
 	while (line[ve->i])
 	{
-		if (handle_single_quote(line, &ve->single_quote, ve->i))
+		if (handle_quotes_for_expansion(line, &ve->single_quote, &ve->double_quote, ve->i))
 			;
-		else if ('$' == line[ve->i] && ft_valid_var_char(line[ve->i + 1]))
+		else if ('$' == line[ve->i] && ft_valid_var_char(line[ve->i + 1]) && !ve->single_quote)
 		{
 			ve->var_lookup = true;
 			ve->value = ve->var_values[ve->var_i];
