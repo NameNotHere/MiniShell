@@ -21,12 +21,19 @@
 	pipe (stripped of newline char).
 	If failed, returns NULL.
 */
+// ...existing code...
+
+#include <stdbool.h>
+
 char	*get_shell_line(t_msh *sh, char *prompt)
 {
 	char	*line;
+	char	*full;
+	char	*tmp;
 	int		input_fd;
 
 	line = NULL;
+	full = NULL;
 	if (sh->is_interact)
 	{
 		g_sig = 0;
@@ -38,13 +45,25 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 		}
 		rl_event_hook = event_hook_sigint_return;
 		line = readline(prompt);
+		if (!line)
+			return (NULL);
+		full = ft_strdup(line);
+		while (unclosed_quotes(full))
+		{
+			safe_free_string(&line);
+			line = readline("unclosed quotes> ");
+			if (!line)
+				break ;
+			tmp = ft_strjoin3(full, "\n", line);
+			safe_free_string(&full);
+			full = tmp;
+		}
+		safe_free_string(&line);
+		return (full);
 	}
 	else
 	{
-		if (sh->script_fd >= 0)
-			input_fd = sh->script_fd;
-		else
-			input_fd = STDIN_FILENO;
+		input_fd = (sh->script_fd >= 0) ? sh->script_fd : STDIN_FILENO;
 		if (g_sig != SIGINT && g_sig != SIGQUIT
 			&& set_ignore_sig()
 			&& readline_noninteract(input_fd, &sh->readbuf, &line) == false)
@@ -53,6 +72,7 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 	return (line);
 }
 
+// ...existing code...
 /*
 	Adds a line to a string, after newline char.
 	If string is NULL, string is copy of the line.

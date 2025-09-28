@@ -98,8 +98,7 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *str)
 		if (ve->var_lookup
 			&& lookup_var(sh, ve, str[i], str[i + 1]) != EXIT_SUCCESS)
 			return (sh->exit_code);
-		if (handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, i))
-			;
+		handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, i);
 		i++;
 	}
 	ve->var_i = 0;
