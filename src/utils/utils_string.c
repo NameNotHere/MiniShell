@@ -63,7 +63,10 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 	}
 	else
 	{
-		input_fd = (sh->script_fd >= 0) ? sh->script_fd : STDIN_FILENO;
+		if (sh->script_fd >= 0)
+			input_fd = sh->script_fd;
+		else
+			input_fd = STDIN_FILENO;
 		if (g_sig != SIGINT && g_sig != SIGQUIT
 			&& set_ignore_sig()
 			&& readline_noninteract(input_fd, &sh->readbuf, &line) == false)
