@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 06:00:11 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:06:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 char	*hdoc_loop(t_msh *sh, t_redir *redir)
 {
-	char	*hdoc_line;
 	char	*hdoc_string;
+	char	*hdoc_line;
 
 	hdoc_string = NULL;
 	if (!set_heredoc_sig())
@@ -34,6 +34,12 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 		{
 			safe_free_string(&hdoc_line);
 			continue ;
+		}
+		if (!redir->quoted && !expand_string_variables(sh, &hdoc_line))
+		{
+			sh->exit_code = EXIT_FAILURE;
+			safe_free_string(&hdoc_line);
+			break ;
 		}
 		if (ft_strcmp(redir->string, hdoc_line) == 0)
 		{

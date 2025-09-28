@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 16:22:25 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:06:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ int	ft_cd(char ***envp, char *directory, int argc)
 		return (EXIT_FAILURE);
 	if (directory[0] == '~')
 	{
-		put_stderr("cd: tilde expansion not supported (use absolute/relative paths)\n");
+		put_stderr("cd: tilde expansion not supported "
+			"(use absolute/relative paths)\n");
 		return (EXIT_FAILURE);
 	}
 	if (chdir(directory) != 0)
@@ -51,11 +52,16 @@ int	ft_cd(char ***envp, char *directory, int argc)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_pwd(t_msh *sh)
+int	ft_pwd(t_msh *sh, t_cmd *cmd)
 {
 	int	i;
 	int	equal;
 
+	if (cmd->argc > 1)
+	{
+		put_stderr("pwd: too many arguments\n");
+		return (EXIT_FAILURE);
+	}
 	i = search_name("PWD", sh->envp);
 	if (i == -1)
 	{
@@ -68,10 +74,15 @@ int	ft_pwd(t_msh *sh)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_env(t_msh sh)
+int	ft_env(t_msh sh, t_cmd *cmd)
 {
 	int	i;
 
+	if (cmd->argc > 1)
+	{
+		put_stderr("env: arguments not supported\n");
+		return (EXIT_FAILURE);
+	}
 	i = 0;
 	while (sh.envp[i])
 	{
@@ -109,13 +120,13 @@ int	execute_builtin(t_msh **sh, t_cmd *cmd)
 
 	ret = EXIT_SUCCESS;
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
-		ret = ft_pwd(*sh);
+		ret = ft_pwd(*sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
 		ret = ft_cd(&((*sh)->envp), cmd->argv[1], cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		ret = ft_echo(cmd->argv, cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
-		ret = ft_env(**sh);
+		ret = ft_env(**sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "export") == 0)
 		ret = ft_export(sh, *cmd);
 	else if (ft_strcmp(cmd->argv[0], "unset") == 0)

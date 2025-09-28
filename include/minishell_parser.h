@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/26 14:33:25 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 14:59:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ typedef enum e_token_ty
 	TOKEN_BACKSLASH,
 	TOKEN_AND,
 	TOKEN_OR,
-	TOKEN_EQUAL,
 	UNCLOSED_DOUBLE_QUOTE,
 	UNCLOSED_SINGLE_QUOTE,
 	TOKEN_LAST
@@ -113,6 +112,7 @@ typedef struct s_redir
 	t_redir_ty		ty;
 	char			*string;
 	int				fd;
+	bool			quoted;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -162,18 +162,18 @@ typedef struct s_envp
 typedef struct s_var_expand
 {
 	char	var_name_buffer[ENV_VAR_NAME_MAX];
-	char	*newline;
+	char	*new_str;
 	char	*value;
 	int		i;
-	int		line_len;
+	int		str_len;
 	int		var_total;
 	int		var_i;
 	int		var_name_i;
 	int		envp_var_i;
 	int		exp_i;
 	int		skipped_chars;
-	bool	single_quote;
-	bool	double_quote;
+	bool	sgl_quote;
+	bool	dbl_quote;
 	bool	var_lookup;
 	char	**var_names;
 	char	**var_values;
@@ -232,19 +232,18 @@ char		*make_word(char *str, int *i, int *err);
 int			skip_spaces(int *i, char *str);
 
 // parser/line_var_expand_catch.c
-int			get_var_count(char *line);
-int			catch_all_vars(t_msh *sh, t_var_expand *ve, char *line);
+int			get_var_count(char *str);
+int			catch_all_vars(t_msh *sh, t_var_expand *ve, char *str);
 
 // parser/line_var_expand.c
-int			expand_line(t_msh *sh);
+bool		expand_string_variables(t_msh *sh, char **string_ptr);
 
 // parser/line_var_expand_helper.c
-bool		handle_single_quote(char *line, bool *single_quote, int i);
-bool		handle_quotes_for_expansion(char *line, bool *single_quote, bool *double_quote, int i);
+bool		handle_sgl_quote(char *str, bool *sgl_quote, int i);
+bool		handle_ve_quote(char *str, bool *sgl_quote, bool *dbl_quote, int i);
 int			init_var_expand_arrays(t_msh *sh, t_var_expand *ve);
-int			allocate_new_line(t_msh *sh, t_var_expand *ve);
+int			allocate_new_str(t_msh *sh, t_var_expand *ve);
 void		reset_var_lookup(t_var_expand *ve);
-void		replace_line_and_cleanup(t_msh *sh, t_var_expand *ve);
 
 // parser/tokenize.c
 const char	*get_token_name(t_token_ty type);
@@ -265,7 +264,7 @@ int			isminioperator(char *token, int i);
 // utils/parser_line.c
 bool		piped_line(char *line);
 
-// errors
+// parser/errors.c
 void		int_closed(char *str, int i, char quote);
 int			ft_strcmp(const char *s1, const char *s2);
 void		*ft_malloc(size_t amount, size_t size);
@@ -273,6 +272,15 @@ int			callo_x(void **ptr, size_t nmemb, size_t size);
 int			mallo_x(void **ptr, size_t nmemb, size_t size);
 int			is_closed(char *str, int i, char quote);
 int			unclosed_token(char *str, char token);
+
+// parser/parser_validation.c
 int			validate_pipe_syntax(t_token *tokens, int start, int end);
+int			validate_semicolon_syntax(t_token *tokens);
+bool		has_complex_heredoc_delimiter(char *line);
+
+// utils/utils_error.c
+void		put_stderr(const char *error);
+void		put_stderr_2(const char *str1, const char *str2);
+void		put_stderr_3(const char *str1, const char *str2, const char *str3);
 
 #endif

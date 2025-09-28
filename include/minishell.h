@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/26 16:28:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 14:59:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef enum e_err_code
 
 # define E_INVALID_REDIR_MSG "syntax error: invalid redirection, missing string"
 # define E_MULTIPLE_MSG "syntax error: multiple commands"
+# define E_SEMICOLON_MSG "minishell: syntax error near unexpected token `;'\n"
 
 typedef enum e_flow
 {
@@ -67,6 +68,8 @@ int		minishell_mainloop(t_msh *sh);
 
 // builtins.c
 int		execute_builtin(t_msh **sh, t_cmd *cmd);
+int		ft_pwd(t_msh *sh, t_cmd *cmd);
+int		ft_env(t_msh sh, t_cmd *cmd);
 
 // builtins_echo.c
 int		ft_echo(char **argv, int argc);
@@ -118,10 +121,9 @@ pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out);
 int		parse_line(t_msh *sh, t_ast *ast, char *string);
 
 // utils/utils_char.c
-int		ft_valid_var_char(int c);
-int		ft_is_singlequote(int c);
-int		ft_is_doublequote(int c);
-int		ft_is_quote(int c);
+bool	ft_valid_var_char(int c);
+bool	is_sgl_quote(int c);
+bool	is_dbl_quote(int c);
 
 // utils/utils_dup2.c
 void	try_dup2_stdout(t_msh *sh, int *fd_out);
@@ -131,11 +133,6 @@ void	try_dup2(t_msh *sh, int *fd_in, int *fd_out);
 // utils/utils_env.c
 bool	is_var_in_env(t_msh *sh, char *var, int *envp_index);
 char	*get_env_value(t_msh *sh, char *var_name, int envp_index);
-
-// utils/utils_error.c
-void	put_stderr(const char *error);
-void	put_stderr_2(const char *str1, const char *str2);
-void	put_stderr_3(const char *str1, const char *str2, const char *str3);
 
 // utils/utils_error_shell.c
 void	put_stderr_code(t_msh *sh, const char *error, int exit_code);
@@ -166,7 +163,6 @@ char	*get_valid_cmd_full_path(char **path_dirs, char *cmd);
 char	*get_path_from_env(char **envp);
 
 // utils/utils_readine
-bool	readline_on_tty(const char *prompt, char **line);
 bool	readline_noninteract(int fd, t_readbuf *st, char **out);
 
 // utils/utils_readline_state.c

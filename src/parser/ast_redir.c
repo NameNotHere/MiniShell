@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:13:32 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/26 13:33:33 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:14:44 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,45 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 		}
 	}
 }
+// TODO: add to utils folder or something, this is very generic to be here
+bool	has_quotes(const char *str)
+{
+	if (!str)
+		return (false);
+	while (*str)
+	{
+		if (*str == '"' || *str == '\'')
+			return (true);
+		str++;
+	}
+	return (false);
+}
+
+/* Detect complex quoted patterns that are hard to parse correctly.
+	Complex pattern: multiple quotes with variables
+
+	TODO: move this function into a "validation" function out of here*/
+bool	is_complex_quoted_delimiter(const char *str)
+{
+	int		i;
+	int		quote_count;
+	bool	has_variables;
+
+	if (!str)
+		return (false);
+	quote_count = 0;
+	has_variables = false;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '"' || str[i] == '\'')
+			quote_count++;
+		if (str[i] == '$')
+			has_variables = true;
+		i++;
+	}
+	return (quote_count > 2 && has_variables);
+}
 
 // TODO: HANDLE ALLOC ERRORS for ft_calloc & ft_strdup
 // TODO: maybe: check valid ast and word
@@ -68,6 +107,15 @@ void	add_redir(t_ast *ast, t_token_ty token_type, char *word)
 	new_redir = ft_calloc(1, sizeof(t_redir));
 	if (!new_redir)
 		return ;
+	if (get_redir_type(token_type) == REDIR_HEREDOC
+		&& is_complex_quoted_delimiter(word))
+	{
+		put_stderr("minishell: syntax error: complex quoted heredoc "
+			"delimiters not supported\n");
+		free(new_redir);
+		return ;
+	}
+	new_redir->quoted = has_quotes(word);
 	new_redir->string = remove_quotes(word, ft_strlen(word));
 	if (!new_redir->string)
 	{
@@ -75,7 +123,6 @@ void	add_redir(t_ast *ast, t_token_ty token_type, char *word)
 		return ;
 	}
 	new_redir->ty = get_redir_type(token_type);
-	a_print("__redir: ty %d : %s\n", new_redir->ty, word);
 	if (!ast->cmd.redir)
 		ast->cmd.redir = new_redir;
 	else

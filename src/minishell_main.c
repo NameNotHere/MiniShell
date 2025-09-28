@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/26 10:32:37 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 14:45:33 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int	initialize_minishell(t_msh *sh, int argc, char **argv, char **envp)
 	return (sh->exit_code);
 }
 
+// TODO: replace strstr
 t_flow	cycle_loop(t_msh *sh)
 {
 	sh->line = get_shell_line(sh, MSH_PROMPT);
@@ -78,10 +79,19 @@ t_flow	cycle_loop(t_msh *sh)
 	if (unclosed_quotes(sh->line))
 		return (put_stderr_code(sh, "error: unclosed quotes\n", 2),
 			CONTINUE_FLOW);
+	if (strstr(sh->line, "<<") && has_complex_heredoc_delimiter(sh->line))
+	{
+		put_stderr_code(sh, "syntax error: complex quoted heredoc "
+			"delimiters not supported\n", 2);
+		return (BREAK_FLOW);
+	}
 	if (sh->is_interact)
 		add_history(sh->line);
-	if (expand_line(sh) != EXIT_SUCCESS)
+	if (!expand_string_variables(sh, &sh->line))
+	{
+		sh->exit_code = EXIT_FAILURE;
 		return (CONTINUE_FLOW);
+	}
 	if (parse_line(sh, sh->ast, sh->line) != EXIT_SUCCESS)
 		return (put_stderr("parse line failed\n"), CONTINUE_FLOW);
 	return (EXEC_FLOW);

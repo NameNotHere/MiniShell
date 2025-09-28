@@ -6,18 +6,20 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 06:11:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/26 14:31:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:12:30 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// TODO: remove comment below
+// NEW: now NULL argv[0] is valid (redirection only), so we just return.
 void	lookup_cmd_fullpath(t_msh *sh, t_cmd *cmd)
 {
 	if (cmd->built_in)
 		return ;
 	if (cmd->argv[0] == NULL || !ft_strlen(cmd->argv[0]))
-		put_stderr("command parsing failed: no command received");
+		return ;
 	cmd->full_cmd = get_valid_cmd_full_path(sh->path_dirs, cmd->argv[0]);
 	if (cmd->full_cmd == NULL)
 	{

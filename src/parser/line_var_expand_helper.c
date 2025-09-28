@@ -6,53 +6,54 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 21:30:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/27 20:17:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	handle_quotes_for_expansion(char *line, bool *single_quote, bool *double_quote, int i)
+bool	handle_ve_quote(char *str, bool *sgl_quote, bool *dbl_quote, int i)
 {
 	bool	handled;
 
 	handled = false;
-	if (*single_quote && ft_is_singlequote(line[i]))
+	if (*sgl_quote && is_sgl_quote(str[i]))
 	{
-		*single_quote = false;
+		*sgl_quote = false;
 		handled = true;
 	}
-	else if (*double_quote && ft_is_doublequote(line[i]))
+	else if (*dbl_quote && is_dbl_quote(str[i]))
 	{
-		*double_quote = false;
+		*dbl_quote = false;
 		handled = true;
 	}
-	else if (!*single_quote && !*double_quote && ft_is_singlequote(line[i]))
+	else if (!*sgl_quote && !*dbl_quote && is_sgl_quote(str[i]))
 	{
-		*single_quote = true;
+		*sgl_quote = true;
 		handled = true;
 	}
-	else if (!*single_quote && ft_is_doublequote(line[i]))
+	else if (!*sgl_quote && is_dbl_quote(str[i]))
 	{
-		*double_quote = true;
+		*dbl_quote = true;
 		handled = true;
 	}
 	return (handled);
 }
 
-bool	handle_single_quote(char *line, bool *single_quote, int i)
+bool	handle_sgl_quote(char *str, bool *sgl_quote, int i)
 {
-	if (*single_quote && ft_is_singlequote(line[i]))
-		*single_quote = false;
-	else if (*single_quote)
+	if (*sgl_quote && is_sgl_quote(str[i]))
+		*sgl_quote = false;
+	else if (*sgl_quote)
 		;
-	else if (ft_is_singlequote(line[i]))
-		*single_quote = true;
+	else if (is_sgl_quote(str[i]))
+		*sgl_quote = true;
 	else
 		return (false);
 	return (true);
 }
 
+// TODO: remove d_prints, add actuall error messages
 int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 {
 	ve->var_names = ft_calloc((ve->var_total + 1), sizeof(char *));
@@ -82,30 +83,21 @@ void	reset_var_lookup(t_var_expand *ve)
 	ve->var_name_i = 0;
 }
 
-int	allocate_new_line(t_msh *sh, t_var_expand *ve)
+int	allocate_new_str(t_msh *sh, t_var_expand *ve)
 {
-	int	new_line_len;
+	int	new_str_len;
 
-	new_line_len = ve->line_len + ft_strlen_array(ve->var_values)
+	new_str_len = ve->str_len + ft_strlen_array(ve->var_values)
 		- (ft_strlen_array(ve->var_names) + ve->var_total);
-	if (callo_x((void **)&ve->newline, new_line_len + 1, sizeof(char))
+	if (callo_x((void **)&ve->new_str, new_str_len + 1, sizeof(char))
 		!= EXIT_SUCCESS)
 	{
-		put_stderr("new_line allocation failed\n");
+		put_stderr("new_str allocation failed\n");
 		sh->exit_code = ENOMEM;
 		if (errno)
 			sh->exit_code = errno;
 		return (sh->exit_code);
 	}
 	return (EXIT_SUCCESS);
-}
-
-void	replace_line_and_cleanup(t_msh *sh, t_var_expand *ve)
-{
-	safe_free_string(&sh->line);
-	sh->line = ve->newline;
-	ve->newline = NULL;
-	safe_free_2d_string(&ve->var_names);
-	safe_free_2d_string(&ve->var_values);
 }
 

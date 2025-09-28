@@ -24,8 +24,6 @@ void	ft_second_token(char *str, t_token *output)
 		output->ty = TOKEN_AND;
 	else if (ft_strncmp(str, "||", 2) == 0)
 		output->ty = TOKEN_OR;
-	else if (str[0] == '=')
-		output->ty = TOKEN_EQUAL;
 }
 
 t_token	ft_token(char *str)
@@ -98,8 +96,6 @@ const char	*get_token_name_continued(t_token_ty type)
 		return ("AND");
 	if (type == TOKEN_OR)
 		return ("OR");
-	if (type == TOKEN_EQUAL)
-		return ("EQUAL");
 	if (type == UNCLOSED_SINGLE_QUOTE)
 		return ("UNCLOSED_SINGLE_QUOTE");
 	if (type == UNCLOSED_DOUBLE_QUOTE)
