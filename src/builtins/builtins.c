@@ -35,13 +35,11 @@ int	ft_cd(char ***envp, char *directory, int argc, t_msh *sh)
 	if (chdir(directory) != 0)
 	{
 		perror("cd");
-		free(directory);
 		return (EXIT_FAILURE);
 	}
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
-		free(directory);
 		perror("getcwd");
 		sh->exit_code = EXIT_FAILURE;
 		return (EXIT_FAILURE);
@@ -50,7 +48,6 @@ int	ft_cd(char ***envp, char *directory, int argc, t_msh *sh)
 	if (pwd_index >= 0)
 	{
 		free((*envp)[pwd_index]);
-		free(directory);
 		(*envp)[pwd_index] = ft_strjoin("PWD=", cwd);
 	}
 	free(cwd);
