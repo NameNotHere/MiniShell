@@ -13,7 +13,7 @@
 #include "minishell.h"
 #include <sys/stat.h>
 
-int	ft_cd(char ***envp, char *directory, int argc)
+int	ft_cd(char ***envp, char *directory, int argc, t_msh *sh)
 {
 	int		pwd_index;
 	char	*cwd;
@@ -21,31 +21,36 @@ int	ft_cd(char ***envp, char *directory, int argc)
 	if (argc > 2)
 	{
 		put_stderr("cd: too many arguments\n");
+		sh->exit_code = EXIT_FAILURE;
+		return (EXIT_FAILURE);
+	}
+	if (isminioperator(directory, 0) > 0)
+	{
+		put_stderr("cd: operators not allowed\n");
+		sh->exit_code = EXIT_FAILURE;
 		return (EXIT_FAILURE);
 	}
 	if (!directory)
-		return (EXIT_FAILURE);
-	if (directory[0] == '~')
-	{
-		put_stderr("cd: tilde expansion not supported "
-			"(use absolute/relative paths)\n");
-		return (EXIT_FAILURE);
-	}
+		directory = get_env_value(sh, "HOME", search_name("HOME", *envp));
 	if (chdir(directory) != 0)
 	{
 		perror("cd");
+		free(directory);
 		return (EXIT_FAILURE);
 	}
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
+		free(directory);
 		perror("getcwd");
+		sh->exit_code = EXIT_FAILURE;
 		return (EXIT_FAILURE);
 	}
 	pwd_index = search_name("PWD", *envp);
 	if (pwd_index >= 0)
 	{
 		free((*envp)[pwd_index]);
+		free(directory);
 		(*envp)[pwd_index] = ft_strjoin("PWD=", cwd);
 	}
 	free(cwd);
@@ -122,7 +127,7 @@ int	execute_builtin(t_msh **sh, t_cmd *cmd)
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		ret = ft_pwd(*sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
-		ret = ft_cd(&((*sh)->envp), cmd->argv[1], cmd->argc);
+		ret = ft_cd(&((*sh)->envp), cmd->argv[1], cmd->argc, *sh);
 	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		ret = ft_echo(cmd->argv, cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)

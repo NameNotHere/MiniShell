@@ -60,6 +60,7 @@ char	*get_env_value(t_msh *sh, char *var_name, int envp_index)
 	if (!var_value)
 	{
 		sh->exit_code = errno;
+		free(var_value);
 		return (NULL);
 	}
 	return (var_value);

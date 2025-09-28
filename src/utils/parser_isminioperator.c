@@ -33,6 +33,8 @@ int	isminioperator(char *token, int i)
 {
 	if (!token)
 		return (0);
+	// if (token[i - 1] == '\\')
+	// 	return (0);
 	if (ft_strncmp(token + i, ">>", 2) == 0)
 		return (2);
 	if (ft_strncmp(token + i, "<<", 2) == 0)
