@@ -21,9 +21,6 @@
 	pipe (stripped of newline char).
 	If failed, returns NULL.
 */
-// ...existing code...
-
-#include <stdbool.h>
 
 char	*get_shell_line(t_msh *sh, char *prompt)
 {
@@ -117,11 +114,6 @@ char	*get_empty_string(void)
 	return (ft_calloc(1, sizeof(char)));
 }
 
-/*
-	Sets a string to an empty string.
-	Returns true on success, false on failure.
-
-*/
 bool	set_empty_string(char **to_empty)
 {
 	safe_free_string(to_empty);
