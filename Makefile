@@ -58,6 +58,7 @@ SRCS = 	signals/signals.c \
 	parser/line_var_expand_catch.c \
 	parser/line_var_expand_helper.c \
 	parser/parse_line.c \
+	parser/parse_validation.c \
 	parser/tokenise_types.c \
 	parser/tokenize.c \
 	utils/parser_isminioperator.c \

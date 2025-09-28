@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/27 20:13:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 14:59:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef enum e_err_code
 
 # define E_INVALID_REDIR_MSG "syntax error: invalid redirection, missing string"
 # define E_MULTIPLE_MSG "syntax error: multiple commands"
+# define E_SEMICOLON_MSG "minishell: syntax error near unexpected token `;'\n"
 
 typedef enum e_flow
 {
@@ -67,6 +68,8 @@ int		minishell_mainloop(t_msh *sh);
 
 // builtins.c
 int		execute_builtin(t_msh **sh, t_cmd *cmd);
+int		ft_pwd(t_msh *sh, t_cmd *cmd);
+int		ft_env(t_msh sh, t_cmd *cmd);
 
 // builtins_echo.c
 int		ft_echo(char **argv, int argc);
@@ -130,11 +133,6 @@ void	try_dup2(t_msh *sh, int *fd_in, int *fd_out);
 // utils/utils_env.c
 bool	is_var_in_env(t_msh *sh, char *var, int *envp_index);
 char	*get_env_value(t_msh *sh, char *var_name, int envp_index);
-
-// utils/utils_error.c
-void	put_stderr(const char *error);
-void	put_stderr_2(const char *str1, const char *str2);
-void	put_stderr_3(const char *str1, const char *str2, const char *str3);
 
 // utils/utils_error_shell.c
 void	put_stderr_code(t_msh *sh, const char *error, int exit_code);

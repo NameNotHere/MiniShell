@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/25 21:30:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 14:53:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,43 +98,4 @@ int	callo_x(void **ptr, size_t nmemb, size_t size)
 	}
 	ft_bzero(*ptr, nmemb * size);
 	return (EXIT_SUCCESS);
-}
-
-
-void	set_has_cmd(int *i, bool *has_cmd, t_token *tokens)
-{
-	if (is_valid_cmd_token(tokens[*i].ty))
-		*has_cmd = true;
-	(*i)++;
-}
-
-/*
-	validate_pipe_syntax: checks if pipe has valid commands on both sides
-	Returns:
-		- 0 if syntax is valid
-		- 2 if syntax error
-*/
-int	validate_pipe_syntax(t_token *tokens, int start, int end)
-{
-	int		i;
-	bool	found_pipe;
-	bool	has_left_cmd;
-	bool	has_right_cmd;
-
-	i = start;
-	found_pipe = false;
-	has_left_cmd = false;
-	has_right_cmd = false;
-	while (tokens[i].word && i <= end && tokens[i].ty != TOKEN_PIPE)
-		set_has_cmd(&i, &has_left_cmd, tokens);
-	if (tokens[i].ty == TOKEN_PIPE)
-	{
-		found_pipe = true;
-		i++;
-		while (tokens[i].word && i <= end)
-			set_has_cmd(&i, &has_right_cmd, tokens);
-	}
-	if (found_pipe && (!has_left_cmd || !has_right_cmd))
-		return (2);
-	return (0);
 }

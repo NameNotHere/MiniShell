@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/27 21:08:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 14:45:33 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int	initialize_minishell(t_msh *sh, int argc, char **argv, char **envp)
 	return (sh->exit_code);
 }
 
+// TODO: replace strstr
 t_flow	cycle_loop(t_msh *sh)
 {
 	sh->line = get_shell_line(sh, MSH_PROMPT);
@@ -78,6 +79,12 @@ t_flow	cycle_loop(t_msh *sh)
 	if (unclosed_quotes(sh->line))
 		return (put_stderr_code(sh, "error: unclosed quotes\n", 2),
 			CONTINUE_FLOW);
+	if (strstr(sh->line, "<<") && has_complex_heredoc_delimiter(sh->line))
+	{
+		put_stderr_code(sh, "syntax error: complex quoted heredoc "
+			"delimiters not supported\n", 2);
+		return (BREAK_FLOW);
+	}
 	if (sh->is_interact)
 		add_history(sh->line);
 	if (!expand_string_variables(sh, &sh->line))

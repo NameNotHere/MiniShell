@@ -26,8 +26,6 @@ int	is_miniop(char *token, int i)
 		return (1);
 	if (ft_strncmp(token + i, ";", 1) == 0)
 		return (1);
-	if (ft_strncmp(token + i, "=", 1) == 0)
-		return (1);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/27 15:47:21 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:06:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 			safe_free_string(&hdoc_line);
 			continue ;
 		}
-		if (!expand_string_variables(sh, &hdoc_line))
+		if (!redir->quoted && !expand_string_variables(sh, &hdoc_line))
 		{
 			sh->exit_code = EXIT_FAILURE;
 			safe_free_string(&hdoc_line);

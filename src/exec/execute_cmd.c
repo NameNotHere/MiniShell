@@ -6,18 +6,30 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:35:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/26 17:01:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 15:04:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+	execute command, or just redirections.
+	if this applies:
+		(if cmd->argv[0] == NULL || !ft_strlen(cmd->argv[0])
+		it means we have no command to run, just redirections. it should
+		not fail in that case.
+*/
 int	execute_command(t_msh *sh, t_cmd *cmd)
 {
 	errno = 0;
 	set_restore_dfl_sig();
 	if (!execute_redirection(sh, cmd->redir))
 		return (sh->exit_code);
+	if (cmd->argv[0] == NULL || !ft_strlen(cmd->argv[0]))
+	{
+		sh->exit_code = EXIT_SUCCESS;
+		return (sh->exit_code);
+	}
 	if (cmd->built_in)
 		return (execute_builtin(&sh, cmd));
 	if (cmd->permission_denied)

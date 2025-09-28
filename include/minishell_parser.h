@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/27 20:15:24 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/28 14:59:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ typedef enum e_token_ty
 	TOKEN_BACKSLASH,
 	TOKEN_AND,
 	TOKEN_OR,
-	TOKEN_EQUAL,
 	UNCLOSED_DOUBLE_QUOTE,
 	UNCLOSED_SINGLE_QUOTE,
 	TOKEN_LAST
@@ -113,6 +112,7 @@ typedef struct s_redir
 	t_redir_ty		ty;
 	char			*string;
 	int				fd;
+	bool			quoted;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -264,7 +264,7 @@ int			isminioperator(char *token, int i);
 // utils/parser_line.c
 bool		piped_line(char *line);
 
-// errors
+// parser/errors.c
 void		int_closed(char *str, int i, char quote);
 int			ft_strcmp(const char *s1, const char *s2);
 void		*ft_malloc(size_t amount, size_t size);
@@ -272,6 +272,15 @@ int			callo_x(void **ptr, size_t nmemb, size_t size);
 int			mallo_x(void **ptr, size_t nmemb, size_t size);
 int			is_closed(char *str, int i, char quote);
 int			unclosed_token(char *str, char token);
+
+// parser/parser_validation.c
 int			validate_pipe_syntax(t_token *tokens, int start, int end);
+int			validate_semicolon_syntax(t_token *tokens);
+bool		has_complex_heredoc_delimiter(char *line);
+
+// utils/utils_error.c
+void		put_stderr(const char *error);
+void		put_stderr_2(const char *str1, const char *str2);
+void		put_stderr_3(const char *str1, const char *str2, const char *str3);
 
 #endif
