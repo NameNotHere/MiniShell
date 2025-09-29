@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/26 13:18:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/29 04:05:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,6 @@ bool	is_valid_exit_code(const char *str)
 	return (true);
 }
 
-/*
-	TODO: should we handle some kind of error message if the exit
-	function is not run (and we reach the function return)?
-*/
 int	ft_exit(t_msh *sh, t_cmd cmd)
 {
 	if (cmd.argc > 2)
