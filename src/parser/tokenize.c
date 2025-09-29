@@ -103,12 +103,6 @@ const char	*get_token_name_continued(t_token_ty type)
 	return ("UNKNOWN");
 }
 
-/*
-TODO: delete this comment
-Added error code for caller to receive.
-call with &err on an int err variable.
-renamed output for res (short for result for norminette lines)
-*/
 t_token	*tokenize(char *input, int *token_count, int *err)
 {
 	t_token			*res;

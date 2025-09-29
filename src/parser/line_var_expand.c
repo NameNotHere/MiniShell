@@ -19,7 +19,7 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *str)
 	{
 		if (handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, ve->i))
 			;
-		else if ('$' == str[ve->i] && ft_valid_var_char(str[ve->i + 1])
+		else if ('$' == str[ve->i] && str[ve->i - 1] != '\\' && ft_valid_var_char(str[ve->i + 1])
 			&& !ve->sgl_quote)
 		{
 			ve->var_lookup = true;

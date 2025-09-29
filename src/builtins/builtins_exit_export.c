@@ -109,6 +109,11 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 
 	if (!cmd.argv[1])
 		return (EXIT_SUCCESS);
+	if (cmd.argc > 2)
+	{
+		put_stderr("export: too many arguments\n");
+		return (EXIT_FAILURE);
+	}
 	equals_pos = ft_strchr(cmd.argv[1], '=');
 	if (!equals_pos)
 	{

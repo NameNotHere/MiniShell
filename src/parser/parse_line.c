@@ -30,6 +30,9 @@ int	parse_line(t_msh *sh, t_ast *ast, char *string)
 	free_tokens(&sh->tokens, token_count);
 	lookup_result = lookup_all_cmd_fullpaths(sh, sh->ast);
 	if (lookup_result != EXIT_SUCCESS)
+	{
+		return (EXIT_FAILURE);
 		sh->exit_code = lookup_result;
+	}
 	return (EXIT_SUCCESS);
 }

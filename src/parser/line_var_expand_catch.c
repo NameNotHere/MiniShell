@@ -27,7 +27,7 @@ int	get_var_count(char *str)
 	{
 		if (handle_ve_quote(str, &sgl_quote, &dbl_quote, i))
 			;
-		else if ('$' == str[i] && ft_valid_var_char(str[i + 1]) && !sgl_quote)
+		else if ('$' == str[i] && i != 0 && str[i - 1] != '\\' && ft_valid_var_char(str[i + 1]) && !sgl_quote)
 			var_count++;
 		i++;
 	}
@@ -90,7 +90,7 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && ft_valid_var_char(str[i + 1]) && !ve->sgl_quote)
+		if (str[i] == '$' && i != 0 && str[i-1] !=  '\\' && ft_valid_var_char(str[i + 1]) && !ve->sgl_quote)
 		{
 			ve->var_lookup = true;
 			i++;
