@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/28 14:55:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 01:54:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 	i = start;
 	if (validate_semicolon_syntax(sh->tokens) != 0)
 	{
-		put_stderr(E_SEMICOLON_MSG);
+		msg_err(E_SEMICOLON_MSG);
 		sh->exit_code = 2;
 		return (2);
 	}
@@ -40,7 +40,7 @@ int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 	{
 		if (validate_pipe_syntax(sh->tokens, start, end) != 0)
 		{
-			put_stderr("minishell: syntax error near unexpected token `|'\n");
+			msg_err("minishell: syntax error near unexpected token `|'\n");
 			sh->exit_code = 2;
 			return (2);
 		}

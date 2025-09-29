@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/29 04:05:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 00:56:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_exit(t_msh *sh, t_cmd cmd)
 {
 	if (cmd.argc > 2)
 	{
-		put_stderr("exit: too many arguments\n");
+		msg_err("exit: too many arguments\n");
 		sh->exit_code = EXIT_FAILURE;
 		return (sh->exit_code);
 	}
@@ -46,7 +46,7 @@ int	ft_exit(t_msh *sh, t_cmd cmd)
 			sh->exit_code = ft_atoi(cmd.argv[1]);
 		else
 		{
-			put_stderr_3("exit: ", cmd.argv[1], ": numeric argument required");
+			msg_err_3("exit: ", cmd.argv[1], ": numeric argument required");
 			sh->exit_code = 2;
 		}
 	}
@@ -114,7 +114,7 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 	{
 		if (!is_valid_var_name(cmd.argv[1]))
 		{
-			put_stderr_3("export: `", cmd.argv[1], "': not a valid identifier");
+			msg_err_3("export: `", cmd.argv[1], "': not a valid identifier");
 			return (EXIT_FAILURE);
 		}
 		return (EXIT_SUCCESS);
@@ -124,7 +124,7 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 	value = equals_pos + 1;
 	if (!is_valid_var_name(name))
 	{
-		put_stderr_3("export: `", cmd.argv[1], "': not a valid identifier");
+		msg_err_3("export: `", cmd.argv[1], "': not a valid identifier");
 		return (EXIT_FAILURE);
 	}
 	i = search_name(name, (*sh)->envp);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:35:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/29 02:37:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 00:56:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,18 @@ int	execute_command(t_msh *sh, t_cmd *cmd)
 	if (cmd->permission_denied)
 	{
 		if (cmd->argv[0] == NULL)
-			put_stderr("permission denied: (empty command)\n");
+			msg_err("permission denied: (empty command)\n");
 		else
-			put_stderr_3("permission denied: ", cmd->argv[0], "\n");
+			msg_err_3("permission denied: ", cmd->argv[0], "\n");
 		sh->exit_code = 126;
 		return (126);
 	}
 	if (cmd->not_found)
 	{
 		if (cmd->argv[0] == NULL)
-			put_stderr("command not found: (empty command)\n");
+			msg_err("command not found: (empty command)\n");
 		else
-			put_stderr_3("command not found: ", cmd->argv[0], "\n");
+			msg_err_3("command not found: ", cmd->argv[0], "\n");
 		sh->exit_code = 127;
 		return (127);
 	}

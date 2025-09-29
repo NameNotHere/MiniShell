@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/27 20:17:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 00:56:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	allocate_new_str(t_msh *sh, t_var_expand *ve)
 	if (callo_x((void **)&ve->new_str, new_str_len + 1, sizeof(char))
 		!= EXIT_SUCCESS)
 	{
-		put_stderr("new_str allocation failed\n");
+		msg_err("new_str allocation failed\n");
 		sh->exit_code = ENOMEM;
 		if (errno)
 			sh->exit_code = errno;

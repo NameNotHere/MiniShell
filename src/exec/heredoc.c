@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/28 15:06:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 00:56:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 	if (!set_heredoc_sig())
 	{
 		sh->exit_code = EXIT_FAILURE;
-		put_stderr("failed to set heredoc signal handler");
+		msg_err("failed to set heredoc signal handler");
 		return (NULL);
 	}
 	while (true)
@@ -60,7 +60,7 @@ void	hdoc_err(t_msh *sh, int *write_fd, int *redir_fd, char *hdoc_str)
 	safe_close_2_fds(write_fd, redir_fd);
 	safe_free_string(&hdoc_str);
 	sh->exit_code = EXIT_FAILURE;
-	put_stderr("heredoc redir failed");
+	msg_err("heredoc redir failed");
 	return ;
 }
 
@@ -111,7 +111,7 @@ int	heredoc_ast_node(t_msh *sh, t_ast *node)
 {
 	if (!node)
 	{
-		put_stderr("error: on execute_ast_node_heredoc, ast node is NULL");
+		msg_err("error: on execute_ast_node_heredoc, ast node is NULL");
 		return (EXIT_FAILURE);
 	}
 	if (node->nty == NODE_CMD)

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:12:44 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/27 20:12:14 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 00:56:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	catch_var(t_msh *sh, t_var_expand *ve)
 	reset_var_lookup(ve);
 	if (!ve->var_names[ve->var_i] || !ve->var_values[ve->var_i])
 	{
-		put_stderr("allocation error on catch_var\n");
+		msg_err("allocation error on catch_var\n");
 		sh->exit_code = errno;
 		return (errno);
 	}
