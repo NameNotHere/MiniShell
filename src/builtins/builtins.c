@@ -6,41 +6,46 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/29 02:37:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/29 03:34:42 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <sys/stat.h>
 
-int	ft_cd(t_msh *sh, t_cmd *cmd)
+int	ft_cd(t_msh *sh, char *directory, int argc)
 {
 	int		pwd_index;
 	char	*cwd;
-	char	*directory;
+	char	*home_path;
 
-	if (cmd->argc > 2)
+	if (argc > 2)
 	{
 		put_stderr("cd: too many arguments\n");
 		return (EXIT_FAILURE);
 	}
-	directory = cmd->argv[1];
 	if (directory && isminioperator(directory, 0) > 0)
 	{
 		put_stderr("cd: operators not allowed\n");
 		return (EXIT_FAILURE);
 	}
+	home_path = NULL;
 	if (!directory)
-		directory = get_env_value(sh, "HOME", search_name("HOME", sh->envp));
-	if (chdir(directory) != 0)
+	{
+		home_path = get_env_value(sh, "HOME", search_name("HOME", sh->envp));
+		directory = home_path;
+	}
+	if (chdir(directory) != EXIT_SUCCESS)
 	{
 		perror("cd");
+		safe_free_string(&home_path);
 		return (EXIT_FAILURE);
 	}
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
 		perror("getcwd");
+		safe_free_string(&home_path);
 		return (EXIT_FAILURE);
 	}
 	pwd_index = search_name("PWD", sh->envp);
@@ -49,7 +54,8 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 		free(sh->envp[pwd_index]);
 		sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
 	}
-	free(cwd);
+	safe_free_string(&cwd);
+	safe_free_string(&home_path);
 	return (EXIT_SUCCESS);
 }
 
@@ -123,7 +129,7 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		ret = ft_pwd(sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
-		ret = ft_cd(sh, cmd);
+		ret = ft_cd(sh, cmd->argv[1], cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		ret = ft_echo(cmd->argv, cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
