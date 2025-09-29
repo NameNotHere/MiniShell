@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:35:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/28 15:04:51 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/29 02:37:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	execute_command(t_msh *sh, t_cmd *cmd)
 		return (sh->exit_code);
 	}
 	if (cmd->built_in)
-		return (execute_builtin(&sh, cmd));
+		return (execute_builtin(sh, cmd));
 	if (cmd->permission_denied)
 	{
 		if (cmd->argv[0] == NULL)

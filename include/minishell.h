@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/28 14:59:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/29 02:37:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,11 @@ int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 int		minishell_mainloop(t_msh *sh);
 
 // builtins.c
-int		execute_builtin(t_msh **sh, t_cmd *cmd);
+int		execute_builtin(t_msh *sh, t_cmd *cmd);
+int		ft_cd(t_msh *sh, t_cmd *cmd);
 int		ft_pwd(t_msh *sh, t_cmd *cmd);
-int		ft_env(t_msh sh, t_cmd *cmd);
+int		ft_env(t_msh *sh, t_cmd *cmd);
+int		ft_unset(t_msh **sh, char *name);
 
 // builtins_echo.c
 int		ft_echo(char **argv, int argc);

@@ -6,32 +6,32 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/28 15:06:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/29 02:37:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <sys/stat.h>
 
-int	ft_cd(char ***envp, char *directory, int argc, t_msh *sh)
+int	ft_cd(t_msh *sh, t_cmd *cmd)
 {
 	int		pwd_index;
 	char	*cwd;
+	char	*directory;
 
-	if (argc > 2)
+	if (cmd->argc > 2)
 	{
 		put_stderr("cd: too many arguments\n");
-		sh->exit_code = EXIT_FAILURE;
 		return (EXIT_FAILURE);
 	}
-	if (isminioperator(directory, 0) > 0)
+	directory = cmd->argv[1];
+	if (directory && isminioperator(directory, 0) > 0)
 	{
 		put_stderr("cd: operators not allowed\n");
-		sh->exit_code = EXIT_FAILURE;
 		return (EXIT_FAILURE);
 	}
 	if (!directory)
-		directory = get_env_value(sh, "HOME", search_name("HOME", *envp));
+		directory = get_env_value(sh, "HOME", search_name("HOME", sh->envp));
 	if (chdir(directory) != 0)
 	{
 		perror("cd");
@@ -41,14 +41,13 @@ int	ft_cd(char ***envp, char *directory, int argc, t_msh *sh)
 	if (!cwd)
 	{
 		perror("getcwd");
-		sh->exit_code = EXIT_FAILURE;
 		return (EXIT_FAILURE);
 	}
-	pwd_index = search_name("PWD", *envp);
+	pwd_index = search_name("PWD", sh->envp);
 	if (pwd_index >= 0)
 	{
-		free((*envp)[pwd_index]);
-		(*envp)[pwd_index] = ft_strjoin("PWD=", cwd);
+		free(sh->envp[pwd_index]);
+		sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
 	}
 	free(cwd);
 	return (EXIT_SUCCESS);
@@ -76,7 +75,7 @@ int	ft_pwd(t_msh *sh, t_cmd *cmd)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_env(t_msh sh, t_cmd *cmd)
+int	ft_env(t_msh *sh, t_cmd *cmd)
 {
 	int	i;
 
@@ -86,9 +85,9 @@ int	ft_env(t_msh sh, t_cmd *cmd)
 		return (EXIT_FAILURE);
 	}
 	i = 0;
-	while (sh.envp[i])
+	while (sh->envp[i])
 	{
-		write(1, sh.envp[i], ft_strlen(sh.envp[i]));
+		write(1, sh->envp[i], ft_strlen(sh->envp[i]));
 		write(1, "\n", 1);
 		i++;
 	}
@@ -116,24 +115,24 @@ int	ft_unset(t_msh **sh, char *name)
 	return (EXIT_SUCCESS);
 }
 
-int	execute_builtin(t_msh **sh, t_cmd *cmd)
+int	execute_builtin(t_msh *sh, t_cmd *cmd)
 {
 	int	ret;
 
 	ret = EXIT_SUCCESS;
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
-		ret = ft_pwd(*sh, cmd);
+		ret = ft_pwd(sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
-		ret = ft_cd(&((*sh)->envp), cmd->argv[1], cmd->argc, *sh);
+		ret = ft_cd(sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		ret = ft_echo(cmd->argv, cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
-		ret = ft_env(**sh, cmd);
+		ret = ft_env(sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "export") == 0)
-		ret = ft_export(sh, *cmd);
+		ret = ft_export(&sh, *cmd);
 	else if (ft_strcmp(cmd->argv[0], "unset") == 0)
-		ret = ft_unset(sh, cmd->argv[1]);
+		ret = ft_unset(&sh, cmd->argv[1]);
 	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
-		ret = ft_exit(*sh, *cmd);
+		ret = ft_exit(sh, *cmd);
 	return (ret);
 }
