@@ -27,7 +27,7 @@ int	get_var_count(char *str)
 	{
 		if (handle_ve_quote(str, &sgl_quote, &dbl_quote, i))
 			;
-		else if ('$' == str[i] && i != 0 && str[i - 1] != '\\' && ft_valid_var_char(str[i + 1]) && !sgl_quote)
+		else if (('$' == str[i] && !is_escaped(str, i)) && ft_valid_var_char(str[i + 1]) && !sgl_quote)
 			var_count++;
 		i++;
 	}

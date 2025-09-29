@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
+#include "minishell.h"
 
 int	skip_spaces(int *i, char *str)
 {
@@ -36,19 +37,28 @@ int	count_tokens(char *str)
 	while (str[i])
 	{
 		skip_spaces(&i, str);
-		if (str[i] && isminioperator(str, i) > 0)
-		{
+		if (isminioperator(str, i) > 0)
 			i += isminioperator(str, i);
-		}
-		else if (str[i] && (str[i] == '\'' || str[i] == '\"'))
+		if (!str[i])
+			break;
+		else if ((str[i] == '\'' || str[i] == '\"'))
 		{
 			quote = str[i++];
-			while (str[i] && is_closed(str, i, quote) && !ft_isspace(str[i]))
+			while (str[i] && str[i] != quote)
+			{
+				if (str[i] == '\\' && str[i + 1])
+					i += 2;
+				else
+					i++;
+			}
+			if (str[i] == quote)
 				i++;
 		}
 		else
-			while (str[i] && !ft_isspace(str[i]) && !isminioperator(str, i))
+		{
+			while (str[i] && !ft_isspace(str[i]) && isminioperator(str, i) == 0)
 				i++;
+		}
 		count++;
 	}
 	return (count);

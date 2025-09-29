@@ -271,7 +271,7 @@ void		*ft_malloc(size_t amount, size_t size);
 int			callo_x(void **ptr, size_t nmemb, size_t size);
 int			mallo_x(void **ptr, size_t nmemb, size_t size);
 int			is_closed(char *str, int i, char quote);
-int			unclosed_token(char *str, char token);
+int			unclosed_token(const char *str, char token);
 
 // parser/parser_validation.c
 int			validate_pipe_syntax(t_token *tokens, int start, int end);
@@ -282,5 +282,8 @@ bool		has_complex_heredoc_delimiter(char *line);
 void		put_stderr(const char *error);
 void		put_stderr_2(const char *str1, const char *str2);
 void		put_stderr_3(const char *str1, const char *str2, const char *str3);
+
+// parser/is_escaped.C
+bool		is_escaped(const char *str, int i);
 
 #endif

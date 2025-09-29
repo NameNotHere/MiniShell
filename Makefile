@@ -61,6 +61,7 @@ SRCS = 	signals/signals.c \
 	parser/parse_validation.c \
 	parser/tokenise_types.c \
 	parser/tokenize.c \
+	parser/is_escaped.c \
 	utils/parser_isminioperator.c \
 	utils/parser_line.c \
 	utils/utils_char.c \
@@ -103,7 +104,14 @@ PARSER_SRCS = parser/ast.c \
 	utils/parser_isminioperator.c \
 	utils/utils_free.c \
 	debug/utils_debug.c \
-	debug/ast_print.c
+	debug/ast_print.c \
+	parser/line_var_expand_catch.c \
+	parser/line_var_expand_helper.c \
+	parser/line_var_expand.c \
+	parser/parse_line.c \
+	parser/parse_validation.c \
+	parser/is_builtin.c \
+	parser/is_escaped.c
 
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
 PARSER_OBJS := $(addprefix $(OBJDIR)/, $(PARSER_OBJS))
