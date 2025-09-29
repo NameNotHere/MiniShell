@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 17:01:06 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/26 17:01:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/29 02:37:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	exec_single_builtin(t_msh *sh, t_cmd *cmd)
 		return (sh->exit_code);
 	}
 	if (execute_redirection(sh, cmd->redir))
-		sh->exit_code = execute_builtin(&sh, cmd);
+		sh->exit_code = execute_builtin(sh, cmd);
 	restore_std_fds(saved_fd_stdin, saved_fd_stdout);
 	return (sh->exit_code);
 }

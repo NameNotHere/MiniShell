@@ -21,12 +21,16 @@
 	pipe (stripped of newline char).
 	If failed, returns NULL.
 */
+
 char	*get_shell_line(t_msh *sh, char *prompt)
 {
 	char	*line;
+	char	*full;
+	char	*tmp;
 	int		input_fd;
 
 	line = NULL;
+	full = NULL;
 	if (sh->is_interact)
 	{
 		g_sig = 0;
@@ -38,6 +42,21 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 		}
 		rl_event_hook = event_hook_sigint_return;
 		line = readline(prompt);
+		if (!line)
+			return (NULL);
+		full = ft_strdup(line);
+		while (unclosed_quotes(full))
+		{
+			safe_free_string(&line);
+			line = readline("unclosed quotes> ");
+			if (!line)
+				break ;
+			tmp = ft_strjoin3(full, "\n", line);
+			safe_free_string(&full);
+			full = tmp;
+		}
+		safe_free_string(&line);
+		return (full);
 	}
 	else
 	{
@@ -53,6 +72,7 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 	return (line);
 }
 
+// ...existing code...
 /*
 	Adds a line to a string, after newline char.
 	If string is NULL, string is copy of the line.
@@ -94,11 +114,6 @@ char	*get_empty_string(void)
 	return (ft_calloc(1, sizeof(char)));
 }
 
-/*
-	Sets a string to an empty string.
-	Returns true on success, false on failure.
-
-*/
 bool	set_empty_string(char **to_empty)
 {
 	safe_free_string(to_empty);
