@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/26 12:16:14 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/29 04:23:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,4 +121,14 @@ bool	set_empty_string(char **to_empty)
 	if (*to_empty == NULL)
 		return (false);
 	return (true);
+}
+
+/*
+	strstr implementation using ft_strnstr from libft
+*/
+char	*ft_strstr(const char *haystack, const char *needle)
+{
+	if (!haystack || !needle)
+		return (NULL);
+	return (ft_strnstr(haystack, needle, ft_strlen(haystack)));
 }
