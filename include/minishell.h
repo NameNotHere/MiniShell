@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/29 02:51:19 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/29 04:23:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ int		add_line_to_string(char **string, char **line);
 char	*get_empty_string(void);
 bool	set_empty_string(char **to_empty);
 bool	make_string_free(char **string);
+char	*ft_strstr(const char *haystack, const char *needle);
 
 // utils/utils_string_array.c
 char	**copy_string_array(char **strings);

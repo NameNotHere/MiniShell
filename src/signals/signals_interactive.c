@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 17:15:30 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 05:15:41 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/29 04:35:22 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 	**helper for handler_interactive_sig, on int sig (control-c)
  	makes readline to stop input and show new prompt
 
-	note: yes, setting rl_done = 1 does that
+	note: setting rl_done = 1 does that with the help of mainloop
+	catching the signal also and looping a continue.
  */
 static void	interactive_sig_int(void)
 {
