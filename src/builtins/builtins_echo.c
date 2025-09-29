@@ -38,7 +38,8 @@ static void	ft_echo_arg(char **argv, int *arg_i, bool *first_content)
 	content_i = 0;
 	while (argv[*arg_i][content_i])
 	{
-		write(1, &argv[*arg_i][content_i], 1);
+		if (argv[*arg_i][content_i] != '\\')
+			write(1, &argv[*arg_i][content_i], 1);
 		content_i++;
 	}
 	(*arg_i)++;
