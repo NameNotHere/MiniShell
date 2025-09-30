@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 00:56:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 02:25:28 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	exec_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
 {
 	int		pipefd[2];
 
-	if (safe_pipe(sh, pipefd, &fd_in, &fd_out) == EXIT_FAILURE)
+	if (!safe_pipe(sh, pipefd, &fd_in, &fd_out))
 		return (sh->exit_code);
 	if (safe_fork_pipe(sh, pipefd, &fd_in, &fd_out) == 0)
 		exec_left(sh, pipe_node->left, pipefd, (int *[2]){&fd_in, &fd_out});

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 00:56:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 02:17:45 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,7 @@ int	ft_pwd(t_msh *sh, t_cmd *cmd)
 	int	equal;
 
 	if (cmd->argc > 1)
-	{
-		msg_err("pwd: too many arguments\n");
-		return (EXIT_FAILURE);
-	}
+		return (ret_exit_msg(sh, EXIT_FAILURE, "pwd: too many arguments\n"));
 	i = search_name("PWD", sh->envp);
 	if (i == -1)
 	{
@@ -86,10 +83,7 @@ int	ft_env(t_msh *sh, t_cmd *cmd)
 	int	i;
 
 	if (cmd->argc > 1)
-	{
-		msg_err("env: arguments not supported\n");
-		return (EXIT_FAILURE);
-	}
+		return (ret_exit_msg(sh, EXIT_FAILURE, "env: arguments not supported\n"));
 	i = 0;
 	while (sh->envp[i])
 	{

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 00:56:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 02:17:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,7 @@ bool	is_valid_exit_code(const char *str)
 int	ft_exit(t_msh *sh, t_cmd cmd)
 {
 	if (cmd.argc > 2)
-	{
-		msg_err("exit: too many arguments\n");
-		sh->exit_code = EXIT_FAILURE;
-		return (sh->exit_code);
-	}
+		return (ret_exit_msg(sh, EXIT_FAILURE, "exit: too many arguments\n"));
 	if (cmd.argc > 1)
 	{
 		if (is_valid_exit_code(cmd.argv[1]))

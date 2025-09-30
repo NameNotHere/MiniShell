@@ -55,6 +55,26 @@ int	ret_exit_msg(t_msh *sh, int exit_code, const char *error_msg)
 	Tries to use errno if ERRNO_CODE (-1) value is passed.
 		Fallsback to EXIT_FAILURE (1).
 	Prints error with perror (or msg_err if no errno).
+*/
+void	set_exit_perr(t_msh *sh, int exit_code, const char *error_msg)
+{
+	if (exit_code != ERRNO_CODE)
+		sh->exit_code = exit_code;
+	else if (exit_code == ERRNO_CODE && !errno)
+		sh->exit_code = EXIT_FAILURE;
+	else
+		sh->exit_code = errno;
+	if (errno)
+		perror(error_msg);
+	else
+		msg_err(error_msg);
+}
+
+/*
+	Sets exit code to errno or specific error.
+	Tries to use errno if ERRNO_CODE (-1) value is passed.
+		Fallsback to EXIT_FAILURE (1).
+	Prints error with perror (or msg_err if no errno).
 	Returns the same value previously set.
 */
 int	ret_exit_perr(t_msh *sh, int exit_code, const char *error_msg)

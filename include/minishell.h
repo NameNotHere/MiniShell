@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 01:31:45 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 02:31:07 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int		heredoc_ast_node(t_msh *sh, t_ast *node);
 int		lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);
 
 // exec/safe_pipe.c
-int		safe_pipe(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
+bool	safe_pipe(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
 
 // exec/safe_fork.c
 pid_t	safe_fork_cmd(t_msh *sh, int *fd_in, int *fd_out);
@@ -151,6 +151,7 @@ void	set_exit_code(t_msh *sh, int exit_code);
 int		ret_exit(t_msh *sh, int exit_code);
 void	set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
 int		ret_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
+void	set_exit_perr(t_msh *sh, int exit_code, const char *error_msg);
 int		ret_exit_perr(t_msh *sh, int exit_code, const char *error_msg);
 
 // utils/utils_string.c
