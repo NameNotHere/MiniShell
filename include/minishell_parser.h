@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/28 14:59:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 01:48:24 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,24 @@
 # include <errno.h>
 # include "libft.h"
 
-// TODO: remove debug include before eval
+// TODO: LAST remove debug include before eval
 # include "minishell_debug.h"
+
+typedef enum e_err_code
+{
+	E_INVALID_REDIR = 200,
+	E_MULTIPLE_CMD
+}	t_err_code;
+
+// TODO: check invalid_redir_error_case
+# define E_INVALID_REDIR_MSG "syntax error: invalid redirection, missing string"
+# define E_SEMICOLON_MSG "syntax error near unexpected token ';'\n"
+# define E_UNCLOSED_QUOTES_MSG "error: unclosed quotes\n"
+# define E_HDOC_DELIM_MSG "syntax error: complex quoted heredoc delimiters\n"
+# define E_REDIR_INVALID_MSG "syntax error: invalid redirection\n"
+# define E_REDIR_ALLOCATION_MSG "error: redirection allocation failed.\n"
+
+# define ERRNO_CODE -1
 
 /*
 no (POSIX or otherwise) standard on enviroment variable name size limit
@@ -264,6 +280,21 @@ int			isminioperator(char *token, int i);
 // utils/parser_line.c
 bool		piped_line(char *line);
 
+// utils/utils_char.c
+bool		ft_valid_var_char(int c);
+bool		is_sgl_quote(int c);
+bool		is_dbl_quote(int c);
+
+// utils/utils_free.c
+void		safe_free(void **ptr);
+void		safe_free_string(char **ptr);
+void		safe_free_2d_string(char ***ptr);
+
+// utils/utils_path.c
+char		*make_cmd_full_path(const char *dir, const char *cmd);
+char		*get_valid_cmd_full_path(char **path_dirs, char *cmd);
+char		*get_path_from_env(char **envp);
+
 // parser/errors.c
 void		int_closed(char *str, int i, char quote);
 int			ft_strcmp(const char *s1, const char *s2);
@@ -279,8 +310,8 @@ int			validate_semicolon_syntax(t_token *tokens);
 bool		has_complex_heredoc_delimiter(char *line);
 
 // utils/utils_error.c
-void		put_stderr(const char *error);
-void		put_stderr_2(const char *str1, const char *str2);
-void		put_stderr_3(const char *str1, const char *str2, const char *str3);
+void		msg_err(const char *error);
+void		msg_err_2(const char *str1, const char *str2);
+void		msg_err_3(const char *str1, const char *str2, const char *str3);
 
 #endif

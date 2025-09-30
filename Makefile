@@ -1,13 +1,13 @@
 # THIS MAKEFILE COMPILES 2 separate executables:
 # parser and minishell
-# TODO: before eval, this makefile will only compile minishell (cleanup b4 eval)
-# TODO: remove all debug folder references in sources.
+# TODO: LAST before eval, this makefile will only compile minishell (cleanup b4 eval)
+# TODO: LAST remove all debug folder references in sources.
 
 # executables
 NAME = minishell
 PARSER = parser
 
-#TODO: remove -g before submitting
+#TODO: LAST remove -g before submitting
 # compiler settings
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -fsanitize=address,undefined,leak -g3 -fno-omit-frame-pointer
@@ -33,6 +33,7 @@ SRCS = 	signals/signals.c \
 	signals/signals_execution.c \
 	signals/signals_interactive.c \
 	signals/signals_heredoc.c \
+	minishell_initialize.c \
 	minishell_main.c \
 	builtins/builtins.c \
 	builtins/builtins_echo.c \
@@ -66,7 +67,6 @@ SRCS = 	signals/signals.c \
 	utils/utils_char.c \
 	utils/utils_dup2.c \
 	utils/utils_error.c \
-	utils/utils_error_shell.c \
 	utils/utils_exit.c \
 	utils/utils_fd.c \
 	utils/utils_env.c \
@@ -78,6 +78,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
 	utils/utils_readline_state.c \
+	utils/utils_set_exit_code.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
 	utils/utils_token.c \

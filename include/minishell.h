@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/29 04:23:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 02:31:07 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,6 @@
 // 0644: user can read/write, others can read. reasonable/safe setting.
 # define OUTPUT_PERMISSIONS 0644
 
-typedef enum e_err_code
-{
-	E_INVALID_REDIR = 200,
-	E_MULTIPLE_CMD
-}	t_err_code;
-
-# define E_INVALID_REDIR_MSG "syntax error: invalid redirection, missing string"
-# define E_MULTIPLE_MSG "syntax error: multiple commands"
-# define E_SEMICOLON_MSG "minishell: syntax error near unexpected token `;'\n"
-
 typedef enum e_flow
 {
 	EXEC_FLOW,
@@ -62,9 +52,10 @@ typedef enum e_flow
 	BREAK_FLOW
 }	t_flow;
 
-// minishell_main.c
+// minishell_initialize.c
 int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
-int		minishell_mainloop(t_msh *sh);
+
+// int		minishell_mainloop(t_msh *sh);
 
 // builtins.c
 int		execute_builtin(t_msh *sh, t_cmd *cmd);
@@ -113,7 +104,7 @@ int		heredoc_ast_node(t_msh *sh, t_ast *node);
 int		lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);
 
 // exec/safe_pipe.c
-int		safe_pipe(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
+bool	safe_pipe(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
 
 // exec/safe_fork.c
 pid_t	safe_fork_cmd(t_msh *sh, int *fd_in, int *fd_out);
@@ -121,11 +112,6 @@ pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out);
 
 // parse/parse_line.c
 int		parse_line(t_msh *sh, t_ast *ast, char *string);
-
-// utils/utils_char.c
-bool	ft_valid_var_char(int c);
-bool	is_sgl_quote(int c);
-bool	is_dbl_quote(int c);
 
 // utils/utils_dup2.c
 void	try_dup2_stdout(t_msh *sh, int *fd_out);
@@ -135,9 +121,6 @@ void	try_dup2(t_msh *sh, int *fd_in, int *fd_out);
 // utils/utils_env.c
 bool	is_var_in_env(t_msh *sh, char *var, int *envp_index);
 char	*get_env_value(t_msh *sh, char *var_name, int envp_index);
-
-// utils/utils_error_shell.c
-void	put_stderr_code(t_msh *sh, const char *error, int exit_code);
 
 // utils/utils/exit.c
 void	close_fds_exit_error_free(t_msh *sh, const char *error, int *fd_in,
@@ -154,16 +137,6 @@ int		cleanup_all_fds(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out);
 bool	save_std_fds(int *saved_stdin, int *saved_stdout);
 void	restore_std_fds(int saved_stdin, int saved_stdout);
 
-// utils/utils_free.c
-void	safe_free(void **ptr);
-void	safe_free_string(char **ptr);
-void	safe_free_2d_string(char ***ptr);
-
-// utils/utils_path.c
-char	*make_cmd_full_path(const char *dir, const char *cmd);
-char	*get_valid_cmd_full_path(char **path_dirs, char *cmd);
-char	*get_path_from_env(char **envp);
-
 // utils/utils_readine
 bool	readline_noninteract(int fd, t_readbuf *st, char **out);
 
@@ -172,6 +145,14 @@ bool	add_chunk(t_rln_state *st, const char *src, size_t n);
 bool	rln_flush_line(t_rln_state *st, char **line);
 bool	rln_init(t_rln_state *st, t_readbuf *rb, char **line);
 bool	rln_emit_line(t_rln_state *st, t_readbuf *rb, char **line);
+
+// utils/utils_set_exit_code.c
+void	set_exit_code(t_msh *sh, int exit_code);
+int		ret_exit(t_msh *sh, int exit_code);
+void	set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
+int		ret_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
+void	set_exit_perr(t_msh *sh, int exit_code, const char *error_msg);
+int		ret_exit_perr(t_msh *sh, int exit_code, const char *error_msg);
 
 // utils/utils_string.c
 char	*get_shell_line(t_msh *sh, char *prompt);

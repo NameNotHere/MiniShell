@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/29 03:34:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 02:17:45 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ int	ft_cd(t_msh *sh, char *directory, int argc)
 
 	if (argc > 2)
 	{
-		put_stderr("cd: too many arguments\n");
+		msg_err("cd: too many arguments\n");
 		return (EXIT_FAILURE);
 	}
 	if (directory && isminioperator(directory, 0) > 0)
 	{
-		put_stderr("cd: operators not allowed\n");
+		msg_err("cd: operators not allowed\n");
 		return (EXIT_FAILURE);
 	}
 	home_path = NULL;
@@ -65,10 +65,7 @@ int	ft_pwd(t_msh *sh, t_cmd *cmd)
 	int	equal;
 
 	if (cmd->argc > 1)
-	{
-		put_stderr("pwd: too many arguments\n");
-		return (EXIT_FAILURE);
-	}
+		return (ret_exit_msg(sh, EXIT_FAILURE, "pwd: too many arguments\n"));
 	i = search_name("PWD", sh->envp);
 	if (i == -1)
 	{
@@ -86,10 +83,7 @@ int	ft_env(t_msh *sh, t_cmd *cmd)
 	int	i;
 
 	if (cmd->argc > 1)
-	{
-		put_stderr("env: arguments not supported\n");
-		return (EXIT_FAILURE);
-	}
+		return (ret_exit_msg(sh, EXIT_FAILURE, "env: arguments not supported\n"));
 	i = 0;
 	while (sh->envp[i])
 	{

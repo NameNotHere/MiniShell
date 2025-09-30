@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_line.c                                   :+:      :+:    :+:   */
+/*   parse_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:17:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/25 14:24:41 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 02:43:02 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,7 @@ int	parse_line(t_msh *sh, t_ast *ast, char *string)
 
 	tokens = tokenize(string, &token_count, &sh->err);
 	if (!tokens)
-	{
-		put_stderr("tokenizer failed");
-		sh->exit_code = EXIT_FAILURE;
-		return (EXIT_FAILURE);
-	}
+		return (ret_exit_msg(sh, EXIT_FAILURE, "tokenizer failed"));
 	sh->tokens = tokens;
 	build_ast(sh, ast, tokens);
 	free_tokens(&sh->tokens, token_count);
