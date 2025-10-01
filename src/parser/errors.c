@@ -6,34 +6,51 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/28 14:53:51 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 23:39:20 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
+#include "minishell_parser.h"
+
+bool	is_quote_closed(const char *str, char quote)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == quote && (i == 0 || str[i - 1] != '\\'))
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+int	unclosed_token(const char *str, char token)
+{
+	if (token == 0)
+	{
+		if (!is_quote_closed(str, '\''))
+			return (2);
+		if (!is_quote_closed(str, '\"'))
+			return (3);
+	}
+	else if (!is_quote_closed(str, token))
+	{
+		return (1);
+	}
+	return (0);
+}
 
 int	is_closed(char *str, int i, char quote)
 {
 	while (str[i])
 	{
 		if (str[i] == quote)
-			return (0);
+			return (1);
 		i++;
 	}
-	return (1);
-}
-
-int	unclosed_token(char *str, char token)
-{
-	if (token == 0)
-	{
-		if (is_closed(str, 0, '\'') == 1)
-			return (2);
-		if (is_closed(str, 0, '\"') == 1)
-			return (3);
-	}
-	else if (token && is_closed(str, 0, token) == 1)
-		return (1);
 	return (0);
 }
 
@@ -82,7 +99,7 @@ int	mallo_x(void **ptr, size_t nmemb, size_t size)
 callo_x: same as mallo_x, but on successful allocation,
 	zero initializes the allocated memory with ft_bzero.
 */
-int	callo_x(void **ptr, size_t nmemb, size_t size)
+int	x_calloc(void **ptr, size_t nmemb, size_t size)
 {
 	if (nmemb && size > SIZE_MAX / nmemb)
 	{

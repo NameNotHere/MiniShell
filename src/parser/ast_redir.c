@@ -90,7 +90,7 @@ bool	is_complex_quoted_delimiter(const char *str)
 	{
 		if (str[i] == '"' || str[i] == '\'')
 			quote_count++;
-		if (str[i] == '$')
+		if (str[i] == '$' && i != 0 && str[i - 1] != '\\')
 			has_variables = true;
 		i++;
 	}

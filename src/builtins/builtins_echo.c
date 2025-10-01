@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   builtins_echo.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 20:47:44 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 21:25:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,10 @@ static bool	is_valid_n_flag(const char *arg)
 
 static void	ft_echo_arg(char **argv, int *arg_i, bool *first_content)
 {
-	int		content_i;
-
 	if (!*first_content)
 		write(1, " ", 1);
 	*first_content = false;
-	content_i = 0;
-	while (argv[*arg_i][content_i])
-	{
-		write(1, &argv[*arg_i][content_i], 1);
-		content_i++;
-	}
+	write(1, argv[*arg_i], ft_strlen(argv[*arg_i]));
 	(*arg_i)++;
 }
 

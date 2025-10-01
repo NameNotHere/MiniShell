@@ -6,11 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/23 16:48:38 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/01 02:28:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
+#include "minishell.h"
 
 int	skip_spaces(int *i, char *str)
 {
@@ -36,20 +37,36 @@ int	count_tokens(char *str)
 	while (str[i])
 	{
 		skip_spaces(&i, str);
-		if (str[i] && isminioperator(str, i) > 0)
+		if (!str[i])
+			break ;
+		if (isminioperator(str, i) > 0)
 		{
 			i += isminioperator(str, i);
+			count++;
+			continue ;
 		}
-		else if (str[i] && (str[i] == '\'' || str[i] == '\"'))
+		if (!str[i])
+			break ;
+		else if ((str[i] == '\'' || str[i] == '\"'))
 		{
 			quote = str[i++];
-			while (str[i] && is_closed(str, i, quote) && !ft_isspace(str[i]))
+			while (str[i] && str[i] != quote)
+			{
+				if (str[i] == '\\' && str[i + 1] != '\0')
+					i += 2;
+				else
+					i++;
+			}
+			if (str[i] && str[i] == quote)
 				i++;
+			count++;
 		}
-		else
-			while (str[i] && !ft_isspace(str[i]) && !isminioperator(str, i))
+		else if (str[i] && !ft_isspace(str[i]) && isminioperator(str, i) == 0)
+		{
+			while (str[i] && !ft_isspace(str[i]) && isminioperator(str, i) == 0)
 				i++;
-		count++;
+			count++;
+		}
 	}
 	return (count);
 }

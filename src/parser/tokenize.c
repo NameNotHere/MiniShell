@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/12 21:38:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 23:39:20 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,6 @@ const char	*get_token_name_continued(t_token_ty type)
 	return ("UNKNOWN");
 }
 
-/*
-TODO: delete this comment
-Added error code for caller to receive.
-call with &err on an int err variable.
-renamed output for res (short for result for norminette lines)
-*/
 t_token	*tokenize(char *input, int *token_count, int *err)
 {
 	t_token			*res;
@@ -118,7 +112,7 @@ t_token	*tokenize(char *input, int *token_count, int *err)
 
 	i = 0;
 	id = 0;
-	*err = callo_x((void **)&res, sizeof(t_token), (count_tokens(input) + 2));
+	*err = x_calloc((void **)&res, sizeof(t_token), (count_tokens(input) + 2));
 	if (*err)
 		return (NULL);
 	while (input[i])

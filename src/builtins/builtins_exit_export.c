@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 02:17:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/01 02:13:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,11 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 
 	if (!cmd.argv[1])
 		return (EXIT_SUCCESS);
+	if (cmd.argc > 2)
+	{
+		msg_err("export: too many arguments\n");
+		return (EXIT_FAILURE);
+	}
 	equals_pos = ft_strchr(cmd.argv[1], '=');
 	if (!equals_pos)
 	{
