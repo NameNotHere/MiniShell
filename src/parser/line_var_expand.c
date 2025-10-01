@@ -82,7 +82,8 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *str)
 		if (handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, ve->i))
 			;
 		else if ('$' == str[ve->i] && ft_valid_var_char(str[ve->i + 1])
-			&& !ve->sgl_quote && !must_skip_exp(ve, ve->i))
+			&& !ve->sgl_quote && !must_skip_exp(ve, ve->i)
+			&& !is_in_heredoc_delimiter(str, ve->i))
 		{
 			ve->var_lookup = true;
 			ve->value = ve->var_values[ve->var_i];

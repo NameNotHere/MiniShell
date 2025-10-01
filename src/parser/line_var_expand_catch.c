@@ -12,6 +12,43 @@
 
 #include "minishell.h"
 
+/*
+	Check if a position is within a QUOTED heredoc delimiter
+	Returns true if the $ at position i is part of a quoted heredoc delimiter
+*/
+bool	is_in_heredoc_delimiter(char *str, int pos)
+{
+	int		i;
+	int		delimiter_start;
+	int		delimiter_end;
+	bool	is_quoted;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '<' && str[i + 1] == '<')
+		{
+			i += 2;
+			// Skip spaces after <<
+			while (str[i] && (str[i] == ' ' || str[i] == '\t'))
+				i++;
+			delimiter_start = i;
+			// Check if delimiter starts with a quote
+			is_quoted = (str[i] == '"' || str[i] == '\'');
+			// Find end of delimiter (space, tab, newline, or end of string)
+			while (str[i] && str[i] != ' ' && str[i] != '\t' && str[i] != '\n')
+				i++;
+			delimiter_end = i;
+			// Only skip expansion if delimiter is quoted AND position is within it
+			if (is_quoted && pos >= delimiter_start && pos < delimiter_end)
+				return (true);
+		}
+		else
+			i++;
+	}
+	return (false);
+}
+
 int	get_var_count(char *str, t_var_expand *ve)
 {
 	int		var_count;
@@ -28,7 +65,8 @@ int	get_var_count(char *str, t_var_expand *ve)
 		if (handle_ve_quote(str, &sgl_quote, &dbl_quote, i))
 			;
 		else if (('$' == str[i] && !must_skip_exp(ve, i))
-			&& ft_valid_var_char(str[i + 1]) && !sgl_quote)
+			&& ft_valid_var_char(str[i + 1]) && !sgl_quote
+			&& !is_in_heredoc_delimiter(str, i))
 			var_count++;
 		i++;
 	}
@@ -93,7 +131,8 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *str)
 	{
 		if (str[i] == '$'
 			&& !must_skip_exp(ve, i)
-			&& ft_valid_var_char(str[i + 1]) && !ve->sgl_quote)
+			&& ft_valid_var_char(str[i + 1]) && !ve->sgl_quote
+			&& !is_in_heredoc_delimiter(str, i))
 		{
 			ve->var_lookup = true;
 			i++;

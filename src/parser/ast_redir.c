@@ -52,6 +52,7 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 		}
 		else if (!cmd_found)
 		{
+			// 
 			*start = i;
 			cmd_found = true;
 		}
@@ -65,6 +66,19 @@ bool	has_quotes(const char *str)
 	while (*str)
 	{
 		if (*str == '"' || *str == '\'')
+			return (true);
+		str++;
+	}
+	return (false);
+}
+
+bool	has_single_quotes(const char *str)
+{
+	if (!str)
+		return (false);
+	while (*str)
+	{
+		if (*str == '\'')
 			return (true);
 		str++;
 	}

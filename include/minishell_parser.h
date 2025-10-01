@@ -253,6 +253,7 @@ int			skip_spaces(int *i, char *str);
 // parser/line_var_expand_catch.c
 int		get_var_count(char *str, t_var_expand *ve);
 int		catch_all_vars(t_msh *sh, t_var_expand *ve, char *str);
+bool	is_in_heredoc_delimiter(char *str, int pos);
 
 // parser/line_var_expand.c
 bool		expand_string_variables(t_msh *sh, char **string_ptr);
