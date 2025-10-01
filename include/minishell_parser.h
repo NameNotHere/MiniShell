@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/28 14:59:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/01 01:15:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,7 @@ typedef struct s_var_expand
 	char	*new_str;
 	char	*value;
 	int		i;
+	int		res_i;
 	int		str_len;
 	int		var_total;
 	int		var_i;
@@ -177,6 +178,8 @@ typedef struct s_var_expand
 	bool	var_lookup;
 	char	**var_names;
 	char	**var_values;
+	int		*skipped;      /* Array of $ indices that should NOT be expanded */
+	int		skip_len;      /* Number of entries in the skipped array */
 }	t_var_expand;
 
 typedef struct s_msh
@@ -232,11 +235,12 @@ char		*make_word(char *str, int *i, int *err);
 int			skip_spaces(int *i, char *str);
 
 // parser/line_var_expand_catch.c
-int			get_var_count(char *str);
-int			catch_all_vars(t_msh *sh, t_var_expand *ve, char *str);
+int		get_var_count(char *str, t_var_expand *ve);
+int		catch_all_vars(t_msh *sh, t_var_expand *ve, char *str);
 
 // parser/line_var_expand.c
 bool		expand_string_variables(t_msh *sh, char **string_ptr);
+bool		must_skip_exp(t_var_expand *ve, int index);
 
 // parser/line_var_expand_helper.c
 bool		handle_sgl_quote(char *str, bool *sgl_quote, int i);
@@ -268,7 +272,7 @@ bool		piped_line(char *line);
 void		int_closed(char *str, int i, char quote);
 int			ft_strcmp(const char *s1, const char *s2);
 void		*ft_malloc(size_t amount, size_t size);
-int			callo_x(void **ptr, size_t nmemb, size_t size);
+int			x_calloc(void **ptr, size_t nmemb, size_t size);
 int			mallo_x(void **ptr, size_t nmemb, size_t size);
 int			is_closed(char *str, int i, char quote);
 int			unclosed_token(const char *str, char token);

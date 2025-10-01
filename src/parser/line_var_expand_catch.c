@@ -6,13 +6,13 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:12:44 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 19:43:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/01 01:15:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	get_var_count(char *str)
+int	get_var_count(char *str, t_var_expand *ve)
 {
 	int		var_count;
 	int		i;
@@ -27,7 +27,7 @@ int	get_var_count(char *str)
 	{
 		if (handle_ve_quote(str, &sgl_quote, &dbl_quote, i))
 			;
-		else if (('$' == str[i] && !is_escaped(str, i))
+		else if (('$' == str[i] && !must_skip_exp(ve, i))
 			&& ft_valid_var_char(str[i + 1]) && !sgl_quote)
 			var_count++;
 		i++;
@@ -91,7 +91,8 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && !is_escaped(str, i)
+		if (str[i] == '$'
+			&& !must_skip_exp(ve, i)
 			&& ft_valid_var_char(str[i + 1]) && !ve->sgl_quote)
 		{
 			ve->var_lookup = true;

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/28 14:53:51 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 23:39:20 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	mallo_x(void **ptr, size_t nmemb, size_t size)
 callo_x: same as mallo_x, but on successful allocation,
 	zero initializes the allocated memory with ft_bzero.
 */
-int	callo_x(void **ptr, size_t nmemb, size_t size)
+int	x_calloc(void **ptr, size_t nmemb, size_t size)
 {
 	if (nmemb && size > SIZE_MAX / nmemb)
 	{

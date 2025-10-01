@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/27 20:17:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 23:39:20 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	allocate_new_str(t_msh *sh, t_var_expand *ve)
 		return (EXIT_SUCCESS);
 	new_str_len = ve->str_len + ft_strlen_array(ve->var_values)
 		- (ft_strlen_array(ve->var_names) + ve->var_total);
-	if (callo_x((void **)&ve->new_str, new_str_len + 1, sizeof(char))
+	if (x_calloc((void **)&ve->new_str, new_str_len + 1, sizeof(char))
 		!= EXIT_SUCCESS)
 	{
 		put_stderr("new_str allocation failed\n");
