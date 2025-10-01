@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 23:22:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/15 17:26:04 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/29 16:07:44 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ char	**copy_string_array(char **strings)
 		if (copy[i] == NULL)
 		{
 			safe_free_2d_string(&copy);
-			// TODO: set errno to allocation error here
 			return (NULL);
 		}
 		i++;

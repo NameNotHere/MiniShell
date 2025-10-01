@@ -6,20 +6,19 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 22:10:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/13 19:32:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 02:24:48 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	safe_pipe(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out)
+bool	safe_pipe(t_msh *sh, int pipefd[2], int *fd_in, int *fd_out)
 {
 	if (pipe(pipefd) == -1)
 	{
-		perror("pipe");
-		sh->exit_code = errno;
+		set_exit_perr(sh, ERRNO_CODE, "pipe");
 		safe_close_2_fds(fd_in, fd_out);
-		return (EXIT_FAILURE);
+		return (false);
 	}
-	return (EXIT_SUCCESS);
+	return (true);
 }

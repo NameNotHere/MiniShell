@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/29 04:23:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/09/30 00:56:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 		g_sig = 0;
 		if (!set_interactive_sig())
 		{
-			put_stderr("set interactive signal handling failed");
+			msg_err("set interactive signal handling failed");
 			sh->exit_code = EXIT_FAILURE;
 			return (NULL);
 		}
@@ -72,7 +72,6 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 	return (line);
 }
 
-// ...existing code...
 /*
 	Adds a line to a string, after newline char.
 	If string is NULL, string is copy of the line.
@@ -85,7 +84,7 @@ int	add_line_to_string(char **string, char **line)
 	result = EXIT_SUCCESS;
 	if (!(*line) || !*(*line))
 	{
-		put_stderr("add line to string: invalid line");
+		msg_err("add line to string: invalid line");
 		return (EXIT_FAILURE);
 	}
 	if (*string)
