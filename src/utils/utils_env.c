@@ -56,11 +56,12 @@ char	*get_env_value(t_msh *sh, char *var_name, int envp_index)
 {
 	char	*var_value;
 
+	if (envp_index < 0 || !sh->envp[envp_index])
+		return (ft_strdup(""));
 	var_value = ft_strdup(sh->envp[envp_index] + ft_strlen(var_name) + 1);
 	if (!var_value)
 	{
 		set_exit_perr(sh, ERRNO_CODE, "get_env_value allocation failed");
-		free(var_value);
 		return (NULL);
 	}
 	return (var_value);

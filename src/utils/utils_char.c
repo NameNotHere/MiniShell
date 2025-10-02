@@ -13,14 +13,6 @@
 #include <stdbool.h>
 #include "libft.h"
 
-/*
-	check for valid variable characters
-	Returns
-		true if valid
-		false if invalid
-	Note:
-		valid characters are: alphanumeric, underscore and question mark
-*/
 bool	ft_valid_var_char(int c)
 {
 	if ('?' == c)

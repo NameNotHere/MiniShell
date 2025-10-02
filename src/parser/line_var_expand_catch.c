@@ -12,10 +12,6 @@
 
 #include "minishell.h"
 
-/*
-	Check if a position is within a QUOTED heredoc delimiter
-	Returns true if the $ at position i is part of a quoted heredoc delimiter
-*/
 bool	is_in_heredoc_delimiter(char *str, int pos)
 {
 	int		i;
@@ -113,10 +109,14 @@ int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 		return (catch_absent_var(sh, ve));
 	ve->var_name_buffer[ve->var_name_i] = c;
 	ve->var_name_i++;
-	if (is_var_in_env(sh, ve->var_name_buffer, &ve->envp_var_i))
-		return (catch_var(sh, ve));
-	else if (next_c == '\0')
-		return (catch_absent_var(sh, ve));
+	ve->var_name_buffer[ve->var_name_i] = '\0';
+	if (!ft_valid_var_char(next_c))
+	{
+		if (is_var_in_env(sh, ve->var_name_buffer, &ve->envp_var_i))
+			return (catch_var(sh, ve));
+		else
+			return (catch_absent_var(sh, ve));
+	}
 	return (EXIT_SUCCESS);
 }
 
