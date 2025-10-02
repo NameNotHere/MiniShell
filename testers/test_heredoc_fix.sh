@@ -4,12 +4,12 @@ echo "=== Testing minishell heredoc fix ==="
 echo "USER=$USER"
 
 echo
-echo "1. Testing: cat << \"\$USER\" (quoted delimiter - should terminate with 'orhan')"
+echo "1. Testing: cat << \"\$USER\" (quoted delimiter - should terminate with '\$USER')"
 ./minishell << 'EOF'
 cat << "$USER"
 why
 not
-orhan
+$USER
 exit
 EOF
 

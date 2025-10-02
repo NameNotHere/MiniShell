@@ -57,32 +57,6 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 		}
 	}
 }
-// TODO: add to utils folder or something, this is very generic to be here
-bool	has_quotes(const char *str)
-{
-	if (!str)
-		return (false);
-	while (*str)
-	{
-		if (*str == '"' || *str == '\'')
-			return (true);
-		str++;
-	}
-	return (false);
-}
-
-bool	has_single_quotes(const char *str)
-{
-	if (!str)
-		return (false);
-	while (*str)
-	{
-		if (*str == '\'')
-			return (true);
-		str++;
-	}
-	return (false);
-}
 
 /* Detect complex quoted patterns that are hard to parse correctly.
 	Complex pattern: multiple quotes with variables

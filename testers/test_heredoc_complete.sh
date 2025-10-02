@@ -4,12 +4,12 @@ echo "=== Testing heredoc termination fix ==="
 echo "USER=$USER"
 
 echo
-echo "Test 1: cat << \"\$USER\" (should terminate with 'orhan')"
+echo "Test 1: cat << \"\$USER\" (should terminate with '\$USER')"
 ./minishell << 'EOF'
 cat << "$USER"
 line1
 line2
-orhan
+$USER
 exit
 EOF
 

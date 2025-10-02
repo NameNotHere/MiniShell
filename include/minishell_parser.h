@@ -319,6 +319,10 @@ void		msg_err(const char *error);
 void		msg_err_2(const char *str1, const char *str2);
 void		msg_err_3(const char *str1, const char *str2, const char *str3);
 
+// utils/has_quotes.c
+bool		has_quotes(const char *str);
+bool		has_single_quotes(const char *str);
+
 // parser/is_escaped.C
 bool		is_escaped(const char *str, int i);
 

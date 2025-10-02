@@ -21,19 +21,3 @@ removal of tests of unrequired features, or executable paths (most tests assume
 they are installed either at the minishell folder or one folder above).
 - Some tests or test versions may be added, or feedbacks from existing tests
 changed for some reason.
-
-## Custom Heredoc Tests
-
-We've added several custom test scripts for heredoc delimiter functionality:
-
-- **test_heredoc.sh**: Basic heredoc tests comparing bash and minishell behavior
-- **test_heredoc_fix.sh**: Tests for the heredoc delimiter fix implementation  
-- **test_heredoc_complete.sh**: Comprehensive heredoc termination tests
-- **test_final_heredoc.sh**: Final verification of all heredoc delimiter cases
-
-These tests verify the correct handling of quoted vs unquoted heredoc delimiters:
-- `cat << "$USER"` → terminate with literal `$USER`
-- `cat << '$USER'` → terminate with literal `$USER` 
-- `cat << $USER` → terminate with expanded value `orhan`
-
-The tests ensure minishell behavior matches bash exactly for heredoc delimiter expansion.
