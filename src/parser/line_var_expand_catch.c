@@ -29,17 +29,15 @@ bool	is_in_heredoc_delimiter(char *str, int pos)
 		if (str[i] == '<' && str[i + 1] == '<')
 		{
 			i += 2;
-			// Skip spaces after <<
-			while (str[i] && (str[i] == ' ' || str[i] == '\t'))
+			while (str[i] && ft_isspace(str[i]))
 				i++;
 			delimiter_start = i;
-			// Check if delimiter starts with a quote
-			is_quoted = (str[i] == '"' || str[i] == '\'');
-			// Find end of delimiter (space, tab, newline, or end of string)
-			while (str[i] && str[i] != ' ' && str[i] != '\t' && str[i] != '\n')
+			is_quoted = false;
+			if (str[i] == '"' || str[i] == '\'')
+				is_quoted = true;
+			while (str[i] && !ft_isspace(str[i]))
 				i++;
 			delimiter_end = i;
-			// Only skip expansion if delimiter is quoted AND position is within it
 			if (is_quoted && pos >= delimiter_start && pos < delimiter_end)
 				return (true);
 		}

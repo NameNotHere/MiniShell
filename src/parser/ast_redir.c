@@ -52,7 +52,6 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 		}
 		else if (!cmd_found)
 		{
-			// 
 			*start = i;
 			cmd_found = true;
 		}
