@@ -77,7 +77,7 @@ bool	is_valid_var_name(char *name)
 	return (true);
 }
 
-static int	handle_export_name_only(t_msh **sh, char *arg)
+int	handle_export_name_only(t_msh **sh, char *arg)
 {
 	int	i;
 
@@ -93,7 +93,7 @@ static int	handle_export_name_only(t_msh **sh, char *arg)
 	return (EXIT_SUCCESS);
 }
 
-static int	handle_export_assignment(t_msh **sh, char *arg, char *equals_pos)
+int	handle_export_assignment(t_msh **sh, char *arg, char *equals_pos)
 {
 	char	*name;
 	char	*value;
@@ -124,7 +124,10 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 	int		result;
 
 	if (!cmd.argv[1])
+	{
+		ft_env((*sh), 0);
 		return (EXIT_SUCCESS);
+	}
 	(*sh)->exit_code = EXIT_SUCCESS;
 	arg_idx = 1;
 	while (arg_idx < cmd.argc)

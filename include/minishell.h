@@ -61,7 +61,7 @@ int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 int		execute_builtin(t_msh *sh, t_cmd *cmd);
 int		ft_cd(t_msh *sh, char *directory, int argc);
 int		ft_pwd(t_msh *sh, t_cmd *cmd);
-int		ft_env(t_msh *sh, t_cmd *cmd);
+int		ft_env(t_msh *sh, int argc);
 int		ft_unset(t_msh **sh, char *name);
 
 // builtins_echo.c

@@ -78,11 +78,11 @@ int	ft_pwd(t_msh *sh, t_cmd *cmd)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_env(t_msh *sh, t_cmd *cmd)
+int	ft_env(t_msh *sh, int argc)
 {
 	int	i;
 
-	if (cmd->argc > 1)
+	if (argc > 1)
 		return (ret_exit_msg(sh, EXIT_FAILURE, "env: arguments not supported\n"));
 	i = 0;
 	while (sh->envp[i])
@@ -127,7 +127,7 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		ret = ft_echo(cmd->argv, cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
-		ret = ft_env(sh, cmd);
+		ret = ft_env(sh, cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "export") == 0)
 		ret = ft_export(&sh, *cmd);
 	else if (ft_strcmp(cmd->argv[0], "unset") == 0)
