@@ -12,6 +12,37 @@
 
 #include "minishell.h"
 
+bool	is_in_heredoc_delimiter(char *str, int pos)
+{
+	int		i;
+	int		delimiter_start;
+	int		delimiter_end;
+	bool	is_quoted;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '<' && str[i + 1] == '<')
+		{
+			i += 2;
+			while (str[i] && ft_isspace(str[i]))
+				i++;
+			delimiter_start = i;
+			is_quoted = false;
+			if (str[i] == '"' || str[i] == '\'')
+				is_quoted = true;
+			while (str[i] && !ft_isspace(str[i]))
+				i++;
+			delimiter_end = i;
+			if (is_quoted && pos >= delimiter_start && pos < delimiter_end)
+				return (true);
+		}
+		else
+			i++;
+	}
+	return (false);
+}
+
 int	get_var_count(char *str, t_var_expand *ve)
 {
 	int		var_count;
@@ -28,7 +59,8 @@ int	get_var_count(char *str, t_var_expand *ve)
 		if (handle_ve_quote(str, &sgl_quote, &dbl_quote, i))
 			;
 		else if (('$' == str[i] && !must_skip_exp(ve, i))
-			&& ft_valid_var_char(str[i + 1]) && !sgl_quote)
+			&& ft_valid_var_char(str[i + 1]) && !sgl_quote
+			&& !is_in_heredoc_delimiter(str, i))
 			var_count++;
 		i++;
 	}
@@ -77,10 +109,14 @@ int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 		return (catch_absent_var(sh, ve));
 	ve->var_name_buffer[ve->var_name_i] = c;
 	ve->var_name_i++;
-	if (is_var_in_env(sh, ve->var_name_buffer, &ve->envp_var_i))
-		return (catch_var(sh, ve));
-	else if (next_c == '\0')
-		return (catch_absent_var(sh, ve));
+	ve->var_name_buffer[ve->var_name_i] = '\0';
+	if (!ft_valid_var_char(next_c))
+	{
+		if (is_var_in_env(sh, ve->var_name_buffer, &ve->envp_var_i))
+			return (catch_var(sh, ve));
+		else
+			return (catch_absent_var(sh, ve));
+	}
 	return (EXIT_SUCCESS);
 }
 
@@ -93,7 +129,8 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *str)
 	{
 		if (str[i] == '$'
 			&& !must_skip_exp(ve, i)
-			&& ft_valid_var_char(str[i + 1]) && !ve->sgl_quote)
+			&& ft_valid_var_char(str[i + 1]) && !ve->sgl_quote
+			&& !is_in_heredoc_delimiter(str, i))
 		{
 			ve->var_lookup = true;
 			i++;

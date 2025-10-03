@@ -77,55 +77,35 @@ bool	is_valid_var_name(char *name)
 	return (true);
 }
 
-/*
-	Handles export in two formats:
-		export NAME=VALUE  (with assignments)
-		or
-		export NAME  (without assignment)
-	but only the first format does something.
+static int	handle_export_name_only(t_msh **sh, char *arg)
+{
+	int	i;
 
-	NOTES:
-	Since current implementation does not support shell variables (like adding
-	variables with direct assignment like NAME=VALUE without the export keyword)
+	if (!is_valid_var_name(arg))
+	{
+		msg_err_3("export: `", arg, "': not a valid identifier");
+		(*sh)->exit_code = EXIT_FAILURE;
+		return (EXIT_FAILURE);
+	}
+	i = search_name(arg, (*sh)->envp);
+	if (i == -1)
+		add_env_var(&(*sh)->envp, arg, "");
+	return (EXIT_SUCCESS);
+}
 
-	Direct assignment without export keyworkd like NAME=VALUE will be dealt like
-	invalid command.
-
-	Check if it's a valid variable name even without assignment
-
-	Valid variable name is checked in both formats, but assignment only occurs
-	with the assignment format.
-*/
-int	ft_export(t_msh **sh, t_cmd cmd)
+static int	handle_export_assignment(t_msh **sh, char *arg, char *equals_pos)
 {
 	char	*name;
 	char	*value;
-	char	*equals_pos;
 	int		i;
 
-	if (!cmd.argv[1])
-		return (EXIT_SUCCESS);
-	if (cmd.argc > 2)
-	{
-		msg_err("export: too many arguments\n");
-		return (EXIT_FAILURE);
-	}
-	equals_pos = ft_strchr(cmd.argv[1], '=');
-	if (!equals_pos)
-	{
-		if (!is_valid_var_name(cmd.argv[1]))
-		{
-			msg_err_3("export: `", cmd.argv[1], "': not a valid identifier");
-			return (EXIT_FAILURE);
-		}
-		return (EXIT_SUCCESS);
-	}
 	*equals_pos = '\0';
-	name = cmd.argv[1];
+	name = arg;
 	value = equals_pos + 1;
 	if (!is_valid_var_name(name))
 	{
-		msg_err_3("export: `", cmd.argv[1], "': not a valid identifier");
+		msg_err_3("export: `", name, "': not a valid identifier");
+		*equals_pos = '=';
 		return (EXIT_FAILURE);
 	}
 	i = search_name(name, (*sh)->envp);
@@ -133,7 +113,30 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 		add_env_var(&(*sh)->envp, name, value);
 	else
 		change_env_value(name, value, &(*sh)->envp);
-	if (search_name(name, (*sh)->envp) == -1)
-		return (EXIT_FAILURE);
+	*equals_pos = '=';
 	return (EXIT_SUCCESS);
+}
+
+int	ft_export(t_msh **sh, t_cmd cmd)
+{
+	char	*equals_pos;
+	int		arg_idx;
+	int		result;
+
+	if (!cmd.argv[1])
+		return (EXIT_SUCCESS);
+	(*sh)->exit_code = EXIT_SUCCESS;
+	arg_idx = 1;
+	while (arg_idx < cmd.argc)
+	{
+		equals_pos = ft_strchr(cmd.argv[arg_idx], '=');
+		if (!equals_pos)
+			result = handle_export_name_only(sh, cmd.argv[arg_idx]);
+		else
+			result = handle_export_assignment(sh, cmd.argv[arg_idx], equals_pos);
+		if (result == EXIT_FAILURE)
+			(*sh)->exit_code = EXIT_FAILURE;
+		arg_idx++;
+	}
+	return ((*sh)->exit_code);
 }

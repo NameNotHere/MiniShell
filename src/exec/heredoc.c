@@ -30,7 +30,13 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 		hdoc_line = get_shell_line(sh, HDOC_PROMPT);
 		if (g_sig == SIGINT)
 			return (safe_free_string(&hdoc_line), NULL);
-		if (!hdoc_line || !*hdoc_line)
+		if (!hdoc_line)
+		{
+			msg_err("warning: here-document delimited by end-of-file");
+			sh->exit_code = EXIT_FAILURE;
+			return (NULL);
+		}
+		if (!*hdoc_line)
 		{
 			safe_free_string(&hdoc_line);
 			continue ;

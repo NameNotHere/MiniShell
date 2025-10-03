@@ -253,6 +253,7 @@ int			skip_spaces(int *i, char *str);
 // parser/line_var_expand_catch.c
 int		get_var_count(char *str, t_var_expand *ve);
 int		catch_all_vars(t_msh *sh, t_var_expand *ve, char *str);
+bool	is_in_heredoc_delimiter(char *str, int pos);
 
 // parser/line_var_expand.c
 bool		expand_string_variables(t_msh *sh, char **string_ptr);
@@ -317,6 +318,10 @@ bool		has_complex_heredoc_delimiter(char *line);
 void		msg_err(const char *error);
 void		msg_err_2(const char *str1, const char *str2);
 void		msg_err_3(const char *str1, const char *str2, const char *str3);
+
+// utils/has_quotes.c
+bool		has_quotes(const char *str);
+bool		has_single_quotes(const char *str);
 
 // parser/is_escaped.C
 bool		is_escaped(const char *str, int i);
