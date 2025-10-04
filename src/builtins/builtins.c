@@ -27,10 +27,16 @@ int	ft_cd(t_msh *sh, char *directory, int argc)
 	// 	msg_err("cd: too many arguments\n");
 	// 	return (EXIT_FAILURE);
 	// }
+	// we might not need this check
+	// but it's better to be safe than sorry
 	if (directory && isminioperator(directory, 0) > 0)
 	{
 		msg_err("cd: operators not allowed\n");
 		return (EXIT_FAILURE);
+	}
+	else if (ft_strcmp(directory, "-") == 0)
+	{
+		directory = get_env_value(sh, "OLDPWD", search_name("OLDPWD", sh->envp));
 	}
 	home_path = NULL;
 	if (!directory)
@@ -56,6 +62,13 @@ int	ft_cd(t_msh *sh, char *directory, int argc)
 	{
 		free(sh->envp[pwd_index]);
 		sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
+		if (!sh->envp[pwd_index])
+		{
+			msg_err("cd: memory allocation error\n");
+			safe_free_string(&cwd);
+			safe_free_string(&home_path);
+			return (EXIT_FAILURE);
+		}
 	}
 	safe_free_string(&cwd);
 	safe_free_string(&home_path);
