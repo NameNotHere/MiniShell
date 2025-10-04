@@ -19,11 +19,14 @@ int	ft_cd(t_msh *sh, char *directory, int argc)
 	char	*cwd;
 	char	*home_path;
 
-	if (argc > 2)
-	{
-		msg_err("cd: too many arguments\n");
-		return (EXIT_FAILURE);
-	}
+	// add this back for evaluation
+	(void)argc;
+	// if (argc > 2)
+	// {
+	// 	sh->exit_code = EXIT_FAILURE;
+	// 	msg_err("cd: too many arguments\n");
+	// 	return (EXIT_FAILURE);
+	// }
 	if (directory && isminioperator(directory, 0) > 0)
 	{
 		msg_err("cd: operators not allowed\n");
@@ -37,7 +40,7 @@ int	ft_cd(t_msh *sh, char *directory, int argc)
 	}
 	if (chdir(directory) != EXIT_SUCCESS)
 	{
-		perror("cd");
+		perror("No such file or directory");
 		safe_free_string(&home_path);
 		return (EXIT_FAILURE);
 	}

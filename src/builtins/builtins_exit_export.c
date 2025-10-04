@@ -124,10 +124,7 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 	int		result;
 
 	if (!cmd.argv[1])
-	{
-		ft_env((*sh), 0);
-		return (EXIT_SUCCESS);
-	}
+		return (ft_env((*sh), 1));
 	(*sh)->exit_code = EXIT_SUCCESS;
 	arg_idx = 1;
 	while (arg_idx < cmd.argc)
