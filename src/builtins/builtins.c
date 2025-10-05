@@ -13,14 +13,13 @@
 #include "minishell.h"
 #include <sys/stat.h>
 
-int	ft_cd(t_msh *sh, char *directory, int argc)
+int	ft_cd(t_msh *sh, char *directory)
 {
 	int		pwd_index;
 	char	*cwd;
 	char	*home_path;
 	char	*oldpwd_value;
 
-	(void)argc;
 	oldpwd_value = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
 	if (ft_strcmp(directory, "-") == 0)
 		directory = get_env_value(sh, "OLDPWD", search_name("OLDPWD", sh->envp));
@@ -124,7 +123,7 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		ret = ft_pwd(sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
-		ret = ft_cd(sh, cmd->argv[1], cmd->argc);
+		ret = ft_cd(sh, cmd->argv[1]);
 	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		ret = ft_echo(cmd->argv, cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
