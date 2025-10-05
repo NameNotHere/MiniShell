@@ -63,8 +63,6 @@ int		ft_cd(t_msh *sh, char *directory);
 int		ft_pwd(t_msh *sh, t_cmd *cmd);
 int		ft_env(t_msh *sh, int argc);
 int		ft_unset(t_msh **sh, char *name);
-
-// builtins_echo.c
 int		ft_echo(char **argv, int argc);
 
 // builtins_exit_export.c
