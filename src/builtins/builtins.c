@@ -18,26 +18,12 @@ int	ft_cd(t_msh *sh, char *directory, int argc)
 	int		pwd_index;
 	char	*cwd;
 	char	*home_path;
+	char	*oldpwd_value;
 
-	// add this back for evaluation
 	(void)argc;
-	// if (argc > 2)
-	// {
-	// 	sh->exit_code = EXIT_FAILURE;
-	// 	msg_err("cd: too many arguments\n");
-	// 	return (EXIT_FAILURE);
-	// }
-	// we might not need this check
-	// but it's better to be safe than sorry
-	if (directory && isminioperator(directory, 0) > 0)
-	{
-		msg_err("cd: operators not allowed\n");
-		return (EXIT_FAILURE);
-	}
-	else if (ft_strcmp(directory, "-") == 0)
-	{
+	oldpwd_value = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
+	if (ft_strcmp(directory, "-") == 0)
 		directory = get_env_value(sh, "OLDPWD", search_name("OLDPWD", sh->envp));
-	}
 	home_path = NULL;
 	if (!directory)
 	{
@@ -47,31 +33,30 @@ int	ft_cd(t_msh *sh, char *directory, int argc)
 	if (chdir(directory) != EXIT_SUCCESS)
 	{
 		perror("No such file or directory");
-		safe_free_string(&home_path);
+		safe_free_string(&oldpwd_value);
+		sh->exit_code = EXIT_FAILURE;
 		return (EXIT_FAILURE);
 	}
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
 		perror("getcwd");
-		safe_free_string(&home_path);
+		sh->exit_code = EXIT_FAILURE;
 		return (EXIT_FAILURE);
 	}
 	pwd_index = search_name("PWD", sh->envp);
-	if (pwd_index >= 0)
+	free(sh->envp[pwd_index]);
+	sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
+	if (!sh->envp[pwd_index])
 	{
-		free(sh->envp[pwd_index]);
-		sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
-		if (!sh->envp[pwd_index])
-		{
-			msg_err("cd: memory allocation error\n");
-			safe_free_string(&cwd);
-			safe_free_string(&home_path);
-			return (EXIT_FAILURE);
-		}
+		msg_err("cd: memory allocation error\n");
+		safe_free_string(&cwd);
+		return (EXIT_FAILURE);
 	}
 	safe_free_string(&cwd);
-	safe_free_string(&home_path);
+	change_env_value("OLDPWD", oldpwd_value, &sh->envp);
+	safe_free_string(&oldpwd_value);
+	sh->exit_code = EXIT_SUCCESS;
 	return (EXIT_SUCCESS);
 }
 
