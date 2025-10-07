@@ -22,13 +22,14 @@ int	parse_line(t_msh *sh, t_ast *ast, char *string)
 	if (!tokens)
 		return (ret_exit_msg(sh, EXIT_FAILURE, "tokenizer failed"));
 	sh->tokens = tokens;
-	build_ast(sh, ast, tokens);
+	if (build_ast(sh, ast, tokens) != EXIT_SUCCESS)
+		return (ret_exit_msg(sh, EXIT_FAILURE, "AST build failed"));
 	free_tokens(&sh->tokens, token_count);
 	lookup_result = lookup_all_cmd_fullpaths(sh, sh->ast);
 	if (lookup_result != EXIT_SUCCESS)
 	{
-		return (EXIT_FAILURE);
 		sh->exit_code = lookup_result;
+		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
 }

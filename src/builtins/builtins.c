@@ -13,22 +13,16 @@
 #include "minishell.h"
 #include <sys/stat.h>
 
-int	ft_cd(t_msh *sh, char *directory, int argc)
+int	ft_cd(t_msh *sh, char *directory)
 {
 	int		pwd_index;
 	char	*cwd;
 	char	*home_path;
+	char	*oldpwd_value;
 
-	if (argc > 2)
-	{
-		msg_err("cd: too many arguments\n");
-		return (EXIT_FAILURE);
-	}
-	if (directory && isminioperator(directory, 0) > 0)
-	{
-		msg_err("cd: operators not allowed\n");
-		return (EXIT_FAILURE);
-	}
+	oldpwd_value = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
+	if (ft_strcmp(directory, "-") == 0)
+		directory = get_env_value(sh, "OLDPWD", search_name("OLDPWD", sh->envp));
 	home_path = NULL;
 	if (!directory)
 	{
@@ -37,25 +31,31 @@ int	ft_cd(t_msh *sh, char *directory, int argc)
 	}
 	if (chdir(directory) != EXIT_SUCCESS)
 	{
-		perror("cd");
-		safe_free_string(&home_path);
+		perror("No such file or directory");
+		safe_free_string(&oldpwd_value);
+		sh->exit_code = EXIT_FAILURE;
 		return (EXIT_FAILURE);
 	}
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 	{
 		perror("getcwd");
-		safe_free_string(&home_path);
+		sh->exit_code = EXIT_FAILURE;
 		return (EXIT_FAILURE);
 	}
 	pwd_index = search_name("PWD", sh->envp);
-	if (pwd_index >= 0)
+	free(sh->envp[pwd_index]);
+	sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
+	if (!sh->envp[pwd_index])
 	{
-		free(sh->envp[pwd_index]);
-		sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
+		msg_err("cd: memory allocation error\n");
+		safe_free_string(&cwd);
+		return (EXIT_FAILURE);
 	}
 	safe_free_string(&cwd);
-	safe_free_string(&home_path);
+	change_env_value("OLDPWD", oldpwd_value, &sh->envp);
+	safe_free_string(&oldpwd_value);
+	sh->exit_code = EXIT_SUCCESS;
 	return (EXIT_SUCCESS);
 }
 
@@ -78,11 +78,11 @@ int	ft_pwd(t_msh *sh, t_cmd *cmd)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_env(t_msh *sh, t_cmd *cmd)
+int	ft_env(t_msh *sh, int argc)
 {
 	int	i;
 
-	if (cmd->argc > 1)
+	if (argc > 1)
 		return (ret_exit_msg(sh, EXIT_FAILURE, "env: arguments not supported\n"));
 	i = 0;
 	while (sh->envp[i])
@@ -123,11 +123,11 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		ret = ft_pwd(sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
-		ret = ft_cd(sh, cmd->argv[1], cmd->argc);
+		ret = ft_cd(sh, cmd->argv[1]);
 	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		ret = ft_echo(cmd->argv, cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
-		ret = ft_env(sh, cmd);
+		ret = ft_env(sh, cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "export") == 0)
 		ret = ft_export(&sh, *cmd);
 	else if (ft_strcmp(cmd->argv[0], "unset") == 0)

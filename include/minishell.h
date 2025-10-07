@@ -59,12 +59,10 @@ int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 
 // builtins.c
 int		execute_builtin(t_msh *sh, t_cmd *cmd);
-int		ft_cd(t_msh *sh, char *directory, int argc);
+int		ft_cd(t_msh *sh, char *directory);
 int		ft_pwd(t_msh *sh, t_cmd *cmd);
-int		ft_env(t_msh *sh, t_cmd *cmd);
+int		ft_env(t_msh *sh, int argc);
 int		ft_unset(t_msh **sh, char *name);
-
-// builtins_echo.c
 int		ft_echo(char **argv, int argc);
 
 // builtins_exit_export.c
@@ -168,11 +166,6 @@ int		ft_strlen_array(char **array);
 
 // utils/utils_token.c
 bool	is_valid_cmd_token(t_token_ty token_type);
-
-// filenavs.c
-char	*cd(char *path, char *new_path);
-void	pwd(char **path_dirs);
-void	minishell_exit(void);
 
 //envp assistance
 int		search_name(char *name, char **envp);
