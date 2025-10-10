@@ -17,7 +17,6 @@ bool	is_in_heredoc_delimiter(char *str, int pos)
 	int		i;
 	int		delimiter_start;
 	int		delimiter_end;
-	bool	is_quoted;
 
 	i = 0;
 	while (str[i])
@@ -28,13 +27,11 @@ bool	is_in_heredoc_delimiter(char *str, int pos)
 			while (str[i] && ft_isspace(str[i]))
 				i++;
 			delimiter_start = i;
-			is_quoted = false;
-			if (str[i] == '"' || str[i] == '\'')
-				is_quoted = true;
 			while (str[i] && !ft_isspace(str[i]))
 				i++;
 			delimiter_end = i;
-			if (is_quoted && pos >= delimiter_start && pos < delimiter_end)
+			if ((str[delimiter_start] == '"' || str[delimiter_start] == '\'')
+				&& pos >= delimiter_start && pos < delimiter_end)
 				return (true);
 		}
 		else
