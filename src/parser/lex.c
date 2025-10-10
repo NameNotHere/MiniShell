@@ -93,27 +93,33 @@ void	make_string(char *str, int *len, int i)
 	(*len) += j - i;
 }
 
-void	parse_word(char *str, int i, int *len)
+void	parse_word(char *str, int *i, int *len)
 {
-	if (str[i] == '-')
+
+	skip_spaces(i, str);
+	*len = 0;
+	while (str[*i + *len] && !ft_isspace(str[*i + *len])
+		&& !isminioperator(str, *i + *len))
 	{
-		(*len)++;
-		i++;
-	}
-	while (str[i] && !ft_isspace(str[i]) && !isminioperator(str, i) &&\
-            str[i] != '\'' && str[i] != '\"')
-	{
-		if (str[i] == '\\' && str[i + 1])
-		{
-			i += 2;
-			*len += 2;
-		}
+		if (str[*i + *len] && (str[*i + *len] == '\'' || str[*i + *len] == '\"'))
+			make_string(str, len, *i + *len);
 		else
 		{
-			i++;
-			(*len)++;
+			while (str[*i + *len] && !ft_isspace(str[*i + *len])
+				&& !isminioperator(str, *i + *len)
+				&& str[*i + *len] != '\'' && str[*i + *len] != '\"')
+			{
+				if (str[*i + *len] == '\\' && str[*i + *len + 1])
+					*len += 2;
+				else
+					(*len)++;
+			}
 		}
 	}
+	if (*len == 0 && str[*i] && isminioperator(str, *i))
+		*len += isminioperator(str, *i);
+	else if (*len == 0 && str[*i])
+		*len = 1;
 }
 
 char	*make_word(char *str, int *i, int *err)
@@ -121,30 +127,7 @@ char	*make_word(char *str, int *i, int *err)
 	int		len;
 	char	*word;
 
-	skip_spaces(i, str);
-	len = 0;
-	while (str[*i + len] && !ft_isspace(str[*i + len])
-		&& !isminioperator(str, *i + len))
-	{
-		if (str[*i + len] && (str[*i + len] == '\'' || str[*i + len] == '\"'))
-			make_string(str, &len, *i + len);
-		else
-		{
-			while (str[*i + len] && !ft_isspace(str[*i + len])
-				&& !isminioperator(str, *i + len)
-				&& str[*i + len] != '\'' && str[*i + len] != '\"')
-			{
-				if (str[*i + len] == '\\' && str[*i + len + 1])
-					len += 2;
-				else
-					len++;
-			}
-		}
-	}
-	if (len == 0 && str[*i] && isminioperator(str, *i))
-		len += isminioperator(str, *i);
-	else if (len == 0 && str[*i])
-		len = 1;
+	parse_word(str, i, &len);
 	(*i) += len;
 	if (len == 0)
 		*err = EXIT_FAILURE;
