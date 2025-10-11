@@ -36,6 +36,7 @@ SRCS = 	signals/signals.c \
 	minishell_initialize.c \
 	minishell_main.c \
 	builtins/builtins.c \
+	builtins/ft_export.c \
 	builtins/builtins_echo.c \
 	builtins/builtins_exit_export.c \
 	exec/lookup_cmd_fullpath.c \
