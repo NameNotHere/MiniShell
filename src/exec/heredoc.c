@@ -12,64 +12,6 @@
 
 #include "minishell.h"
 
-char	*hdoc_loop(t_msh *sh, t_redir *redir)
-{
-	char	*hdoc_string;
-	char	*hdoc_line;
-
-	hdoc_string = NULL;
-	if (!set_heredoc_sig())
-	{
-		sh->exit_code = EXIT_FAILURE;
-		msg_err("failed to set heredoc signal handler");
-		return (NULL);
-	}
-	while (true)
-	{
-		g_sig = 0;
-		hdoc_line = get_shell_line(sh, HDOC_PROMPT);
-		if (g_sig == SIGINT)
-			return (safe_free_string(&hdoc_line), NULL);
-		if (!hdoc_line)
-		{
-			msg_err("warning: here-document delimited by end-of-file");
-			sh->exit_code = EXIT_FAILURE;
-			return (NULL);
-		}
-		if (!*hdoc_line)
-		{
-			safe_free_string(&hdoc_line);
-			continue ;
-		}
-		if (!redir->quoted && !expand_string_variables(sh, &hdoc_line))
-		{
-			sh->exit_code = EXIT_FAILURE;
-			safe_free_string(&hdoc_line);
-			break ;
-		}
-		if (ft_strcmp(redir->string, hdoc_line) == 0)
-		{
-			safe_free_string(&hdoc_line);
-			break ;
-		}
-		if (add_line_to_string(&hdoc_string, &hdoc_line) == EXIT_FAILURE)
-		{
-			sh->exit_code = EXIT_FAILURE;
-			break ;
-		}
-	}
-	return (hdoc_string);
-}
-
-void	hdoc_err(t_msh *sh, int *write_fd, int *redir_fd, char *hdoc_str)
-{
-	safe_close_2_fds(write_fd, redir_fd);
-	safe_free_string(&hdoc_str);
-	sh->exit_code = EXIT_FAILURE;
-	msg_err("heredoc redir failed");
-	return ;
-}
-
 void	hdoc_redir(t_msh *sh, t_redir *redir, int prev_hdoc_fd)
 {
 	char	*hdoc_str;

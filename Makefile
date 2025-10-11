@@ -47,6 +47,7 @@ SRCS = 	signals/signals.c \
 	exec/execute_cmd_redir.c \
 	exec/execute_cmd_redir_open.c \
 	exec/heredoc.c \
+	exec/heredoc_assist.c \
 	exec/safe_fork.c \
 	exec/safe_pipe.c \
 	parser/ast.c \

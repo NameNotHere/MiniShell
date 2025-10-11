@@ -34,19 +34,13 @@ int	execute_command(t_msh *sh, t_cmd *cmd)
 		return (execute_builtin(sh, cmd));
 	if (cmd->permission_denied)
 	{
-		if (cmd->argv[0] == NULL)
-			msg_err("permission denied: (empty command)\n");
-		else
-			msg_err_3("permission denied: ", cmd->argv[0], "\n");
+		msg_err_3("permission denied: ", cmd->argv[0], "\n");
 		sh->exit_code = 126;
 		return (126);
 	}
 	if (cmd->not_found)
 	{
-		if (cmd->argv[0] == NULL)
-			msg_err("command not found: (empty command)\n");
-		else
-			msg_err_3("command not found: ", cmd->argv[0], "\n");
+		msg_err_3("command not found: ", cmd->argv[0], "\n");
 		sh->exit_code = 127;
 		return (127);
 	}

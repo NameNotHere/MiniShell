@@ -13,6 +13,7 @@
 #include "minishell.h"
 
 static int	wait_children(t_msh *sh);
+static void	process_child_status(t_msh *sh, pid_t child_pid, int child_status);
 
 // pipefd[1] for left-side to write to the pipe (STDOUT_FILENO)
 // pipefd[0] for right-side to read from the pipe (STDIN_FILENO)
@@ -74,6 +75,21 @@ int	exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 }
 
 /*
+Process the exit status of a child and update shell exit code if it's the last
+	child.
+*/
+static void	process_child_status(t_msh *sh, pid_t child_pid, int child_status)
+{
+	if (child_pid == sh->last_pid)
+	{
+		if (WIFEXITED(child_status))
+			sh->exit_code = WEXITSTATUS(child_status);
+		else if (WIFSIGNALED(child_status))
+			sh->exit_code = 128 + WTERMSIG(child_status);
+	}
+}
+
+/*
 	Reap all children and update the shell exit code from the rightmost child.
 	Returns the updated exit code.
 */
@@ -98,13 +114,7 @@ static int	wait_children(t_msh *sh)
 				perror("wait error");
 			break ;
 		}
-		if (child_pid == sh->last_pid)
-		{
-			if (WIFEXITED(child_status))
-				sh->exit_code = WEXITSTATUS(child_status);
-			else if (WIFSIGNALED(child_status))
-				sh->exit_code = 128 + WTERMSIG(child_status);
-		}
+		process_child_status(sh, child_pid, child_status);
 	}
 	if (interrupted)
 		msg_err("\n");

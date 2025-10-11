@@ -96,7 +96,7 @@ void	print_ast_cmd(t_ast *node)
 /*
 TODO: REMOVE TEST BEFORE EVALUATION
 */
-int	print_build_ast(t_msh *sh,  t_ast *ast, t_token *tokens)
+int	print_build_ast(t_msh *sh, t_ast *ast, t_token *tokens)
 {
 	if (!ast)
 		return (EXIT_SUCCESS);

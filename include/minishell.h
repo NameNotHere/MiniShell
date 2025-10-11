@@ -98,6 +98,10 @@ int		open_append_redirection(t_msh *sh, char *filename);
 // exec/heredoc.c
 int		heredoc_ast_node(t_msh *sh, t_ast *node);
 
+// exec/heredoc_assist.c
+char	*hdoc_loop(t_msh *sh, t_redir *redir);
+void	hdoc_err(t_msh *sh, int *write_fd, int *redir_fd, char *hdoc_str);
+
 // exec/lookup_cmd_fullpath.c
 int		lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);
 
