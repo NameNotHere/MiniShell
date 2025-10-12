@@ -97,6 +97,7 @@ char	**token_words_to_argv(t_token *tokens, int start, int end, int argc, int i)
 		}
 		token_i++;
 	}
+	//remove this debug for norm
 	i = 0;
 	a_print(" :: argv -> ");
 	while (argv[i] != NULL)
