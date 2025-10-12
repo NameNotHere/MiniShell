@@ -34,11 +34,7 @@ int	count_tokens(char *str, int count, int i)
 	{
 		skip_spaces(&i, str);
 		if (isminioperator(str, i) > 0)
-		{
 			i += isminioperator(str, i);
-			count++;
-			continue ;
-		}
 		else if ((str[i] == '\'' || str[i] == '\"'))
 		{
 			quote = str[i++];
