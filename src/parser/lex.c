@@ -26,47 +26,35 @@ int	skip_spaces(int *i, char *str)
 	return (y);
 }
 
-int	count_tokens(char *str)
+int	count_tokens(char *str, int count, int i)
 {
-	int		count;
-	int		i;
 	char	quote;
 
-	i = 0;
-	count = 0;
 	while (str[i])
 	{
 		skip_spaces(&i, str);
-		if (!str[i])
-			break ;
 		if (isminioperator(str, i) > 0)
 		{
 			i += isminioperator(str, i);
 			count++;
 			continue ;
 		}
-		if (!str[i])
-			break ;
 		else if ((str[i] == '\'' || str[i] == '\"'))
 		{
 			quote = str[i++];
 			while (str[i] && str[i] != quote)
 			{
 				if (str[i] == '\\' && str[i + 1] != '\0')
-					i += 2;
-				else
 					i++;
+				i++;
 			}
 			if (str[i] && str[i] == quote)
 				i++;
-			count++;
 		}
 		else if (str[i] && !ft_isspace(str[i]) && isminioperator(str, i) == 0)
-		{
 			while (str[i] && !ft_isspace(str[i]) && isminioperator(str, i) == 0)
 				i++;
-			count++;
-		}
+		count++;
 	}
 	return (count);
 }

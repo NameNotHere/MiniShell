@@ -244,7 +244,7 @@ t_redir_ty	get_redir_type(t_token_ty ty);
 void		parse_redir(t_msh *sh, t_ast *ast, int *start, int *end);
 
 // parser/lex.c
-int			count_tokens(char *str);
+int			count_tokens(char *str, int count, int i);
 const char	*get_token_name(t_token_ty type);
 const char	*get_token_name_continued(t_token_ty type);
 char		*make_word(char *str, int *i, int *err);
