@@ -223,7 +223,7 @@ void		parse_pipe(t_msh *sh, t_ast *ast, int start, int end);
 
 // parser/ast_cmd.c
 void		parse_cmd(t_msh *sh, t_ast *ast, int start, int end);
-char		**token_words_to_argv(t_token *tokens, int start, int end);
+char		**token_words_to_argv(t_token *tokens, int start, int end, int argc, int i);
 char		*remove_quotes(char *str, int len);
 
 // utils/utils_token.c
