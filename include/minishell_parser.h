@@ -318,6 +318,8 @@ bool		has_complex_heredoc_delimiter(char *line);
 void		msg_err(const char *error);
 void		msg_err_2(const char *str1, const char *str2);
 void		msg_err_3(const char *str1, const char *str2, const char *str3);
+int			msg_err_and_free_string(const char *str1, char **to_free);
+int			set_dir_or_error(t_msh *sh, char **directory, char **dir_to_free);
 
 // utils/has_quotes.c
 bool		has_quotes(const char *str);

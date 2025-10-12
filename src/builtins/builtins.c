@@ -21,31 +21,16 @@ int	ft_cd(t_msh *sh, char *directory)
 	char	*dir_to_free;
 
 	sh->exit_code = EXIT_FAILURE;
-	dir_to_free = NULL;
 	oldpwd_value = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
-	if (ft_strcmp(directory, "-") == 0)
-		dir_to_free = get_env_value(sh, "OLDPWD", search_name("OLDPWD", sh->envp));
-	if (!directory)
-		dir_to_free = get_env_value(sh, "HOME", search_name("HOME", sh->envp));
-	if (ft_strcmp(directory, "-") == 0 || !directory)
-		directory = dir_to_free;
-	if (chdir(directory) != EXIT_SUCCESS)
-	{
-		perror("No such file or directory");
-		safe_free_string(&oldpwd_value);
-		safe_free_string(&dir_to_free);
-		return (EXIT_FAILURE);
-	}
+	if (set_dir_or_error(sh, &directory, &dir_to_free) == EXIT_FAILURE)
+		return (sh->exit_code);
 	cwd = getcwd(NULL, 0);
 	pwd_index = search_name("PWD", sh->envp);
 	free(sh->envp[pwd_index]);
 	sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
 	safe_free_string(&cwd);
 	if (!sh->envp[pwd_index])
-	{
-		msg_err("cd: memory allocation error\n");
-		return (EXIT_FAILURE);
-	}
+		return (msg_err_and_free_string("cd: memory allocation error\n", &oldpwd_value));
 	change_env_value("OLDPWD", oldpwd_value, &sh->envp);
 	safe_free_string(&oldpwd_value);
 	safe_free_string(&dir_to_free);
