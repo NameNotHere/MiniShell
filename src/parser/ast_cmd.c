@@ -73,8 +73,9 @@ char	*remove_quotes(char *str, int len)
 	return (result);
 }
 
-char	**token_words_to_argv(t_token *tokens, int start, int end, int argc, int i)
+char	**token_words_to_argv(t_token *tokens, int start, int end, int argc)
 {
+	int 	i;
 	int		token_i;
 	char	**argv;
 	char	*word;
