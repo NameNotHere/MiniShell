@@ -91,7 +91,6 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 	arg_idx = 1;
 	while (arg_idx < cmd.argc)
 	{
-		// Check for invalid options (starts with --)
 		if (cmd.argv[arg_idx][0] == '-' && cmd.argv[arg_idx][1] == '-')
 		{
 			msg_err_3("export: `", cmd.argv[arg_idx], "': not a valid identifier");

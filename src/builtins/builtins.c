@@ -89,6 +89,14 @@ int	ft_unset(t_msh **sh, char *name)
 	(*sh)->exit_code = EXIT_SUCCESS;
 	if (!name)
 		return (EXIT_SUCCESS);
+	if (name[0] == '-')
+	{
+		write(STDERR_FILENO, "unset: ", 7);
+		write(STDERR_FILENO, name, ft_strlen(name));
+		write(STDERR_FILENO, ": invalid option\n", 17);
+		(*sh)->exit_code = 2;
+		return (2);
+	}
 	i = search_name(name, (*sh)->envp);
 	if (i == -1)
 		return (EXIT_SUCCESS);
@@ -107,7 +115,7 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 {
 	int	ret;
 
-	ret = EXIT_SUCCESS;
+	ret = 127;
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		ret = ft_pwd(sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
@@ -122,6 +130,5 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 		ret = ft_unset(&sh, cmd->argv[1]);
 	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
 		ret = ft_exit(sh, *cmd);
-	//sh->exit_code = ret;
 	return (ret);
 }
