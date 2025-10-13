@@ -20,7 +20,7 @@ void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 	ast->cmd.built_in = false;
 	if (sh->tokens[start].ty == TOKEN_INBUILT)
 		ast->cmd.built_in = true;
-	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end, 0, 0);
+	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end, 0);
 	ast->cmd.argc = 0;
 	while (ast->cmd.argv && ast->cmd.argv[ast->cmd.argc])
 		ast->cmd.argc++;
