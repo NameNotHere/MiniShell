@@ -41,6 +41,17 @@ int	msg_err_and_free_string(const char *str1, char **to_free)
 
 int	set_dir_or_error(t_msh *sh, char **directory, char **dir_to_free)
 {
+	*dir_to_free = NULL;
+	if (ft_strcmp(*directory, "-") == 0)
+	{
+		*dir_to_free = get_env_value(sh, "OLDPWD", search_name("OLDPWD", sh->envp));
+		*directory = *dir_to_free;
+	}
+	else if (!*directory || ft_strcmp(*directory, "~") == 0)
+	{
+		*dir_to_free = get_env_value(sh, "HOME", search_name("HOME", sh->envp));
+		*directory = *dir_to_free;
+	}
 	if (chdir(*directory) != EXIT_SUCCESS)
 	{
 		msg_err("cd: no such file or directory: ");
@@ -49,12 +60,5 @@ int	set_dir_or_error(t_msh *sh, char **directory, char **dir_to_free)
 		safe_free_string(dir_to_free);
 		return (EXIT_FAILURE);
 	}
-	if (ft_strcmp(*directory, "-") == 0)
-		*dir_to_free = get_env_value(sh, "OLDPWD", search_name("OLDPWD",\
-			 sh->envp));
-	if (!*directory)
-		*dir_to_free = get_env_value(sh, "HOME", search_name("HOME", sh->envp));
-	if (ft_strcmp(*directory, "-") == 0 || !*directory)
-		*directory = *dir_to_free;
 	return (EXIT_SUCCESS);
 }
