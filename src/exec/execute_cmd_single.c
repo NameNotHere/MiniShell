@@ -50,11 +50,10 @@ int	exec_single_builtin(t_msh *sh, t_cmd *cmd)
 
 	saved_fd_stdin = -1;
 	saved_fd_stdout = -1;
-
 	if (cmd->redir && !save_std_fds(&saved_fd_stdin, &saved_fd_stdout))
 	{
 		return (ret_exit_msg(sh, EXIT_FAILURE, "error: failed to save stdin/stdout"
-			" for builtin redirection\n"));
+							" for builtin redirection\n"));
 	}
 	if (execute_redirection(sh, cmd->redir))
 		sh->exit_code = execute_builtin(sh, cmd);

@@ -112,7 +112,7 @@ t_token	*tokenize(char *input, int *token_count, int *err)
 
 	i = 0;
 	id = 0;
-	*err = x_calloc((void **)&res, sizeof(t_token), (count_tokens(input) + 2));
+	*err = x_calloc((void **)&res, sizeof(t_token), (count_tokens(input, 0, 0) + 2));
 	if (*err)
 		return (NULL);
 	while (input[i])

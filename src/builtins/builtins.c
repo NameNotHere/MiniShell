@@ -21,20 +21,11 @@ int	ft_cd(t_msh *sh, char *directory)
 	char	*dir_to_free;
 
 	sh->exit_code = EXIT_FAILURE;
-	dir_to_free = NULL;
 	oldpwd_value = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
-	if (ft_strcmp(directory, "-") == 0)
-		dir_to_free = get_env_value(sh, "OLDPWD", search_name("OLDPWD", sh->envp));
-	if (!directory)
-		dir_to_free = get_env_value(sh, "HOME", search_name("HOME", sh->envp));
-	if (ft_strcmp(directory, "-") == 0 || !directory)
-		directory = dir_to_free;
-	if (chdir(directory) != EXIT_SUCCESS)
+	if (set_dir_or_error(sh, &directory, &dir_to_free) == EXIT_FAILURE)
 	{
-		perror("No such file or directory");
 		safe_free_string(&oldpwd_value);
-		safe_free_string(&dir_to_free);
-		return (EXIT_FAILURE);
+		return (sh->exit_code);
 	}
 	cwd = getcwd(NULL, 0);
 	pwd_index = search_name("PWD", sh->envp);
@@ -42,10 +33,7 @@ int	ft_cd(t_msh *sh, char *directory)
 	sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
 	safe_free_string(&cwd);
 	if (!sh->envp[pwd_index])
-	{
-		msg_err("cd: memory allocation error\n");
-		return (EXIT_FAILURE);
-	}
+		return (msg_err_and_free_string("cd: memory allocation error\n", &oldpwd_value));
 	change_env_value("OLDPWD", oldpwd_value, &sh->envp);
 	safe_free_string(&oldpwd_value);
 	safe_free_string(&dir_to_free);
@@ -58,17 +46,18 @@ int	ft_pwd(t_msh *sh, t_cmd *cmd)
 	int	i;
 	int	equal;
 
-	if (cmd->argc > 1)
-		return (ret_exit_msg(sh, EXIT_FAILURE, "pwd: too many arguments\n"));
+	(void)cmd;
 	i = search_name("PWD", sh->envp);
 	if (i == -1)
 	{
 		write(STDERR_FILENO, "PWD not found\n", 14);
+		sh->exit_code = EXIT_FAILURE;
 		return (EXIT_FAILURE);
 	}
 	equal = length_till_equal(sh->envp[i]) + 1;
 	write(1, sh->envp[i] + equal, ft_strlen(sh->envp[i] + equal));
 	write(1, "\n", 1);
+	sh->exit_code = EXIT_SUCCESS;
 	return (EXIT_SUCCESS);
 }
 
@@ -77,7 +66,10 @@ int	ft_env(t_msh *sh, int argc)
 	int	i;
 
 	if (argc > 1)
-		return (ret_exit_msg(sh, EXIT_FAILURE, "env: arguments not supported\n"));
+	{
+		sh->exit_code = 127;
+		return (ret_exit_msg(sh, 127, "env: arguments not supported\n"));
+	}
 	i = 0;
 	while (sh->envp[i])
 	{
@@ -85,6 +77,7 @@ int	ft_env(t_msh *sh, int argc)
 		write(1, "\n", 1);
 		i++;
 	}
+	sh->exit_code = EXIT_SUCCESS;
 	return (EXIT_SUCCESS);
 }
 
@@ -93,8 +86,17 @@ int	ft_unset(t_msh **sh, char *name)
 	int	i;
 	int	env_len;
 
+	(*sh)->exit_code = EXIT_SUCCESS;
 	if (!name)
 		return (EXIT_SUCCESS);
+	if (name[0] == '-')
+	{
+		write(STDERR_FILENO, "unset: ", 7);
+		write(STDERR_FILENO, name, ft_strlen(name));
+		write(STDERR_FILENO, ": invalid option\n", 17);
+		(*sh)->exit_code = 2;
+		return (2);
+	}
 	i = search_name(name, (*sh)->envp);
 	if (i == -1)
 		return (EXIT_SUCCESS);
@@ -113,7 +115,7 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 {
 	int	ret;
 
-	ret = EXIT_SUCCESS;
+	ret = 127;
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		ret = ft_pwd(sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "cd") == 0)

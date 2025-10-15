@@ -20,7 +20,7 @@ void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 	ast->cmd.built_in = false;
 	if (sh->tokens[start].ty == TOKEN_INBUILT)
 		ast->cmd.built_in = true;
-	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end);
+	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end, 0);
 	ast->cmd.argc = 0;
 	while (ast->cmd.argv && ast->cmd.argv[ast->cmd.argc])
 		ast->cmd.argc++;
@@ -73,22 +73,17 @@ char	*remove_quotes(char *str, int len)
 	return (result);
 }
 
-char	**token_words_to_argv(t_token *tokens, int start, int end)
+char	**token_words_to_argv(t_token *tokens, int start, int end, int argc)
 {
-	int		i;
-	int		argc;
+	int 	i;
 	int		token_i;
 	char	**argv;
 	char	*word;
 
-	argc = 0;
 	i = start;
 	while (i < end)
-	{
-		if (tokens[i].word && !is_within_redir_tokens(tokens, i))
+		if (tokens[i].word && !is_within_redir_tokens(tokens, i++))
 			argc++;
-		i++;
-	}
 	argv = ft_calloc(argc + 1, sizeof(char *));
 	if (!argv)
 		return (NULL);
@@ -99,11 +94,11 @@ char	**token_words_to_argv(t_token *tokens, int start, int end)
 		if (tokens[token_i].word && !is_within_redir_tokens(tokens, token_i))
 		{
 			word = tokens[token_i].word;
-			argv[i] = remove_quotes(word, ft_strlen(word));
-			i++;
+			argv[i++] = remove_quotes(word, ft_strlen(word));
 		}
 		token_i++;
 	}
+	//remove this debug for norm
 	i = 0;
 	a_print(" :: argv -> ");
 	while (argv[i] != NULL)

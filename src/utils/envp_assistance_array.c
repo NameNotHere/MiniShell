@@ -90,4 +90,3 @@ int	add_env_var(char ***envp, char *name, char *value)
 	(*envp)[env_len + 1] = NULL;
 	return (EXIT_SUCCESS);
 }
-

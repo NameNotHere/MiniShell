@@ -223,7 +223,8 @@ void		parse_pipe(t_msh *sh, t_ast *ast, int start, int end);
 
 // parser/ast_cmd.c
 void		parse_cmd(t_msh *sh, t_ast *ast, int start, int end);
-char		**token_words_to_argv(t_token *tokens, int start, int end);
+char		**token_words_to_argv(t_token *tokens, \
+				int start, int end, int argc);
 char		*remove_quotes(char *str, int len);
 
 // utils/utils_token.c
@@ -244,7 +245,7 @@ t_redir_ty	get_redir_type(t_token_ty ty);
 void		parse_redir(t_msh *sh, t_ast *ast, int *start, int *end);
 
 // parser/lex.c
-int			count_tokens(char *str);
+int			count_tokens(char *str, int count, int i);
 const char	*get_token_name(t_token_ty type);
 const char	*get_token_name_continued(t_token_ty type);
 char		*make_word(char *str, int *i, int *err);
@@ -318,6 +319,8 @@ bool		has_complex_heredoc_delimiter(char *line);
 void		msg_err(const char *error);
 void		msg_err_2(const char *str1, const char *str2);
 void		msg_err_3(const char *str1, const char *str2, const char *str3);
+int			msg_err_and_free_string(const char *str1, char **to_free);
+int			set_dir_or_error(t_msh *sh, char **directory, char **dir_to_free);
 
 // utils/has_quotes.c
 bool		has_quotes(const char *str);
