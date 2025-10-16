@@ -32,7 +32,7 @@ static t_flow	cycle_loop(t_msh *sh)
 	if (!expand_string_variables(sh, &sh->line))
 		return (set_exit_code(sh, EXIT_FAILURE), CONTINUE_FLOW);
 	if (parse_line(sh, sh->ast, sh->line) != EXIT_SUCCESS)
-		return (msg_err("parse line failed\n"), CONTINUE_FLOW);
+		return (CONTINUE_FLOW);
 	return (EXEC_FLOW);
 }
 
