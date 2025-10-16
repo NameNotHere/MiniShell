@@ -45,6 +45,7 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 			if (invalid_redir(sh, i) == 1)
 			{
 				msg_err(E_REDIR_INVALID_MSG);
+				sh->exit_code = 2;
 				break ;
 			}
 			add_redir(ast, sh->tokens[i].ty, sh->tokens[i + 1].word);

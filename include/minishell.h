@@ -38,6 +38,10 @@
 # define MSH_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
 # define HDOC_PROMPT "hdoc > "
 
+# define EXIT_INCORRECT_BUILTIN 2
+# define EXIT_CMD_NOT_FOUND 127
+# define EXIT_CMD_PERMISSION_DENIED 126
+
 // alternative simpler prompts commented out below:
 // # define MSH_PROMPT "$ "
 // # define HDOC_PROMPT "> "

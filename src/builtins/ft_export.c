@@ -83,11 +83,9 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 {
 	char	*equals_pos;
 	int		arg_idx;
-	int		result;
 
 	if (!cmd.argv[1])
 		return (ft_env((*sh), 1));
-	(*sh)->exit_code = EXIT_SUCCESS;
 	arg_idx = 1;
 	while (arg_idx < cmd.argc)
 	{
@@ -96,15 +94,13 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 			msg_err_3("export: `", cmd.argv[arg_idx], "': not a valid identifier");
 			(*sh)->exit_code = 2;
 			arg_idx++;
-			continue;
+			continue ;
 		}
 		equals_pos = ft_strchr(cmd.argv[arg_idx], '=');
 		if (!equals_pos)
-			result = handle_export_name_only(sh, cmd.argv[arg_idx]);
+			(*sh)->exit_code = handle_export_name_only(sh, cmd.argv[arg_idx]);
 		else
-			result = handle_export_assignment(sh, cmd.argv[arg_idx], equals_pos);
-		if (result == EXIT_FAILURE)
-			(*sh)->exit_code = 1;
+			(*sh)->exit_code = handle_export_assignment(sh, cmd.argv[arg_idx], equals_pos);
 		arg_idx++;
 	}
 	return ((*sh)->exit_code);
