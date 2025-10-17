@@ -17,10 +17,12 @@ TODO: change return value for a custom one? (will count as exit code)
 */
 int	build_ast(t_msh *sh, t_ast *ast, t_token *tokens)
 {
+	int	result;
+
 	if (tokens == NULL || tokens[0].word == NULL)
 		return (EXIT_SUCCESS);
-	scan_tokens(sh, ast, 0, last_token(tokens));
-	return (EXIT_SUCCESS);
+	result = scan_tokens(sh, ast, 0, last_token(tokens));
+	return (result);
 }
 
 int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
