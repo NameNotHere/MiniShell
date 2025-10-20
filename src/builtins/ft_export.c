@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtins_exit_export.c                             :+:      :+:    :+:   */
@@ -100,7 +100,8 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 		if (!equals_pos)
 			(*sh)->exit_code = handle_export_name_only(sh, cmd.argv[arg_idx]);
 		else
-			(*sh)->exit_code = handle_export_assignment(sh, cmd.argv[arg_idx], equals_pos);
+			(*sh)->exit_code = handle_export_assignment\
+							(sh, cmd.argv[arg_idx], equals_pos);
 		arg_idx++;
 	}
 	return ((*sh)->exit_code);

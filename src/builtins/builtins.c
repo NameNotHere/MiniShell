@@ -33,7 +33,8 @@ int	ft_cd(t_msh *sh, char *directory)
 	sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
 	safe_free_string(&cwd);
 	if (!sh->envp[pwd_index])
-		return (msg_err_and_free_string("cd: memory allocation error\n", &oldpwd_value));
+		return (msg_err_and_free_string("cd: memory allocation error\n",\
+					 &oldpwd_value));
 	change_env_value("OLDPWD", oldpwd_value, &sh->envp);
 	safe_free_string(&oldpwd_value);
 	safe_free_string(&dir_to_free);
@@ -91,9 +92,7 @@ int	ft_unset(t_msh **sh, char *name)
 		return (EXIT_SUCCESS);
 	if (name[0] == '-')
 	{
-		write(STDERR_FILENO, "unset: ", 7);
-		write(STDERR_FILENO, name, ft_strlen(name));
-		write(STDERR_FILENO, ": invalid option\n", 17);
+		msg_err_3("unset: ", name, ": invalid option\n");
 		(*sh)->exit_code = 2;
 		return (2);
 	}

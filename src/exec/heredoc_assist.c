@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-static bool	hdoc_process_line(t_msh *sh, t_redir *redir, char **hdoc_line, char **hdoc_string)
+static bool	hdoc_process_line(t_msh *sh, t_redir *redir,\
+	char **hdoc_line, char **hdoc_string)
 {
 	if (!*hdoc_line)
 		return (safe_free_string(hdoc_line), true);

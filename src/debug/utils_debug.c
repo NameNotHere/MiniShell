@@ -14,9 +14,10 @@
 
 void	d_print(const char *str, ...)
 {
+	va_list	args;
+
 	if (!DEBUG_MINISHELL)
 		return ;
-	va_list	args;
 	va_start(args, str);
 	vfprintf(stderr, str, args);
 	va_end(args);
@@ -24,9 +25,10 @@ void	d_print(const char *str, ...)
 
 void	t_print(const char *str, ...)
 {
+	va_list	args;
+
 	if (!DEBUG_TOKENIZE)
 		return ;
-	va_list	args;
 	va_start(args, str);
 	vfprintf(stderr, str, args);
 	va_end(args);
@@ -34,9 +36,10 @@ void	t_print(const char *str, ...)
 
 void	a_print(const char *str, ...)
 {
+	va_list	args;
+
 	if (!DEBUG_AST)
 		return ;
-	va_list	args;
 	va_start(args, str);
 	vfprintf(stderr, str, args);
 	va_end(args);
@@ -48,6 +51,7 @@ void	a_print(const char *str, ...)
 void	temp_print(const char *str, ...)
 {
 	va_list	args;
+
 	va_start(args, str);
 	vfprintf(stderr, str, args);
 	va_end(args);
