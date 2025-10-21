@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/01 01:41:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/21 04:36:10 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 {
-	if (str[ve->i] == '\\' && str[ve->i + 1] == '\\')
+	if (!ve->sgl_quote && str[ve->i] == '\\' && str[ve->i + 1] == '\\')
 	{
 		result[(ve->res_i)++] = '\\';
 		ve->i += 2;
 	}
-	else if (str[ve->i] == '\\' && str[ve->i + 1] == '$')
+	else if (!ve->sgl_quote && str[ve->i] == '\\' && str[ve->i + 1] == '$')
 	{
 		ve->skipped[ve->skip_len++] = ve->res_i;
 		result[(ve->res_i)++] = '$';
@@ -31,6 +31,8 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 		result[(ve->res_i)++] = str[ve->i];
 		(ve->i)++;
 	}
+	if (result[ve->res_i - 1] == '\'')
+		ve->sgl_quote = !ve->sgl_quote;
 }
 
 /*
@@ -53,6 +55,7 @@ bool	fix_slashes_set_skips(t_var_expand *ve, char **str_ptr, size_t len)
 		cycle_fix_slash_set_skip(ve, *str_ptr, result);
 	ve->i = 0;
 	ve->res_i = 0;
+	ve->sgl_quote = false;
 	safe_free_string(str_ptr);
 	*str_ptr = result;
 	return (true);
