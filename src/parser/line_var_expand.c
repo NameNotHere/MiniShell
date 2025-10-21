@@ -105,13 +105,16 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *str)
 	return (sh->exit_code);
 }
 
-void	cleanup_ve(t_var_expand *ve)
+void	cleanup_ve(t_var_expand *ve, bool free_new_str)
 {
 	safe_free_2d_string(&ve->var_names);
 	safe_free_2d_string(&ve->var_values);
 	if (ve->skipped)
 		free(ve->skipped);
-	ve->new_str = NULL;
+	if (free_new_str)
+		safe_free_string(&ve->new_str);
+	else
+		ve->new_str = NULL;
 }
 
 /*
@@ -139,11 +142,11 @@ bool	expand_string_variables(t_msh *sh, char **str_ptr)
 		|| expand_vars(sh, &ve, *str_ptr) != EXIT_SUCCESS)
 	{
 		safe_free_string(str_ptr);
-		cleanup_ve(&ve);
+		cleanup_ve(&ve, true);
 		return (false);
 	}
 	safe_free_string(str_ptr);
 	*str_ptr = ve.new_str;
-	cleanup_ve(&ve);
+	cleanup_ve(&ve, false);
 	return (true);
 }
