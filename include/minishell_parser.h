@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/21 02:40:49 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/21 05:35:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,6 +301,7 @@ bool		make_string_free(char **string);
 char		*make_cmd_full_path(const char *dir, const char *cmd);
 char		*get_valid_cmd_full_path(char **path_dirs, char *cmd);
 char		*get_path_from_env(char **envp);
+int			update_path_dirs(char ***path_dirs, char **envp);
 
 // parser/errors.c
 void		int_closed(char *str, int i, char quote);

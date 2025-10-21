@@ -1,12 +1,12 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins_exit_export.c                             :+:      :+:    :+:   */
+/*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/01 02:13:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/21 05:36:15 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int	handle_export_assignment(t_msh **sh, char *arg, char *equals_pos)
 		add_env_var(&(*sh)->envp, name, value);
 	else
 		change_env_value(name, value, &(*sh)->envp);
+	if (ft_strcmp(name, "PATH") == 0)
+		update_path_dirs(&(*sh)->path_dirs, (*sh)->envp);
 	*equals_pos = '=';
 	return (EXIT_SUCCESS);
 }
