@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:04:21 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 00:57:00 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/21 02:24:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,25 +39,22 @@ int	msg_err_and_free_string(const char *str1, char **to_free)
 	return (EXIT_FAILURE);
 }
 
-int	set_dir_or_error(t_msh *sh, char **directory, char **dir_to_free)
+int	set_dir_or_error(t_msh *sh, char **directory)
 {
-	*dir_to_free = NULL;
 	if (ft_strcmp(*directory, "-") == 0)
 	{
-		*dir_to_free = get_env_value(sh, "OLDPWD", search_name("OLDPWD", sh->envp));
-		*directory = *dir_to_free;
+		safe_free_string(directory);
+		*directory = get_env_value(sh, "OLDPWD",
+				search_name("OLDPWD", sh->envp));
 	}
 	else if (!*directory || ft_strcmp(*directory, "~") == 0)
 	{
-		*dir_to_free = get_env_value(sh, "HOME", search_name("HOME", sh->envp));
-		*directory = *dir_to_free;
+		safe_free_string(directory);
+		*directory = get_env_value(sh, "HOME", search_name("HOME", sh->envp));
 	}
 	if (chdir(*directory) != EXIT_SUCCESS)
 	{
-		msg_err("cd: no such file or directory: ");
-		msg_err(*directory);
-		msg_err("\n");
-		safe_free_string(dir_to_free);
+		msg_err_3("cd: no such file or directory: ", *directory, "\n");
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);

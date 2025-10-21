@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/01 02:09:02 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/21 02:40:49 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,6 +295,7 @@ bool		is_dbl_quote(int c);
 void		safe_free(void **ptr);
 void		safe_free_string(char **ptr);
 void		safe_free_2d_string(char ***ptr);
+bool		make_string_free(char **string);
 
 // utils/utils_path.c
 char		*make_cmd_full_path(const char *dir, const char *cmd);
@@ -320,7 +321,7 @@ void		msg_err(const char *error);
 void		msg_err_2(const char *str1, const char *str2);
 void		msg_err_3(const char *str1, const char *str2, const char *str3);
 int			msg_err_and_free_string(const char *str1, char **to_free);
-int			set_dir_or_error(t_msh *sh, char **directory, char **dir_to_free);
+int			set_dir_or_error(t_msh *sh, char **directory);
 
 // utils/has_quotes.c
 bool		has_quotes(const char *str);
