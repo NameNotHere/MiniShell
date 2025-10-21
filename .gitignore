@@ -1,3 +1,4 @@
+.gitignore
 .vscode
 en.subject.pdf
 *.o
@@ -6,3 +7,5 @@ en.subject.pdf
 /pipex
 /minishell
 /bin
+/testers
+

@@ -6,13 +6,22 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/21 04:36:10 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/21 20:41:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 #include "minishell.h"
 
+/*
+	Does a few things to support line expansions done correctly:
+	1) fixes backslash parsing either inside or outside single quotes
+	2) skips expansions on escaped $ char (sets location of skipped expansions)
+	3) also skips expansion on use of posix locale syntax ($"..."): $
+	char is skipped, variable expansion skipped so what is inside the quotes
+	do not expand. note that no translation lookup is supported, so it just
+	needs to extract the untranslated content (english basically).
+*/
 static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 {
 	if (!ve->sgl_quote && str[ve->i] == '\\' && str[ve->i + 1] == '\\')
@@ -25,6 +34,18 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 		ve->skipped[ve->skip_len++] = ve->res_i;
 		result[(ve->res_i)++] = '$';
 		ve->i += 2;
+	}
+	else if (!ve->sgl_quote && str[ve->i] == '$' && str[ve->i + 1] == '"')
+	{
+		ve->skipped[ve->skip_len++] = ve->res_i;
+		ve->i += 2;
+		while (str[ve->i] && str[ve->i] != '"')
+		{
+			result[(ve->res_i)++] = str[ve->i];
+			ve->i++;
+		}
+		if (str[ve->i] == '"')
+			ve->i++;
 	}
 	else
 	{
