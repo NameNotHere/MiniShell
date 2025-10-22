@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 02:31:07 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/21 02:40:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 
 // builtins.c
 int		execute_builtin(t_msh *sh, t_cmd *cmd);
-int		ft_cd(t_msh *sh, char *directory);
+int		ft_cd(t_msh *sh, t_cmd *cmd);
 int		ft_pwd(t_msh *sh, t_cmd *cmd);
 int		ft_env(t_msh *sh, int argc);
 int		ft_unset(t_msh **sh, char *name);
@@ -165,7 +165,6 @@ char	*get_shell_line(t_msh *sh, char *prompt);
 int		add_line_to_string(char **string, char **line);
 char	*get_empty_string(void);
 bool	set_empty_string(char **to_empty);
-bool	make_string_free(char **string);
 char	*ft_strstr(const char *haystack, const char *needle);
 
 // utils/utils_string_array.c

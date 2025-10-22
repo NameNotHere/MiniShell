@@ -1,8 +1,0 @@
-.vscode
-en.subject.pdf
-*.o
-*.a
-/parser
-/pipex
-/minishell
-/bin

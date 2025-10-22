@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:18:36 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/08/28 13:42:57 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/21 05:42:17 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*make_cmd_full_path(const char *dir, const char *cmd)
 
 // TODO: replace ~/ with home folder.
 // TODO: replace ./ with PWD?
-// TODO: use chdir(current folder) so processes know where they are 
+// TODO: use chdir(current folder) so processes know where they are
 // (like access, to be able to use relative paths)
 // Gets a full command path by checking concatenations of path
 // directories with command, and checking if the full path exists
@@ -65,7 +65,7 @@ char	*get_valid_cmd_full_path(char **path_dirs, char *cmd)
 	int		i;
 	char	*full_path;
 
-	if (!path_dirs || !cmd || !*cmd)
+	if (!cmd || !*cmd)
 		return (NULL);
 	if (ft_strchr(cmd, '/'))
 	{
@@ -73,6 +73,8 @@ char	*get_valid_cmd_full_path(char **path_dirs, char *cmd)
 			return (ft_strdup(cmd));
 		return (NULL);
 	}
+	if (!path_dirs)
+		return (NULL);
 	i = 0;
 	while (path_dirs[i])
 	{
@@ -98,4 +100,31 @@ char	*get_path_from_env(char **envp)
 		envp++;
 	}
 	return (NULL);
+}
+
+// Updates path_dirs.
+// Gets PATH value from env.
+// Frees old path_dirs and creates new one.
+// Returns:
+// 	- EXIT_SUCCESS on success
+//	- EXIT_FAILURE on failure
+int	update_path_dirs(char ***path_dirs, char **envp)
+{
+	char	*path_value;
+
+	if (*path_dirs)
+	{
+		safe_free_2d_string(path_dirs);
+		*path_dirs = NULL;
+	}
+	path_value = get_path_from_env(envp);
+	if (!path_value || !*path_value)
+	{
+		*path_dirs = NULL;
+		return (EXIT_SUCCESS);
+	}
+	*path_dirs = ft_split(path_value, ':');
+	if (!*path_dirs)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }

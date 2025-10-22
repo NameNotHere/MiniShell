@@ -6,31 +6,54 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/01 01:41:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/21 20:41:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 #include "minishell.h"
 
+/*
+	Does a few things to support line expansions done correctly:
+	1) fixes backslash parsing either inside or outside single quotes
+	2) skips expansions on escaped $ char (sets location of skipped expansions)
+	3) also skips expansion on use of posix locale syntax ($"..."): $
+	char is skipped, variable expansion skipped so what is inside the quotes
+	do not expand. note that no translation lookup is supported, so it just
+	needs to extract the untranslated content (english basically).
+*/
 static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 {
-	if (str[ve->i] == '\\' && str[ve->i + 1] == '\\')
+	if (!ve->sgl_quote && str[ve->i] == '\\' && str[ve->i + 1] == '\\')
 	{
 		result[(ve->res_i)++] = '\\';
 		ve->i += 2;
 	}
-	else if (str[ve->i] == '\\' && str[ve->i + 1] == '$')
+	else if (!ve->sgl_quote && str[ve->i] == '\\' && str[ve->i + 1] == '$')
 	{
 		ve->skipped[ve->skip_len++] = ve->res_i;
 		result[(ve->res_i)++] = '$';
 		ve->i += 2;
+	}
+	else if (!ve->sgl_quote && str[ve->i] == '$' && str[ve->i + 1] == '"')
+	{
+		ve->skipped[ve->skip_len++] = ve->res_i;
+		ve->i += 2;
+		while (str[ve->i] && str[ve->i] != '"')
+		{
+			result[(ve->res_i)++] = str[ve->i];
+			ve->i++;
+		}
+		if (str[ve->i] == '"')
+			ve->i++;
 	}
 	else
 	{
 		result[(ve->res_i)++] = str[ve->i];
 		(ve->i)++;
 	}
+	if (result[ve->res_i - 1] == '\'')
+		ve->sgl_quote = !ve->sgl_quote;
 }
 
 /*
@@ -53,6 +76,7 @@ bool	fix_slashes_set_skips(t_var_expand *ve, char **str_ptr, size_t len)
 		cycle_fix_slash_set_skip(ve, *str_ptr, result);
 	ve->i = 0;
 	ve->res_i = 0;
+	ve->sgl_quote = false;
 	safe_free_string(str_ptr);
 	*str_ptr = result;
 	return (true);
@@ -105,13 +129,16 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *str)
 	return (sh->exit_code);
 }
 
-void	cleanup_ve(t_var_expand *ve)
+void	cleanup_ve(t_var_expand *ve, bool free_new_str)
 {
 	safe_free_2d_string(&ve->var_names);
 	safe_free_2d_string(&ve->var_values);
 	if (ve->skipped)
 		free(ve->skipped);
-	ve->new_str = NULL;
+	if (free_new_str)
+		safe_free_string(&ve->new_str);
+	else
+		ve->new_str = NULL;
 }
 
 /*
@@ -139,11 +166,11 @@ bool	expand_string_variables(t_msh *sh, char **str_ptr)
 		|| expand_vars(sh, &ve, *str_ptr) != EXIT_SUCCESS)
 	{
 		safe_free_string(str_ptr);
-		cleanup_ve(&ve);
+		cleanup_ve(&ve, true);
 		return (false);
 	}
 	safe_free_string(str_ptr);
 	*str_ptr = ve.new_str;
-	cleanup_ve(&ve);
+	cleanup_ve(&ve, false);
 	return (true);
 }

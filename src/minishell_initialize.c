@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 00:12:45 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 01:17:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/21 05:36:29 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@ static int	initialize_environment(t_msh *sh, char **envp)
 	sh->envp = copy_string_array(envp);
 	if (!sh->envp)
 		return (ret_exit_perr(sh, ERRNO_CODE, "initialize_environment"));
-	sh->path_dirs = ft_split(get_path_from_env(sh->envp), ':');
-	if (!sh->path_dirs)
+	if (update_path_dirs(&sh->path_dirs, sh->envp) != EXIT_SUCCESS)
 		return (ret_exit_perr(sh, ERRNO_CODE, "initialize_environment"));
 	return (sh->exit_code);
 }
