@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/22 10:46:12 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/22 18:01:00 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	handle_export_name_only(t_msh **sh, char *arg)
 
 	if (!is_valid_var_name(arg))
 	{
-		msg_err_3("export: `", arg, "': not a valid identifier");
+		msg_err_3("export: `", arg, "': not a valid identifier\n");
 		return (EXIT_FAILURE);
 	}
 	i = search_name(arg, (*sh)->envp);
@@ -65,7 +65,7 @@ int	handle_export_assignment(t_msh **sh, char *arg, char *equals_pos)
 	value = equals_pos + 1;
 	if (!is_valid_var_name(name))
 	{
-		msg_err_3("export: `", name, "': not a valid identifier");
+		msg_err_3("export: `", name, "': not a valid identifier\n");
 		*equals_pos = '=';
 		return (EXIT_FAILURE);
 	}
@@ -93,7 +93,7 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 	{
 		if (cmd.argv[arg_idx][0] == '-' && cmd.argv[arg_idx][1] == '-')
 		{
-			msg_err_3("export: `", cmd.argv[arg_idx], "': not a valid identifier");
+			msg_err_3("export: `", cmd.argv[arg_idx], "': not a valid identifier\n");
 			exit_code = 2;
 			arg_idx++;
 			continue ;
