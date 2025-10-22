@@ -8,4 +8,6 @@ en.subject.pdf
 /minishell
 /bin
 /testers
-
+./testers
+/testers/*
+./testers/*

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/22 10:43:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/22 13:48:19 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,11 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 	sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
 	safe_free_string(&cwd);
 	if (!sh->envp[pwd_index])
-		return (msg_err_and_free_string("cd: memory allocation error\n",
-				&oldpwd_value));
+	{
+		msg_err_and_free_string("cd: memory allocation error\n",
+			&oldpwd_value);
+		return (EXIT_FAILURE);
+	}
 	change_env_value("OLDPWD", oldpwd_value, &sh->envp);
 	safe_free_string(&oldpwd_value);
 	return (EXIT_SUCCESS);
