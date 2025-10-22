@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/21 05:36:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/22 10:43:29 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ int	ft_unset(t_msh **sh, char *name)
 	int	i;
 	int	env_len;
 
-	(*sh)->exit_code = EXIT_SUCCESS;
 	if (!name)
 		return (EXIT_SUCCESS);
 	if (name[0] == '-')
