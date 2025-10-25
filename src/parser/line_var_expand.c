@@ -35,7 +35,7 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 		result[(ve->res_i)++] = '$';
 		ve->i += 2;
 	}
-	else if (!ve->sgl_quote && str[ve->i] == '$' && str[ve->i + 1] == '"')
+	else if (!ve->sgl_quote && !ve->dbl_quote && str[ve->i] == '$' && str[ve->i + 1] == '"')
 	{
 		ve->skipped[ve->skip_len++] = ve->res_i;
 		ve->i += 2;
@@ -54,6 +54,8 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 	}
 	if (result[ve->res_i - 1] == '\'')
 		ve->sgl_quote = !ve->sgl_quote;
+	if (result[ve->res_i - 1] == '"')
+		ve->dbl_quote = !ve->dbl_quote;
 }
 
 /*

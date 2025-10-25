@@ -1,11 +1,4 @@
-# THIS MAKEFILE COMPILES 2 separate executables:
-# parser and minishell
-# TODO: LAST before eval, this makefile will only compile minishell (cleanup b4 eval)
-# TODO: LAST remove all debug folder references in sources.
-
-# executables
 NAME = minishell
-PARSER = parser
 
 #TODO: LAST remove -g before submitting
 # compiler settings
@@ -28,7 +21,6 @@ OBJDIR = bin
 all:
 	@$(MAKE) $(NAME)
 
-# ***** MINISHELL SRCS *****
 SRCS = 	signals/signals.c \
 	signals/signals_execution.c \
 	signals/signals_interactive.c \
@@ -94,33 +86,6 @@ OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDE) -o $(NAME) $(OBJS) $(LDFLAGS)
 
-# ***** PARSER SRCS *****
-PARSER_SRCS = parser/ast.c \
-	parser/ast_cmd.c \
-	parser/ast_helper.c \
-	parser/ast_redir.c \
-	parser/errors.c \
-	parser/lex.c \
-	parser/tokenise_types.c \
-	parser/tokenize.c \
-	utils/parser_isminioperator.c \
-	utils/utils_free.c \
-	debug/utils_debug.c \
-	debug/ast_print.c \
-	parser/line_var_expand_catch.c \
-	parser/line_var_expand_helper.c \
-	parser/line_var_expand.c \
-	parser/parse_line.c \
-	parser/parse_validation.c \
-	parser/is_builtin.c \
-	parser/is_escaped.c
-
-PARSER_OBJS = $(PARSER_SRCS:.c=.o)
-PARSER_OBJS := $(addprefix $(OBJDIR)/, $(PARSER_OBJS))
-
-$(PARSER): $(LIBFT) $(PARSER_OBJS)
-	$(CC) $(CFLAGS) $(INCLUDE) -o $(PARSER) $(PARSER_OBJS) $(LDFLAGS)
-
 # shell commands
 RM = rm -f
 
@@ -139,7 +104,7 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
-	$(RM) $(PARSER)
+# 	$(RM) $(PARSER)
 	$(RM) -r $(OBJDIR)
 	@$(MAKE) -C $(LIBFTDIR) fclean
 
