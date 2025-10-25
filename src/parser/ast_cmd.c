@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/27 20:12:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/25 05:28:52 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	*remove_quotes(char *str, int len)
 
 char	**token_words_to_argv(t_token *tokens, int start, int end, int argc)
 {
-	int 	i;
+	int		i;
 	int		token_i;
 	char	**argv;
 	char	*word;
@@ -98,14 +98,5 @@ char	**token_words_to_argv(t_token *tokens, int start, int end, int argc)
 		}
 		token_i++;
 	}
-	//remove this debug for norm
-	i = 0;
-	a_print(" :: argv -> ");
-	while (argv[i] != NULL)
-	{
-		a_print("|%s", argv[i]);
-		i++;
-	}
-	a_print("|\n");
 	return (argv);
 }

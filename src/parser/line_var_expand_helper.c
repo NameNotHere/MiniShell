@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/01 02:10:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/25 05:20:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,24 +53,28 @@ bool	handle_sgl_quote(char *str, bool *sgl_quote, int i)
 	return (true);
 }
 
-// TODO: remove d_prints, add actuall error messages
+// TODO: not sure we need the sh->err and sh->exit_code here
 int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 {
 	ve->var_names = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_names)
 	{
-		d_print("allocation error on var names");
-		sh->err = errno;
-		sh->exit_code = errno;
-		return (errno);
+		msg_err("allocation error on var names\n");
+		sh->err = EXIT_FAILURE;
+		if (errno)
+			sh->err = errno;
+		sh->exit_code = sh->err;
+		return (sh->err);
 	}
 	ve->var_values = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_values)
 	{
-		d_print("allocation error on var values");
-		sh->err = errno;
-		sh->exit_code = errno;
-		return (errno);
+		msg_err("allocation error on var values\n");
+		sh->err = EXIT_FAILURE;
+		if (errno)
+			sh->err = errno;
+		sh->exit_code = sh->err;
+		return (sh->err);
 	}
 	reset_var_lookup(ve);
 	return (EXIT_SUCCESS);
@@ -87,7 +91,8 @@ int	allocate_new_str(t_msh *sh, t_var_expand *ve)
 {
 	int	new_str_len;
 
-	if (ve->var_total <= 0 || !ve->var_names || !ve->var_values || ve->str_len <= 0)
+	if (ve->var_total <= 0 || !ve->var_names || !ve->var_values
+		|| ve->str_len <= 0)
 		return (EXIT_SUCCESS);
 	new_str_len = ve->str_len + ft_strlen_array(ve->var_values)
 		- (ft_strlen_array(ve->var_names) + ve->var_total);
