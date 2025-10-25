@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/22 18:01:00 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/25 04:24:19 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	is_valid_var_name(char *name)
 {
 	int	i;
 
-	if (!name || !*name)
+	if (!name || !*name || name[0] == '?')
 		return (false);
 	if (!ft_isalpha(name[0]) && name[0] != '_')
 		return (false);
@@ -93,7 +93,8 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 	{
 		if (cmd.argv[arg_idx][0] == '-' && cmd.argv[arg_idx][1] == '-')
 		{
-			msg_err_3("export: `", cmd.argv[arg_idx], "': not a valid identifier\n");
+			msg_err_3("export: `", cmd.argv[arg_idx],
+				"': not a valid identifier\n");
 			exit_code = 2;
 			arg_idx++;
 			continue ;
@@ -102,8 +103,8 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 		if (!equals_pos)
 			exit_code = handle_export_name_only(sh, cmd.argv[arg_idx]);
 		else
-			exit_code = handle_export_assignment\
-							(sh, cmd.argv[arg_idx], equals_pos);
+			exit_code = handle_export_assignment(sh, cmd.argv[arg_idx],
+					equals_pos);
 		arg_idx++;
 	}
 	return (exit_code);

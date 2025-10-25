@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/21 20:41:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/25 04:09:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ bool	must_skip_exp(t_var_expand *ve, int index)
 	return (false);
 }
 
-int	expand_vars(t_msh *sh, t_var_expand *ve, char *str)
+int	expand_vars(t_var_expand *ve, char *str)
 {
 	while (str[ve->i])
 	{
@@ -126,7 +126,7 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *str)
 		ve->var_lookup = false;
 		ve->i++;
 	}
-	return (sh->exit_code);
+	return (EXIT_SUCCESS);
 }
 
 void	cleanup_ve(t_var_expand *ve, bool free_new_str)
@@ -150,7 +150,9 @@ void	cleanup_ve(t_var_expand *ve, bool free_new_str)
 bool	expand_string_variables(t_msh *sh, char **str_ptr)
 {
 	t_var_expand	ve;
+	bool			success;
 
+	success = true;
 	ft_bzero(&ve, sizeof(t_var_expand));
 	if (!fix_slashes_set_skips(&ve, str_ptr, ft_strlen(*str_ptr)))
 		return (false);
@@ -163,14 +165,11 @@ bool	expand_string_variables(t_msh *sh, char **str_ptr)
 	if (init_var_expand_arrays(sh, &ve) != EXIT_SUCCESS
 		|| catch_all_vars(sh, &ve, *str_ptr) != EXIT_SUCCESS
 		|| allocate_new_str(sh, &ve) != EXIT_SUCCESS
-		|| expand_vars(sh, &ve, *str_ptr) != EXIT_SUCCESS)
-	{
-		safe_free_string(str_ptr);
-		cleanup_ve(&ve, true);
-		return (false);
-	}
+		|| expand_vars(&ve, *str_ptr) != EXIT_SUCCESS)
+		success = false;
 	safe_free_string(str_ptr);
-	*str_ptr = ve.new_str;
-	cleanup_ve(&ve, false);
-	return (true);
+	if (success)
+		*str_ptr = ve.new_str;
+	cleanup_ve(&ve, !success);
+	return (success);
 }

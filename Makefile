@@ -149,8 +149,11 @@ re: fclean all
 
 bonus: all
 
-valgrind: fclean
+debug: fclean
 	$(MAKE) CFLAGS="$(CFLAGS_VALGRIND)" all
+	@echo "debug build made"
+
+valgrind: debug
 	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --track-origins=yes --suppressions=minishell.supp ./$(NAME)
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re bonus debug
