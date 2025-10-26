@@ -82,7 +82,7 @@ int	add_line_to_string(char **string, char **line)
 	char	*updated_string;
 
 	result = EXIT_SUCCESS;
-	if (!(*line) || !*(*line))
+	if (!(*line))
 	{
 		msg_err("add line to string: invalid line");
 		return (EXIT_FAILURE);
