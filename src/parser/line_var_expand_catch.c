@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:12:44 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/21 03:37:02 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/25 16:10:52 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,10 @@ int	catch_absent_var(t_msh *sh, t_var_expand *ve)
 	if (!ve->var_names[ve->var_i] || !ve->var_values[ve->var_i])
 	{
 		msg_err("allocation error on catch_absent_var\n");
-		sh->exit_code = errno;
-		return (errno);
+		sh->exit_code = EXIT_FAILURE;
+		if (errno)
+			sh->exit_code = errno;
+		return (sh->exit_code);
 	}
 	ve->var_i++;
 	return (EXIT_SUCCESS);

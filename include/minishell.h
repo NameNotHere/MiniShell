@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/21 02:40:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/25 16:37:44 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void	close_fds_exit_error_free(t_msh *sh, const char *error, int *fd_in,
 			int *fd_out);
 void	exit_error_free(t_msh *sh, const char *error);
 void	exit_free_with_code(t_msh *sh, int exit_code);
-int		handle_execute_command_errors(t_msh *sh, t_cmd *cmd);
+int		handle_execute_command_errors(t_cmd *cmd);
 
 // utils/utils_fd.c
 void	safe_close_fd(int *fd);

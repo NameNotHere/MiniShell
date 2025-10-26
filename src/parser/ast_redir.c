@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:13:32 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/25 05:05:24 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/25 16:18:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ int	invalid_redir(t_msh *sh, int i)
 	return (EXIT_SUCCESS);
 }
 
+// TODO: check if we need exit_code + err or just one (or 0)
 void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 {
 	int				i;
@@ -63,7 +64,7 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 /* Detect complex quoted patterns that are hard to parse correctly.
 	Complex pattern: multiple quotes with variables
 
-	TODO: move this function into a "validation" function out of here*/
+	TODO: move this function into a "validation" file out of here*/
 bool	is_complex_quoted_delimiter(const char *str)
 {
 	int		i;
