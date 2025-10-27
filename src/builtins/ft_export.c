@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/25 04:24:19 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:27:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 	arg_idx = 1;
 	while (arg_idx < cmd.argc)
 	{
-		if (cmd.argv[arg_idx][0] == '-' && cmd.argv[arg_idx][1] == '-')
+		if (cmd.argv[arg_idx][0] == '-')
 		{
 			msg_err_3("export: `", cmd.argv[arg_idx],
 				"': not a valid identifier\n");
