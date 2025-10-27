@@ -206,7 +206,6 @@ typedef struct s_msh
 	char		**export_vars;
 	char		**path_dirs;
 	char		*line;
-	int			err;
 	int			exit_code;
 	int			saved_exit_code;
 	pid_t		last_pid;

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:13:32 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/27 12:36:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:42:33 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 			{
 				msg_err(E_REDIR_INVALID_MSG);
 				sh->exit_code = 2;
-				sh->err = 2;
 				break ;
 			}
 			add_redir(ast, sh->tokens[i].ty, sh->tokens[i + 1].word);

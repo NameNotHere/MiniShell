@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:12:44 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/25 16:10:52 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:42:44 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ int	get_var_count(char *str, t_var_expand *ve)
 		if (handle_ve_quote(str, &sgl_quote, &dbl_quote, i))
 			;
 		else if (('$' == str[i] && !must_skip_exp(ve, i))
-			&& ft_valid_var_char(str[i + 1]) && !sgl_quote
-			&& !is_in_heredoc_delimiter(str, i))
+			&& (ft_valid_var_char(str[i + 1]) || str[i + 1] == '?')
+			&& !sgl_quote && !is_in_heredoc_delimiter(str, i))
 			var_count++;
 		i++;
 	}
@@ -113,14 +113,21 @@ int	catch_var(t_msh *sh, t_var_expand *ve)
 
 int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 {
+	if (c == '?')
+	{
+		ve->var_name_buffer[ve->var_name_i] = c;
+		ve->var_name_i++;
+		ve->var_name_buffer[ve->var_name_i] = '\0';
+		return (catch_var(sh, ve));
+	}
 	if (!ft_valid_var_char(c))
 		return (catch_absent_var(sh, ve));
 	ve->var_name_buffer[ve->var_name_i] = c;
 	ve->var_name_i++;
 	ve->var_name_buffer[ve->var_name_i] = '\0';
-	if (c == '?' || !ft_valid_var_char(next_c))
+	if (!ft_valid_var_char(next_c))
 	{
-		if (c == '?' || is_var_in_env(sh, ve->var_name_buffer, &ve->envp_var_i))
+		if (is_var_in_env(sh, ve->var_name_buffer, &ve->envp_var_i))
 			return (catch_var(sh, ve));
 		else
 			return (catch_absent_var(sh, ve));
@@ -136,8 +143,8 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *str)
 	while (str[i])
 	{
 		if (str[i] == '$'
-			&& !must_skip_exp(ve, i)
-			&& ft_valid_var_char(str[i + 1]) && !ve->sgl_quote
+			&& !must_skip_exp(ve, i) && (ft_valid_var_char(str[i + 1])
+				|| str[i + 1] == '?') && !ve->sgl_quote
 			&& !is_in_heredoc_delimiter(str, i))
 		{
 			ve->var_lookup = true;

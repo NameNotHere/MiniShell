@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/25 05:20:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:42:49 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,28 +53,25 @@ bool	handle_sgl_quote(char *str, bool *sgl_quote, int i)
 	return (true);
 }
 
-// TODO: not sure we need the sh->err and sh->exit_code here
 int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 {
 	ve->var_names = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_names)
 	{
 		msg_err("allocation error on var names\n");
-		sh->err = EXIT_FAILURE;
+		sh->exit_code = EXIT_FAILURE;
 		if (errno)
-			sh->err = errno;
-		sh->exit_code = sh->err;
-		return (sh->err);
+			sh->exit_code = errno;
+		return (sh->exit_code);
 	}
 	ve->var_values = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_values)
 	{
 		msg_err("allocation error on var values\n");
-		sh->err = EXIT_FAILURE;
+		sh->exit_code = EXIT_FAILURE;
 		if (errno)
-			sh->err = errno;
-		sh->exit_code = sh->err;
-		return (sh->err);
+			sh->exit_code = errno;
+		return (sh->exit_code);
 	}
 	reset_var_lookup(ve);
 	return (EXIT_SUCCESS);
@@ -107,4 +104,3 @@ int	allocate_new_str(t_msh *sh, t_var_expand *ve)
 	}
 	return (EXIT_SUCCESS);
 }
-

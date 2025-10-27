@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/25 05:27:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:42:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 	}
 	else
 		parse_cmd(sh, current_node, start, end);
-	if (sh->err != EXIT_SUCCESS)
-		return (sh->err);
+	if (sh->exit_code != EXIT_SUCCESS)
+		return (sh->exit_code);
 	return (EXIT_SUCCESS);
 }
 

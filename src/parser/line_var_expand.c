@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/25 04:09:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:42:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,18 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 			ve->i++;
 		}
 		if (str[ve->i] == '"')
+			ve->i++;
+	}
+	else if (!ve->sgl_quote && !ve->dbl_quote && str[ve->i] == '$' && str[ve->i + 1] == '\'')
+	{
+		ve->skipped[ve->skip_len++] = ve->res_i;
+		ve->i += 2;
+		while (str[ve->i] && str[ve->i] != '\'')
+		{
+			result[(ve->res_i)++] = str[ve->i];
+			ve->i++;
+		}
+		if (str[ve->i] == '\'')
 			ve->i++;
 	}
 	else
@@ -107,7 +119,7 @@ int	expand_vars(t_var_expand *ve, char *str)
 	{
 		if (handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, ve->i))
 			;
-		else if ('$' == str[ve->i] && ft_valid_var_char(str[ve->i + 1])
+		else if ('$' == str[ve->i] && (ft_valid_var_char(str[ve->i + 1]) || str[ve->i + 1] == '?')
 			&& !ve->sgl_quote && !must_skip_exp(ve, ve->i)
 			&& !is_in_heredoc_delimiter(str, ve->i))
 		{
