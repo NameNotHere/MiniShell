@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:35:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/25 16:38:07 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 16:28:54 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,13 @@ int	execute_command(t_msh *sh, t_cmd *cmd)
 	set_restore_dfl_sig();
 	if (!execute_redirection(sh, cmd->redir))
 		return (sh->exit_code);
-	if (cmd->argv[0] == NULL || !ft_strlen(cmd->argv[0]))
+	if (cmd->argv[0] == NULL)
 		return (EXIT_SUCCESS);
+	if (!ft_strlen(cmd->argv[0]))
+	{
+		msg_err("command not found: \n");
+		return (127);
+	}
 	if (cmd->built_in)
 		return (execute_builtin(sh, cmd));
 	if (cmd->permission_denied)
