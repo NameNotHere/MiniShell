@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/27 13:42:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/28 00:20:01 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,11 @@ int	expand_vars(t_var_expand *ve, char *str)
 			ve->value = ve->var_values[ve->var_i];
 			while (*ve->value)
 			{
+				if (!ve->dbl_quote && is_operator_char(*ve->value))
+				{
+					ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = EXP_MARK;
+					ve->exp_i++;
+				}
 				ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = *ve->value;
 				ve->exp_i++;
 				ve->value++;

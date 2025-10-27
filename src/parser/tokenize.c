@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/30 23:39:20 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 23:57:45 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,24 @@ const char	*get_token_name_continued(t_token_ty type)
 	return ("UNKNOWN");
 }
 
+static void	strip_exp_marks(char *str)
+{
+	int	i;
+	int	j;
+
+	if (!str)
+		return ;
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (str[i] != EXP_MARK)
+			str[j++] = str[i];
+		i++;
+	}
+	str[j] = '\0';
+}
+
 t_token	*tokenize(char *input, int *token_count, int *err)
 {
 	t_token			*res;
@@ -122,7 +140,11 @@ t_token	*tokenize(char *input, int *token_count, int *err)
 			break ;
 		token = make_word(input, &i, err);
 		if (token)
-			res[id++] = ft_token(token);
+		{
+			res[id] = ft_token(token);
+			strip_exp_marks(res[id].word);
+			id++;
+		}
 		else
 			return (free(res), NULL);
 	}

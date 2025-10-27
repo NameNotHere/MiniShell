@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/01 02:28:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/28 00:13:07 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ int	count_tokens(char *str, int count, int i)
 	while (str[i])
 	{
 		skip_spaces(&i, str);
-		if (isminioperator(str, i) > 0)
-			i += isminioperator(str, i);
+		if (is_operator(str, i) > 0)
+			i += is_operator(str, i);
 		else if ((str[i] == '\'' || str[i] == '\"'))
 		{
 			quote = str[i++];
@@ -47,8 +47,8 @@ int	count_tokens(char *str, int count, int i)
 			if (str[i] && str[i] == quote)
 				i++;
 		}
-		else if (str[i] && !ft_isspace(str[i]) && isminioperator(str, i) == 0)
-			while (str[i] && !ft_isspace(str[i]) && isminioperator(str, i) == 0)
+		else if (str[i] && !ft_isspace(str[i]) && is_operator(str, i) == 0)
+			while (str[i] && !ft_isspace(str[i]) && is_operator(str, i) == 0)
 				i++;
 		count++;
 	}
@@ -83,14 +83,14 @@ void	parse_word(char *str, int *i, int *len)
 	skip_spaces(i, str);
 	*len = 0;
 	while (str[*i + *len] && !ft_isspace(str[*i + *len])
-		&& !isminioperator(str, *i + *len))
+		&& !is_operator(str, *i + *len))
 	{
 		if (str[*i + *len] && (str[*i + *len] == '\'' || str[*i + *len] == '\"'))
 			make_string(str, len, *i + *len);
 		else
 		{
 			while (str[*i + *len] && !ft_isspace(str[*i + *len])
-				&& !isminioperator(str, *i + *len)
+				&& !is_operator(str, *i + *len)
 				&& str[*i + *len] != '\'' && str[*i + *len] != '\"')
 			{
 				if (str[*i + *len] == '\\' && str[*i + *len + 1])
@@ -100,8 +100,8 @@ void	parse_word(char *str, int *i, int *len)
 			}
 		}
 	}
-	if (*len == 0 && str[*i] && isminioperator(str, *i))
-		*len += isminioperator(str, *i);
+	if (*len == 0 && str[*i] && is_operator(str, *i))
+		*len += is_operator(str, *i);
 	else if (*len == 0 && str[*i])
 		*len = 1;
 }
