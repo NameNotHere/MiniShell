@@ -1,18 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_isminioperator.c                            :+:      :+:    :+:   */
+/*   parser_is_operator.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:18:52 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/28 00:17:30 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/28 00:28:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 
-// TODO: rename file to parser_is_operator.c
 int	is_operator_continued(char *token, int i);
 
 int	is_operator(char *token, int i)
