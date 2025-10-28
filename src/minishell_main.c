@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 01:47:19 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:43:22 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,11 @@ static t_flow	cycle_loop(t_msh *sh)
 	if (!expand_string_variables(sh, &sh->line))
 		return (set_exit_code(sh, EXIT_FAILURE), CONTINUE_FLOW);
 	if (parse_line(sh, sh->ast, sh->line) != EXIT_SUCCESS)
+	{
+		if (!sh->is_interact && sh->exit_code == 2)
+			return (BREAK_FLOW);
 		return (CONTINUE_FLOW);
+	}
 	return (EXEC_FLOW);
 }
 

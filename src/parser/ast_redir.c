@@ -6,22 +6,17 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:13:32 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 01:54:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:42:33 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 
-/*
-TODO: remove printfs, add error handling
-TODO: check when empty command is valid, if always (redir only is valid in bash)s
-*/
-
 int	invalid_redir(t_msh *sh, int i)
 {
-	if (i <= 0 || !sh->tokens[i + 1].word)
+	if (!sh->tokens[i + 1].word)
 		return (EXIT_FAILURE);
-	if (!sh->tokens[i - 1].word || !sh->tokens[i + 1].word)
+	if (i > 0 && !sh->tokens[i - 1].word)
 		return (EXIT_FAILURE);
 	i++;
 	if (get_redir_type(sh->tokens[i].ty) != REDIR_UNKNOWN)
@@ -31,6 +26,7 @@ int	invalid_redir(t_msh *sh, int i)
 	return (EXIT_SUCCESS);
 }
 
+// TODO: check if we need exit_code + err or just one (or 0)
 void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 {
 	int				i;
@@ -46,7 +42,6 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 			{
 				msg_err(E_REDIR_INVALID_MSG);
 				sh->exit_code = 2;
-				sh->err = 2;
 				break ;
 			}
 			add_redir(ast, sh->tokens[i].ty, sh->tokens[i + 1].word);
@@ -63,7 +58,7 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 /* Detect complex quoted patterns that are hard to parse correctly.
 	Complex pattern: multiple quotes with variables
 
-	TODO: move this function into a "validation" function out of here*/
+	TODO: move this function into a "validation" file out of here*/
 bool	is_complex_quoted_delimiter(const char *str)
 {
 	int		i;

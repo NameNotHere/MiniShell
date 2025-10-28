@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/27 20:12:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:42:30 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 {
 	ast->nty = NODE_CMD;
 	parse_redir(sh, ast, &start, &end);
+	if (sh->exit_code != EXIT_SUCCESS)
+		return ;
 	ast->cmd.built_in = false;
 	if (sh->tokens[start].ty == TOKEN_INBUILT)
 		ast->cmd.built_in = true;
@@ -75,7 +77,7 @@ char	*remove_quotes(char *str, int len)
 
 char	**token_words_to_argv(t_token *tokens, int start, int end, int argc)
 {
-	int 	i;
+	int		i;
 	int		token_i;
 	char	**argv;
 	char	*word;
@@ -98,14 +100,5 @@ char	**token_words_to_argv(t_token *tokens, int start, int end, int argc)
 		}
 		token_i++;
 	}
-	//remove this debug for norm
-	i = 0;
-	a_print(" :: argv -> ");
-	while (argv[i] != NULL)
-	{
-		a_print("|%s", argv[i]);
-		i++;
-	}
-	a_print("|\n");
 	return (argv);
 }

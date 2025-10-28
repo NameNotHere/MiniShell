@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/21 05:35:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/28 00:20:01 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ larger than 256: hard to use and read.
 larger than 2048: arbitrarily high soft limit: avoids truncation
 */
 # define ENV_VAR_NAME_MAX 2048
+
+/* marker for operators in variable expansions before tokenizing */
+# define EXP_MARK '\x01'
 
 typedef enum e_token_ty
 {
@@ -206,7 +209,6 @@ typedef struct s_msh
 	char		**export_vars;
 	char		**path_dirs;
 	char		*line;
-	int			err;
 	int			exit_code;
 	int			saved_exit_code;
 	pid_t		last_pid;
@@ -281,7 +283,8 @@ void		tokenise_redirs(char *str, t_token *output);
 void		free_tokens(t_token **tokens, int amount);
 
 // utils/parser_isminioperator.c
-int			isminioperator(char *token, int i);
+int			is_operator(char *token, int i);
+bool		is_operator_char(char c);
 
 // utils/parser_line.c
 bool		piped_line(char *line);

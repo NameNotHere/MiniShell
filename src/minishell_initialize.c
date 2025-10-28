@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 00:12:45 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/21 05:36:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/28 01:33:54 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,28 @@ static int	initialize_run_script(t_msh *sh, char **argv)
 	return (sh->exit_code);
 }
 
+static int	initialize_run_command(t_msh *sh, char **argv)
+{
+	int	pipefd[2];
+
+	sh->is_interact = false;
+	if (pipe(pipefd) < 0)
+		return (ret_exit_perr(sh, ERRNO_CODE, "pipe"));
+	if (write(pipefd[1], argv[2], ft_strlen(argv[2])) < 0)
+		return (ret_exit_perr(sh, ERRNO_CODE, "write"));
+	close(pipefd[1]);
+	sh->script_fd = pipefd[0];
+	return (sh->exit_code);
+}
+
 int	initialize_minishell(t_msh *sh, int argc, char **argv, char **envp)
 {
 	ft_bzero(sh, sizeof(*sh));
 	if (initialize_environment(sh, envp) != EXIT_SUCCESS)
 		return (sh->exit_code);
-	if (argc > 1)
+	if (argc >= 3 && !ft_strncmp(argv[1], "-c", 3))
+		return (initialize_run_command(sh, argv));
+	else if (argc > 1)
 		return (initialize_run_script(sh, argv));
 	sh->is_interact = isatty(STDIN_FILENO);
 	sh->script_fd = -1;

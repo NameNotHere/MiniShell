@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 00:56:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/25 16:21:47 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	add_line_to_string(char **string, char **line)
 	char	*updated_string;
 
 	result = EXIT_SUCCESS;
-	if (!(*line) || !*(*line))
+	if (!(*line))
 	{
 		msg_err("add line to string: invalid line");
 		return (EXIT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:03:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/27 20:13:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:43:10 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 
 bool	ft_valid_var_char(int c)
 {
-	if ('?' == c)
-		return (true);
 	if (ft_isalnum(c))
 		return (true);
 	if ('_' == c)
@@ -37,4 +35,3 @@ bool	is_dbl_quote(int c)
 		return (true);
 	return (false);
 }
-

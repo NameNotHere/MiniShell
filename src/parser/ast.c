@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 02:41:10 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 13:42:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,14 @@ int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 	if (has_pipe(sh->tokens, start, end))
 	{
 		if (validate_pipe_syntax(sh->tokens, start, end) != 0)
-			return (ret_exit_msg(sh, 2, "minishell: syntax error near unexpected token `|'\n"));
+			return (ret_exit_msg(sh, 2,
+					"minishell: syntax error near unexpected token `|'\n"));
 		scan_pipe(sh, current_node, sh->tokens, &i);
 	}
 	else
 		parse_cmd(sh, current_node, start, end);
-	if (sh->err != EXIT_SUCCESS)
-		return (sh->err);
+	if (sh->exit_code != EXIT_SUCCESS)
+		return (sh->exit_code);
 	return (EXIT_SUCCESS);
 }
 
@@ -87,7 +88,7 @@ void	parse_pipe(t_msh *sh, t_ast *ast, int start, int end)
 	ast->pipe.right = make_ast_node(NODE_UNKNOWN);
 	if (!ast->pipe.left || !ast->pipe.right)
 	{
-		a_print("*** ERROR *** Failed to allocate AST nodes\n");
+		msg_err("Failed to allocate AST nodes\n");
 		return ;
 	}
 	parse_cmd(sh, ast->pipe.left, start, end);

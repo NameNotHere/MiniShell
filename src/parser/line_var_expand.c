@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/21 20:41:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/28 00:20:01 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 		result[(ve->res_i)++] = '$';
 		ve->i += 2;
 	}
-	else if (!ve->sgl_quote && str[ve->i] == '$' && str[ve->i + 1] == '"')
+	else if (!ve->sgl_quote && !ve->dbl_quote && str[ve->i] == '$' && str[ve->i + 1] == '"')
 	{
 		ve->skipped[ve->skip_len++] = ve->res_i;
 		ve->i += 2;
@@ -47,6 +47,18 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 		if (str[ve->i] == '"')
 			ve->i++;
 	}
+	else if (!ve->sgl_quote && !ve->dbl_quote && str[ve->i] == '$' && str[ve->i + 1] == '\'')
+	{
+		ve->skipped[ve->skip_len++] = ve->res_i;
+		ve->i += 2;
+		while (str[ve->i] && str[ve->i] != '\'')
+		{
+			result[(ve->res_i)++] = str[ve->i];
+			ve->i++;
+		}
+		if (str[ve->i] == '\'')
+			ve->i++;
+	}
 	else
 	{
 		result[(ve->res_i)++] = str[ve->i];
@@ -54,6 +66,8 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 	}
 	if (result[ve->res_i - 1] == '\'')
 		ve->sgl_quote = !ve->sgl_quote;
+	if (result[ve->res_i - 1] == '"')
+		ve->dbl_quote = !ve->dbl_quote;
 }
 
 /*
@@ -99,13 +113,13 @@ bool	must_skip_exp(t_var_expand *ve, int index)
 	return (false);
 }
 
-int	expand_vars(t_msh *sh, t_var_expand *ve, char *str)
+int	expand_vars(t_var_expand *ve, char *str)
 {
 	while (str[ve->i])
 	{
 		if (handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, ve->i))
 			;
-		else if ('$' == str[ve->i] && ft_valid_var_char(str[ve->i + 1])
+		else if ('$' == str[ve->i] && (ft_valid_var_char(str[ve->i + 1]) || str[ve->i + 1] == '?')
 			&& !ve->sgl_quote && !must_skip_exp(ve, ve->i)
 			&& !is_in_heredoc_delimiter(str, ve->i))
 		{
@@ -113,6 +127,11 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *str)
 			ve->value = ve->var_values[ve->var_i];
 			while (*ve->value)
 			{
+				if (!ve->dbl_quote && is_operator_char(*ve->value))
+				{
+					ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = EXP_MARK;
+					ve->exp_i++;
+				}
 				ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = *ve->value;
 				ve->exp_i++;
 				ve->value++;
@@ -126,7 +145,7 @@ int	expand_vars(t_msh *sh, t_var_expand *ve, char *str)
 		ve->var_lookup = false;
 		ve->i++;
 	}
-	return (sh->exit_code);
+	return (EXIT_SUCCESS);
 }
 
 void	cleanup_ve(t_var_expand *ve, bool free_new_str)
@@ -150,7 +169,9 @@ void	cleanup_ve(t_var_expand *ve, bool free_new_str)
 bool	expand_string_variables(t_msh *sh, char **str_ptr)
 {
 	t_var_expand	ve;
+	bool			success;
 
+	success = true;
 	ft_bzero(&ve, sizeof(t_var_expand));
 	if (!fix_slashes_set_skips(&ve, str_ptr, ft_strlen(*str_ptr)))
 		return (false);
@@ -163,14 +184,11 @@ bool	expand_string_variables(t_msh *sh, char **str_ptr)
 	if (init_var_expand_arrays(sh, &ve) != EXIT_SUCCESS
 		|| catch_all_vars(sh, &ve, *str_ptr) != EXIT_SUCCESS
 		|| allocate_new_str(sh, &ve) != EXIT_SUCCESS
-		|| expand_vars(sh, &ve, *str_ptr) != EXIT_SUCCESS)
-	{
-		safe_free_string(str_ptr);
-		cleanup_ve(&ve, true);
-		return (false);
-	}
+		|| expand_vars(&ve, *str_ptr) != EXIT_SUCCESS)
+		success = false;
 	safe_free_string(str_ptr);
-	*str_ptr = ve.new_str;
-	cleanup_ve(&ve, false);
-	return (true);
+	if (success)
+		*str_ptr = ve.new_str;
+	cleanup_ve(&ve, !success);
+	return (success);
 }

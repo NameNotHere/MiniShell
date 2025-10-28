@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:17:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 00:56:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/25 16:37:29 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	close_fds_exit_error_free(t_msh *sh, const char *error,\
 	exit_error_free(sh, error);
 }
 
-int	handle_execute_command_errors(t_msh *sh, t_cmd *cmd)
+int	handle_execute_command_errors(t_cmd *cmd)
 {
 	(void)cmd;
 	if (errno == EACCES)
@@ -54,13 +54,11 @@ int	handle_execute_command_errors(t_msh *sh, t_cmd *cmd)
 			msg_err("permission denied: (empty command)\n");
 		else
 			msg_err_3("permission denied: ", cmd->full_cmd, "\n");
-		sh->exit_code = 126;
 		return (126);
 	}
 	if (cmd->full_cmd == NULL)
 		msg_err("command not found: (empty command)\n");
 	else
 		msg_err_3("command not found: ", cmd->argv[0], "\n");
-	sh->exit_code = 127;
 	return (127);
 }

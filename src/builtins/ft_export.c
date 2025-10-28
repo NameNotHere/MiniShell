@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/22 10:46:12 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/27 19:27:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	is_valid_var_name(char *name)
 {
 	int	i;
 
-	if (!name || !*name)
+	if (!name || !*name || name[0] == '?')
 		return (false);
 	if (!ft_isalpha(name[0]) && name[0] != '_')
 		return (false);
@@ -45,7 +45,7 @@ int	handle_export_name_only(t_msh **sh, char *arg)
 
 	if (!is_valid_var_name(arg))
 	{
-		msg_err_3("export: `", arg, "': not a valid identifier");
+		msg_err_3("export: `", arg, "': not a valid identifier\n");
 		return (EXIT_FAILURE);
 	}
 	i = search_name(arg, (*sh)->envp);
@@ -65,7 +65,7 @@ int	handle_export_assignment(t_msh **sh, char *arg, char *equals_pos)
 	value = equals_pos + 1;
 	if (!is_valid_var_name(name))
 	{
-		msg_err_3("export: `", name, "': not a valid identifier");
+		msg_err_3("export: `", name, "': not a valid identifier\n");
 		*equals_pos = '=';
 		return (EXIT_FAILURE);
 	}
@@ -91,9 +91,10 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 	arg_idx = 1;
 	while (arg_idx < cmd.argc)
 	{
-		if (cmd.argv[arg_idx][0] == '-' && cmd.argv[arg_idx][1] == '-')
+		if (cmd.argv[arg_idx][0] == '-')
 		{
-			msg_err_3("export: `", cmd.argv[arg_idx], "': not a valid identifier");
+			msg_err_3("export: `", cmd.argv[arg_idx],
+				"': not a valid identifier\n");
 			exit_code = 2;
 			arg_idx++;
 			continue ;
@@ -102,8 +103,8 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 		if (!equals_pos)
 			exit_code = handle_export_name_only(sh, cmd.argv[arg_idx]);
 		else
-			exit_code = handle_export_assignment\
-							(sh, cmd.argv[arg_idx], equals_pos);
+			exit_code = handle_export_assignment(sh, cmd.argv[arg_idx],
+					equals_pos);
 		arg_idx++;
 	}
 	return (exit_code);
