@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/28 00:20:01 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/28 13:26:54 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ typedef enum e_err_code
 }	t_err_code;
 
 // TODO: check invalid_redir_error_case
-# define E_INVALID_REDIR_MSG "syntax error: invalid redirection, missing string"
-# define E_SEMICOLON_MSG "syntax error near unexpected token ';'\n"
-# define E_UNCLOSED_QUOTES_MSG "error: unclosed quotes\n"
-# define E_HDOC_DELIM_MSG "syntax error: complex quoted heredoc delimiters\n"
-# define E_REDIR_INVALID_MSG "syntax error: invalid redirection\n"
-# define E_REDIR_ALLOCATION_MSG "error: redirection allocation failed.\n"
+# define E_SEMICOLON_MSG "minishell: syntax error near unexpected token ';'\n"
+# define E_UNCLOSED_QUOTES_MSG "minishell: unclosed quotes\n"
+# define E_HDOC_DELIM_MSG "minishell: syntax error: complex quoted heredoc \
+delimiters\n"
+# define E_REDIR_INVALID_MSG "minishell: syntax error: invalid redirection\n"
+# define E_REDIR_ALLOCATION_MSG "minishell: redirection allocation failed.\n"
 
 # define ERRNO_CODE -1
 
@@ -319,6 +319,10 @@ int			unclosed_token(const char *str, char token);
 int			validate_pipe_syntax(t_token *tokens, int start, int end);
 int			validate_semicolon_syntax(t_token *tokens);
 bool		has_complex_heredoc_delimiter(char *line);
+
+// utils/detect_logical_op.c
+int			detect_logical_op_token(t_token *tokens);
+int			process_logical_op_syntax_error(t_msh *sh);
 
 // utils/utils_error.c
 void		msg_err(const char *error);

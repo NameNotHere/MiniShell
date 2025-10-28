@@ -57,6 +57,7 @@ SRCS = 	signals/signals.c \
 	parser/tokenise_types.c \
 	parser/tokenize.c \
 	parser/is_escaped.c \
+	utils/detect_logical_op.c \
 	utils/parser_is_operator.c \
 	utils/parser_line.c \
 	utils/utils_char.c \
