@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/28 13:26:54 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/28 13:33:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ typedef enum e_err_code
 	E_MULTIPLE_CMD
 }	t_err_code;
 
-// TODO: check invalid_redir_error_case
+// TODO: add ALL parser error messages here, also add "minishell:" to all error
+// messages! Long messages: break with \ char please (no adjacent strings).
 # define E_SEMICOLON_MSG "minishell: syntax error near unexpected token ';'\n"
 # define E_UNCLOSED_QUOTES_MSG "minishell: unclosed quotes\n"
 # define E_HDOC_DELIM_MSG "minishell: syntax error: complex quoted heredoc \
