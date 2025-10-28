@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/27 23:57:45 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/28 14:05:10 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	ft_second_token(char *str, t_token *output)
 		output->ty = TOKEN_AND;
 	else if (ft_strncmp(str, "||", 2) == 0)
 		output->ty = TOKEN_OR;
+	else if (ft_strncmp(str, "&", 1) == 0)
+		output->ty = TOKEN_AMPERSAND;
 }
 
 t_token	ft_token(char *str)

@@ -6,11 +6,11 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 13:05:01 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/28 13:14:11 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/28 14:05:10 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parser.h"
+#include "minishell.h"
 
 /*
 	Returns TOKEN_AND if a TOKEN_AND token exists
@@ -29,7 +29,9 @@ int	detect_logical_op_token(t_token *tokens)
 	i = 0;
 	while (tokens[i].word)
 	{
-		if (tokens[i].ty == TOKEN_AND || tokens[i].ty == TOKEN_OR)
+		if (tokens[i].ty == TOKEN_AND
+			|| tokens[i].ty == TOKEN_OR
+			|| tokens[i].ty == TOKEN_AMPERSAND)
 			return (tokens[i].ty);
 		i++;
 	}
@@ -47,4 +49,8 @@ int	process_logical_op_syntax_error(t_msh *sh)
 	if (logop == TOKEN_AND)
 		return (ret_exit_msg(sh, 2,
 				"minishell: syntax error near unexpected token `&&'\n"));
+	if (logop == TOKEN_AMPERSAND)
+		return (ret_exit_msg(sh, 2,
+				"minishell: syntax error near unexpected token `&'\n"));
+	return (2);
 }

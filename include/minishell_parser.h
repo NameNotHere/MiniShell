@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/28 13:33:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/28 15:42:49 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef enum e_token_ty
 	TOKEN_BACKSLASH,
 	TOKEN_AND,
 	TOKEN_OR,
+	TOKEN_AMPERSAND,
 	UNCLOSED_DOUBLE_QUOTE,
 	UNCLOSED_SINGLE_QUOTE,
 	TOKEN_LAST

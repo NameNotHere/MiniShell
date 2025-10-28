@@ -6,12 +6,13 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 00:56:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/28 17:34:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// TODO: make filename unique each time.
 void	hdoc_redir(t_msh *sh, t_redir *redir, int prev_hdoc_fd)
 {
 	char	*hdoc_str;
