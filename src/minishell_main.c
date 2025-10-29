@@ -29,7 +29,7 @@ static t_flow	cycle_loop(t_msh *sh)
 		return (set_exit_msg(sh, 2, E_HDOC_DELIM_MSG), BREAK_FLOW);
 	if (sh->is_interact)
 		add_history(sh->line);
-	if (!expand_string_variables(sh, &sh->line))
+	if (!expand_string_variables(sh, &sh->line, false))
 		return (set_exit_code(sh, EXIT_FAILURE), CONTINUE_FLOW);
 	if (parse_line(sh, sh->ast, sh->line) != EXIT_SUCCESS)
 	{

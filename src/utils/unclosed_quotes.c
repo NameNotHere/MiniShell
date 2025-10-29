@@ -16,16 +16,18 @@ int	unclosed_quotes(const char *line)
 {
 	bool	single;
 	bool	dbl;
+	int		i;
 
 	single = false;
 	dbl = false;
-	while (*line)
+	i = 0;
+	while (line[i])
 	{
-		if (*line == '\'' && !dbl)
+		if (line[i] == '\'' && !dbl && !is_escaped(line, i))
 			single = !single;
-		else if (*line == '"' && !single)
+		else if (line[i] == '"' && !single && !is_escaped(line, i))
 			dbl = !dbl;
-		line++;
+		i++;
 	}
 	return (single || dbl);
 }

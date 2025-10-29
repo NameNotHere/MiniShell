@@ -35,6 +35,18 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 		result[(ve->res_i)++] = '$';
 		ve->i += 2;
 	}
+	else if (!ve->sgl_quote && str[ve->i] == '\\'
+		&& (str[ve->i + 1] == '"' || str[ve->i + 1] == '\''))
+	{
+		result[(ve->res_i)++] = '\\';
+		result[(ve->res_i)++] = str[ve->i + 1];
+		ve->i += 2;
+	}
+	else if (!ve->sgl_quote && !ve->dbl_quote && str[ve->i] == '\\' && str[ve->i + 1])
+	{
+		result[(ve->res_i)++] = str[ve->i + 1];
+		ve->i += 2;
+	}
 	else if (!ve->sgl_quote && !ve->dbl_quote && str[ve->i] == '$' && str[ve->i + 1] == '"')
 	{
 		ve->skipped[ve->skip_len++] = ve->res_i;
@@ -166,14 +178,16 @@ void	cleanup_ve(t_var_expand *ve, bool free_new_str)
  * Returns true on success, false on error
  * Caller must free the result string
  */
-bool	expand_string_variables(t_msh *sh, char **str_ptr)
+bool	expand_string_variables(t_msh *sh, char **str_ptr, bool is_heredoc)
 {
 	t_var_expand	ve;
 	bool			success;
 
 	success = true;
 	ft_bzero(&ve, sizeof(t_var_expand));
-	if (!fix_slashes_set_skips(&ve, str_ptr, ft_strlen(*str_ptr)))
+	if (!is_heredoc && !fix_slashes_set_skips(&ve, str_ptr, ft_strlen(*str_ptr)))
+		return (false);
+	if (is_heredoc && x_calloc((void **)&ve.skipped, ft_strlen(*str_ptr), sizeof(int)) != EXIT_SUCCESS)
 		return (false);
 	ve.str_len = ft_strlen(*str_ptr);
 	if (!ve.str_len)

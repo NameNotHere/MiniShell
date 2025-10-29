@@ -17,7 +17,7 @@ static bool	hdoc_process_line(t_msh *sh, t_redir *redir,\
 {
 	if (!*hdoc_line)
 		return (safe_free_string(hdoc_line), true);
-	if (!redir->quoted && !expand_string_variables(sh, hdoc_line))
+	if (!redir->quoted && !expand_string_variables(sh, hdoc_line, true))
 		return (safe_free_string(hdoc_line), false);
 	if (ft_strcmp(redir->string, *hdoc_line) == 0)
 		return (safe_free_string(hdoc_line), false);

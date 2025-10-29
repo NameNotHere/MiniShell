@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/29 20:01:04 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 23:54:04 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,7 +264,7 @@ int			catch_all_vars(t_msh *sh, t_var_expand *ve, char *str);
 bool		is_in_heredoc_delimiter(char *str, int pos);
 
 // parser/line_var_expand.c
-bool		expand_string_variables(t_msh *sh, char **string_ptr);
+bool		expand_string_variables(t_msh *sh, char **string_ptr, bool is_hdoc);
 bool		must_skip_exp(t_var_expand *ve, int index);
 
 // parser/line_var_expand_helper.c

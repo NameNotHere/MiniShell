@@ -64,10 +64,16 @@ char	*remove_quotes(char *str, int len)
 	in_dbl_quote = false;
 	while (str[str_i])
 	{
-		if (str[str_i] == '\'' && !in_dbl_quote)
+		if (str[str_i] == '\'' && !in_dbl_quote && !is_escaped(str, str_i))
 			in_sgl_quote = !in_sgl_quote;
-		else if (str[str_i] == '"' && !in_sgl_quote)
+		else if (str[str_i] == '"' && !in_sgl_quote && !is_escaped(str, str_i))
 			in_dbl_quote = !in_dbl_quote;
+		else if (str[str_i] == '\\' && str[str_i + 1]
+			&& (str[str_i + 1] == '"' || str[str_i + 1] == '\'') && !in_sgl_quote)
+		{
+			str_i++;
+			result[res_i++] = str[str_i];
+		}
 		else
 			result[res_i++] = str[str_i];
 		str_i++;
