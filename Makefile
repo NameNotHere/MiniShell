@@ -72,6 +72,7 @@ SRCS = 	signals/signals.c \
 	utils/has_quotes.c \
 	utils/unclosed_quotes.c \
 	utils/ft_realloc.c \
+	utils/utils_math.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
 	utils/utils_readline_state.c \

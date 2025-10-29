@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/25 16:37:44 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 19:44:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int		ft_echo(char **argv, int argc);
 // builtins_exit_export.c
 int		ft_exit(t_msh *sh, t_cmd cmd);
 int		ft_export(t_msh **sh, t_cmd cmd);
+int		handle_export_assignment(t_msh **sh, char *arg, char *equals_pos);
 
 // exec/execute.c
 int		exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out);
@@ -127,6 +128,9 @@ void	try_dup2(t_msh *sh, int *fd_in, int *fd_out);
 // utils/utils_env.c
 bool	is_var_in_env(t_msh *sh, char *var, int *envp_index);
 char	*get_env_value(t_msh *sh, char *var_name, int envp_index);
+int		update_shell_level_var(t_msh *sh);
+int		initialize_null_env(t_msh *sh);
+
 
 // utils/utils/exit.c
 void	close_fds_exit_error_free(t_msh *sh, const char *error, int *fd_in,

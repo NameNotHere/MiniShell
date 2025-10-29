@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/27 13:43:22 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 19:50:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,11 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_msh	sh;
 
-	if (envp[0] == NULL)
-	{
-		msg_err("error: empty environment variables\n");
-		return (EXIT_FAILURE);
-	}
 	if (initialize_minishell(&sh, argc, argv, envp) != EXIT_SUCCESS)
+	{
+		free_everything(&sh);
 		return (sh.exit_code);
+	}
 	if (minishell_mainloop(&sh) != EXIT_SUCCESS)
 		return (sh.exit_code);
 	return (sh.exit_code);

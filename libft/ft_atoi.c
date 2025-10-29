@@ -3,27 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: otanovic <otanovic@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 16:56:38 by otanovic          #+#    #+#             */
-/*   Updated: 2024/12/01 12:09:23 by otanovic         ###   ########.fr       */
+/*   Updated: 2025/10/29 18:49:28 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <limits.h>
 #include "libft.h"
 
-int	signs_and_spaces(const char *s, int i)
+static int	skip_initial_spaces(const char *s, int i)
 {
 	while (s[i] == ' ' || s[i] == '\t' || s[i] == '\n' || s[i] == '\v'
 		|| s[i] == '\f' || s[i] == '\r')
-	{
 		i++;
-	}
 	return (i);
 }
 
-void	handle_sign(const char *s, int *i, int *sign)
+static void	handle_sign(const char *s, int *i, int *sign)
 {
 	if (s[*i] == '+' || s[*i] == '-')
 	{
@@ -42,7 +40,7 @@ int	ft_atoi(const char *s)
 	i = 0;
 	num = 0;
 	sign = 1;
-	i = signs_and_spaces(s, i);
+	i = skip_initial_spaces(s, i);
 	handle_sign(s, &i, &sign);
 	while (s[i] >= '0' && s[i] <= '9')
 	{

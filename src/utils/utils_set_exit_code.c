@@ -67,7 +67,7 @@ void	set_exit_perr(t_msh *sh, int exit_code, const char *error_msg)
 	if (errno)
 		perror(error_msg);
 	else
-		msg_err(error_msg);
+		msg_err_2(error_msg, "\n");
 }
 
 /*

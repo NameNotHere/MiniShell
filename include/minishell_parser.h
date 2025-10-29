@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/29 04:57:30 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 20:01:04 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,24 @@
 // TODO: LAST remove debug include before eval
 # include "minishell_debug.h"
 
-// TODO: add ALL parser error messages here, also add "minishell:" to all error
+# define PATH_DEFAULT "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin\
+:/sbin:/bin"
+
+# define ERRNO_CODE -1
+
+// TODO: add ALL parser error messages here, also add "minishell:" when needed.
 // messages! Long messages: break with \ char please (no adjacent strings).
+// these are for error messages (not perror)
 # define E_SEMICOLON_MSG "minishell: syntax error near unexpected token ';'\n"
 # define E_UNCLOSED_QUOTES_MSG "minishell: unclosed quotes\n"
 # define E_HDOC_DELIM_MSG "minishell: syntax error: complex quoted heredoc \
 delimiters\n"
 # define E_REDIR_INVALID_MSG "minishell: syntax error: invalid redirection\n"
 # define E_REDIR_ALLOCATION_MSG "minishell: redirection allocation failed.\n"
-
-# define ERRNO_CODE -1
+# define E_INIT_ENV_MSG "minishell: initialize_environment allocation failed\n"
+# define E_OPTION_C_ARGUMENT "minishell: -c: option requires an argument\n"
+// MESSAGES FOR PERRORS OR MSG (no newline)
+# define E_SHLVL_MSG "minishell: update_shell_level allocation failed"
 
 /*
 no (POSIX or otherwise) standard on enviroment variable name size limit
@@ -296,6 +304,10 @@ void		safe_free(void **ptr);
 void		safe_free_string(char **ptr);
 void		safe_free_2d_string(char ***ptr);
 bool		make_string_free(char **string);
+
+// utils/math.c
+int			min_int(int a, int b);
+int			max_int(int a, int b);
 
 // utils/utils_path.c
 char		*make_cmd_full_path(const char *dir, const char *cmd);
