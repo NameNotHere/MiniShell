@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/28 15:42:49 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 03:59:24 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ typedef struct s_cmd
 	bool		built_in;
 	bool		not_found;
 	bool		permission_denied;
+	bool		is_a_dir;
 	t_redir		*redir;
 }	t_cmd;
 
