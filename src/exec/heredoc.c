@@ -6,13 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/28 17:34:37 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 03:06:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// TODO: make filename unique each time.
 void	hdoc_redir(t_msh *sh, t_redir *redir, int prev_hdoc_fd)
 {
 	char	*hdoc_str;
@@ -31,6 +30,8 @@ void	hdoc_redir(t_msh *sh, t_redir *redir, int prev_hdoc_fd)
 		return (hdoc_err(sh, &write_fd, NULL, NULL), perror("open hdoc"));
 	unlink("/tmp/tmp_hdoc");
 	hdoc_str = hdoc_loop(sh, redir);
+	if (hdoc_str == NULL && g_sig == SIGINT)
+		return (safe_close_2_fds(&write_fd, &redir->fd));
 	if (hdoc_str == NULL && set_empty_string(&hdoc_str) == false)
 		return (hdoc_err(sh, &write_fd, &redir->fd, hdoc_str), perror("alloc"));
 	if ((write(write_fd, hdoc_str, ft_strlen(hdoc_str)) == -1)
@@ -44,7 +45,7 @@ void	hdoc_redir(t_msh *sh, t_redir *redir, int prev_hdoc_fd)
 int	heredoc_cmd_node(t_msh *sh, t_cmd *cmd)
 {
 	hdoc_redir(sh, cmd->redir, 0);
-	return (EXIT_SUCCESS);
+	return (sh->exit_code);
 }
 
 int	heredoc_pipe_node(t_msh *sh, t_pipe *pipe_node)
@@ -60,7 +61,7 @@ int	heredoc_ast_node(t_msh *sh, t_ast *node)
 {
 	if (!node)
 	{
-		msg_err("error: on execute_ast_node_heredoc, ast node is NULL");
+		msg_err("minishell: execute_ast_node_heredoc, ast node is NULL\n");
 		return (EXIT_FAILURE);
 	}
 	if (node->nty == NODE_CMD)

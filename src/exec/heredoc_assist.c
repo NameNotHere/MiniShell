@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 00:00:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/11 00:00:00 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 03:06:11 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	*hdoc_handle_input(t_msh *sh)
 		return (safe_free_string(&hdoc_line), NULL);
 	if (!hdoc_line)
 	{
-		msg_err("warning: here-document delimited by end-of-file");
+		msg_err("warning: here-document delimited by end-of-file\n");
 		return (NULL);
 	}
 	return (hdoc_line);
@@ -50,12 +50,21 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 	hdoc_string = NULL;
 	sh->exit_code = EXIT_FAILURE;
 	if (!set_heredoc_sig())
-		return (msg_err("failed to set heredoc signal handler"), NULL);
+		return (msg_err(
+				"minishell: failed to set heredoc signal handler\n"), NULL);
 	while (true)
 	{
 		hdoc_line = hdoc_handle_input(sh);
 		if (!hdoc_line)
+		{
+			if (g_sig == SIGINT)
+			{
+				safe_free_string(&hdoc_string);
+				sh->exit_code = 130;
+				return (NULL);
+			}
 			return (hdoc_string);
+		}
 		if (!hdoc_process_line(sh, redir, &hdoc_line, &hdoc_string))
 			break ;
 	}
