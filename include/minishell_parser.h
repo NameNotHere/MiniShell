@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/29 03:59:24 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 04:57:30 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,6 @@
 
 // TODO: LAST remove debug include before eval
 # include "minishell_debug.h"
-
-typedef enum e_err_code
-{
-	E_INVALID_REDIR = 200,
-	E_MULTIPLE_CMD
-}	t_err_code;
 
 // TODO: add ALL parser error messages here, also add "minishell:" to all error
 // messages! Long messages: break with \ char please (no adjacent strings).
