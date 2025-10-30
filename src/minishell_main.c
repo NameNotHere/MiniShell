@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/29 19:50:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/30 11:03:50 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ static t_flow	cycle_loop(t_msh *sh)
 		return (CONTINUE_FLOW);
 	if (unclosed_quotes(sh->line))
 		return (set_exit_msg(sh, 2, E_UNCLOSED_QUOTES_MSG), CONTINUE_FLOW);
-	if (has_complex_heredoc_delimiter(sh->line))
-		return (set_exit_msg(sh, 2, E_HDOC_DELIM_MSG), BREAK_FLOW);
 	if (sh->is_interact)
 		add_history(sh->line);
 	if (!expand_string_variables(sh, &sh->line, false))

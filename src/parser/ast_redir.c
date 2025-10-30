@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:13:32 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/27 13:42:33 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/30 11:03:35 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,32 +55,6 @@ void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 	}
 }
 
-/* Detect complex quoted patterns that are hard to parse correctly.
-	Complex pattern: multiple quotes with variables
-
-	TODO: move this function into a "validation" file out of here*/
-bool	is_complex_quoted_delimiter(const char *str)
-{
-	int		i;
-	int		quote_count;
-	bool	has_variables;
-
-	if (!str)
-		return (false);
-	quote_count = 0;
-	has_variables = false;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '"' || str[i] == '\'')
-			quote_count++;
-		if (str[i] == '$' && i != 0 && str[i - 1] != '\\')
-			has_variables = true;
-		i++;
-	}
-	return (quote_count > 2 && has_variables);
-}
-
 void	add_redir(t_ast *ast, t_token_ty token_type, char *word)
 {
 	t_redir	*current_redir;
@@ -89,9 +63,6 @@ void	add_redir(t_ast *ast, t_token_ty token_type, char *word)
 	new_redir = ft_calloc(1, sizeof(t_redir));
 	if (!new_redir)
 		return (msg_err(E_REDIR_ALLOCATION_MSG));
-	if (get_redir_type(token_type) == REDIR_HEREDOC
-		&& is_complex_quoted_delimiter(word))
-		return (msg_err(E_HDOC_DELIM_MSG), safe_free((void **)&new_redir));
 	new_redir->quoted = has_quotes(word);
 	new_redir->string = remove_quotes(word, ft_strlen(word));
 	if (!new_redir->string)

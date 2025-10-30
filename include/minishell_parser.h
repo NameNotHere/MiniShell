@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/29 23:54:04 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/30 11:03:44 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@
 // these are for error messages (not perror)
 # define E_SEMICOLON_MSG "minishell: syntax error near unexpected token ';'\n"
 # define E_UNCLOSED_QUOTES_MSG "minishell: unclosed quotes\n"
-# define E_HDOC_DELIM_MSG "minishell: syntax error: complex quoted heredoc \
-delimiters\n"
 # define E_REDIR_INVALID_MSG "minishell: syntax error: invalid redirection\n"
 # define E_REDIR_ALLOCATION_MSG "minishell: redirection allocation failed.\n"
 # define E_INIT_ENV_MSG "minishell: initialize_environment allocation failed\n"
@@ -328,7 +326,6 @@ int			unclosed_token(const char *str, char token);
 // parser/parser_validation.c
 int			validate_pipe_syntax(t_token *tokens, int start, int end);
 int			validate_semicolon_syntax(t_token *tokens);
-bool		has_complex_heredoc_delimiter(char *line);
 
 // utils/detect_logical_op.c
 int			detect_logical_op_token(t_token *tokens);

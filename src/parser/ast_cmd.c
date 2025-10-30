@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/27 13:42:30 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/30 11:03:39 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 	parse_redir(sh, ast, &start, &end);
 	if (sh->exit_code != EXIT_SUCCESS)
 		return ;
-	ast->cmd.built_in = false;
-	if (sh->tokens[start].ty == TOKEN_INBUILT)
-		ast->cmd.built_in = true;
 	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end, 0);
 	ast->cmd.argc = 0;
 	while (ast->cmd.argv && ast->cmd.argv[ast->cmd.argc])
 		ast->cmd.argc++;
+	ast->cmd.built_in = false;
+	if (ast->cmd.argv && ast->cmd.argv[0] && is_builtin(ast->cmd.argv[0]))
+		ast->cmd.built_in = true;
 	return ;
 }
 
