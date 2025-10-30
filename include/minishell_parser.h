@@ -200,6 +200,7 @@ typedef struct s_var_expand
 	bool	sgl_quote;
 	bool	dbl_quote;
 	bool	var_lookup;
+	bool	is_hdoc;
 	char	**var_names;
 	char	**var_values;
 	int		*skipped;
