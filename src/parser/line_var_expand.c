@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/30 01:10:28 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/30 23:33:33 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 	2. \$ → $ (with skip marking for variable expansion)
 	3. \" / \' → preserve both (for later quote removal)
 	4. \X → X (general case, outside double quotes only)
+
+	Note: inside $"..." , escapes the single quotes, otherwise they get removed
 */
 static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 {
@@ -60,6 +62,8 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 		ve->i += 2;
 		while (str[ve->i] && str[ve->i] != '"')
 		{
+			if (str[ve->i] == '\'')
+				result[(ve->res_i)++] = '\\';
 			result[(ve->res_i)++] = str[ve->i];
 			ve->i++;
 		}
