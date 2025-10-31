@@ -6,12 +6,14 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 17:15:30 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/29 04:35:22 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/31 16:03:07 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_signal.h"
 #include <readline/readline.h>
+#include <unistd.h>
+#include <termios.h>
 
 /*
 	**helper for handler_interactive_sig, on int sig (control-c)
@@ -54,15 +56,25 @@ static void	handler_interactive_sig(int sig)
 /*
 	sets: interactive signal handling
 
-	uses install_sig_handler to install interactive signal handler
+	1)  configures terminal to suppress echoing control characters.
+			terminal usually prints/echoes some characters when you control+c,
+			control+\ etc, so we turn it off (bash and zsh also suppress those)
+			getting terminal state is required, but setting may fail silently
+			(but unlikely will fail).
+	2)  uses install_sig_handler to install interactive signal handler
 
 	Returns:
-	- true if install succeeded
-	- false if install failed
+	- true if install succeeded.
+	- false if cannot get terminal state or if install failed.
  */
 bool	set_interactive_sig(void)
 {
-	t_sa	sa;
+	t_sa			sa;
+	struct termios	term;
 
+	if (tcgetattr(STDIN_FILENO, &term) == -1)
+		return (false);
+	term.c_lflag &= ~ECHOCTL;
+	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	return (install_sig_handler(&sa, 0, handler_interactive_sig));
 }
