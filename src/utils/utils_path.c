@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:18:36 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/21 05:42:17 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 04:47:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,6 @@ char	*make_cmd_full_path(const char *dir, const char *cmd)
 	return (full);
 }
 
-// TODO: replace ~/ with home folder.
-// TODO: replace ./ with PWD?
-// TODO: use chdir(current folder) so processes know where they are
-// (like access, to be able to use relative paths)
 // Gets a full command path by checking concatenations of path
 // directories with command, and checking if the full path exists
 // and is executable.
@@ -59,7 +55,6 @@ char	*make_cmd_full_path(const char *dir, const char *cmd)
 // it is treated as a full path.
 // Returns full path if found, or NULL if not found.
 // Caller is responsible for freeing the returned string.
-// TODO: handle ~/ (I had this here, broken if (ft_strncmp(cmd, "~/", 2) == 0))
 char	*get_valid_cmd_full_path(char **path_dirs, char *cmd)
 {
 	int		i;

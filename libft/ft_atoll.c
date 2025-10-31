@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_atoll.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/21 16:56:38 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/29 18:49:28 by tda-roch         ###   ########.fr       */
+/*   Created: 2025/10/30 11:23:20 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/10/30 11:23:25 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ static void	handle_sign(const char *s, int *i, int *sign)
 	}
 }
 
-int	ft_atoi(const char *s)
+long long	ft_atoll(const char *s)
 {
-	int	i;
-	int	num;
-	int	sign;
+	int			i;
+	long long	num;
+	int			sign;
 
 	i = 0;
 	num = 0;
@@ -44,12 +44,12 @@ int	ft_atoi(const char *s)
 	handle_sign(s, &i, &sign);
 	while (s[i] >= '0' && s[i] <= '9')
 	{
-		if (num > (INT_MAX - (s[i] - '0')) / 10)
+		if (num > (LLONG_MAX - (s[i] - '0')) / 10)
 		{
 			if (sign == 1)
-				return (INT_MAX);
+				return (LLONG_MAX);
 			else
-				return (INT_MIN);
+				return (LLONG_MIN);
 		}
 		num = num * 10 + (s[i] - '0');
 		i++;

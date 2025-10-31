@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/10 10:42:20 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/10 10:44:54 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 13:53:01 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,3 +36,4 @@ char	*ft_strjoin3(char const *s1, char const *s2, char const *s3)
 	result[i] = '\0';
 	return (result);
 }
+

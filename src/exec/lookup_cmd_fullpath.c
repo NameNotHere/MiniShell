@@ -6,20 +6,34 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 06:11:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 00:56:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 04:47:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <sys/stat.h>
 
-// TODO: remove comment below
-// NEW: now NULL argv[0] is valid (redirection only), so we just return.
+
+void	lookup_cmd_is_dir(t_cmd *cmd)
+{
+	struct stat	buf;
+
+	if (lstat(cmd->argv[0], &buf) == 0 && S_ISDIR(buf.st_mode))
+		cmd->is_a_dir = true;
+}
+
 void	lookup_cmd_fullpath(t_msh *sh, t_cmd *cmd)
 {
 	if (cmd->built_in)
 		return ;
 	if (cmd->argv[0] == NULL || !ft_strlen(cmd->argv[0]))
 		return ;
+	if (ft_strchr(cmd->argv[0], '/'))
+	{
+		lookup_cmd_is_dir(cmd);
+		if (cmd->is_a_dir)
+			return ;
+	}
 	cmd->full_cmd = get_valid_cmd_full_path(sh->path_dirs, cmd->argv[0]);
 	if (cmd->full_cmd == NULL)
 	{

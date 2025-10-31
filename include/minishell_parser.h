@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/28 00:20:01 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/30 11:03:44 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,22 @@
 // TODO: LAST remove debug include before eval
 # include "minishell_debug.h"
 
-typedef enum e_err_code
-{
-	E_INVALID_REDIR = 200,
-	E_MULTIPLE_CMD
-}	t_err_code;
-
-// TODO: check invalid_redir_error_case
-# define E_INVALID_REDIR_MSG "syntax error: invalid redirection, missing string"
-# define E_SEMICOLON_MSG "syntax error near unexpected token ';'\n"
-# define E_UNCLOSED_QUOTES_MSG "error: unclosed quotes\n"
-# define E_HDOC_DELIM_MSG "syntax error: complex quoted heredoc delimiters\n"
-# define E_REDIR_INVALID_MSG "syntax error: invalid redirection\n"
-# define E_REDIR_ALLOCATION_MSG "error: redirection allocation failed.\n"
+# define PATH_DEFAULT "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin\
+:/sbin:/bin"
 
 # define ERRNO_CODE -1
+
+// TODO: add ALL parser error messages here, also add "minishell:" when needed.
+// messages! Long messages: break with \ char please (no adjacent strings).
+// these are for error messages (not perror)
+# define E_SEMICOLON_MSG "minishell: syntax error near unexpected token ';'\n"
+# define E_UNCLOSED_QUOTES_MSG "minishell: unclosed quotes\n"
+# define E_REDIR_INVALID_MSG "minishell: syntax error: invalid redirection\n"
+# define E_REDIR_ALLOCATION_MSG "minishell: redirection allocation failed.\n"
+# define E_INIT_ENV_MSG "minishell: initialize_environment allocation failed\n"
+# define E_OPTION_C_ARGUMENT "minishell: -c: option requires an argument\n"
+// MESSAGES FOR PERRORS OR MSG (no newline)
+# define E_SHLVL_MSG "minishell: update_shell_level allocation failed"
 
 /*
 no (POSIX or otherwise) standard on enviroment variable name size limit
@@ -71,6 +72,7 @@ typedef enum e_token_ty
 	TOKEN_BACKSLASH,
 	TOKEN_AND,
 	TOKEN_OR,
+	TOKEN_AMPERSAND,
 	UNCLOSED_DOUBLE_QUOTE,
 	UNCLOSED_SINGLE_QUOTE,
 	TOKEN_LAST
@@ -144,6 +146,7 @@ typedef struct s_cmd
 	bool		built_in;
 	bool		not_found;
 	bool		permission_denied;
+	bool		is_a_dir;
 	t_redir		*redir;
 }	t_cmd;
 
@@ -195,6 +198,7 @@ typedef struct s_var_expand
 	bool	sgl_quote;
 	bool	dbl_quote;
 	bool	var_lookup;
+	bool	is_hdoc;
 	char	**var_names;
 	char	**var_values;
 	int		*skipped;
@@ -259,7 +263,7 @@ int			catch_all_vars(t_msh *sh, t_var_expand *ve, char *str);
 bool		is_in_heredoc_delimiter(char *str, int pos);
 
 // parser/line_var_expand.c
-bool		expand_string_variables(t_msh *sh, char **string_ptr);
+bool		expand_string_variables(t_msh *sh, char **string_ptr, bool is_hdoc);
 bool		must_skip_exp(t_var_expand *ve, int index);
 
 // parser/line_var_expand_helper.c
@@ -300,6 +304,10 @@ void		safe_free_string(char **ptr);
 void		safe_free_2d_string(char ***ptr);
 bool		make_string_free(char **string);
 
+// utils/math.c
+int			min_int(int a, int b);
+int			max_int(int a, int b);
+
 // utils/utils_path.c
 char		*make_cmd_full_path(const char *dir, const char *cmd);
 char		*get_valid_cmd_full_path(char **path_dirs, char *cmd);
@@ -318,7 +326,10 @@ int			unclosed_token(const char *str, char token);
 // parser/parser_validation.c
 int			validate_pipe_syntax(t_token *tokens, int start, int end);
 int			validate_semicolon_syntax(t_token *tokens);
-bool		has_complex_heredoc_delimiter(char *line);
+
+// utils/detect_logical_op.c
+int			detect_logical_op_token(t_token *tokens);
+int			process_logical_op_syntax_error(t_msh *sh);
 
 // utils/utils_error.c
 void		msg_err(const char *error);

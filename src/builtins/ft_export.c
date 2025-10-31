@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/27 19:27:51 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 17:04:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	handle_export_name_only(t_msh **sh, char *arg)
 	return (EXIT_SUCCESS);
 }
 
+// TODO: do we need *name? why not just use arg
 int	handle_export_assignment(t_msh **sh, char *arg, char *equals_pos)
 {
 	char	*name;

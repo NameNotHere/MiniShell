@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 00:00:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/11 00:00:00 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/29 22:24:08 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static bool	hdoc_process_line(t_msh *sh, t_redir *redir,\
 {
 	if (!*hdoc_line)
 		return (safe_free_string(hdoc_line), true);
-	if (!redir->quoted && !expand_string_variables(sh, hdoc_line))
+	if (!redir->quoted && !expand_string_variables(sh, hdoc_line, true))
 		return (safe_free_string(hdoc_line), false);
 	if (ft_strcmp(redir->string, *hdoc_line) == 0)
 		return (safe_free_string(hdoc_line), false);
@@ -26,7 +26,7 @@ static bool	hdoc_process_line(t_msh *sh, t_redir *redir,\
 	return (true);
 }
 
-static char	*hdoc_handle_input(t_msh *sh)
+static char	*hdoc_handle_input(t_msh *sh, t_redir *redir)
 {
 	char	*hdoc_line;
 
@@ -36,7 +36,7 @@ static char	*hdoc_handle_input(t_msh *sh)
 		return (safe_free_string(&hdoc_line), NULL);
 	if (!hdoc_line)
 	{
-		msg_err("warning: here-document delimited by end-of-file");
+		msg_err_3("warning: here-document at line 1 delimited by end-of-file (wanted `", redir->string, "')\n");
 		return (NULL);
 	}
 	return (hdoc_line);
@@ -48,18 +48,26 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 	char	*hdoc_line;
 
 	hdoc_string = NULL;
-	sh->exit_code = EXIT_FAILURE;
+	sh->exit_code = EXIT_SUCCESS;
 	if (!set_heredoc_sig())
-		return (msg_err("failed to set heredoc signal handler"), NULL);
+		return (msg_err(
+				"minishell: failed to set heredoc signal handler\n"), NULL);
 	while (true)
 	{
-		hdoc_line = hdoc_handle_input(sh);
+		hdoc_line = hdoc_handle_input(sh, redir);
 		if (!hdoc_line)
+		{
+			if (g_sig == SIGINT)
+			{
+				safe_free_string(&hdoc_string);
+				sh->exit_code = 130;
+				return (NULL);
+			}
 			return (hdoc_string);
+		}
 		if (!hdoc_process_line(sh, redir, &hdoc_line, &hdoc_string))
 			break ;
 	}
-	sh->exit_code = EXIT_SUCCESS;
 	return (hdoc_string);
 }
 

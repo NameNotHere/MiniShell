@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/27 13:43:22 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/30 11:03:50 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,9 @@ static t_flow	cycle_loop(t_msh *sh)
 		return (CONTINUE_FLOW);
 	if (unclosed_quotes(sh->line))
 		return (set_exit_msg(sh, 2, E_UNCLOSED_QUOTES_MSG), CONTINUE_FLOW);
-	if (has_complex_heredoc_delimiter(sh->line))
-		return (set_exit_msg(sh, 2, E_HDOC_DELIM_MSG), BREAK_FLOW);
 	if (sh->is_interact)
 		add_history(sh->line);
-	if (!expand_string_variables(sh, &sh->line))
+	if (!expand_string_variables(sh, &sh->line, false))
 		return (set_exit_code(sh, EXIT_FAILURE), CONTINUE_FLOW);
 	if (parse_line(sh, sh->ast, sh->line) != EXIT_SUCCESS)
 	{
@@ -63,13 +61,11 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_msh	sh;
 
-	if (envp[0] == NULL)
-	{
-		msg_err("error: empty environment variables\n");
-		return (EXIT_FAILURE);
-	}
 	if (initialize_minishell(&sh, argc, argv, envp) != EXIT_SUCCESS)
+	{
+		free_everything(&sh);
 		return (sh.exit_code);
+	}
 	if (minishell_mainloop(&sh) != EXIT_SUCCESS)
 		return (sh.exit_code);
 	return (sh.exit_code);

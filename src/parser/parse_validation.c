@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:47:30 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/29 04:29:33 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/30 11:03:20 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,41 +68,4 @@ int	validate_semicolon_syntax(t_token *tokens)
 		i++;
 	}
 	return (0);
-}
-
-/* Check if line contains complex heredoc delimiters
-
-	TODO: add the initial check for strstr here instead of in mainloop
-*/
-bool	has_complex_heredoc_delimiter(char *line)
-{
-	char	*heredoc_pos;
-	char	*delimiter_start;
-	int		i;
-	int		quote_count;
-	bool	has_variables;
-
-	heredoc_pos = ft_strstr(line, "<<");
-	while (heredoc_pos)
-	{
-		delimiter_start = heredoc_pos + 2;
-		while (*delimiter_start == ' ' || *delimiter_start == '\t')
-			delimiter_start++;
-		i = 0;
-		quote_count = 0;
-		has_variables = false;
-		while (delimiter_start[i] && delimiter_start[i] != ' '
-			&& delimiter_start[i] != '\t' && delimiter_start[i] != '\n')
-		{
-			if (delimiter_start[i] == '"' || delimiter_start[i] == '\'')
-				quote_count++;
-			if (delimiter_start[i] == '$')
-				has_variables = true;
-			i++;
-		}
-		if (quote_count > 2 && has_variables)
-			return (true);
-		heredoc_pos = ft_strstr(heredoc_pos + 2, "<<");
-	}
-	return (false);
 }

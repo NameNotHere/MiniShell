@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unclosed_quotes.c                                  :+:      :+:    :+:   */
+/*   utils_math.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/30 00:32:07 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/30 00:34:36 by tda-roch         ###   ########.fr       */
+/*   Created: 2025/10/29 17:41:15 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/10/29 17:42:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-int	unclosed_quotes(const char *line)
+int	min_int(int a, int b)
 {
-	bool	single;
-	bool	dbl;
-	int		i;
+	if (a < b)
+		return (a);
+	return (b);
+}
 
-	single = false;
-	dbl = false;
-	i = 0;
-	while (line[i])
-	{
-		if (line[i] == '\'' && !dbl && !is_escaped(line, i))
-			single = !single;
-		else if (line[i] == '"' && !single && !is_escaped(line, i))
-			dbl = !dbl;
-		i++;
-	}
-	return (single || dbl);
+int	max_int(int a, int b)
+{
+	if (a > b)
+		return (a);
+	return (b);
 }

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/27 13:42:30 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/10/30 23:34:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 	parse_redir(sh, ast, &start, &end);
 	if (sh->exit_code != EXIT_SUCCESS)
 		return ;
-	ast->cmd.built_in = false;
-	if (sh->tokens[start].ty == TOKEN_INBUILT)
-		ast->cmd.built_in = true;
 	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end, 0);
 	ast->cmd.argc = 0;
 	while (ast->cmd.argv && ast->cmd.argv[ast->cmd.argc])
 		ast->cmd.argc++;
+	ast->cmd.built_in = false;
+	if (ast->cmd.argv && ast->cmd.argv[0] && is_builtin(ast->cmd.argv[0]))
+		ast->cmd.built_in = true;
 	return ;
 }
 
@@ -42,7 +42,7 @@ bool	init_remove_quotes(char *str, char **result, int len)
 	*result = ft_calloc(len + 1, sizeof(char));
 	if (!*result)
 	{
-		perror("init remove quotes");
+		perror("minishell: init_remove_quotes");
 		return (false);
 	}
 	return (true);
@@ -58,19 +58,21 @@ char	*remove_quotes(char *str, int len)
 
 	if (init_remove_quotes(str, &result, len) == false)
 		return (result);
-	str_i = 0;
-	res_i = 0;
 	in_sgl_quote = false;
 	in_dbl_quote = false;
-	while (str[str_i])
+	res_i = 0;
+	str_i = -1;
+	while (str[++str_i])
 	{
-		if (str[str_i] == '\'' && !in_dbl_quote)
+		if (str[str_i] == '\'' && !in_dbl_quote && !is_escaped(str, str_i))
 			in_sgl_quote = !in_sgl_quote;
-		else if (str[str_i] == '"' && !in_sgl_quote)
+		else if (str[str_i] == '"' && !in_sgl_quote && !is_escaped(str, str_i))
 			in_dbl_quote = !in_dbl_quote;
+		else if (str[str_i] == '\\' && !in_sgl_quote && str[str_i + 1]
+			&& (str[str_i + 1] == '"' || str[str_i + 1] == '\''))
+			result[res_i++] = str[++str_i];
 		else
 			result[res_i++] = str[str_i];
-		str_i++;
 	}
 	return (result);
 }
