@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 00:12:45 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/29 20:01:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/01 15:15:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,13 @@ int	initialize_minishell(t_msh *sh, int argc, char **argv, char **envp)
 	}
 	else if (argc > 1)
 		return (initialize_run_script(sh, argv));
-	sh->is_interact = isatty(STDIN_FILENO);
+	// TODO: CHANGES FOR TESTER -- REVERT (end of addition in //)
+	// sh->is_interact = isatty(STDIN_FILENO);
+	// if (sh->is_interact)
+	sh->is_interact = true;
+	if (isatty(STDIN_FILENO))
+	// TODO: REMOVE ABOVE
+		write(STDOUT_FILENO, BRACKET_PASTE_CODE, ft_strlen(BRACKET_PASTE_CODE));
 	sh->script_fd = -1;
 	return (sh->exit_code);
 }

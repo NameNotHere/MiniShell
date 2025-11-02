@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/29 19:44:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/01 14:06:35 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <unistd.h>
+
+// Sequence to ENABLE bracketed paste mode by readline
+# define BRACKET_PASTE_CODE "\033[?2004h"
+
 /*
 	\033[96m = cyan
 	colors need to be wrapped in \001 and \002
@@ -35,16 +39,16 @@
 	prompt is: star+arrow(cyan)
 	user input has default term color
 */
-# define MSH_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
-# define HDOC_PROMPT "hdoc > "
+// # define MSH_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
+// # define HDOC_PROMPT "hdoc > "
 
 # define EXIT_INCORRECT_BUILTIN 2
 # define EXIT_CMD_NOT_FOUND 127
 # define EXIT_CMD_PERMISSION_DENIED 126
 
 // alternative simpler prompts commented out below:
-// # define MSH_PROMPT "$ "
-// # define HDOC_PROMPT "> "
+# define MSH_PROMPT "$ "
+# define HDOC_PROMPT "> "
 
 // 0644: user can read/write, others can read. reasonable/safe setting.
 # define OUTPUT_PERMISSIONS 0644
