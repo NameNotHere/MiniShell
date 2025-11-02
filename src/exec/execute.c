@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 02:25:28 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/02 20:31:35 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ int	exec_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 {
 	if (!node)
 	{
-		msg_err("error: on execution, ast node is NULL");
+		msg_err("exec_ast_root: on execution, ast node is NULL");
 		return (EXIT_FAILURE);
 	}
 	if (!set_ignore_sig())
 	{
-		msg_err("failed to set execution signal handling");
+		msg_err("exec_ast_root: failed to set execution signal handling");
 		sh->exit_code = EXIT_FAILURE;
 		return (sh->exit_code);
 	}
@@ -63,7 +63,7 @@ int	exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 	sh->last_pid = 0;
 	if (!node)
 	{
-		msg_err("error: on exec, ast root node is NULL");
+		msg_err("exec_ast: ast root node is NULL");
 		return (EXIT_FAILURE);
 	}
 	if (heredoc_ast_node(sh, sh->ast) != EXIT_SUCCESS)
@@ -111,12 +111,12 @@ static int	wait_children(t_msh *sh)
 			if (errno == EINTR)
 				continue ;
 			if (errno != ECHILD)
-				perror("wait error");
+				ms_perror("wait error");
 			break ;
 		}
 		process_child_status(sh, child_pid, child_status);
 	}
 	if (interrupted)
-		msg_err("\n");
+		write(STDERR_FILENO, "\n", 1);
 	return (sh->exit_code);
 }

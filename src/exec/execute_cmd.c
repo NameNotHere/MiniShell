@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:35:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/29 04:47:34 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/02 20:31:30 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,17 @@ int	execute_command(t_msh *sh, t_cmd *cmd)
 		return (EXIT_SUCCESS);
 	if (!ft_strlen(cmd->argv[0]))
 	{
-		msg_err("command not found: \n");
+		msg_err("command not found: ");
 		return (127);
 	}
 	if (cmd->built_in)
 		return (execute_builtin(sh, cmd));
 	if (cmd->is_a_dir)
-		return (msg_err_3("minishell: is a directory: ", cmd->argv[0], "\n"), 126);
+		return (msg_err_2("is a directory: ", cmd->argv[0]), 126);
 	if (cmd->permission_denied)
-		return (msg_err_3("minishell: permission denied: ", cmd->argv[0], "\n"), 126);
+		return (msg_err_2("permission denied: ", cmd->argv[0]), 126);
 	if (cmd->not_found)
-		return (msg_err_3("minishell: command not found: ", cmd->argv[0], "\n"), 127);
+		return (msg_err_2("command not found: ", cmd->argv[0]), 127);
 	execve(cmd->full_cmd, cmd->argv, sh->envp);
 	return (handle_execute_command_errors(cmd));
 }

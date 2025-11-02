@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:18:36 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/29 04:47:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/02 20:30:02 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ char	*make_cmd_full_path(const char *dir, const char *cmd)
 // Caller is responsible for freeing the returned string.
 char	*get_valid_cmd_full_path(char **path_dirs, char *cmd)
 {
+
 	int		i;
 	char	*full_path;
 
@@ -99,6 +100,7 @@ char	*get_path_from_env(char **envp)
 
 // Updates path_dirs.
 // Gets PATH value from env.
+// If PATH is not set, uses PATH_DEFAULT (skip "PATH=" prefix).
 // Frees old path_dirs and creates new one.
 // Returns:
 // 	- EXIT_SUCCESS on success
@@ -114,10 +116,7 @@ int	update_path_dirs(char ***path_dirs, char **envp)
 	}
 	path_value = get_path_from_env(envp);
 	if (!path_value || !*path_value)
-	{
-		*path_dirs = NULL;
-		return (EXIT_SUCCESS);
-	}
+		path_value = &PATH_DEFAULT[5];
 	*path_dirs = ft_split(path_value, ':');
 	if (!*path_dirs)
 		return (EXIT_FAILURE);

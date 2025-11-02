@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/30 11:03:44 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/02 20:30:47 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,15 @@
 
 // TODO: add ALL parser error messages here, also add "minishell:" when needed.
 // messages! Long messages: break with \ char please (no adjacent strings).
-// these are for error messages (not perror)
-# define E_SEMICOLON_MSG "minishell: syntax error near unexpected token ';'\n"
-# define E_UNCLOSED_QUOTES_MSG "minishell: unclosed quotes\n"
-# define E_REDIR_INVALID_MSG "minishell: syntax error: invalid redirection\n"
-# define E_REDIR_ALLOCATION_MSG "minishell: redirection allocation failed.\n"
-# define E_INIT_ENV_MSG "minishell: initialize_environment allocation failed\n"
-# define E_OPTION_C_ARGUMENT "minishell: -c: option requires an argument\n"
-// MESSAGES FOR PERRORS OR MSG (no newline)
-# define E_SHLVL_MSG "minishell: update_shell_level allocation failed"
+# define E_MINISHELL "minishell: "
+# define E_SEMICOLON "syntax error near unexpected token ';'"
+# define E_UNCLOSED_QUOTES "unclosed quotes"
+# define E_REDIR_INVALID "syntax error near unexpected token"
+# define E_REDIR_ALLOCATION "redirection allocation failed."
+# define E_INIT_ENV "initialize_environment allocation failed"
+# define E_OPTION_C_ARGUMENT "-c: option requires an argument"
+# define E_EXPORT_START "export: `"
+# define E_EXPORT_END "': not a valid identifier"
 
 /*
 no (POSIX or otherwise) standard on enviroment variable name size limit
@@ -336,7 +336,10 @@ void		msg_err(const char *error);
 void		msg_err_2(const char *str1, const char *str2);
 void		msg_err_3(const char *str1, const char *str2, const char *str3);
 int			msg_err_and_free_string(const char *str1, char **to_free);
+
+// utils/utils_error2.c
 int			set_dir_or_error(t_msh *sh, char **directory);
+void		ms_perror(const char *error);
 
 // utils/has_quotes.c
 bool		has_quotes(const char *str);

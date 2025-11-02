@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 00:12:45 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/01 15:15:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/02 20:30:23 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ static int	initialize_environment(t_msh *sh, char **envp)
 	else if (envp[0])
 		sh->envp = copy_string_array(envp);
 	if (!sh->envp)
-		return (ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV_MSG));
+		return (ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV));
 	if (update_path_dirs(&sh->path_dirs, sh->envp) != EXIT_SUCCESS)
-		return (ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV_MSG));
+		return (ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV));
 	update_shell_level_var(sh);
 	return (sh->exit_code);
 }
@@ -32,7 +32,7 @@ static int	initialize_run_script(t_msh *sh, char **argv)
 	sh->script_fd = open(argv[1], O_RDONLY);
 	if (sh->script_fd < 0)
 	{
-		msg_err_2("minishell: ", argv[1]);
+		msg_err(argv[1]);
 		return (ret_exit_perr(sh, ERRNO_CODE, ""));
 	}
 	return (sh->exit_code);
@@ -65,12 +65,8 @@ int	initialize_minishell(t_msh *sh, int argc, char **argv, char **envp)
 	}
 	else if (argc > 1)
 		return (initialize_run_script(sh, argv));
-	// TODO: CHANGES FOR TESTER -- REVERT (end of addition in //)
-	// sh->is_interact = isatty(STDIN_FILENO);
-	// if (sh->is_interact)
-	sh->is_interact = true;
-	if (isatty(STDIN_FILENO))
-	// TODO: REMOVE ABOVE
+	sh->is_interact = isatty(STDIN_FILENO);
+	if (sh->is_interact)
 		write(STDOUT_FILENO, BRACKET_PASTE_CODE, ft_strlen(BRACKET_PASTE_CODE));
 	sh->script_fd = -1;
 	return (sh->exit_code);

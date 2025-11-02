@@ -63,6 +63,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_char.c \
 	utils/utils_dup2.c \
 	utils/utils_error.c \
+	utils/utils_error_2.c \
 	utils/utils_exit.c \
 	utils/utils_fd.c \
 	utils/utils_env.c \
@@ -82,6 +83,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_token.c \
 	utils/envp_assistance_array.c \
 	debug/utils_debug.c
+
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
 

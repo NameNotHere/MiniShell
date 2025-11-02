@@ -54,7 +54,7 @@ int	ret_exit_msg(t_msh *sh, int exit_code, const char *error_msg)
 	Sets exit code to errno or specific error.
 	Tries to use errno if ERRNO_CODE (-1) value is passed.
 		Fallsback to EXIT_FAILURE (1).
-	Prints error with perror (or msg_err if no errno).
+	Prints error with ms_perror (or msg_err if no errno).
 */
 void	set_exit_perr(t_msh *sh, int exit_code, const char *error_msg)
 {
@@ -65,16 +65,16 @@ void	set_exit_perr(t_msh *sh, int exit_code, const char *error_msg)
 	else
 		sh->exit_code = errno;
 	if (errno)
-		perror(error_msg);
+		ms_perror(error_msg);
 	else
-		msg_err_2(error_msg, "\n");
+		msg_err(error_msg);
 }
 
 /*
 	Sets exit code to errno or specific error.
 	Tries to use errno if ERRNO_CODE (-1) value is passed.
 		Fallsback to EXIT_FAILURE (1).
-	Prints error with perror (or msg_err if no errno).
+	Prints error with ms_perror (or msg_err if no errno).
 	Returns the same value previously set.
 */
 int	ret_exit_perr(t_msh *sh, int exit_code, const char *error_msg)
@@ -86,7 +86,7 @@ int	ret_exit_perr(t_msh *sh, int exit_code, const char *error_msg)
 	else
 		sh->exit_code = errno;
 	if (errno)
-		perror(error_msg);
+		ms_perror(error_msg);
 	else
 		msg_err(error_msg);
 	return (sh->exit_code);

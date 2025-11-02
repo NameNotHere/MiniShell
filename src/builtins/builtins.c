@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/22 13:48:19 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/02 20:31:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,17 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 	}
 	cwd = getcwd(NULL, 0);
 	pwd_index = search_name("PWD", sh->envp);
-	free(sh->envp[pwd_index]);
-	sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
+	if (pwd_index != -1)
+	{
+		free(sh->envp[pwd_index]);
+		sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
+	}
+	else
+		add_env_var(&sh->envp, "PWD", cwd);
 	safe_free_string(&cwd);
 	if (!sh->envp[pwd_index])
 	{
-		msg_err_and_free_string("cd: memory allocation error\n",
+		msg_err_and_free_string("cd: memory allocation error",
 			&oldpwd_value);
 		return (EXIT_FAILURE);
 	}
@@ -86,7 +91,7 @@ int	ft_unset(t_msh **sh, char *name)
 		return (EXIT_SUCCESS);
 	if (name[0] == '-')
 	{
-		msg_err_3("unset: ", name, ": invalid option\n");
+		msg_err_3("unset: ", name, ": invalid option");
 		return (2);
 	}
 	i = search_name(name, (*sh)->envp);

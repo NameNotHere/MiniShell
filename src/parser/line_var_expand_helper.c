@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/28 00:20:01 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/02 14:48:03 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 	ve->var_names = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_names)
 	{
-		msg_err("allocation error on var names\n");
+		msg_err("init_var_expand_arrays: allocation error");
 		sh->exit_code = EXIT_FAILURE;
 		if (errno)
 			sh->exit_code = errno;
@@ -89,7 +89,7 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 	ve->var_values = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_values)
 	{
-		msg_err("allocation error on var values\n");
+		msg_err("init_var_expand_arrays: allocation error on var_values");
 		sh->exit_code = EXIT_FAILURE;
 		if (errno)
 			sh->exit_code = errno;
@@ -120,7 +120,7 @@ int	allocate_new_str(t_msh *sh, t_var_expand *ve)
 	if (x_calloc((void **)&ve->new_str, new_str_len + 1, sizeof(char))
 		!= EXIT_SUCCESS)
 	{
-		msg_err("new_str allocation failed\n");
+		msg_err("allocate_new_str: allocation failed");
 		sh->exit_code = ENOMEM;
 		if (errno)
 			sh->exit_code = errno;

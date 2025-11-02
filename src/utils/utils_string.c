@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/01 15:15:24 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/02 20:30:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,8 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 
 	line = NULL;
 	full = NULL;
-	// TODO: REVERT FOR TESTER
-	// if (sh->is_interact)
-	if (sh->is_interact && isatty(STDIN_FILENO))
-	// TODO: remove above
+
+	if (sh->is_interact)
 	{
 		g_sig = 0;
 		if (!set_interactive_sig())
@@ -63,10 +61,6 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 	}
 	else
 	{
-		// TODO: TESTER: REMOVE BELOW
-		if (sh->is_interact && prompt)
-			write(STDOUT_FILENO, prompt, ft_strlen(prompt));
-		// TODO: TESTER: REMOVE ABOVE
 		if (sh->script_fd >= 0)
 			input_fd = sh->script_fd;
 		else
@@ -75,13 +69,6 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 			&& set_ignore_sig()
 			&& readline_noninteract(input_fd, &sh->readbuf, &line) == false)
 			safe_free_string(&line);
-		// TODO: TESTER: REMOVE BELOW
-		if (sh->is_interact && line)
-		{
-			write(STDOUT_FILENO, line, ft_strlen(line));
-			write(STDOUT_FILENO, "\n", 1);
-		}
-		// TODO: TESTER: REMOVE ABOVE
 	}
 	return (line);
 }
@@ -107,7 +94,7 @@ int	add_line_to_string(char **string, char **line)
 		updated_string = ft_strdup(*line);
 	if (updated_string == NULL)
 	{
-		perror("add line to string");
+		ms_perror("add line to string");
 		result = EXIT_FAILURE;
 	}
 	safe_free_string(string);

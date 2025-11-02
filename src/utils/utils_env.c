@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 18:28:25 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/29 19:43:08 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/02 20:31:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*get_env_value(t_msh *sh, char *var_name, int envp_index)
 	var_value = ft_strdup(sh->envp[envp_index] + ft_strlen(var_name) + 1);
 	if (!var_value)
 	{
-		set_exit_perr(sh, ERRNO_CODE, "minishell: get_env_value allocation failed\n");
+		set_exit_perr(sh, ERRNO_CODE, "get_env_value allocation failed\n");
 		return (NULL);
 	}
 	return (var_value);
@@ -105,11 +105,11 @@ int	initialize_null_env(t_msh *sh)
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-		return (ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV_MSG));
+		return (ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV));
 	sh->envp = ft_calloc(5, sizeof(char *));
 	if (!sh->envp)
 		return (safe_free_string(&cwd),
-			ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV_MSG));
+			ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV));
 	sh->envp[0] = ft_strjoin("PWD=", cwd);
 	sh->envp[1] = ft_strjoin("OLDPWD=", cwd);
 	sh->envp[2] = ft_strdup("SHLVL=");
@@ -117,6 +117,6 @@ int	initialize_null_env(t_msh *sh)
 	safe_free_string(&cwd);
 	if (!sh->envp[0] || !sh->envp[1] || !sh->envp[2] || !sh->envp[3])
 		return (safe_free_2d_string(&sh->envp),
-			ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV_MSG));
+			ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV));
 	return (sh->exit_code);
 }
