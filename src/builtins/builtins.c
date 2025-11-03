@@ -6,18 +6,27 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 11:49:37 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 12:09:17 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <sys/stat.h>
 
+
+/*
+	If getcwd fails (for example when current directory was removed),
+	prefer to keep the existing PWD rather than overwriting it with a
+	possibly-invalid path. Only use oldpwd as a fallback when it still
+	points to a valid directory.
+	leave cwd NULL to indicate unknown cwd; do not update PWD
+*/
 int	ft_cd(t_msh *sh, t_cmd *cmd)
 {
-	int		pwd_index;
-	char	*cwd;
-	char	*oldpwd;
+	struct stat	sb;
+	int			pwd_index;
+	char		*cwd;
+	char		*oldpwd;
 
 	if (cmd->argc > 2)
 		return (msg_err("cd: too many arguments"), EXIT_FAILURE);
@@ -25,15 +34,26 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 	if (set_dir_or_error(sh, &cmd->argv[1]) == EXIT_FAILURE)
 		return (ret_free_string(&oldpwd, EXIT_FAILURE));
 	cwd = getcwd(NULL, 0);
+
 	pwd_index = search_name("PWD", sh->envp);
-	if (pwd_index != -1)
+	if (cwd == NULL)
 	{
-		free(sh->envp[pwd_index]);
-		sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
+		if (oldpwd && stat(oldpwd, &sb) == 0 && S_ISDIR(sb.st_mode))
+			cwd = ft_strdup(oldpwd);
+		else
+			cwd = NULL;
 	}
-	else
-		add_env_var(&sh->envp, "PWD", cwd);
-	safe_free_string(&cwd);
+	if (cwd)
+	{
+		if (pwd_index != -1)
+		{
+			free(sh->envp[pwd_index]);
+			sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
+		}
+		else
+			add_env_var(&sh->envp, "PWD", cwd);
+		safe_free_string(&cwd);
+	}
 	if (!sh->envp[pwd_index])
 		return (ret_msg_free_string(E_CD_ALLOC, &oldpwd, EXIT_FAILURE));
 	change_env_value("OLDPWD", oldpwd, &sh->envp);
