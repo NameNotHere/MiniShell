@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:18:36 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/29 04:47:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char	*get_valid_cmd_full_path(char **path_dirs, char *cmd)
 			continue ;
 		if (!access(full_path, X_OK))
 			return (full_path);
-		safe_free_string(&full_path);
+		safe_free_str(&full_path);
 	}
 	return (NULL);
 }
@@ -99,6 +99,8 @@ char	*get_path_from_env(char **envp)
 
 // Updates path_dirs.
 // Gets PATH value from env.
+// If PATH is not set (NULL), uses PATH_DEFAULT (skip "PATH=" prefix).
+// If PATH="" (empty string), path_dirs will be NULL.
 // Frees old path_dirs and creates new one.
 // Returns:
 // 	- EXIT_SUCCESS on success
@@ -113,7 +115,9 @@ int	update_path_dirs(char ***path_dirs, char **envp)
 		*path_dirs = NULL;
 	}
 	path_value = get_path_from_env(envp);
-	if (!path_value || !*path_value)
+	if (!path_value)
+		path_value = &PATH_DEFAULT[5];
+	else if (!*path_value)
 	{
 		*path_dirs = NULL;
 		return (EXIT_SUCCESS);

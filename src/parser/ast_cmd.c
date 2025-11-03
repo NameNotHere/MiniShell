@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/30 23:34:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/02 14:06:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ bool	init_remove_quotes(char *str, char **result, int len)
 	*result = ft_calloc(len + 1, sizeof(char));
 	if (!*result)
 	{
-		perror("minishell: init_remove_quotes");
+		ms_perror("init_remove_quotes");
 		return (false);
 	}
 	return (true);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/30 23:33:33 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ bool	fix_slashes_set_skips(t_var_expand *ve, char **str_ptr, size_t len)
 	if (x_calloc((void **)&result, len + 1, sizeof(char)) != EXIT_SUCCESS
 		|| x_calloc((void **)&ve->skipped, len, sizeof(int)) != EXIT_SUCCESS)
 	{
-		safe_free_string(&result);
+		safe_free_str(&result);
 		safe_free((void **)&ve->skipped);
 		return (false);
 	}
@@ -144,7 +144,7 @@ bool	fix_slashes_set_skips(t_var_expand *ve, char **str_ptr, size_t len)
 	ve->i = 0;
 	ve->res_i = 0;
 	ve->sgl_quote = false;
-	safe_free_string(str_ptr);
+	safe_free_str(str_ptr);
 	*str_ptr = result;
 	return (true);
 }
@@ -208,7 +208,7 @@ void	cleanup_ve(t_var_expand *ve, bool free_new_str)
 	if (ve->skipped)
 		free(ve->skipped);
 	if (free_new_str)
-		safe_free_string(&ve->new_str);
+		safe_free_str(&ve->new_str);
 	else
 		ve->new_str = NULL;
 }
@@ -240,7 +240,7 @@ bool	expand_string_variables(t_msh *sh, char **str_ptr, bool is_hdoc)
 		|| allocate_new_str(sh, &ve) != EXIT_SUCCESS
 		|| expand_vars(&ve, *str_ptr) != EXIT_SUCCESS)
 		success = false;
-	safe_free_string(str_ptr);
+	safe_free_str(str_ptr);
 	if (success)
 		*str_ptr = ve.new_str;
 	cleanup_ve(&ve, !success);

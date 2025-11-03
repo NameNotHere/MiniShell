@@ -57,31 +57,35 @@ SRCS = 	signals/signals.c \
 	parser/tokenise_types.c \
 	parser/tokenize.c \
 	parser/is_escaped.c \
+	utils/envp_assistance_array.c \
 	utils/detect_logical_op.c \
-	utils/parser_is_operator.c \
-	utils/parser_line.c \
-	utils/utils_char.c \
-	utils/utils_dup2.c \
-	utils/utils_error.c \
-	utils/utils_exit.c \
-	utils/utils_fd.c \
-	utils/utils_env.c \
 	utils/ft_strndup.c \
 	utils/ft_strcmp.c \
-	utils/utils_free.c \
-	utils/has_quotes.c \
-	utils/unclosed_quotes.c \
 	utils/ft_realloc.c \
+	utils/has_quotes.c \
+	utils/parser_is_operator.c \
+	utils/parser_line.c \
+	utils/unclosed_quotes.c \
+	utils/utils_char.c \
+	utils/utils_dup2.c \
+	utils/utils_env.c \
+	utils/utils_error.c \
+	utils/utils_error_2.c \
+	utils/utils_exit.c \
+	utils/utils_fd.c \
+	utils/utils_free.c \
 	utils/utils_math.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
 	utils/utils_readline_state.c \
+	utils/utils_ret_err_msg.c \
+	utils/utils_ret_plus.c \
 	utils/utils_set_exit_code.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
 	utils/utils_token.c \
-	utils/envp_assistance_array.c \
 	debug/utils_debug.c
+
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
 
@@ -119,6 +123,6 @@ debug: fclean
 	@echo "debug build made"
 
 valgrind: debug
-	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --track-origins=yes --suppressions=minishell.supp ./$(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --track-origins=yes --trace-children=yes --suppressions=rl.supp ./$(NAME)
 
 .PHONY: all clean fclean re bonus debug

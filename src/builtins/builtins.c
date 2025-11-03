@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/22 13:48:19 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:38:21 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,31 +15,29 @@
 
 int	ft_cd(t_msh *sh, t_cmd *cmd)
 {
-	int		pwd_index;
-	char	*cwd;
-	char	*oldpwd_value;
+	int			pwd_idx;
+	char		*cwd;
+	char		*oldpwd;
 
 	if (cmd->argc > 2)
-		return (msg_err("cd: too many arguments\n"), EXIT_FAILURE);
-	oldpwd_value = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
+		return (msg_err("cd: too many arguments"), EXIT_FAILURE);
+	oldpwd = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
 	if (set_dir_or_error(sh, &cmd->argv[1]) == EXIT_FAILURE)
-	{
-		safe_free_string(&oldpwd_value);
-		return (EXIT_FAILURE);
-	}
+		return (ret_free_str(&oldpwd, EXIT_FAILURE));
 	cwd = getcwd(NULL, 0);
-	pwd_index = search_name("PWD", sh->envp);
-	free(sh->envp[pwd_index]);
-	sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
-	safe_free_string(&cwd);
-	if (!sh->envp[pwd_index])
-	{
-		msg_err_and_free_string("cd: memory allocation error\n",
-			&oldpwd_value);
-		return (EXIT_FAILURE);
-	}
-	change_env_value("OLDPWD", oldpwd_value, &sh->envp);
-	safe_free_string(&oldpwd_value);
+	if (cwd == NULL)
+		return (ret_msg_free_str(E_CD_CWD_NULL, &oldpwd, EXIT_SUCCESS));
+	pwd_idx = search_name("PWD", sh->envp);
+	if ((pwd_idx == -1 && add_env_var(&sh->envp, "PWD", cwd) != EXIT_SUCCESS)
+		|| (pwd_idx != -1 && change_env_val_idx("PWD", cwd, pwd_idx, &sh->envp)
+			!= EXIT_SUCCESS))
+		return (ret_free_two_str(&cwd, &oldpwd, EXIT_FAILURE));
+	safe_free_str(&cwd);
+	pwd_idx = search_name("PWD", sh->envp);
+	if (pwd_idx == -1 || !sh->envp[pwd_idx])
+		return (ret_msg_free_str(E_CD_ALLOC, &oldpwd, EXIT_FAILURE));
+	change_env_val("OLDPWD", oldpwd, &sh->envp);
+	safe_free_str(&oldpwd);
 	return (EXIT_SUCCESS);
 }
 
@@ -52,7 +50,7 @@ int	ft_pwd(t_msh *sh, t_cmd *cmd)
 	i = search_name("PWD", sh->envp);
 	if (i == -1)
 	{
-		write(STDERR_FILENO, "PWD not found\n", 14);
+		msg_err("PWD not found");
 		return (EXIT_FAILURE);
 	}
 	equal = length_till_equal(sh->envp[i]) + 1;
@@ -66,7 +64,7 @@ int	ft_env(t_msh *sh, int argc)
 	int	i;
 
 	if (argc > 1)
-		return (ret_exit_msg(sh, 127, "env: arguments not supported\n"));
+		return (ret_exit_msg(sh, 127, "env: arguments not supported"));
 	i = 0;
 	while (sh->envp[i])
 	{
@@ -86,7 +84,7 @@ int	ft_unset(t_msh **sh, char *name)
 		return (EXIT_SUCCESS);
 	if (name[0] == '-')
 	{
-		msg_err_3("unset: ", name, ": invalid option\n");
+		msg_err_3("unset: ", name, ": invalid option");
 		return (2);
 	}
 	i = search_name(name, (*sh)->envp);

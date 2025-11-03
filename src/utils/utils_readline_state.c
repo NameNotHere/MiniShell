@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 02:33:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/20 02:47:30 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/02 20:30:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ bool	add_chunk(t_rln_state *st, const char *src, size_t n)
 	new_line_made = ft_calloc(new_len + 1, sizeof(char));
 	if (!new_line_made)
 	{
-		perror("add chunk");
+		ms_perror("add chunk");
 		return (false);
 	}
 	if (st->made_len > 0 && st->line_made)

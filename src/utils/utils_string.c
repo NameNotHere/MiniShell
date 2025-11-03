@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/01 15:15:24 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 23:12:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,8 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 
 	line = NULL;
 	full = NULL;
-	// TODO: REVERT FOR TESTER
-	// if (sh->is_interact)
-	if (sh->is_interact && isatty(STDIN_FILENO))
-	// TODO: remove above
+
+	if (sh->is_interact)
 	{
 		g_sig = 0;
 		if (!set_interactive_sig())
@@ -50,23 +48,19 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 		full = ft_strdup(line);
 		while (unclosed_quotes(full))
 		{
-			safe_free_string(&line);
+			safe_free_str(&line);
 			line = readline("unclosed quotes> ");
 			if (!line)
 				break ;
 			tmp = ft_strjoin3(full, "\n", line);
-			safe_free_string(&full);
+			safe_free_str(&full);
 			full = tmp;
 		}
-		safe_free_string(&line);
+		safe_free_str(&line);
 		return (full);
 	}
 	else
 	{
-		// TODO: TESTER: REMOVE BELOW
-		if (sh->is_interact && prompt)
-			write(STDOUT_FILENO, prompt, ft_strlen(prompt));
-		// TODO: TESTER: REMOVE ABOVE
 		if (sh->script_fd >= 0)
 			input_fd = sh->script_fd;
 		else
@@ -74,14 +68,7 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 		if (g_sig != SIGINT && g_sig != SIGQUIT
 			&& set_ignore_sig()
 			&& readline_noninteract(input_fd, &sh->readbuf, &line) == false)
-			safe_free_string(&line);
-		// TODO: TESTER: REMOVE BELOW
-		if (sh->is_interact && line)
-		{
-			write(STDOUT_FILENO, line, ft_strlen(line));
-			write(STDOUT_FILENO, "\n", 1);
-		}
-		// TODO: TESTER: REMOVE ABOVE
+			safe_free_str(&line);
 	}
 	return (line);
 }
@@ -107,11 +94,11 @@ int	add_line_to_string(char **string, char **line)
 		updated_string = ft_strdup(*line);
 	if (updated_string == NULL)
 	{
-		perror("add line to string");
+		ms_perror("add line to string");
 		result = EXIT_FAILURE;
 	}
-	safe_free_string(string);
-	safe_free_string(line);
+	safe_free_str(string);
+	safe_free_str(line);
 	*string = updated_string;
 	updated_string = NULL;
 	return (result);
@@ -129,7 +116,7 @@ char	*get_empty_string(void)
 
 bool	set_empty_string(char **to_empty)
 {
-	safe_free_string(to_empty);
+	safe_free_str(to_empty);
 	*to_empty = get_empty_string();
 	if (*to_empty == NULL)
 		return (false);

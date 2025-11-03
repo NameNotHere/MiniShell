@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/01 14:06:35 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:24:47 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <unistd.h>
-
-// Sequence to ENABLE bracketed paste mode by readline
-# define BRACKET_PASTE_CODE "\033[?2004h"
+# include <termios.h>
 
 /*
 	\033[96m = cyan
@@ -39,16 +37,16 @@
 	prompt is: star+arrow(cyan)
 	user input has default term color
 */
-// # define MSH_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
-// # define HDOC_PROMPT "hdoc > "
+# define MSH_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
+# define HDOC_PROMPT "hdoc > "
+
+// alternative simpler prompts commented out below:
+// # define MSH_PROMPT "$ "
+// # define HDOC_PROMPT "> "
 
 # define EXIT_INCORRECT_BUILTIN 2
 # define EXIT_CMD_NOT_FOUND 127
 # define EXIT_CMD_PERMISSION_DENIED 126
-
-// alternative simpler prompts commented out below:
-# define MSH_PROMPT "$ "
-# define HDOC_PROMPT "> "
 
 // 0644: user can read/write, others can read. reasonable/safe setting.
 # define OUTPUT_PERMISSIONS 0644
@@ -130,11 +128,10 @@ void	try_dup2_stdin(t_msh *sh, int *fd_in);
 void	try_dup2(t_msh *sh, int *fd_in, int *fd_out);
 
 // utils/utils_env.c
-bool	is_var_in_env(t_msh *sh, char *var, int *envp_index);
-char	*get_env_value(t_msh *sh, char *var_name, int envp_index);
+bool	is_var_in_env(t_msh *sh, char *var, int *envp_idx);
+char	*get_env_value(t_msh *sh, char *var_name, int envp_idx);
 int		update_shell_level_var(t_msh *sh);
 int		initialize_null_env(t_msh *sh);
-
 
 // utils/utils/exit.c
 void	close_fds_exit_error_free(t_msh *sh, const char *error, int *fd_in,
@@ -185,7 +182,10 @@ bool	is_valid_cmd_token(t_token_ty token_type);
 //envp assistance
 int		search_name(char *name, char **envp);
 int		length_till_equal(char *str);
-int		change_env_value(char *name, char *new_value, char ***envp);
+int		change_env_val_idx(char *name, char *new_value, int index,
+			char ***envp);
+int		change_env_val(char *name, char *new_value, char ***envp);
+
 int		add_env_var(char ***envp, char *name, char *value);
 int		envp_len(char **envp);
 

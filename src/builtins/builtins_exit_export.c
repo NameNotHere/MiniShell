@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/30 18:03:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/02 20:31:03 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ bool	is_valid_exit_code(const char *str)
 	if (!str || !*str)
 		return (false);
 	i = 0;
+	while (str[i] == ' ' || str[i] == '\t')
+		i++;
 	if (str[i] == '+' || str[i] == '-')
 		i++;
 	if (!str[i])
@@ -40,11 +42,11 @@ int	ft_exit(t_msh *sh, t_cmd cmd)
 	if (cmd.argc > 1 && !is_valid_exit_code(cmd.argv[1]))
 	{
 		exit_code = 2;
-		msg_err_3("exit: ", cmd.argv[1], ": numeric argument required\n");
+		msg_err_3("exit: ", cmd.argv[1], ": numeric argument required");
 	}
 	else if (cmd.argc > 2)
 	{
-		msg_err("minishell: exit: too many arguments\n");
+		msg_err("exit: too many arguments");
 		exit_code = EXIT_FAILURE;
 		if (sh->is_interact)
 			return (exit_code);

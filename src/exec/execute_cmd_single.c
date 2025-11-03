@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 17:01:06 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/30 02:37:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 02:12:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ int	exec_single_builtin(t_msh *sh, t_cmd *cmd)
 	saved_fd_stdout = -1;
 	if (cmd->redir && !save_std_fds(&saved_fd_stdin, &saved_fd_stdout))
 	{
-		return (ret_exit_msg(sh, EXIT_FAILURE, "error: failed to save stdin/stdout\
-			 for builtin redirection\n"));
+		return (ret_exit_msg(sh, EXIT_FAILURE, "failed to save stdin/stdout \
+for builtin redirection"));
 	}
 	if (execute_redirection(sh, cmd->redir))
 		sh->exit_code = execute_builtin(sh, cmd);

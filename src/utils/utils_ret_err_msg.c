@@ -1,36 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_cleanup.c                                  :+:      :+:    :+:   */
+/*   utils_ret_err_msg.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/15 17:23:15 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
+/*   Created: 2025/11/03 09:57:30 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/11/03 20:35:11 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
+#include <errno.h>
 #include "minishell.h"
 
-void	free_everything(t_msh *sh)
-{
-	free_ast(&sh->ast);
-	safe_free_str(&sh->line);
-	safe_free_2d_string(&sh->envp);
-	safe_free_2d_string(&sh->path_dirs);
-	if (sh->script_fd >= 0)
-		close(sh->script_fd);
-	rl_clear_history();
-}
-
 /*
-	Shell line cleanup
-	Free/Reset AST and line.
+	prints error message, frees a string, returns a value.
+	the three parameters are passed in this order.
 */
-void	shell_line_cleanup(t_msh *sh)
+int	ret_msg_free_str(const char *error, char **to_free, int ret)
 {
-	free_ast(&sh->ast);
-	sh->ast = make_ast_node(NODE_UNKNOWN);
-	safe_free_str(&sh->line);
-	sh->saved_exit_code = sh->exit_code;
+	msg_err(error);
+	safe_free_str(to_free);
+	return (ret);
 }
