@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/02 20:30:47 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 11:49:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,13 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include "libft.h"
+# include "minishell_errors.h"
 
 // TODO: LAST remove debug include before eval
 # include "minishell_debug.h"
 
 # define PATH_DEFAULT "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin\
 :/sbin:/bin"
-
-# define ERRNO_CODE -1
-
-// TODO: add ALL parser error messages here, also add "minishell:" when needed.
-// messages! Long messages: break with \ char please (no adjacent strings).
-# define E_MINISHELL "minishell: "
-# define E_SEMICOLON "syntax error near unexpected token ';'"
-# define E_UNCLOSED_QUOTES "unclosed quotes"
-# define E_REDIR_INVALID "syntax error near unexpected token"
-# define E_REDIR_ALLOCATION "redirection allocation failed."
-# define E_INIT_ENV "initialize_environment allocation failed"
-# define E_OPTION_C_ARGUMENT "-c: option requires an argument"
-# define E_EXPORT_START "export: `"
-# define E_EXPORT_END "': not a valid identifier"
 
 /*
 no (POSIX or otherwise) standard on enviroment variable name size limit
@@ -229,8 +216,8 @@ void		parse_pipe(t_msh *sh, t_ast *ast, int start, int end);
 
 // parser/ast_cmd.c
 void		parse_cmd(t_msh *sh, t_ast *ast, int start, int end);
-char		**token_words_to_argv(t_token *tokens, \
-				int start, int end, int argc);
+char		**token_words_to_argv(t_token *tokens, int start, int end,
+				int argc);
 char		*remove_quotes(char *str, int len);
 
 // utils/utils_token.c
@@ -335,7 +322,12 @@ int			process_logical_op_syntax_error(t_msh *sh);
 void		msg_err(const char *error);
 void		msg_err_2(const char *str1, const char *str2);
 void		msg_err_3(const char *str1, const char *str2, const char *str3);
-int			msg_err_and_free_string(const char *str1, char **to_free);
+
+// utils/utils_ret_err_msg.c
+int			ret_msg_free_string(const char *error, char **to_free, int ret);
+
+// utils/utils_ret_plus.c
+int			ret_free_string(char **to_free, int ret);
 
 // utils/utils_error2.c
 int			set_dir_or_error(t_msh *sh, char **directory);

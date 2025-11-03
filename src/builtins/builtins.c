@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 02:12:00 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 11:49:37 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,13 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 {
 	int		pwd_index;
 	char	*cwd;
-	char	*oldpwd_value;
+	char	*oldpwd;
 
 	if (cmd->argc > 2)
 		return (msg_err("cd: too many arguments"), EXIT_FAILURE);
-	oldpwd_value = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
+	oldpwd = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
 	if (set_dir_or_error(sh, &cmd->argv[1]) == EXIT_FAILURE)
-	{
-		safe_free_string(&oldpwd_value);
-		return (EXIT_FAILURE);
-	}
+		return (ret_free_string(&oldpwd, EXIT_FAILURE));
 	cwd = getcwd(NULL, 0);
 	pwd_index = search_name("PWD", sh->envp);
 	if (pwd_index != -1)
@@ -38,13 +35,9 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 		add_env_var(&sh->envp, "PWD", cwd);
 	safe_free_string(&cwd);
 	if (!sh->envp[pwd_index])
-	{
-		msg_err_and_free_string("cd: memory allocation error",
-			&oldpwd_value);
-		return (EXIT_FAILURE);
-	}
-	change_env_value("OLDPWD", oldpwd_value, &sh->envp);
-	safe_free_string(&oldpwd_value);
+		return (ret_msg_free_string(E_CD_ALLOC, &oldpwd, EXIT_FAILURE));
+	change_env_value("OLDPWD", oldpwd, &sh->envp);
+	safe_free_string(&oldpwd);
 	return (EXIT_SUCCESS);
 }
 

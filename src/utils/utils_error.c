@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:04:21 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:32:03 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 11:49:25 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,3 @@ void	msg_err_3(const char *str1, const char *str2, const char *str3)
 		write(STDERR_FILENO, str3++, 1);
 	write(STDERR_FILENO, "\n", 1);
 }
-
-int	msg_err_and_free_string(const char *str1, char **to_free)
-{
-	msg_err(str1);
-	safe_free_string(to_free);
-	return (EXIT_FAILURE);
-}
-

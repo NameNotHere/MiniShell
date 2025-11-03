@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 02:11:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 11:49:43 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,6 @@ bool	is_var_in_env(t_msh *sh, char *var, int *envp_index);
 char	*get_env_value(t_msh *sh, char *var_name, int envp_index);
 int		update_shell_level_var(t_msh *sh);
 int		initialize_null_env(t_msh *sh);
-
 
 // utils/utils/exit.c
 void	close_fds_exit_error_free(t_msh *sh, const char *error, int *fd_in,
