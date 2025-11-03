@@ -30,7 +30,7 @@ int	exec_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
 	if (pipe_node->right->nty == NODE_PIPE)
 	{
 		safe_close_fd(&fd_in);
-		close(pipefd[1]);
+		safe_close_fd(&pipefd[1]);
 		return (exec_pipe_node(sh, &pipe_node->right->pipe, pipefd[0], fd_out));
 	}
 	if (safe_fork_pipe(sh, pipefd, &fd_in, &fd_out) == 0)
