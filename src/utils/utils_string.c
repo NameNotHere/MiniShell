@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:30:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 23:12:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,15 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 		full = ft_strdup(line);
 		while (unclosed_quotes(full))
 		{
-			safe_free_string(&line);
+			safe_free_str(&line);
 			line = readline("unclosed quotes> ");
 			if (!line)
 				break ;
 			tmp = ft_strjoin3(full, "\n", line);
-			safe_free_string(&full);
+			safe_free_str(&full);
 			full = tmp;
 		}
-		safe_free_string(&line);
+		safe_free_str(&line);
 		return (full);
 	}
 	else
@@ -68,7 +68,7 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 		if (g_sig != SIGINT && g_sig != SIGQUIT
 			&& set_ignore_sig()
 			&& readline_noninteract(input_fd, &sh->readbuf, &line) == false)
-			safe_free_string(&line);
+			safe_free_str(&line);
 	}
 	return (line);
 }
@@ -97,8 +97,8 @@ int	add_line_to_string(char **string, char **line)
 		ms_perror("add line to string");
 		result = EXIT_FAILURE;
 	}
-	safe_free_string(string);
-	safe_free_string(line);
+	safe_free_str(string);
+	safe_free_str(line);
 	*string = updated_string;
 	updated_string = NULL;
 	return (result);
@@ -116,7 +116,7 @@ char	*get_empty_string(void)
 
 bool	set_empty_string(char **to_empty)
 {
-	safe_free_string(to_empty);
+	safe_free_str(to_empty);
 	*to_empty = get_empty_string();
 	if (*to_empty == NULL)
 		return (false);

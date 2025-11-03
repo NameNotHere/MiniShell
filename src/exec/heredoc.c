@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:31:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	hdoc_redir(t_msh *sh, t_redir *redir, int prev_hdoc_fd)
 		|| (ft_strlen(hdoc_str) > 0 && write(write_fd, "\n", 1) == -1))
 		return (hdoc_err(sh, &write_fd, &redir->fd, hdoc_str), ms_perror("write"));
 	close(write_fd);
-	safe_free_string(&hdoc_str);
+	safe_free_str(&hdoc_str);
 	hdoc_redir(sh, redir->next, redir->fd);
 }
 

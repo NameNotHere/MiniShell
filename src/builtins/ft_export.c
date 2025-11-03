@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 02:12:21 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:23:03 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	handle_export_assignment(t_msh **sh, char *arg, char *equals_pos)
 	if (i == -1)
 		add_env_var(&(*sh)->envp, name, value);
 	else
-		change_env_value(name, value, &(*sh)->envp);
+		change_env_val(name, value, &(*sh)->envp);
 	if (ft_strcmp(name, "PATH") == 0)
 		update_path_dirs(&(*sh)->path_dirs, (*sh)->envp);
 	*equals_pos = '=';

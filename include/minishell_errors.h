@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 10:56:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 11:50:00 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 14:39:52 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@
 # define E_INIT_ENV "initialize_environment allocation failed"
 # define E_OPTION_C_ARGUMENT "-c: option requires an argument"
 # define E_CD_ALLOC "cd: memory allocation failure"
+# define E_CD_CWD_NULL "cd: error retrieving current directory: getcwd: cannot \
+access parent directories: No such file or directory"
 
 /* minishell partial error messages */
 # define E_EXPORT_START "export: `"

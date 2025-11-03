@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:12:44 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 14:46:25 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	catch_var(t_msh *sh, t_var_expand *ve)
 		if (!ve->var_values[ve->var_i])
 		{
 			msg_err("ft_itoa failed for $? expansion");
-			safe_free_string(&ve->var_names[ve->var_i]);
+			safe_free_str(&ve->var_names[ve->var_i]);
 			sh->exit_code = errno;
 			return (errno);
 		}

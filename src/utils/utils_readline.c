@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 17:07:24 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/21 03:02:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 23:12:48 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,12 @@ bool	readline_noninteract(int fd, t_readbuf *rb, char **line)
 			if (rb->len < 0 && (errno == EINTR))
 				continue ;
 			if (rb->len < 0)
-				return (safe_free_string(&st.line_made), false);
+				return (safe_free_str(&st.line_made), false);
 		}
 		st.end = rln_find_nl_or_end(rb);
 		if ((st.end > rb->pos)
 			&& !add_chunk(&st, rb->buf + rb->pos, (size_t)(st.end - rb->pos)))
-			return (safe_free_string(&st.line_made), false);
+			return (safe_free_str(&st.line_made), false);
 		if (st.end < rb->len && rb->buf[st.end] == '\n')
 			return (rln_emit_line(&st, rb, line));
 		rb->pos = st.end;

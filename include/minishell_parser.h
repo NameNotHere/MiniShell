@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/03 11:49:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:35:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@
 # include <errno.h>
 # include "libft.h"
 # include "minishell_errors.h"
+
+/*
+PRO defaults 0
+PRO=0 means minishell does not handle any extra features (backslashes, unclosed
+quotes etc)
+PRO=1 means minishell handles all extra features coded
+*/
+# ifndef PRO
+#  define PRO 0
+# endif
 
 // TODO: LAST remove debug include before eval
 # include "minishell_debug.h"
@@ -287,7 +297,7 @@ bool		is_dbl_quote(int c);
 
 // utils/utils_free.c
 void		safe_free(void **ptr);
-void		safe_free_string(char **ptr);
+void		safe_free_str(char **ptr);
 void		safe_free_2d_string(char ***ptr);
 bool		make_string_free(char **string);
 
@@ -324,10 +334,11 @@ void		msg_err_2(const char *str1, const char *str2);
 void		msg_err_3(const char *str1, const char *str2, const char *str3);
 
 // utils/utils_ret_err_msg.c
-int			ret_msg_free_string(const char *error, char **to_free, int ret);
+int			ret_msg_free_str(const char *error, char **to_free, int ret);
 
 // utils/utils_ret_plus.c
-int			ret_free_string(char **to_free, int ret);
+int			ret_free_str(char **to_free, int ret);
+int			ret_free_two_str(char **str_a, char **str_b, int ret);
 
 // utils/utils_error2.c
 int			set_dir_or_error(t_msh *sh, char **directory);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 11:49:43 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:24:47 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,8 +128,8 @@ void	try_dup2_stdin(t_msh *sh, int *fd_in);
 void	try_dup2(t_msh *sh, int *fd_in, int *fd_out);
 
 // utils/utils_env.c
-bool	is_var_in_env(t_msh *sh, char *var, int *envp_index);
-char	*get_env_value(t_msh *sh, char *var_name, int envp_index);
+bool	is_var_in_env(t_msh *sh, char *var, int *envp_idx);
+char	*get_env_value(t_msh *sh, char *var_name, int envp_idx);
 int		update_shell_level_var(t_msh *sh);
 int		initialize_null_env(t_msh *sh);
 
@@ -182,7 +182,10 @@ bool	is_valid_cmd_token(t_token_ty token_type);
 //envp assistance
 int		search_name(char *name, char **envp);
 int		length_till_equal(char *str);
-int		change_env_value(char *name, char *new_value, char ***envp);
+int		change_env_val_idx(char *name, char *new_value, int index,
+			char ***envp);
+int		change_env_val(char *name, char *new_value, char ***envp);
+
 int		add_env_var(char ***envp, char *name, char *value);
 int		envp_len(char **envp);
 

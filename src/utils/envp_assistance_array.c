@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:17:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 22:00:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:23:22 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,20 +45,34 @@ int	search_name(char *name, char **envp)
 	return (-1);
 }
 
-int	change_env_value(char *name, char *new_value, char ***envp)
+int	change_env_val_idx(char *name, char *new_value, int index, char ***envp)
 {
-	int		index;
 	char	*new_entry;
 
-	index = search_name(name, *envp);
-	if (index == -1)
-		return (EXIT_FAILURE);
 	new_entry = ft_strjoin3(name, "=", new_value);
 	if (!new_entry)
 		return (EXIT_FAILURE);
 	free((*envp)[index]);
 	(*envp)[index] = new_entry;
 	return (EXIT_SUCCESS);
+}
+
+/*
+	Changes env value.
+	Returns EXIT_SUCCESS if success.
+	Returns EXIT_FAILURE if not.
+	Note: fails silently (no message).
+*/
+int	change_env_val(char *name, char *new_value, char ***envp)
+{
+	int		index;
+
+	if (!name || !new_value || name[0] == '\0')
+		return (EXIT_FAILURE);
+	index = search_name(name, *envp);
+	if (index == -1)
+		return (EXIT_FAILURE);
+	return (change_env_val_idx(name, new_value, index, envp));
 }
 
 int	envp_len(char **envp)

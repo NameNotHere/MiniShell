@@ -123,6 +123,6 @@ debug: fclean
 	@echo "debug build made"
 
 valgrind: debug
-	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --track-origins=yes --suppressions=minishell.supp ./$(NAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --track-origins=yes --trace-children=yes --suppressions=rl.supp ./$(NAME)
 
 .PHONY: all clean fclean re bonus debug

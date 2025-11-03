@@ -6,25 +6,16 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 12:09:17 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 20:38:21 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <sys/stat.h>
 
-
-/*
-	If getcwd fails (for example when current directory was removed),
-	prefer to keep the existing PWD rather than overwriting it with a
-	possibly-invalid path. Only use oldpwd as a fallback when it still
-	points to a valid directory.
-	leave cwd NULL to indicate unknown cwd; do not update PWD
-*/
 int	ft_cd(t_msh *sh, t_cmd *cmd)
 {
-	struct stat	sb;
-	int			pwd_index;
+	int			pwd_idx;
 	char		*cwd;
 	char		*oldpwd;
 
@@ -32,32 +23,21 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 		return (msg_err("cd: too many arguments"), EXIT_FAILURE);
 	oldpwd = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
 	if (set_dir_or_error(sh, &cmd->argv[1]) == EXIT_FAILURE)
-		return (ret_free_string(&oldpwd, EXIT_FAILURE));
+		return (ret_free_str(&oldpwd, EXIT_FAILURE));
 	cwd = getcwd(NULL, 0);
-
-	pwd_index = search_name("PWD", sh->envp);
 	if (cwd == NULL)
-	{
-		if (oldpwd && stat(oldpwd, &sb) == 0 && S_ISDIR(sb.st_mode))
-			cwd = ft_strdup(oldpwd);
-		else
-			cwd = NULL;
-	}
-	if (cwd)
-	{
-		if (pwd_index != -1)
-		{
-			free(sh->envp[pwd_index]);
-			sh->envp[pwd_index] = ft_strjoin("PWD=", cwd);
-		}
-		else
-			add_env_var(&sh->envp, "PWD", cwd);
-		safe_free_string(&cwd);
-	}
-	if (!sh->envp[pwd_index])
-		return (ret_msg_free_string(E_CD_ALLOC, &oldpwd, EXIT_FAILURE));
-	change_env_value("OLDPWD", oldpwd, &sh->envp);
-	safe_free_string(&oldpwd);
+		return (ret_msg_free_str(E_CD_CWD_NULL, &oldpwd, EXIT_SUCCESS));
+	pwd_idx = search_name("PWD", sh->envp);
+	if ((pwd_idx == -1 && add_env_var(&sh->envp, "PWD", cwd) != EXIT_SUCCESS)
+		|| (pwd_idx != -1 && change_env_val_idx("PWD", cwd, pwd_idx, &sh->envp)
+			!= EXIT_SUCCESS))
+		return (ret_free_two_str(&cwd, &oldpwd, EXIT_FAILURE));
+	safe_free_str(&cwd);
+	pwd_idx = search_name("PWD", sh->envp);
+	if (pwd_idx == -1 || !sh->envp[pwd_idx])
+		return (ret_msg_free_str(E_CD_ALLOC, &oldpwd, EXIT_FAILURE));
+	change_env_val("OLDPWD", oldpwd, &sh->envp);
+	safe_free_str(&oldpwd);
 	return (EXIT_SUCCESS);
 }
 
