@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:17:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:29:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 02:13:08 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	handle_execute_command_errors(t_cmd *cmd)
 		return (126);
 	}
 	if (cmd->full_cmd == NULL)
-		msg_err("command not found: (empty command)\n");
+		msg_err("command not found: (empty command)");
 	else
 		msg_err_2("command not found: ", cmd->argv[0]);
 	return (127);

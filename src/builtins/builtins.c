@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:31:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 02:12:00 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 	char	*oldpwd_value;
 
 	if (cmd->argc > 2)
-		return (msg_err("cd: too many arguments\n"), EXIT_FAILURE);
+		return (msg_err("cd: too many arguments"), EXIT_FAILURE);
 	oldpwd_value = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
 	if (set_dir_or_error(sh, &cmd->argv[1]) == EXIT_FAILURE)
 	{
@@ -57,7 +57,7 @@ int	ft_pwd(t_msh *sh, t_cmd *cmd)
 	i = search_name("PWD", sh->envp);
 	if (i == -1)
 	{
-		write(STDERR_FILENO, "PWD not found\n", 14);
+		msg_err("PWD not found");
 		return (EXIT_FAILURE);
 	}
 	equal = length_till_equal(sh->envp[i]) + 1;
@@ -71,7 +71,7 @@ int	ft_env(t_msh *sh, int argc)
 	int	i;
 
 	if (argc > 1)
-		return (ret_exit_msg(sh, 127, "env: arguments not supported\n"));
+		return (ret_exit_msg(sh, 127, "env: arguments not supported"));
 	i = 0;
 	while (sh->envp[i])
 	{

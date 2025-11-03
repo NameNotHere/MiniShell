@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:30:52 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 02:11:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <unistd.h>
-
-// Sequence to ENABLE bracketed paste mode by readline
-# define BRACKET_PASTE_CODE "\033[?2004h"
+# include <termios.h>
 
 /*
 	\033[96m = cyan

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 00:12:45 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:30:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 02:52:47 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,23 @@ static int	initialize_run_command(t_msh *sh, char **argv)
 	return (sh->exit_code);
 }
 
+static void	initialize_run_interactive(void)
+{
+	struct termios	term;
+
+	if (tcgetattr(STDIN_FILENO, &term) == 0)
+	{
+		term.c_lflag |= ECHOCTL;
+		tcsetattr(STDIN_FILENO, TCSANOW, &term);
+	}
+}
+
 int	initialize_minishell(t_msh *sh, int argc, char **argv, char **envp)
 {
 	ft_bzero(sh, sizeof(*sh));
 	if (initialize_environment(sh, envp) != EXIT_SUCCESS)
 		return (sh->exit_code);
-	if (argc > 1 && !ft_strncmp(argv[1], "-c", 3))
+	if (argc > 1 && ft_strncmp(argv[1], "-c", 3) == 0)
 	{
 		if (argc < 3)
 			return (ret_exit_msg(sh, 127, E_OPTION_C_ARGUMENT));
@@ -67,7 +78,7 @@ int	initialize_minishell(t_msh *sh, int argc, char **argv, char **envp)
 		return (initialize_run_script(sh, argv));
 	sh->is_interact = isatty(STDIN_FILENO);
 	if (sh->is_interact)
-		write(STDOUT_FILENO, BRACKET_PASTE_CODE, ft_strlen(BRACKET_PASTE_CODE));
+		initialize_run_interactive();
 	sh->script_fd = -1;
 	return (sh->exit_code);
 }

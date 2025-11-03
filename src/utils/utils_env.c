@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 18:28:25 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:31:55 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 02:12:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*get_env_value(t_msh *sh, char *var_name, int envp_index)
 	var_value = ft_strdup(sh->envp[envp_index] + ft_strlen(var_name) + 1);
 	if (!var_value)
 	{
-		set_exit_perr(sh, ERRNO_CODE, "get_env_value allocation failed\n");
+		set_exit_perr(sh, ERRNO_CODE, "get_env_value allocation failed");
 		return (NULL);
 	}
 	return (var_value);

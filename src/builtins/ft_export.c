@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:31:10 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 02:12:21 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,11 @@ int	handle_export_name_only(t_msh **sh, char *arg)
 	}
 	i = search_name(arg, (*sh)->envp);
 	if (i == -1)
+	{
 		add_env_var(&(*sh)->envp, arg, "");
+		if (ft_strcmp(arg, "PATH") == 0)
+			update_path_dirs(&(*sh)->path_dirs, (*sh)->envp);
+	}
 	return (EXIT_SUCCESS);
 }
 

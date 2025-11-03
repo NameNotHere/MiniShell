@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 14:45:07 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/03 02:12:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 	{
 		if (validate_pipe_syntax(sh->tokens, start, end) != 0)
 			return (ret_exit_msg(sh, 2,
-				"syntax error near unexpected token `|'\n"));
+				"syntax error near unexpected token `|'"));
 		scan_pipe(sh, current_node, sh->tokens, &i);
 	}
 	else
