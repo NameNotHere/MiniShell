@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 14:48:03 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 17:33:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,13 +117,13 @@ int	allocate_new_str(t_msh *sh, t_var_expand *ve)
 	operator_count = count_operator_chars_in_values(ve);
 	new_str_len = ve->str_len + ft_strlen_array(ve->var_values)
 		- (ft_strlen_array(ve->var_names) + ve->var_total) + operator_count;
-	if (x_calloc((void **)&ve->new_str, new_str_len + 1, sizeof(char))
-		!= EXIT_SUCCESS)
+	int	all_err;
+
+	x_calloc((void **)&ve->new_str, &all_err, new_str_len + 1, sizeof(char));
+	if (all_err)
 	{
 		msg_err(E_ALLOCATE_NEW_STR);
-		sh->exit_code = ENOMEM;
-		if (errno)
-			sh->exit_code = errno;
+		sh->exit_code = all_err;
 		return (sh->exit_code);
 	}
 	return (EXIT_SUCCESS);

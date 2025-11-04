@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/30 23:39:20 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 17:33:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	is_closed(char *str, int i, char quote)
 }
 
 /*
-mallo_x is a malloc wrapper with error return
+x_malloc is a malloc wrapper with error return
 
 Returns:
 - 0 (EXIT_SUCCESS) if allocation worked.
@@ -75,44 +75,35 @@ usage example:
 
 	char	*word;
 
-	if (mallo_x((void **)&word, 11, sizeof(char)))
+	if (x_malloc((void **)&word, 11, sizeof(char)))
 		return (EXIT_FAILURE);
 */
-int	mallo_x(void **ptr, size_t nmemb, size_t size)
+int	x_malloc(void **ptr, int *err, size_t nmemb, size_t size)
 {
+	*err = EXIT_SUCCESS;
 	if (nmemb && size > SIZE_MAX / nmemb)
 	{
 		*ptr = NULL;
 		errno = ERANGE;
-		return (ERANGE);
+		*err = ERANGE;
+		return (*err);
 	}
 	*ptr = malloc(nmemb * size);
 	if (!(*ptr))
 	{
 		errno = ENOMEM;
-		return (ENOMEM);
+		*err = ENOMEM;
 	}
-	return (EXIT_SUCCESS);
+	return (*err);
 }
 
 /*
-callo_x: same as mallo_x, but on successful allocation,
+callo_x: same as x_malloc, but on successful allocation,
 	zero initializes the allocated memory with ft_bzero.
 */
-int	x_calloc(void **ptr, size_t nmemb, size_t size)
+int	x_calloc(void **ptr, int *err, size_t nmemb, size_t size)
 {
-	if (nmemb && size > SIZE_MAX / nmemb)
-	{
-		*ptr = NULL;
-		errno = ERANGE;
-		return (ERANGE);
-	}
-	*ptr = malloc(nmemb * size);
-	if (!(*ptr))
-	{
-		errno = ENOMEM;
-		return (ENOMEM);
-	}
-	ft_bzero(*ptr, nmemb * size);
-	return (EXIT_SUCCESS);
+	if (x_malloc(ptr, err, nmemb, size) == EXIT_SUCCESS)
+		ft_bzero(*ptr, nmemb * size);
+	return (*err);
 }
