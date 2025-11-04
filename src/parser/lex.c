@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/04 16:59:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 17:10:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,10 @@ char	*make_word(char *str, int *i, int *err)
 	parse_word(str, i, &len);
 	(*i) += len;
 	if (len == 0)
+	{
 		*err = EXIT_FAILURE;
-	if (len == 0)
 		return (NULL);
+	}
 	*err = mallo_x((void **)&word, (len + 1), sizeof(char));
 	if (*err)
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/04 16:59:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 17:10:55 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,33 +35,29 @@ t_token	ft_token(char *str)
 
 const char	*get_token_name(t_token_ty type)
 {
-	switch (type)
-	{
-		case TOKEN_WORD:
-			return ("WORD");
-		case TOKEN_INBUILT:
-			return ("INBUILT");
-		case TOKEN_PIPE:
-			return ("PIPE");
-		case TOKEN_INPUT:
-			return ("INPUT");
-		case TOKEN_OUTPUT:
-			return ("OUTPUT");
-		case TOKEN_APPEND:
-			return ("APPEND");
-		case TOKEN_HEREDOC:
-			return ("HEREDOC");
-		case TOKEN_DASH_PARAM:
-			return ("DASH_PARAM");
-		case TOKEN_AND:
-			return ("AND");
-		case TOKEN_OR:
-			return ("OR");
-		case TOKEN_AMPERSAND:
-			return ("AMPERSAND");
-		default:
-			return ("UNKNOWN");
-	}
+	if (type == TOKEN_WORD)
+		return ("WORD");
+	if (type == TOKEN_INBUILT)
+		return ("INBUILT");
+	if (type == TOKEN_PIPE)
+		return ("PIPE");
+	if (type == TOKEN_INPUT)
+		return ("INPUT");
+	if (type == TOKEN_OUTPUT)
+		return ("OUTPUT");
+	if (type == TOKEN_APPEND)
+		return ("APPEND");
+	if (type == TOKEN_HEREDOC)
+		return ("HEREDOC");
+	if (type == TOKEN_DASH_PARAM)
+		return ("DASH_PARAM");
+	if (type == TOKEN_AND)
+		return ("AND");
+	if (type == TOKEN_OR)
+		return ("OR");
+	if (type == TOKEN_AMPERSAND)
+		return ("AMPERSAND");
+	return ("UNKNOWN");
 }
 
 const char	*get_token_name_continued(t_token_ty type)
@@ -105,14 +101,11 @@ t_token	*tokenize(char *input, int *token_count, int *err)
 		if (!input[i])
 			break ;
 		token = make_word(input, &i, err);
-		if (token)
-		{
-			res[id] = ft_token(token);
-			strip_exp_marks(res[id].word);
-			id++;
-		}
-		else
+		if (!token)
 			return (free(res), NULL);
+		res[id] = ft_token(token);
+		strip_exp_marks(res[id].word);
+		id++;
 	}
 	*token_count = id;
 	return (res);
