@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/04 17:33:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:28:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,6 +307,11 @@ int			ft_strcmp(const char *s1, const char *s2);
 void		*ft_malloc(size_t amount, size_t size);
 int			x_calloc(void **ptr, int *err, size_t nmemb, size_t size);
 int			x_malloc(void **ptr, int *err, size_t nmemb, size_t size);
+int			x_malloc_char(char **ptr, int *err, size_t count);
+int			x_calloc_char(char **ptr, int *err, size_t count);
+int			x_malloc_token(t_token **ptr, int *err, size_t count);
+int			x_calloc_token(t_token **ptr, int *err, size_t count);
+int			x_calloc_int(int **ptr, int *err, size_t count);
 int			is_closed(char *str, int i, char quote);
 int			unclosed_token(const char *str, char token);
 

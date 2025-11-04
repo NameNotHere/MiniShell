@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/04 17:33:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:28:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,7 @@ char	*make_word(char *str, int *i, int *err)
 		*err = EXIT_FAILURE;
 		return (NULL);
 	}
-	x_malloc((void **)&word, err, len + 1, sizeof(char));
-	if (*err)
+	if (x_malloc_char(&word, err, len + 1) != EXIT_SUCCESS)
 		return (NULL);
 	ft_memcpy(word, str + (*i - len), len);
 	word[len] = '\0';

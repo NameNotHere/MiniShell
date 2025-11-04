@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/04 17:33:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:28:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,30 +80,66 @@ usage example:
 */
 int	x_malloc(void **ptr, int *err, size_t nmemb, size_t size)
 {
-	*err = EXIT_SUCCESS;
+	int	local_err;
+	int	*err_ptr;
+
+	if (!err)
+		err_ptr = &local_err;
+	else
+		err_ptr = err;
 	if (nmemb && size > SIZE_MAX / nmemb)
 	{
 		*ptr = NULL;
 		errno = ERANGE;
-		*err = ERANGE;
-		return (*err);
+		*err_ptr = ERANGE;
+		return (*err_ptr);
 	}
 	*ptr = malloc(nmemb * size);
 	if (!(*ptr))
 	{
 		errno = ENOMEM;
-		*err = ENOMEM;
+		*err_ptr = ENOMEM;
 	}
-	return (*err);
+	return (*err_ptr);
 }
 
 /*
 callo_x: same as x_malloc, but on successful allocation,
-	zero initializes the allocated memory with ft_bzero.
+zero initializes the allocated memory with ft_bzero.
 */
 int	x_calloc(void **ptr, int *err, size_t nmemb, size_t size)
 {
-	if (x_malloc(ptr, err, nmemb, size) == EXIT_SUCCESS)
+	int	retval;
+
+	retval = x_malloc(ptr, err, nmemb, size);
+	if (retval == EXIT_SUCCESS)
 		ft_bzero(*ptr, nmemb * size);
-	return (*err);
+	return (retval);
+}
+
+/* Type-specific wrappers for common types */
+
+int	x_malloc_char(char **ptr, int *err, size_t count)
+{
+	return (x_malloc((void **)ptr, err, count, sizeof(char)));
+}
+
+int	x_calloc_char(char **ptr, int *err, size_t count)
+{
+	return (x_calloc((void **)ptr, err, count, sizeof(char)));
+}
+
+int	x_malloc_token(t_token **ptr, int *err, size_t count)
+{
+	return (x_malloc((void **)ptr, err, count, sizeof(t_token)));
+}
+
+int	x_calloc_token(t_token **ptr, int *err, size_t count)
+{
+	return (x_calloc((void **)ptr, err, count, sizeof(t_token)));
+}
+
+int	x_calloc_int(int **ptr, int *err, size_t count)
+{
+	return (x_calloc((void **)ptr, err, count, sizeof(int)));
 }
