@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 00:00:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 16:59:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ static char	*hdoc_handle_input(t_msh *sh, t_redir *redir)
 	if (!hdoc_line)
 	{
 		msg_err_3(
-		E_HEREDOC_EOF_START,
-		redir->string, E_HEREDOC_EOF_END);
+			E_HDOC_EOF_START,
+			redir->string, E_HDOC_EOF_END);
 		return (NULL);
 	}
 	return (hdoc_line);

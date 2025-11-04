@@ -6,24 +6,17 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/28 00:13:07 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 16:59:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 #include "minishell.h"
 
-int	skip_spaces(int *i, char *str)
+void	skip_spaces(int *i, char *str)
 {
-	int	y;
-
-	y = 0;
 	while (str[*i] && (str[*i] == ' ' || str[*i] == '\n' || str[*i] == '\t'))
-	{
 		(*i)++;
-		y++;
-	}
-	return (y);
 }
 
 int	count_tokens(char *str, int count, int i)

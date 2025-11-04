@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 10:56:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/04 15:42:24 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 16:59:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ access parent directories: No such file or directory"
 # define E_SEMICOLON "syntax error near unexpected token ';'"
 # define E_UNCLOSED_DBL_QUOTE "unexpected EOF while looking for matching `\"'"
 # define E_UNCLOSED_SGL_QUOTE "unexpected EOF while looking for matching `''"
-# define E_UNSET_END ": invalid option"
 # define E_UNSET_START "unset: "
+# define E_UNSET_END ": invalid option"
 
 /* execution error messages */
 # define E_CD_NAME_TOO_LONG "cd: file name too long: "
@@ -65,8 +65,8 @@ access parent directories: No such file or directory"
 # define E_ALLOCATE_NEW_STR "allocate_new_str: allocation failed"
 # define E_CATCH_ABSENT_VAR "allocation error on catch_absent_var"
 # define E_CATCH_VAR "catch_var: allocation error"
-# define E_INIT_VAR_ARRAYS "init_var_expand_arrays: allocation error"
-# define E_INIT_VAR_VALUES "init_var_expand_arrays: allocation error on var_values"
+# define E_INIT_VAR_ARRAYS "init_var_expand_arrays: allocation failed"
+# define E_INIT_VAR_VALUES "init_var_expand_arrays allocation failed on values"
 # define E_ITOA_FAILED "ft_itoa failed for $? expansion"
 
 /* AST and parsing error messages */
@@ -100,7 +100,7 @@ access parent directories: No such file or directory"
 # define E_WRITE "write"
 
 /* heredoc warning messages */
-# define E_HEREDOC_EOF_END "')"
-# define E_HEREDOC_EOF_START "warning: here-document at line 1 delimited by end-of-file (wanted `"
-
+# define E_HDOC_EOF_START "warning: here-document delimited by end-of-file \
+(wanted `"
+# define E_HDOC_EOF_END "')"
 #endif

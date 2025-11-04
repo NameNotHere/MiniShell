@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/04 13:36:50 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 16:59:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,18 +60,10 @@ typedef enum e_token_ty
 	TOKEN_OUTPUT,
 	TOKEN_APPEND,
 	TOKEN_HEREDOC,
-	TOKEN_SINGLE_QUOTE,
-	TOKEN_DOUBLE_QUOTE,
-	TOKEN_VARIABLE,
 	TOKEN_DASH_PARAM,
-	TOKEN_FILE_PATH,
-	TOKEN_NUMBER,
-	TOKEN_BACKSLASH,
 	TOKEN_AND,
 	TOKEN_OR,
 	TOKEN_AMPERSAND,
-	UNCLOSED_DOUBLE_QUOTE,
-	UNCLOSED_SINGLE_QUOTE,
 	TOKEN_LAST
 }	t_token_ty;
 
@@ -252,7 +244,7 @@ int			count_tokens(char *str, int count, int i);
 const char	*get_token_name(t_token_ty type);
 const char	*get_token_name_continued(t_token_ty type);
 char		*make_word(char *str, int *i, int *err);
-int			skip_spaces(int *i, char *str);
+void		skip_spaces(int *i, char *str);
 
 // parser/line_var_expand_catch.c
 int			get_var_count(char *str, t_var_expand *ve);
