@@ -80,7 +80,7 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 	ve->var_names = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_names)
 	{
-		msg_err("init_var_expand_arrays: allocation error");
+		msg_err(E_INIT_VAR_ARRAYS);
 		sh->exit_code = EXIT_FAILURE;
 		if (errno)
 			sh->exit_code = errno;
@@ -89,7 +89,7 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 	ve->var_values = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_values)
 	{
-		msg_err("init_var_expand_arrays: allocation error on var_values");
+		msg_err(E_INIT_VAR_VALUES);
 		sh->exit_code = EXIT_FAILURE;
 		if (errno)
 			sh->exit_code = errno;
@@ -120,7 +120,7 @@ int	allocate_new_str(t_msh *sh, t_var_expand *ve)
 	if (x_calloc((void **)&ve->new_str, new_str_len + 1, sizeof(char))
 		!= EXIT_SUCCESS)
 	{
-		msg_err("allocate_new_str: allocation failed");
+		msg_err(E_ALLOCATE_NEW_STR);
 		sh->exit_code = ENOMEM;
 		if (errno)
 			sh->exit_code = errno;

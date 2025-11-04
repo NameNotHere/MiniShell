@@ -72,7 +72,7 @@ int	catch_absent_var(t_msh *sh, t_var_expand *ve)
 	reset_var_lookup(ve);
 	if (!ve->var_names[ve->var_i] || !ve->var_values[ve->var_i])
 	{
-		msg_err("allocation error on catch_absent_var");
+		msg_err(E_CATCH_ABSENT_VAR);
 		sh->exit_code = EXIT_FAILURE;
 		if (errno)
 			sh->exit_code = errno;
@@ -90,7 +90,7 @@ int	catch_var(t_msh *sh, t_var_expand *ve)
 		ve->var_values[ve->var_i] = ft_itoa(sh->saved_exit_code);
 		if (!ve->var_values[ve->var_i])
 		{
-			msg_err("ft_itoa failed for $? expansion");
+		msg_err(E_ITOA_FAILED);
 			safe_free_str(&ve->var_names[ve->var_i]);
 			sh->exit_code = errno;
 			return (errno);
@@ -103,7 +103,7 @@ int	catch_var(t_msh *sh, t_var_expand *ve)
 	reset_var_lookup(ve);
 	if (!ve->var_names[ve->var_i] || !ve->var_values[ve->var_i])
 	{
-		msg_err("catch_var: allocation error");
+		msg_err(E_CATCH_VAR);
 		sh->exit_code = errno;
 		return (errno);
 	}

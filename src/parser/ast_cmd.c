@@ -42,7 +42,7 @@ bool	init_remove_quotes(char *str, char **result, int len)
 	*result = ft_calloc(len + 1, sizeof(char));
 	if (!*result)
 	{
-		ms_perror("init_remove_quotes");
+		ms_perror(E_INIT_REMOVE_QUOTES);
 		return (false);
 	}
 	return (true);

@@ -25,7 +25,7 @@ pid_t	safe_fork_cmd(t_msh *sh, int *fd_in, int *fd_out)
 	pid = fork();
 	if (pid == -1)
 	{
-		ms_perror("cmd node fork");
+		ms_perror(E_FORK_CMD);
 		if (fd_in && fd_out)
 			safe_close_2_fds(fd_in, fd_out);
 		sh->exit_code = EXIT_FAILURE;
@@ -48,7 +48,7 @@ pid_t	safe_fork_pipe(t_msh *sh, int *pipe_fds, int *fd_in, int *fd_out)
 	pid = fork();
 	if (pid == -1)
 	{
-		ms_perror("pipe node fork");
+		ms_perror(E_FORK_PIPE);
 		if (pipe_fds)
 			safe_close_2_fds(&pipe_fds[0], &pipe_fds[1]);
 		if (fd_in && fd_out)

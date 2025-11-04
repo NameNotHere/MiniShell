@@ -90,7 +90,7 @@ void	parse_pipe(t_msh *sh, t_ast *ast, int start, int end)
 	ast->pipe.right = make_ast_node(NODE_UNKNOWN);
 	if (!ast->pipe.left || !ast->pipe.right)
 	{
-		msg_err("failed to allocate AST nodes");
+		msg_err(E_FAILED_ALLOC_AST);
 		return ;
 	}
 	parse_cmd(sh, ast->pipe.left, start, end);

@@ -18,13 +18,13 @@
 static void	print_chdir_error(char	*target_dir)
 {
 	if (errno == ENOTDIR)
-		msg_err_2("cd: not a directory: ", target_dir);
+		msg_err_2(E_CD_NOT_DIR, target_dir);
 	else if (errno == EACCES)
-		msg_err_2("cd: permission denied: ", target_dir);
+		msg_err_2(E_CD_PERMISSION, target_dir);
 	else if (errno == ENAMETOOLONG)
-		msg_err_2("cd: file name too long: ", target_dir);
+		msg_err_2(E_CD_NAME_TOO_LONG, target_dir);
 	else
-		msg_err_2("cd: no such file or directory: ", target_dir);
+		msg_err_2(E_CD_NO_SUCH, target_dir);
 }
 
 int	set_dir_or_error(t_msh *sh, char **directory)

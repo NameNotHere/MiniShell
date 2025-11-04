@@ -53,7 +53,7 @@ int	lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node)
 {
 	if (!node)
 	{
-		msg_err("lookup_all_cmd_fullpaths: ast node is NULL");
+		msg_err(E_LOOKUP_AST_NULL);
 		return (EXIT_FAILURE);
 	}
 	if (node->nty == NODE_CMD)

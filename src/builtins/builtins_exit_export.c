@@ -42,11 +42,11 @@ int	ft_exit(t_msh *sh, t_cmd cmd)
 	if (cmd.argc > 1 && !is_valid_exit_code(cmd.argv[1]))
 	{
 		exit_code = 2;
-		msg_err_3("exit: ", cmd.argv[1], ": numeric argument required");
+		msg_err_3(E_EXIT_ARG, cmd.argv[1], E_EXIT_NUMERIC);
 	}
 	else if (cmd.argc > 2)
 	{
-		msg_err("exit: too many arguments");
+		msg_err(E_EXIT_TOO_MANY);
 		exit_code = EXIT_FAILURE;
 		if (sh->is_interact)
 			return (exit_code);

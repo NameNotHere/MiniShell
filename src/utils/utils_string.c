@@ -37,7 +37,7 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 		g_sig = 0;
 		if (!set_interactive_sig())
 		{
-			msg_err("set interactive signal handling failed");
+		msg_err(E_SIGNAL_INTERACTIVE);
 			sh->exit_code = EXIT_FAILURE;
 			return (NULL);
 		}
@@ -85,7 +85,7 @@ int	add_line_to_string(char **string, char **line)
 	result = EXIT_SUCCESS;
 	if (!(*line))
 	{
-		msg_err("add line to string: invalid line");
+		msg_err(E_ADD_LINE_INVALID);
 		return (EXIT_FAILURE);
 	}
 	if (*string)
@@ -94,7 +94,7 @@ int	add_line_to_string(char **string, char **line)
 		updated_string = ft_strdup(*line);
 	if (updated_string == NULL)
 	{
-		ms_perror("add line to string");
+		ms_perror(E_ADD_LINE_STRING);
 		result = EXIT_FAILURE;
 	}
 	safe_free_str(string);
