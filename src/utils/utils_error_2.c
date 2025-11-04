@@ -12,6 +12,7 @@
 
 #include <unistd.h>
 #include <errno.h>
+#include <string.h>
 #include "minishell.h"
 
 static void	print_chdir_error(char	*target_dir)
@@ -54,6 +55,23 @@ int	set_dir_or_error(t_msh *sh, char **directory)
 
 void	ms_perror(const char *error)
 {
-	write(STDERR_FILENO, E_MINISHELL, sizeof(E_MINISHELL));
-	perror(error);
+	char		buf[4096];
+	size_t		len;
+	const char	*err_str;
+
+	len = 0;
+	ft_memcpy(buf, E_MINISHELL, sizeof(E_MINISHELL) - 1);
+	len += sizeof(E_MINISHELL) - 1;
+	while (*error && len < sizeof(buf) - 3)
+		buf[len++] = *error++;
+	if (len < sizeof(buf) - 2)
+		buf[len++] = ':';
+	if (len < sizeof(buf) - 2)
+		buf[len++] = ' ';
+	err_str = strerror(errno);
+	while (*err_str && len < sizeof(buf) - 2)
+		buf[len++] = *err_str++;
+	if (len < sizeof(buf) - 1)
+		buf[len++] = '\n';
+	write(STDERR_FILENO, buf, len);
 }
