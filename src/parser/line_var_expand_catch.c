@@ -125,7 +125,7 @@ int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 	ve->var_name_buffer[ve->var_name_i] = c;
 	ve->var_name_i++;
 	ve->var_name_buffer[ve->var_name_i] = '\0';
-	if (!ft_valid_var_char(next_c))
+	if (!ft_valid_var_char(next_c) || (ve->var_name_i == 1 && ft_isdigit(c) && PRO))
 	{
 		if (is_var_in_env(sh, ve->var_name_buffer, &ve->envp_var_i))
 			return (catch_var(sh, ve));

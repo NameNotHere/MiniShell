@@ -4,8 +4,14 @@ NAME = minishell
 # compiler settings
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -fsanitize=address,undefined,leak -g3 -fno-omit-frame-pointer
-CFLAGS_VALGRIND = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer
+CFLAGS_DEBUG = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer
 LDFLAGS = -lreadline -Llibft -lft
+
+# PRO mode: enable extra features (positional params, etc)
+ifdef PRO
+CFLAGS += -DPRO=$(PRO)
+CFLAGS_DEBUG += -DPRO=$(PRO)
+endif
 
 # LIBFT settings
 LIBFTDIR = libft
@@ -110,7 +116,6 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
-# 	$(RM) $(PARSER)
 	$(RM) -r $(OBJDIR)
 	@$(MAKE) -C $(LIBFTDIR) fclean
 
@@ -119,7 +124,7 @@ re: fclean all
 bonus: all
 
 debug: fclean
-	$(MAKE) CFLAGS="$(CFLAGS_VALGRIND)" all
+	$(MAKE) CFLAGS="$(CFLAGS_DEBUG)" all
 	@echo "debug build made"
 
 valgrind: debug
