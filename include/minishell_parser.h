@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/03 20:35:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 13:36:50 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,8 +278,6 @@ void		free_tokens(t_token **tokens, int amount);
 
 // parser/tokenise.c
 int			is_file_path(char *str, int *y);
-int			search_for_singlequote(char *str);
-void		tokenise_quotes(char *str, t_token *output);
 void		tokenise_redirs(char *str, t_token *output);
 void		free_tokens(t_token **tokens, int amount);
 

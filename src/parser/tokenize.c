@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/10/28 14:05:10 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:13:29 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ t_token	ft_token(char *str)
 		}
 	}
 	tokenise_redirs(str, &output);
-	tokenise_quotes(str, &output);
 	return (output);
 }
 

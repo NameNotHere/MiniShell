@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 06:11:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 14:44:41 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:24:34 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	lookup_cmd_fullpath(t_msh *sh, t_cmd *cmd)
 		else
 			cmd->not_found = true;
 	}
+	else if (access(cmd->full_cmd, X_OK) != 0)
+		cmd->permission_denied = true;
 }
 
 int	lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node)

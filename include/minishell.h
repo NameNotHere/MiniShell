@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:24:47 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:13:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,5 +205,6 @@ void	*ft_realloc(void *ptr, size_t new_size, size_t old_size);
 
 // utils/unclosed_quotes.c
 int		unclosed_quotes(const char *line);
+bool	error_unclosed_quotes(const char *line);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 10:56:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 14:39:52 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:33:48 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@
 
 /* minishell full error messages */
 # define E_SEMICOLON "syntax error near unexpected token ';'"
-# define E_UNCLOSED_QUOTES "unclosed quotes"
+# define E_UNCLOSED_SGL_QUOTE "unexpected EOF while looking for matching `''"
+# define E_UNCLOSED_DBL_QUOTE "unexpected EOF while looking for matching `\"'"
 # define E_REDIR_INVALID "syntax error near unexpected token"
 # define E_REDIR_ALLOCATION "redirection allocation failed"
 # define E_INIT_ENV "initialize_environment allocation failed"
