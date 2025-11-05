@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/04 18:28:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 02:40:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 /*
 	Does a few things to support line expansions done correctly:
-	1) fixes backslash parsing either inside or outside single quotes
+	1) fixes backslash parsing either inside or outside single quotes (when PRO=1)
 	2) skips expansions on escaped $ char (sets location of skipped expansions)
 	3) also skips expansion on use of posix locale syntax ($"..."): $
 	char is skipped, variable expansion skipped so what is inside the quotes
@@ -23,35 +23,36 @@
 	needs to extract the untranslated content (english basically).
 
 	Proper precedence: The cycle_fix_slash_set_skip function handles escapes
-	in the right order:
+	in the right order (only when PRO=1):
 	1. \\ → \ (prevents false-positive escaped chars)
 	2. \$ → $ (with skip marking for variable expansion)
 	3. \" / \' → preserve both (for later quote removal)
 	4. \X → X (general case, outside double quotes only)
 
-	Note: inside $"..." , escapes the single quotes, otherwise they get removed
+	Single quotes are marked with SGL_QUOTE_MARK to preserve them initially.
+	Note: inside $"..." , escapes the single quotes, otherwise they get marked
 */
 static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 {
-	if (!ve->sgl_quote && str[ve->i] == '\\' && str[ve->i + 1] == '\\')
+	if (PRO && !ve->is_hdoc && !ve->sgl_quote && str[ve->i] == '\\' && str[ve->i + 1] == '\\')
 	{
 		result[(ve->res_i)++] = '\\';
 		ve->i += 2;
 	}
-	else if (!ve->sgl_quote && str[ve->i] == '\\' && str[ve->i + 1] == '$')
+	else if (PRO && !ve->sgl_quote && str[ve->i] == '\\' && str[ve->i + 1] == '$')
 	{
 		ve->skipped[ve->skip_len++] = ve->res_i;
 		result[(ve->res_i)++] = '$';
 		ve->i += 2;
 	}
-	else if (!ve->sgl_quote && str[ve->i] == '\\'
+	else if (PRO && !ve->sgl_quote && str[ve->i] == '\\'
 		&& (str[ve->i + 1] == '"' || str[ve->i + 1] == '\''))
 	{
 		result[(ve->res_i)++] = '\\';
 		result[(ve->res_i)++] = str[ve->i + 1];
 		ve->i += 2;
 	}
-	else if (!ve->sgl_quote && !ve->dbl_quote && str[ve->i] == '\\' && str[ve->i + 1])
+	else if (PRO && !ve->is_hdoc && !ve->sgl_quote && !ve->dbl_quote && str[ve->i] == '\\' && str[ve->i + 1])
 	{
 		result[(ve->res_i)++] = str[ve->i + 1];
 		ve->i += 2;
@@ -63,7 +64,7 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 		while (str[ve->i] && str[ve->i] != '"')
 		{
 			if (str[ve->i] == '\'')
-				result[(ve->res_i)++] = '\\';
+				result[(ve->res_i)++] = SGL_QUOTE_MARK;
 			result[(ve->res_i)++] = str[ve->i];
 			ve->i++;
 		}
@@ -82,37 +83,17 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 		if (str[ve->i] == '\'')
 			ve->i++;
 	}
-	else
+	else if (str[ve->i] == '\'')
+	{
+		result[(ve->res_i)++] = SGL_QUOTE_MARK;
+		(ve->i)++;
+		ve->sgl_quote = !ve->sgl_quote;
+	}
+	else if (str[ve->i] == '"')
 	{
 		result[(ve->res_i)++] = str[ve->i];
 		(ve->i)++;
-	}
-	if (result[ve->res_i - 1] == '\'')
-		ve->sgl_quote = !ve->sgl_quote;
-	if (result[ve->res_i - 1] == '"')
 		ve->dbl_quote = !ve->dbl_quote;
-}
-
-/*
-	Heredoc-specific processing: only handle \\, \$, and \" escapes
-*/
-static void	cycle_fix_slash_hdoc(t_var_expand *ve, char *str, char *result)
-{
-	if (str[ve->i] == '\\' && str[ve->i + 1] == '\\')
-	{
-		result[(ve->res_i)++] = '\\';
-		ve->i += 2;
-	}
-	else if (str[ve->i] == '\\' && str[ve->i + 1] == '$')
-	{
-		ve->skipped[ve->skip_len++] = ve->res_i;
-		result[(ve->res_i)++] = '$';
-		ve->i += 2;
-	}
-	else if (str[ve->i] == '\\' && str[ve->i + 1] == '"')
-	{
-		result[(ve->res_i)++] = '"';
-		ve->i += 2;
 	}
 	else
 	{
@@ -137,9 +118,7 @@ bool	fix_slashes_set_skips(t_var_expand *ve, char **str_ptr, size_t len)
 		safe_free((void **)&ve->skipped);
 		return (false);
 	}
-	while (ve->is_hdoc && (*str_ptr)[ve->i])
-		cycle_fix_slash_hdoc(ve, *str_ptr, result);
-	while (!ve->is_hdoc && (*str_ptr)[ve->i])
+	while ((*str_ptr)[ve->i])
 		cycle_fix_slash_set_skip(ve, *str_ptr, result);
 	ve->i = 0;
 	ve->res_i = 0;

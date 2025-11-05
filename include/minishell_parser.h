@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/05 01:28:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 02:40:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ larger than 2048: arbitrarily high soft limit: avoids truncation
 # define ENV_VAR_NAME_MAX 2048
 
 /* marker for operators in variable expansions before tokenizing */
-# define EXP_MARK '\x01'
+# define EXP_MARK '\x14'
+
+/* marker for single quotes - used to preserve them before removal */
+# define SGL_QUOTE_MARK '\x18'
 
 typedef enum e_token_ty
 {

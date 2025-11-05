@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 14:06:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 02:40:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ char	*remove_quotes(char *str, int len)
 	str_i = -1;
 	while (str[++str_i])
 	{
-		if (str[str_i] == '\'' && !in_dbl_quote && !is_escaped(str, str_i))
+		if ((str[str_i] == SGL_QUOTE_MARK) && !in_dbl_quote && !is_escaped(str, str_i))
 			in_sgl_quote = !in_sgl_quote;
 		else if (str[str_i] == '"' && !in_sgl_quote && !is_escaped(str, str_i))
 			in_dbl_quote = !in_dbl_quote;
-		else if (str[str_i] == '\\' && !in_sgl_quote && str[str_i + 1]
+		else if (PRO && str[str_i] == '\\' && !in_sgl_quote && str[str_i + 1]
 			&& (str[str_i + 1] == '"' || str[str_i + 1] == '\''))
 			result[res_i++] = str[++str_i];
 		else
