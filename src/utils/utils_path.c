@@ -6,12 +6,13 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:18:36 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:14:10 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
 #include "minishell.h"
 
 // Creates a full command path by concatenating the directory
@@ -77,7 +78,7 @@ char	*get_valid_cmd_full_path(char **path_dirs, char *cmd)
 		i++;
 		if (!full_path)
 			continue ;
-		if (!access(full_path, X_OK))
+		if (access(full_path, F_OK) == 0)
 			return (full_path);
 		safe_free_str(&full_path);
 	}

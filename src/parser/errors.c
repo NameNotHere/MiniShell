@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/30 23:39:20 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 01:28:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	is_closed(char *str, int i, char quote)
 }
 
 /*
-mallo_x is a malloc wrapper with error return
+x_malloc is a malloc wrapper with error return
 
 Returns:
 - 0 (EXIT_SUCCESS) if allocation worked.
@@ -75,44 +75,72 @@ usage example:
 
 	char	*word;
 
-	if (mallo_x((void **)&word, 11, sizeof(char)))
+	if (x_malloc((void **)&word, 11, sizeof(char)))
 		return (EXIT_FAILURE);
 */
-int	mallo_x(void **ptr, size_t nmemb, size_t size)
+int	x_malloc(void **ptr, int *err, size_t nmemb, size_t size)
 {
+	int	local_err;
+	int	*err_ptr;
+
+	if (!err)
+		err_ptr = &local_err;
+	else
+		err_ptr = err;
+	*err_ptr = EXIT_SUCCESS;
 	if (nmemb && size > SIZE_MAX / nmemb)
 	{
 		*ptr = NULL;
 		errno = ERANGE;
-		return (ERANGE);
+		*err_ptr = ERANGE;
+		return (*err_ptr);
 	}
 	*ptr = malloc(nmemb * size);
 	if (!(*ptr))
 	{
 		errno = ENOMEM;
-		return (ENOMEM);
+		*err_ptr = ENOMEM;
 	}
-	return (EXIT_SUCCESS);
+	return (*err_ptr);
 }
 
 /*
-callo_x: same as mallo_x, but on successful allocation,
-	zero initializes the allocated memory with ft_bzero.
+callo_x: same as x_malloc, but on successful allocation,
+zero initializes the allocated memory with ft_bzero.
 */
-int	x_calloc(void **ptr, size_t nmemb, size_t size)
+int	x_calloc(void **ptr, int *err, size_t nmemb, size_t size)
 {
-	if (nmemb && size > SIZE_MAX / nmemb)
-	{
-		*ptr = NULL;
-		errno = ERANGE;
-		return (ERANGE);
-	}
-	*ptr = malloc(nmemb * size);
-	if (!(*ptr))
-	{
-		errno = ENOMEM;
-		return (ENOMEM);
-	}
-	ft_bzero(*ptr, nmemb * size);
-	return (EXIT_SUCCESS);
+	int	retval;
+
+	retval = x_malloc(ptr, err, nmemb, size);
+	if (retval == EXIT_SUCCESS)
+		ft_bzero(*ptr, nmemb * size);
+	return (retval);
+}
+
+/* Type-specific wrappers for common types */
+
+int	x_malloc_char(char **ptr, int *err, size_t count)
+{
+	return (x_malloc((void **)ptr, err, count, sizeof(char)));
+}
+
+int	x_calloc_char(char **ptr, int *err, size_t count)
+{
+	return (x_calloc((void **)ptr, err, count, sizeof(char)));
+}
+
+int	x_malloc_token(t_token **ptr, int *err, size_t count)
+{
+	return (x_malloc((void **)ptr, err, count, sizeof(t_token)));
+}
+
+int	x_calloc_token(t_token **ptr, int *err, size_t count)
+{
+	return (x_calloc((void **)ptr, err, count, sizeof(t_token)));
+}
+
+int	x_calloc_int(int **ptr, int *err, size_t count)
+{
+	return (x_calloc((void **)ptr, err, count, sizeof(int)));
 }

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 00:32:07 by otanovic          #+#    #+#             */
-/*   Updated: 2025/09/30 00:34:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:34:03 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,23 @@ int	unclosed_quotes(const char *line)
 			dbl = !dbl;
 		i++;
 	}
-	return (single || dbl);
+	if (single)
+		return ('\'');
+	if (dbl)
+		return ('"');
+	return (0);
+}
+
+bool	error_unclosed_quotes(const char *line)
+{
+	int	check_return;
+
+	check_return = unclosed_quotes(line);
+	if (check_return == 0)
+		return (false);
+	if (check_return == '\'')
+		msg_err(E_UNCLOSED_SGL_QUOTE);
+	else
+		msg_err(E_UNCLOSED_DBL_QUOTE);
+	return (true);
 }

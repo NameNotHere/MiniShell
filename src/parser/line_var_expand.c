@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:28:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,8 @@ bool	fix_slashes_set_skips(t_var_expand *ve, char **str_ptr, size_t len)
 {
 	char	*result;
 
-	if (x_calloc((void **)&result, len + 1, sizeof(char)) != EXIT_SUCCESS
-		|| x_calloc((void **)&ve->skipped, len, sizeof(int)) != EXIT_SUCCESS)
+	if (x_calloc_char(&result, NULL, len + 1) != EXIT_SUCCESS
+		|| x_calloc_int(&ve->skipped, NULL, len) != EXIT_SUCCESS)
 	{
 		safe_free_str(&result);
 		safe_free((void **)&ve->skipped);

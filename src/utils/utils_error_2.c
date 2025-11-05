@@ -12,18 +12,19 @@
 
 #include <unistd.h>
 #include <errno.h>
+#include <string.h>
 #include "minishell.h"
 
 static void	print_chdir_error(char	*target_dir)
 {
 	if (errno == ENOTDIR)
-		msg_err_2("cd: not a directory: ", target_dir);
+		msg_err_2(E_CD_NOT_DIR, target_dir);
 	else if (errno == EACCES)
-		msg_err_2("cd: permission denied: ", target_dir);
+		msg_err_2(E_CD_PERMISSION, target_dir);
 	else if (errno == ENAMETOOLONG)
-		msg_err_2("cd: file name too long: ", target_dir);
+		msg_err_2(E_CD_NAME_TOO_LONG, target_dir);
 	else
-		msg_err_2("cd: no such file or directory: ", target_dir);
+		msg_err_2(E_CD_NO_SUCH, target_dir);
 }
 
 int	set_dir_or_error(t_msh *sh, char **directory)
@@ -54,6 +55,23 @@ int	set_dir_or_error(t_msh *sh, char **directory)
 
 void	ms_perror(const char *error)
 {
-	write(STDERR_FILENO, E_MINISHELL, sizeof(E_MINISHELL));
-	perror(error);
+	char		buf[4096];
+	size_t		len;
+	const char	*err_str;
+
+	len = 0;
+	ft_memcpy(buf, E_MINISHELL, sizeof(E_MINISHELL) - 1);
+	len += sizeof(E_MINISHELL) - 1;
+	while (*error && len < sizeof(buf) - 3)
+		buf[len++] = *error++;
+	if (len < sizeof(buf) - 2)
+		buf[len++] = ':';
+	if (len < sizeof(buf) - 2)
+		buf[len++] = ' ';
+	err_str = strerror(errno);
+	while (*err_str && len < sizeof(buf) - 2)
+		buf[len++] = *err_str++;
+	if (len < sizeof(buf) - 1)
+		buf[len++] = '\n';
+	write(STDERR_FILENO, buf, len);
 }

@@ -44,9 +44,9 @@ static int	initialize_run_command(t_msh *sh, char **argv)
 
 	sh->is_interact = false;
 	if (pipe(pipefd) < 0)
-		return (ret_exit_perr(sh, ERRNO_CODE, "pipe"));
+		return (ret_exit_perr(sh, ERRNO_CODE, E_PIPE));
 	if (write(pipefd[1], argv[2], ft_strlen(argv[2])) < 0)
-		return (ret_exit_perr(sh, ERRNO_CODE, "write"));
+		return (ret_exit_perr(sh, ERRNO_CODE, E_WRITE));
 	close(pipefd[1]);
 	sh->script_fd = pipefd[0];
 	return (sh->exit_code);

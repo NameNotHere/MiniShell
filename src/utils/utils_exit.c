@@ -51,14 +51,14 @@ int	handle_execute_command_errors(t_cmd *cmd)
 	if (errno == EACCES)
 	{
 		if (cmd->full_cmd == NULL)
-			msg_err("permission denied: (empty command)");
+			msg_err(E_PERMISSION_DENIED_EMPTY);
 		else
-			msg_err_2("permission denied: ", cmd->full_cmd);
+			msg_err_2(E_PERMISSION_DENIED, cmd->full_cmd);
 		return (126);
 	}
 	if (cmd->full_cmd == NULL)
-		msg_err("command not found: (empty command)");
+		msg_err(E_CMD_NOT_FOUND_EMPTY);
 	else
-		msg_err_2("command not found: ", cmd->argv[0]);
+		msg_err_2(E_CMD_NOT_FOUND, cmd->argv[0]);
 	return (127);
 }

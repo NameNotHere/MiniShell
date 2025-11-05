@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 00:00:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 16:59:36 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ static char	*hdoc_handle_input(t_msh *sh, t_redir *redir)
 	if (!hdoc_line)
 	{
 		msg_err_3(
-		"warning: here-document at line 1 delimited by end-of-file (wanted `",
-		redir->string, "')");
+			E_HDOC_EOF_START,
+			redir->string, E_HDOC_EOF_END);
 		return (NULL);
 	}
 	return (hdoc_line);
@@ -52,7 +52,7 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 	hdoc_string = NULL;
 	sh->exit_code = EXIT_SUCCESS;
 	if (!set_heredoc_sig())
-		return (msg_err("failed to set heredoc signal handler"), NULL);
+		return (msg_err(E_HEREDOC_SIG), NULL);
 	while (true)
 	{
 		hdoc_line = hdoc_handle_input(sh, redir);
@@ -77,6 +77,6 @@ void	hdoc_err(t_msh *sh, int *write_fd, int *redir_fd, char *hdoc_str)
 	safe_close_2_fds(write_fd, redir_fd);
 	safe_free_str(&hdoc_str);
 	sh->exit_code = EXIT_FAILURE;
-	msg_err("heredoc redir failed");
+	msg_err(E_HEREDOC_REDIR);
 	return ;
 }

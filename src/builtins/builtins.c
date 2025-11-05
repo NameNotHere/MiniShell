@@ -20,7 +20,7 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 	char		*oldpwd;
 
 	if (cmd->argc > 2)
-		return (msg_err("cd: too many arguments"), EXIT_FAILURE);
+		return (msg_err(E_CD_TOO_MANY), EXIT_FAILURE);
 	oldpwd = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
 	if (set_dir_or_error(sh, &cmd->argv[1]) == EXIT_FAILURE)
 		return (ret_free_str(&oldpwd, EXIT_FAILURE));
@@ -50,7 +50,7 @@ int	ft_pwd(t_msh *sh, t_cmd *cmd)
 	i = search_name("PWD", sh->envp);
 	if (i == -1)
 	{
-		msg_err("PWD not found");
+		msg_err(E_PWD_NOT_FOUND);
 		return (EXIT_FAILURE);
 	}
 	equal = length_till_equal(sh->envp[i]) + 1;
@@ -84,7 +84,7 @@ int	ft_unset(t_msh **sh, char *name)
 		return (EXIT_SUCCESS);
 	if (name[0] == '-')
 	{
-		msg_err_3("unset: ", name, ": invalid option");
+		msg_err_3(E_UNSET_START, name, E_UNSET_END);
 		return (2);
 	}
 	i = search_name(name, (*sh)->envp);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 14:48:03 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:28:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 	ve->var_names = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_names)
 	{
-		msg_err("init_var_expand_arrays: allocation error");
+		msg_err(E_INIT_VAR_ARRAYS);
 		sh->exit_code = EXIT_FAILURE;
 		if (errno)
 			sh->exit_code = errno;
@@ -89,7 +89,7 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 	ve->var_values = ft_calloc((ve->var_total + 1), sizeof(char *));
 	if (!ve->var_values)
 	{
-		msg_err("init_var_expand_arrays: allocation error on var_values");
+		msg_err(E_INIT_VAR_VALUES);
 		sh->exit_code = EXIT_FAILURE;
 		if (errno)
 			sh->exit_code = errno;
@@ -110,6 +110,7 @@ int	allocate_new_str(t_msh *sh, t_var_expand *ve)
 {
 	int	new_str_len;
 	int	operator_count;
+	int	all_err;
 
 	if (ve->var_total <= 0 || !ve->var_names || !ve->var_values
 		|| ve->str_len <= 0)
@@ -117,13 +118,10 @@ int	allocate_new_str(t_msh *sh, t_var_expand *ve)
 	operator_count = count_operator_chars_in_values(ve);
 	new_str_len = ve->str_len + ft_strlen_array(ve->var_values)
 		- (ft_strlen_array(ve->var_names) + ve->var_total) + operator_count;
-	if (x_calloc((void **)&ve->new_str, new_str_len + 1, sizeof(char))
-		!= EXIT_SUCCESS)
+	if (x_calloc_char(&ve->new_str, &all_err, new_str_len + 1))
 	{
-		msg_err("allocate_new_str: allocation failed");
-		sh->exit_code = ENOMEM;
-		if (errno)
-			sh->exit_code = errno;
+		msg_err(E_ALLOCATE_NEW_STR);
+		sh->exit_code = all_err;
 		return (sh->exit_code);
 	}
 	return (EXIT_SUCCESS);

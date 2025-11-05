@@ -29,7 +29,7 @@ bool	add_chunk(t_rln_state *st, const char *src, size_t n)
 	new_line_made = ft_calloc(new_len + 1, sizeof(char));
 	if (!new_line_made)
 	{
-		ms_perror("add chunk");
+		ms_perror(E_ADD_CHUNK);
 		return (false);
 	}
 	if (st->made_len > 0 && st->line_made)

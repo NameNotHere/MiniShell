@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 23:12:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:13:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 		g_sig = 0;
 		if (!set_interactive_sig())
 		{
-			msg_err("set interactive signal handling failed");
+		msg_err(E_SIGNAL_INTERACTIVE);
 			sh->exit_code = EXIT_FAILURE;
 			return (NULL);
 		}
@@ -46,7 +46,7 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 		if (!line)
 			return (NULL);
 		full = ft_strdup(line);
-		while (unclosed_quotes(full))
+		while (PRO && unclosed_quotes(full))
 		{
 			safe_free_str(&line);
 			line = readline("unclosed quotes> ");
@@ -85,7 +85,7 @@ int	add_line_to_string(char **string, char **line)
 	result = EXIT_SUCCESS;
 	if (!(*line))
 	{
-		msg_err("add line to string: invalid line");
+		msg_err(E_ADD_LINE_INVALID);
 		return (EXIT_FAILURE);
 	}
 	if (*string)
@@ -94,7 +94,7 @@ int	add_line_to_string(char **string, char **line)
 		updated_string = ft_strdup(*line);
 	if (updated_string == NULL)
 	{
-		ms_perror("add line to string");
+		ms_perror(E_ADD_LINE_STRING);
 		result = EXIT_FAILURE;
 	}
 	safe_free_str(string);

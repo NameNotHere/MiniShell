@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/03 20:35:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 01:28:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,24 +54,15 @@ larger than 2048: arbitrarily high soft limit: avoids truncation
 typedef enum e_token_ty
 {
 	TOKEN_WORD,
-	TOKEN_INBUILT,
 	TOKEN_PIPE,
 	TOKEN_INPUT,
 	TOKEN_OUTPUT,
 	TOKEN_APPEND,
 	TOKEN_HEREDOC,
-	TOKEN_SINGLE_QUOTE,
-	TOKEN_DOUBLE_QUOTE,
-	TOKEN_VARIABLE,
 	TOKEN_DASH_PARAM,
-	TOKEN_FILE_PATH,
-	TOKEN_NUMBER,
-	TOKEN_BACKSLASH,
 	TOKEN_AND,
 	TOKEN_OR,
 	TOKEN_AMPERSAND,
-	UNCLOSED_DOUBLE_QUOTE,
-	UNCLOSED_SINGLE_QUOTE,
 	TOKEN_LAST
 }	t_token_ty;
 
@@ -249,10 +240,8 @@ void		parse_redir(t_msh *sh, t_ast *ast, int *start, int *end);
 
 // parser/lex.c
 int			count_tokens(char *str, int count, int i);
-const char	*get_token_name(t_token_ty type);
-const char	*get_token_name_continued(t_token_ty type);
-char		*make_word(char *str, int *i, int *err);
-int			skip_spaces(int *i, char *str);
+char		*make_token_word(char *str, int *i, int *err);
+void		skip_spaces(int *i, char *str);
 
 // parser/line_var_expand_catch.c
 int			get_var_count(char *str, t_var_expand *ve);
@@ -271,16 +260,7 @@ int			allocate_new_str(t_msh *sh, t_var_expand *ve);
 void		reset_var_lookup(t_var_expand *ve);
 
 // parser/tokenize.c
-const char	*get_token_name(t_token_ty type);
-int			is_builtin(char *str);
 t_token		*tokenize(char *input, int *token_count, int *err);
-void		free_tokens(t_token **tokens, int amount);
-
-// parser/tokenise.c
-int			is_file_path(char *str, int *y);
-int			search_for_singlequote(char *str);
-void		tokenise_quotes(char *str, t_token *output);
-void		tokenise_redirs(char *str, t_token *output);
 void		free_tokens(t_token **tokens, int amount);
 
 // utils/parser_isminioperator.c
@@ -315,8 +295,13 @@ int			update_path_dirs(char ***path_dirs, char **envp);
 void		int_closed(char *str, int i, char quote);
 int			ft_strcmp(const char *s1, const char *s2);
 void		*ft_malloc(size_t amount, size_t size);
-int			x_calloc(void **ptr, size_t nmemb, size_t size);
-int			mallo_x(void **ptr, size_t nmemb, size_t size);
+int			x_calloc(void **ptr, int *err, size_t nmemb, size_t size);
+int			x_malloc(void **ptr, int *err, size_t nmemb, size_t size);
+int			x_malloc_char(char **ptr, int *err, size_t count);
+int			x_calloc_char(char **ptr, int *err, size_t count);
+int			x_malloc_token(t_token **ptr, int *err, size_t count);
+int			x_calloc_token(t_token **ptr, int *err, size_t count);
+int			x_calloc_int(int **ptr, int *err, size_t count);
 int			is_closed(char *str, int i, char quote);
 int			unclosed_token(const char *str, char token);
 

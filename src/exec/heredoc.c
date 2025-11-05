@@ -36,19 +36,19 @@ void	hdoc_redir(t_msh *sh, t_redir *redir, int prev_hdoc_fd)
 	safe_close_fd(&prev_hdoc_fd);
 	write_fd = open("/tmp/tmp_hdoc", O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (write_fd == -1)
-		return (hdoc_err(sh, NULL, NULL, NULL), ms_perror("open hdoc"));
+		return (hdoc_err(sh, NULL, NULL, NULL), ms_perror(E_OPEN_HEREDOC));
 	redir->fd = open("/tmp/tmp_hdoc", O_RDONLY);
 	if (redir->fd == -1)
-		return (hdoc_err(sh, &write_fd, NULL, NULL), ms_perror("open hdoc"));
+		return (hdoc_err(sh, &write_fd, NULL, NULL), ms_perror(E_OPEN_HEREDOC));
 	unlink("/tmp/tmp_hdoc");
 	hdoc_str = hdoc_loop(sh, redir);
 	if (hdoc_str == NULL && g_sig == SIGINT)
 		return (close_all_hdocs(redir->next, &write_fd));
 	if (hdoc_str == NULL && set_empty_string(&hdoc_str) == false)
-		return (hdoc_err(sh, &write_fd, &redir->fd, hdoc_str), ms_perror("alloc"));
+		return (hdoc_err(sh, &write_fd, &redir->fd, hdoc_str), ms_perror(E_ALLOC));
 	if ((write(write_fd, hdoc_str, ft_strlen(hdoc_str)) == -1)
 		|| (ft_strlen(hdoc_str) > 0 && write(write_fd, "\n", 1) == -1))
-		return (hdoc_err(sh, &write_fd, &redir->fd, hdoc_str), ms_perror("write"));
+		return (hdoc_err(sh, &write_fd, &redir->fd, hdoc_str), ms_perror(E_WRITE));
 	safe_close_fd(&write_fd);
 	safe_free_str(&hdoc_str);
 	hdoc_redir(sh, redir->next, redir->fd);
@@ -73,7 +73,7 @@ int	heredoc_ast_node(t_msh *sh, t_ast *node)
 {
 	if (!node)
 	{
-		msg_err("heredoc_ast_node, ast node is NULL");
+		msg_err(E_HEREDOC_AST_NULL);
 		return (EXIT_FAILURE);
 	}
 	if (node->nty == NODE_CMD)

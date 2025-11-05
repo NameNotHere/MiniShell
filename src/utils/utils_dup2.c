@@ -18,9 +18,9 @@ void	try_dup2_stdout(t_msh *sh, int *fd_out)
 		return ;
 	if (dup2(*fd_out, STDOUT_FILENO) == -1)
 	{
-		ms_perror("dup2");
+		ms_perror(E_DUP2);
 		safe_close_fd(fd_out);
-		exit_error_free(sh, "error: failed to redirect output");
+		exit_error_free(sh, E_REDIR_OUTPUT_FAILED);
 	}
 }
 
@@ -30,9 +30,9 @@ void	try_dup2_stdin(t_msh *sh, int *fd_in)
 		return ;
 	if (dup2(*fd_in, STDIN_FILENO) == -1)
 	{
-		ms_perror("dup2");
+		ms_perror(E_DUP2);
 		safe_close_fd(fd_in);
-		exit_error_free(sh, "error: failed to redirect input");
+		exit_error_free(sh, E_REDIR_INPUT_FAILED);
 	}
 }
 
