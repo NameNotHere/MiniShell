@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:26:41 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ quotes etc)
 PRO=1 means minishell handles all extra features coded
 */
 # ifndef PRO
-#  define PRO 0
+#  define PRO 1
 # endif
 
 // TODO: LAST remove debug include before eval
