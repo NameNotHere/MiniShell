@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 18:28:25 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,7 @@ int	initialize_null_env(t_msh *sh)
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		return (ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV));
-	sh->envp = ft_calloc(5, sizeof(char *));
-	if (!sh->envp)
+	if (x_calloc_charptr(&sh->envp, 5) != EXIT_SUCCESS)
 		return (safe_free_str(&cwd),
 			ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV));
 	sh->envp[0] = ft_strjoin("PWD=", cwd);

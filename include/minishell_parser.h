@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/05 01:28:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:26:41 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ quotes etc)
 PRO=1 means minishell handles all extra features coded
 */
 # ifndef PRO
-#  define PRO 0
+#  define PRO 1
 # endif
 
 // TODO: LAST remove debug include before eval
@@ -294,14 +294,28 @@ int			update_path_dirs(char ***path_dirs, char **envp);
 // parser/errors.c
 void		int_closed(char *str, int i, char quote);
 int			ft_strcmp(const char *s1, const char *s2);
-void		*ft_malloc(size_t amount, size_t size);
-int			x_calloc(void **ptr, int *err, size_t nmemb, size_t size);
-int			x_malloc(void **ptr, int *err, size_t nmemb, size_t size);
-int			x_malloc_char(char **ptr, int *err, size_t count);
-int			x_calloc_char(char **ptr, int *err, size_t count);
-int			x_malloc_token(t_token **ptr, int *err, size_t count);
-int			x_calloc_token(t_token **ptr, int *err, size_t count);
-int			x_calloc_int(int **ptr, int *err, size_t count);
+
+/* xe_ functions: with error pointer parameter */
+int			xe_malloc(void **ptr, int *err, size_t nmemb, size_t size);
+int			xe_calloc(void **ptr, int *err, size_t nmemb, size_t size);
+
+/* Type-specific xe_calloc wrappers */
+int			xe_calloc_char(char **ptr, int *err, size_t count);
+int			xe_calloc_token(t_token **ptr, int *err, size_t count);
+int			xe_calloc_int(int **ptr, int *err, size_t count);
+int			xe_calloc_charptr(char ***ptr, int *err, size_t count);
+
+/* x_ functions: without error pointer parameter (uses local error) */
+int			x_malloc(void **ptr, size_t nmemb, size_t size);
+int			x_calloc(void **ptr, size_t nmemb, size_t size);
+
+/* Type-specific x_calloc wrappers */
+int		x_calloc_char(char **ptr, size_t count);
+int		x_calloc_token(t_token **ptr, size_t count);
+int		x_calloc_int(int **ptr, size_t count);
+int		x_calloc_charptr(char ***ptr, size_t count);
+int		x_calloc_redir(t_redir **ptr, size_t count);
+int		x_calloc_ast(t_ast **ptr, size_t count);
 int			is_closed(char *str, int i, char quote);
 int			unclosed_token(const char *str, char token);
 

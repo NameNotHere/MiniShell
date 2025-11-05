@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/05 01:28:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_token	*tokenize(char *input, int *token_count, int *err)
 
 	i = 0;
 	id = 0;
-	if (x_calloc_token(&res, err, count_tokens(input, 0, 0) + 2))
+	if (xe_calloc_token(&res, err, count_tokens(input, 0, 0) + 2))
 		return (NULL);
 	while (input[i])
 	{

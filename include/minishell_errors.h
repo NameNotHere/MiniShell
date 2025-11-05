@@ -6,23 +6,15 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 10:56:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/04 16:59:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_ERRORS_H
 # define MINISHELL_ERRORS_H
 
-/*
-	IMPORTANT: for long messages: break with \ char please (no adjacent strings).
-	it must continue from the start of next line, or whitespace is added to msg.
-*/
-
-
-/*
-	ERRNO CODE used for minishell functions that try to use the errno value.
-	If no errno found, fallsback to EXIT_FAILURE (1)
-*/
+/* ERRNO CODE used for minishell functions that try to use the errno value.
+	If no errno found, fallsback to EXIT_FAILURE (1) */
 # define ERRNO_CODE -1
 
 /* minishell start error message */

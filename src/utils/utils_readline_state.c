@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 02:33:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:30:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ bool	add_chunk(t_rln_state *st, const char *src, size_t n)
 	if (n == 0)
 		return (true);
 	new_len = st->made_len + n;
-	new_line_made = ft_calloc(new_len + 1, sizeof(char));
-	if (!new_line_made)
+	if (x_calloc_char(&new_line_made, new_len + 1) != EXIT_SUCCESS)
 	{
 		ms_perror(E_ADD_CHUNK);
 		return (false);
@@ -81,12 +80,15 @@ bool	rln_init(t_rln_state *st, t_readbuf *rb, char **line)
 */
 bool	rln_emit_line(t_rln_state *st, t_readbuf *rb, char **line)
 {
+	if (!st || !rb || !line)
+	{
+		if (line)
+			*line = NULL;
+		return (false);
+	}
 	rb->pos = st->end + 1;
 	if (!st->line_made)
-	{
-		*line = ft_calloc(1, sizeof(char));
-		return (*line != NULL);
-	}
+		return (x_calloc_char(line, 1) == EXIT_SUCCESS);
 	*line = st->line_made;
 	return (true);
 }

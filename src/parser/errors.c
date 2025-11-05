@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/05 01:28:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,93 +54,123 @@ int	is_closed(char *str, int i, char quote)
 	return (0);
 }
 
-/*
-x_malloc is a malloc wrapper with error return
-
-Returns:
-- 0 (EXIT_SUCCESS) if allocation worked.
-- 12 (ENOMEM) if allocation failed.
-- 34 (ERANGE) or "value out of range" (nmemb * size would exceed SIZE_MAX)
-
-NOTE: if allocation fails, also sets errno to ENOMEM
-
-ENOMEM is defined in <errno.h> as default code for allocation error (12).
-parameters:
-- void **ptr = pointer to pointer to be allocated
-	(must be passed by address (&ptr))
-- size_t amount = number of items that could be allocated
-- size_t size = sizeof(datatype)
-
-usage example:
-
-	char	*word;
-
-	if (x_malloc((void **)&word, 11, sizeof(char)))
-		return (EXIT_FAILURE);
-*/
-int	x_malloc(void **ptr, int *err, size_t nmemb, size_t size)
+int	xe_malloc(void **ptr, int *err, size_t nmemb, size_t size)
 {
-	int	local_err;
-	int	*err_ptr;
-
-	if (!err)
-		err_ptr = &local_err;
-	else
-		err_ptr = err;
-	*err_ptr = EXIT_SUCCESS;
+	*ptr = NULL;
+	*err = EXIT_SUCCESS;
 	if (nmemb && size > SIZE_MAX / nmemb)
 	{
-		*ptr = NULL;
-		errno = ERANGE;
-		*err_ptr = ERANGE;
-		return (*err_ptr);
+		*err = ERANGE;
+		return (*err);
 	}
 	*ptr = malloc(nmemb * size);
 	if (!(*ptr))
 	{
-		errno = ENOMEM;
-		*err_ptr = ENOMEM;
+		*err = errno;
+		if (!*err)
+			*err = ENOMEM;
 	}
-	return (*err_ptr);
+	return (*err);
 }
 
 /*
-callo_x: same as x_malloc, but on successful allocation,
-zero initializes the allocated memory with ft_bzero.
+||xe_calloc: same as xe_malloc, but on successful allocation,
+|zero initializes the allocated memory with ft_bzero.
 */
-int	x_calloc(void **ptr, int *err, size_t nmemb, size_t size)
+int	xe_calloc(void **ptr, int *err, size_t nmemb, size_t size)
 {
 	int	retval;
 
-	retval = x_malloc(ptr, err, nmemb, size);
+	retval = xe_malloc(ptr, err, nmemb, size);
 	if (retval == EXIT_SUCCESS)
 		ft_bzero(*ptr, nmemb * size);
 	return (retval);
 }
 
-/* Type-specific wrappers for common types */
-
-int	x_malloc_char(char **ptr, int *err, size_t count)
+/*
+|x_malloc: simple malloc wrapper without error pointer parameter
+|Uses local error variable internally
+*/
+int	x_malloc(void **ptr, size_t nmemb, size_t size)
 {
-	return (x_malloc((void **)ptr, err, count, sizeof(char)));
+	int	local_err;
+
+	return (xe_malloc(ptr, &local_err, nmemb, size));
 }
 
-int	x_calloc_char(char **ptr, int *err, size_t count)
+/*
+|x_calloc: simple calloc wrapper without error pointer parameter
+|Uses local error variable internally
+*/
+int	x_calloc(void **ptr, size_t nmemb, size_t size)
 {
-	return (x_calloc((void **)ptr, err, count, sizeof(char)));
+	int	local_err;
+
+	return (xe_calloc(ptr, &local_err, nmemb, size));
 }
 
-int	x_malloc_token(t_token **ptr, int *err, size_t count)
+/* Type-specific wrappers for calloc only */
+
+int	xe_calloc_char(char **ptr, int *err, size_t count)
 {
-	return (x_malloc((void **)ptr, err, count, sizeof(t_token)));
+	return (xe_calloc((void **)ptr, err, count, sizeof(char)));
 }
 
-int	x_calloc_token(t_token **ptr, int *err, size_t count)
+int	xe_calloc_token(t_token **ptr, int *err, size_t count)
 {
-	return (x_calloc((void **)ptr, err, count, sizeof(t_token)));
+	return (xe_calloc((void **)ptr, err, count, sizeof(t_token)));
 }
 
-int	x_calloc_int(int **ptr, int *err, size_t count)
+int	xe_calloc_int(int **ptr, int *err, size_t count)
 {
-	return (x_calloc((void **)ptr, err, count, sizeof(int)));
+	return (xe_calloc((void **)ptr, err, count, sizeof(int)));
+}
+
+int	xe_calloc_charptr(char ***ptr, int *err, size_t count)
+{
+	return (xe_calloc((void **)ptr, err, count, sizeof(char *)));
+}
+
+/* Type-specific wrappers for calloc without error pointer */
+
+int	x_calloc_char(char **ptr, size_t count)
+{
+	int	local_err;
+
+	return (xe_calloc_char(ptr, &local_err, count));
+}
+
+int	x_calloc_token(t_token **ptr, size_t count)
+{
+	int	local_err;
+
+	return (xe_calloc_token(ptr, &local_err, count));
+}
+
+int	x_calloc_int(int **ptr, size_t count)
+{
+	int	local_err;
+
+	return (xe_calloc_int(ptr, &local_err, count));
+}
+
+int	x_calloc_charptr(char ***ptr, size_t count)
+{
+	int	local_err;
+
+	return (xe_calloc_charptr(ptr, &local_err, count));
+}
+
+int	x_calloc_redir(t_redir **ptr, size_t count)
+{
+	int	local_err;
+
+	return (xe_calloc((void **)ptr, &local_err, count, sizeof(t_redir)));
+}
+
+int	x_calloc_ast(t_ast **ptr, size_t count)
+{
+	int	local_err;
+
+	return (xe_calloc((void **)ptr, &local_err, count, sizeof(t_ast)));
 }

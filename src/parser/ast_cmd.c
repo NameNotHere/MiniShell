@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 14:06:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ bool	init_remove_quotes(char *str, char **result, int len)
 		*result = get_empty_string();
 		return (false);
 	}
-	*result = ft_calloc(len + 1, sizeof(char));
-	if (!*result)
+	if (x_calloc_char(result, len + 1) != EXIT_SUCCESS)
 	{
 		ms_perror(E_INIT_REMOVE_QUOTES);
 		return (false);
@@ -68,7 +67,7 @@ char	*remove_quotes(char *str, int len)
 			in_sgl_quote = !in_sgl_quote;
 		else if (str[str_i] == '"' && !in_sgl_quote && !is_escaped(str, str_i))
 			in_dbl_quote = !in_dbl_quote;
-		else if (str[str_i] == '\\' && !in_sgl_quote && str[str_i + 1]
+		else if (PRO && str[str_i] == '\\' && !in_sgl_quote && str[str_i + 1]
 			&& (str[str_i + 1] == '"' || str[str_i + 1] == '\''))
 			result[res_i++] = str[++str_i];
 		else
@@ -88,8 +87,7 @@ char	**token_words_to_argv(t_token *tokens, int start, int end, int argc)
 	while (i < end)
 		if (tokens[i].word && !is_within_redir_tokens(tokens, i++))
 			argc++;
-	argv = ft_calloc(argc + 1, sizeof(char *));
-	if (!argv)
+	if (x_calloc_charptr(&argv, argc + 1) != EXIT_SUCCESS)
 		return (NULL);
 	i = 0;
 	token_i = start;
