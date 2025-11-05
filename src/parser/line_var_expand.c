@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/05 02:40:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 		while (str[ve->i] && str[ve->i] != '"')
 		{
 			if (str[ve->i] == '\'')
-				result[(ve->res_i)++] = SGL_QUOTE_MARK;
+				result[(ve->res_i)++] = '\\';
 			result[(ve->res_i)++] = str[ve->i];
 			ve->i++;
 		}
@@ -85,7 +85,7 @@ static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
 	}
 	else if (str[ve->i] == '\'')
 	{
-		result[(ve->res_i)++] = SGL_QUOTE_MARK;
+		result[(ve->res_i)++] = str[ve->i];
 		(ve->i)++;
 		ve->sgl_quote = !ve->sgl_quote;
 	}
@@ -111,8 +111,8 @@ bool	fix_slashes_set_skips(t_var_expand *ve, char **str_ptr, size_t len)
 {
 	char	*result;
 
-	if (x_calloc_char(&result, NULL, len + 1) != EXIT_SUCCESS
-		|| x_calloc_int(&ve->skipped, NULL, len) != EXIT_SUCCESS)
+	if (x_calloc_char(&result, len + 1) != EXIT_SUCCESS
+		|| x_calloc_int(&ve->skipped, len) != EXIT_SUCCESS)
 	{
 		safe_free_str(&result);
 		safe_free((void **)&ve->skipped);

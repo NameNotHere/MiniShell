@@ -6,20 +6,18 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:04:16 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-// #include <errno.h>
 
 t_ast	*make_ast_node(t_node_ty type)
 {
 	t_ast	*new_node;
 
-	new_node = ft_calloc(1, sizeof(t_ast));
-	if (!new_node)
-		return (NULL);
+	if (x_calloc_ast(&new_node, 1) != EXIT_SUCCESS)
+		return (ms_perror("make_ast_node allocation"), NULL);
 	new_node->nty = type;
 	return (new_node);
 }

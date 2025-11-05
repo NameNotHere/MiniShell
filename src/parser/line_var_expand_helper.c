@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/04 18:28:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,7 @@ bool	handle_sgl_quote(char *str, bool *sgl_quote, int i)
 
 int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 {
-	ve->var_names = ft_calloc((ve->var_total + 1), sizeof(char *));
-	if (!ve->var_names)
+	if (x_calloc_charptr(&ve->var_names, ve->var_total + 1) != EXIT_SUCCESS)
 	{
 		msg_err(E_INIT_VAR_ARRAYS);
 		sh->exit_code = EXIT_FAILURE;
@@ -86,8 +85,7 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 			sh->exit_code = errno;
 		return (sh->exit_code);
 	}
-	ve->var_values = ft_calloc((ve->var_total + 1), sizeof(char *));
-	if (!ve->var_values)
+	if (x_calloc_charptr(&ve->var_values, ve->var_total + 1) != EXIT_SUCCESS)
 	{
 		msg_err(E_INIT_VAR_VALUES);
 		sh->exit_code = EXIT_FAILURE;
@@ -118,7 +116,7 @@ int	allocate_new_str(t_msh *sh, t_var_expand *ve)
 	operator_count = count_operator_chars_in_values(ve);
 	new_str_len = ve->str_len + ft_strlen_array(ve->var_values)
 		- (ft_strlen_array(ve->var_names) + ve->var_total) + operator_count;
-	if (x_calloc_char(&ve->new_str, &all_err, new_str_len + 1))
+	if (xe_calloc_char(&ve->new_str, &all_err, new_str_len + 1))
 	{
 		msg_err(E_ALLOCATE_NEW_STR);
 		sh->exit_code = all_err;

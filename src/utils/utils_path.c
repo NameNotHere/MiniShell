@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:18:36 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/04 14:14:10 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,12 @@ char	*make_cmd_full_path(const char *dir, const char *cmd)
 
 	add_slash = (dir[ft_strlen(dir) - 1] != '/');
 	len = ft_strlen(dir) + ft_strlen(cmd) + add_slash + 1;
-	full = malloc(len * sizeof(char));
-	if (!full)
+	// full = malloc(len * sizeof(char));
+	// if (!full)
+	// 	return (NULL);
+	if (x_calloc_char(&full, len) != EXIT_SUCCESS)
 		return (NULL);
+
 	i = 0;
 	cmd_i = 0;
 	while (dir[i])

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:13:32 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 13:31:54 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,8 @@ void	add_redir(t_ast *ast, t_token_ty token_type, char *word)
 	t_redir	*current_redir;
 	t_redir	*new_redir;
 
-	new_redir = ft_calloc(1, sizeof(t_redir));
-	if (!new_redir)
-		return (msg_err(E_REDIR_ALLOCATION));
+	if (x_calloc_redir(&new_redir, 1) != EXIT_SUCCESS)
+		return (ms_perror(E_REDIR_ALLOCATION));
 	new_redir->quoted = has_quotes(word);
 	new_redir->string = remove_quotes(word, ft_strlen(word));
 	if (!new_redir->string)
