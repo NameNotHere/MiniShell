@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/04 18:28:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 01:28:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	count_tokens(char *str, int count, int i)
 	return (count);
 }
 
-void	make_string(char *str, int *len, int i)
+void	update_quoted_len(char *str, int *len, int i)
 {
 	char	quote;
 	int		j;
@@ -70,16 +70,16 @@ void	make_string(char *str, int *len, int i)
 	(*len) += j - i;
 }
 
-void	parse_word(char *str, int *i, int *len)
+void	calculate_token_word_len(char *str, int *i, int *len)
 {
-
 	skip_spaces(i, str);
 	*len = 0;
 	while (str[*i + *len] && !ft_isspace(str[*i + *len])
 		&& !is_operator(str, *i + *len))
 	{
-		if (str[*i + *len] && (str[*i + *len] == '\'' || str[*i + *len] == '\"'))
-			make_string(str, len, *i + *len);
+		if (str[*i + *len]
+			&& (str[*i + *len] == '\'' || str[*i + *len] == '\"'))
+			update_quoted_len(str, len, *i + *len);
 		else
 		{
 			while (str[*i + *len] && !ft_isspace(str[*i + *len])
@@ -99,12 +99,12 @@ void	parse_word(char *str, int *i, int *len)
 		*len = 1;
 }
 
-char	*make_word(char *str, int *i, int *err)
+char	*make_token_word(char *str, int *i, int *err)
 {
 	int		len;
 	char	*word;
 
-	parse_word(str, i, &len);
+	calculate_token_word_len(str, i, &len);
 	(*i) += len;
 	if (len == 0)
 	{

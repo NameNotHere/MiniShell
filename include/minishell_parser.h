@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/04 18:28:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 01:28:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ larger than 2048: arbitrarily high soft limit: avoids truncation
 typedef enum e_token_ty
 {
 	TOKEN_WORD,
-	TOKEN_INBUILT,
 	TOKEN_PIPE,
 	TOKEN_INPUT,
 	TOKEN_OUTPUT,
@@ -241,9 +240,7 @@ void		parse_redir(t_msh *sh, t_ast *ast, int *start, int *end);
 
 // parser/lex.c
 int			count_tokens(char *str, int count, int i);
-const char	*get_token_name(t_token_ty type);
-const char	*get_token_name_continued(t_token_ty type);
-char		*make_word(char *str, int *i, int *err);
+char		*make_token_word(char *str, int *i, int *err);
 void		skip_spaces(int *i, char *str);
 
 // parser/line_var_expand_catch.c
@@ -263,14 +260,7 @@ int			allocate_new_str(t_msh *sh, t_var_expand *ve);
 void		reset_var_lookup(t_var_expand *ve);
 
 // parser/tokenize.c
-const char	*get_token_name(t_token_ty type);
-int			is_builtin(char *str);
 t_token		*tokenize(char *input, int *token_count, int *err);
-void		free_tokens(t_token **tokens, int amount);
-
-// parser/tokenise.c
-int			is_file_path(char *str, int *y);
-void		tokenise_redirs(char *str, t_token *output);
 void		free_tokens(t_token **tokens, int amount);
 
 // utils/parser_isminioperator.c

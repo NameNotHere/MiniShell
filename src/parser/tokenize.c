@@ -6,13 +6,13 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/04 18:28:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/05 01:28:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 
-t_token	ft_token(char *str)
+t_token	make_token(char *str)
 {
 	t_token	output;
 
@@ -26,43 +26,17 @@ t_token	ft_token(char *str)
 		output.ty = TOKEN_AMPERSAND;
 	else if (str[0] == '-')
 		output.ty = TOKEN_DASH_PARAM;
-	else if (is_builtin(str) == 1)
-		output.ty = TOKEN_INBUILT;
-	else
-		tokenise_redirs(str, &output);
+	else if (ft_strncmp(str, "<<", 2) == 0)
+		output.ty = TOKEN_HEREDOC;
+	else if (ft_strncmp(str, ">>", 2) == 0)
+		output.ty = TOKEN_APPEND;
+	else if (ft_strncmp(str, "<", 1) == 0)
+		output.ty = TOKEN_INPUT;
+	else if (ft_strncmp(str, ">", 1) == 0)
+		output.ty = TOKEN_OUTPUT;
+	else if (str[0] == '|')
+		output.ty = TOKEN_PIPE;
 	return (output);
-}
-
-const char	*get_token_name(t_token_ty type)
-{
-	if (type == TOKEN_WORD)
-		return ("WORD");
-	if (type == TOKEN_INBUILT)
-		return ("INBUILT");
-	if (type == TOKEN_PIPE)
-		return ("PIPE");
-	if (type == TOKEN_INPUT)
-		return ("INPUT");
-	if (type == TOKEN_OUTPUT)
-		return ("OUTPUT");
-	if (type == TOKEN_APPEND)
-		return ("APPEND");
-	if (type == TOKEN_HEREDOC)
-		return ("HEREDOC");
-	if (type == TOKEN_DASH_PARAM)
-		return ("DASH_PARAM");
-	if (type == TOKEN_AND)
-		return ("AND");
-	if (type == TOKEN_OR)
-		return ("OR");
-	if (type == TOKEN_AMPERSAND)
-		return ("AMPERSAND");
-	return ("UNKNOWN");
-}
-
-const char	*get_token_name_continued(t_token_ty type)
-{
-	return (get_token_name(type));
 }
 
 static void	strip_exp_marks(char *str)
@@ -99,13 +73,29 @@ t_token	*tokenize(char *input, int *token_count, int *err)
 		skip_spaces(&i, input);
 		if (!input[i])
 			break ;
-		token = make_word(input, &i, err);
+		token = make_token_word(input, &i, err);
 		if (!token)
 			return (free(res), NULL);
-		res[id] = ft_token(token);
+		res[id] = make_token(token);
 		strip_exp_marks(res[id].word);
 		id++;
 	}
 	*token_count = id;
 	return (res);
+}
+
+void	free_tokens(t_token **tokens, int amount)
+{
+	int	i;
+
+	if (!tokens || !*tokens)
+		return ;
+	i = 0;
+	while (amount--)
+	{
+		free((*tokens)[i].word);
+		i++;
+	}
+	free(*tokens);
+	*tokens = NULL;
 }

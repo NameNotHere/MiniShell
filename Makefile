@@ -60,7 +60,6 @@ SRCS = 	signals/signals.c \
 	parser/line_var_expand_helper.c \
 	parser/parse_line.c \
 	parser/parse_validation.c \
-	parser/tokenise_types.c \
 	parser/tokenize.c \
 	parser/is_escaped.c \
 	utils/envp_assistance_array.c \
