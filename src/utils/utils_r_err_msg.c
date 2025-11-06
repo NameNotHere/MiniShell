@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_ret_err_msg.c                                :+:      :+:    :+:   */
+/*   utils_r_err_msg.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -18,7 +18,7 @@
 	prints error message, frees a string, returns a value.
 	the three parameters are passed in this order.
 */
-int	ret_msg_free_str(const char *error, char **to_free, int ret)
+int	r_msg_free_str(const char *error, char **to_free, int ret)
 {
 	msg_err(error);
 	safe_free_str(to_free);
