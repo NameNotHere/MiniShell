@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 19:46:14 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,6 +297,8 @@ void		fix_locale_syntax(t_var_expand *ve, char *result, char *str);
 void		fix_ansi_c_quoting(t_var_expand *ve, char *result, char *str);
 
 // parser/line_var_expand_helper.c
+bool		is_quote_free(t_var_expand *ve);
+bool		must_expand(t_var_expand *ve, char *str, int pos);
 bool		handle_sgl_quote(char *str, bool *sgl_quote, int i);
 bool		handle_ve_quote(char *str, bool *sgl_quote, bool *dbl_quote, int i);
 int			init_var_expand_arrays(t_msh *sh, t_var_expand *ve);

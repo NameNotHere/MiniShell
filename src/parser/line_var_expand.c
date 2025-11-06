@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 19:46:14 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ bool	advanced_substitutions(t_var_expand *ve, char **str_ptr)
 	ve->i = 0;
 	ve->res_i = 0;
 	ve->sgl_quote = false;
+	ve->dbl_quote = false;
 	safe_free_str(str_ptr);
 	*str_ptr = result;
 	return (true);
@@ -113,19 +114,14 @@ int	expand_vars(t_var_expand *ve, char *str)
 	{
 		if (handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, ve->i))
 			;
-		else if ('$' == str[ve->i] && (ft_valid_var_char(str[ve->i + 1]) || str[ve->i + 1] == '?')
-			&& !ve->sgl_quote && !must_skip_exp(ve, ve->i)
-			&& !is_in_heredoc_delimiter(str, ve->i))
+		else if ('$' == str[ve->i] && must_expand(ve, str, ve->i))
 		{
 			ve->var_lookup = true;
 			ve->value = ve->var_values[ve->var_i];
 			while (*ve->value)
 			{
 				if (!ve->dbl_quote && is_operator_char(*ve->value))
-				{
-					ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = EXP_MARK;
-					ve->exp_i++;
-				}
+					ve->new_str[ve->i + ve->exp_i++ - ve->skipped_chars] = EXP_MARK;
 				ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = *ve->value;
 				ve->exp_i++;
 				ve->value++;

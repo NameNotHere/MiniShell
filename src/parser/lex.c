@@ -6,12 +6,22 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 19:46:14 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 #include "minishell.h"
+
+/*
+	Check if character at position is part of a token.
+	Returns true if character exists, is not whitespace, and is not an operator.
+	Used to identify token boundaries during lexical analysis.
+*/
+static bool	is_token_char(char *str, int pos)
+{
+	return (str[pos] && !ft_isspace(str[pos]) && is_operator(str, pos) == 0);
+}
 
 void	skip_spaces(int *i, char *str)
 {
@@ -40,8 +50,8 @@ int	count_tokens(char *str, int count, int i)
 			if (str[i] && str[i] == quote)
 				i++;
 		}
-		else if (str[i] && !ft_isspace(str[i]) && is_operator(str, i) == 0)
-			while (str[i] && !ft_isspace(str[i]) && is_operator(str, i) == 0)
+		else if (is_token_char(str, i))
+			while (is_token_char(str, i))
 				i++;
 		count++;
 	}
@@ -74,16 +84,14 @@ void	calculate_token_word_len(char *str, int *i, int *len)
 {
 	skip_spaces(i, str);
 	*len = 0;
-	while (str[*i + *len] && !ft_isspace(str[*i + *len])
-		&& !is_operator(str, *i + *len))
+	while (is_token_char(str, *i + *len))
 	{
 		if (str[*i + *len]
 			&& (str[*i + *len] == '\'' || str[*i + *len] == '\"'))
 			update_quoted_len(str, len, *i + *len);
 		else
 		{
-			while (str[*i + *len] && !ft_isspace(str[*i + *len])
-				&& !is_operator(str, *i + *len)
+			while (is_token_char(str, *i + *len)
 				&& str[*i + *len] != '\'' && str[*i + *len] != '\"')
 			{
 				if (str[*i + *len] == '\\' && str[*i + *len + 1])
