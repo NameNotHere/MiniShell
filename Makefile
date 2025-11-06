@@ -57,6 +57,7 @@ SRCS = 	signals/signals.c \
 	parser/errors.c \
 	parser/lex.c \
 	parser/is_builtin.c \
+	parser/fix_slash_set_skip_helper.c \
 	parser/line_var_expand.c \
 	parser/line_var_expand_catch.c \
 	parser/line_var_expand_helper.c \

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 03:38:42 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,82 +32,42 @@
 	Single quotes are marked with SGL_QUOTE_MARK to preserve them initially.
 	Note: inside $"..." , escapes the single quotes, otherwise they get marked
 */
-static void	cycle_fix_slash_set_skip(t_var_expand *ve, char *str, char *result)
+static void	cycle_advanced_substitutions(t_var_expand *ve, char *str, char *result)
 {
-	if (PRO && !ve->is_hdoc && !ve->sgl_quote && str[ve->i] == '\\' && str[ve->i + 1] == '\\')
-	{
-		result[(ve->res_i)++] = '\\';
-		ve->i += 2;
-	}
-	else if (PRO && !ve->sgl_quote && str[ve->i] == '\\' && str[ve->i + 1] == '$')
-	{
-		ve->skipped[ve->skip_len++] = ve->res_i;
-		result[(ve->res_i)++] = '$';
-		ve->i += 2;
-	}
-	else if (PRO && !ve->sgl_quote && str[ve->i] == '\\'
-		&& (str[ve->i + 1] == '"' || str[ve->i + 1] == '\''))
-	{
-		result[(ve->res_i)++] = '\\';
-		result[(ve->res_i)++] = str[ve->i + 1];
-		ve->i += 2;
-	}
-	else if (PRO && !ve->is_hdoc && !ve->sgl_quote && !ve->dbl_quote && str[ve->i] == '\\' && str[ve->i + 1])
-	{
-		result[(ve->res_i)++] = str[ve->i + 1];
-		ve->i += 2;
-	}
-	else if (!ve->sgl_quote && !ve->dbl_quote && str[ve->i] == '$' && str[ve->i + 1] == '"')
-	{
-		ve->skipped[ve->skip_len++] = ve->res_i;
-		ve->i += 2;
-		while (str[ve->i] && str[ve->i] != '"')
-		{
-			if (str[ve->i] == '\'')
-				result[(ve->res_i)++] = '\\';
-			result[(ve->res_i)++] = str[ve->i];
-			ve->i++;
-		}
-		if (str[ve->i] == '"')
-			ve->i++;
-	}
-	else if (!ve->sgl_quote && !ve->dbl_quote && str[ve->i] == '$' && str[ve->i + 1] == '\'')
-	{
-		ve->skipped[ve->skip_len++] = ve->res_i;
-		ve->i += 2;
-		while (str[ve->i] && str[ve->i] != '\'')
-		{
-			result[(ve->res_i)++] = str[ve->i];
-			ve->i++;
-		}
-		if (str[ve->i] == '\'')
-			ve->i++;
-	}
+	if (must_fix_escaped_backslash(ve, str))
+		fix_escaped_bkslash(ve, result);
+	else if (must_fix_escaped_dollar(ve, str))
+		fix_escaped_dollar(ve, result);
+	else if (must_fix_escaped_quotes(ve, str))
+		fix_quoted_chars(ve, str, result);
+	else if (must_fix_unquoted_backslash(ve, str))
+		fix_unquoted_bkslash(ve, str, result);
+	else if (must_fix_locale_syntax(ve, str))
+		fix_locale_syntax(ve, result, str);
+	else if (must_fix_ansi_c_quoting(ve, str))
+		fix_ansi_c_quoting(ve, result, str);
 	else if (str[ve->i] == '\'')
 	{
-		result[(ve->res_i)++] = str[ve->i];
-		(ve->i)++;
+		result[ve->res_i++] = str[ve->i++];
 		ve->sgl_quote = !ve->sgl_quote;
 	}
 	else if (str[ve->i] == '"')
 	{
-		result[(ve->res_i)++] = str[ve->i];
-		(ve->i)++;
+		result[ve->res_i++] = str[ve->i++];
 		ve->dbl_quote = !ve->dbl_quote;
 	}
 	else
-	{
-		result[(ve->res_i)++] = str[ve->i];
-		(ve->i)++;
-	}
+		result[ve->res_i++] = str[ve->i++];
 }
 
 /*
-	Processes backslashes (shortens pairs into literal backslashes)
-		and create skip list for escaped variables
-	Replaces provided string pointer and updates ve->skipped/ve->skip_len
+	Processes advanced interpreting, expansions and substitutions involving
+	backslashes escaped variables or characters, locale syntax and ANSI-C.
+	quoting
+	Replaces provided string pointer and updates ve->skipped/ve->skip_len.
+	Only applies if PRO=1.
  */
-bool	fix_slashes_set_skips(t_var_expand *ve, char **str_ptr, size_t len)
+bool	advanced_substitutions(t_var_expand *ve, char **str_ptr, size_t len)
 {
 	char	*result;
 
@@ -119,7 +79,7 @@ bool	fix_slashes_set_skips(t_var_expand *ve, char **str_ptr, size_t len)
 		return (false);
 	}
 	while ((*str_ptr)[ve->i])
-		cycle_fix_slash_set_skip(ve, *str_ptr, result);
+		cycle_advanced_substitutions(ve, *str_ptr, result);
 	ve->i = 0;
 	ve->res_i = 0;
 	ve->sgl_quote = false;
@@ -206,7 +166,7 @@ bool	expand_string_variables(t_msh *sh, char **str_ptr, bool is_hdoc)
 	success = true;
 	ft_bzero(&ve, sizeof(t_var_expand));
 	ve.is_hdoc = is_hdoc;
-	if (!fix_slashes_set_skips(&ve, str_ptr, ft_strlen(*str_ptr)))
+	if (!advanced_substitutions(&ve, str_ptr, ft_strlen(*str_ptr)))
 		return (false);
 	ve.str_len = ft_strlen(*str_ptr);
 	if (!ve.str_len)
