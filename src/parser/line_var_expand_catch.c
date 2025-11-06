@@ -6,11 +6,22 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:12:44 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 03:38:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 19:46:14 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+	Checks if this is a positional variable ($0-$9).
+	Positional variables are single digits only; $10+ require braces.
+	Assumes caller has already checked PRO mode.
+*/
+static bool	is_positional_var(t_var_expand *ve, char c)
+{
+	return (ve->var_name_i == 1 && ft_isdigit(c));
+}
+
 
 bool	is_in_heredoc_delimiter(char *str, int pos)
 {
@@ -44,23 +55,19 @@ int	get_var_count(char *str, t_var_expand *ve)
 {
 	int		var_count;
 	int		i;
-	bool	sgl_quote;
-	bool	dbl_quote;
 
 	i = 0;
-	sgl_quote = false;
-	dbl_quote = false;
 	var_count = 0;
 	while (str[i])
 	{
-		if (handle_ve_quote(str, &sgl_quote, &dbl_quote, i))
+		if (handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, i))
 			;
-		else if (('$' == str[i] && !must_skip_exp(ve, i))
-			&& (ft_valid_var_char(str[i + 1]) || str[i + 1] == '?')
-			&& !sgl_quote && !is_in_heredoc_delimiter(str, i))
+		else if ('$' == str[i] && must_expand(ve, str, i))
 			var_count++;
 		i++;
 	}
+	ve->sgl_quote = false;
+	ve->dbl_quote = false;
 	return (var_count);
 }
 
@@ -113,6 +120,8 @@ int	catch_var(t_msh *sh, t_var_expand *ve)
 
 int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 {
+	if (!ve->var_lookup)
+		return (EXIT_SUCCESS);
 	if (c == '?')
 	{
 		ve->var_name_buffer[ve->var_name_i] = c;
@@ -125,7 +134,7 @@ int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 	ve->var_name_buffer[ve->var_name_i] = c;
 	ve->var_name_i++;
 	ve->var_name_buffer[ve->var_name_i] = '\0';
-	if (!ft_valid_var_char(next_c) || (ve->var_name_i == 1 && ft_isdigit(c) && PRO))
+	if (!ft_valid_var_char(next_c) || (PRO && is_positional_var(ve, c)))
 	{
 		if (is_var_in_env(sh, ve->var_name_buffer, &ve->envp_var_i))
 			return (catch_var(sh, ve));
@@ -142,16 +151,12 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '$'
-			&& !must_skip_exp(ve, i) && (ft_valid_var_char(str[i + 1])
-				|| str[i + 1] == '?') && !ve->sgl_quote
-			&& !is_in_heredoc_delimiter(str, i))
+		if (str[i] == '$' && must_expand(ve, str, i))
 		{
 			ve->var_lookup = true;
 			i++;
 		}
-		if (ve->var_lookup
-			&& lookup_var(sh, ve, str[i], str[i + 1]) != EXIT_SUCCESS)
+		if (lookup_var(sh, ve, str[i], str[i + 1]) != EXIT_SUCCESS)
 			return (sh->exit_code);
 		handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, i);
 		i++;

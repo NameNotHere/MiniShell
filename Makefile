@@ -7,6 +7,7 @@ CFLAGS = -Wall -Werror -Wextra -fsanitize=address,undefined,leak -g3 -fno-omit-f
 #TODO: remove temporary -Wmaybe-uninitialized flag from debug flags... using just to check things now
 # CFLAGS_DEBUG = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer
 CFLAGS_DEBUG = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer -Wmaybe-uninitialized
+CFLAGS_OPTIMAL = -Wall -Werror -Wextra -O3 -flto
 LDFLAGS = -lreadline -Llibft -lft
 
 # PRO mode: enable extra features (positional params, etc)
@@ -130,7 +131,11 @@ debug: fclean
 	$(MAKE) CFLAGS="$(CFLAGS_DEBUG)" all
 	@echo "debug build made"
 
+optimal: fclean
+	$(MAKE) CFLAGS="$(CFLAGS_OPTIMAL)" all
+	@echo "optimal build made"
+
 valgrind: debug
 	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --track-origins=yes --trace-children=yes --suppressions=rl.supp ./$(NAME)
 
-.PHONY: all clean fclean re bonus debug
+.PHONY: all clean fclean re bonus debug optimal
