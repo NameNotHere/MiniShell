@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 10:31:10 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 	char		*oldpwd;
 
 	if (cmd->argc > 2)
-		return (msg_err(E_CD_TOO_MANY), EXIT_FAILURE);
+		return (r_msg_err(E_CD_TOO_MANY, EXIT_FAILURE));
 	oldpwd = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
 	if (set_dir_or_error(sh, &cmd->argv[1]) == EXIT_FAILURE)
 		return (r_free_str(&oldpwd, EXIT_FAILURE));
@@ -64,7 +64,7 @@ int	ft_env(t_msh *sh, int argc)
 	int	i;
 
 	if (argc > 1)
-		return (ret_exit_msg(sh, 127, "env: arguments not supported"));
+		return (r_set_exit_msg(sh, 127, E_ENV_ARGS_NOT_SUPPORTED));
 	i = 0;
 	while (sh->envp[i])
 	{

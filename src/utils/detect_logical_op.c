@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 13:05:01 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 03:38:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,10 @@ int	process_logical_op_syntax_error(t_msh *sh)
 
 	logop = detect_logical_op_token(sh->tokens);
 	if (logop == TOKEN_OR)
-		return (ret_exit_msg(sh, 2,
-				"syntax error near unexpected token `||'"));
+		return (r_set_exit_msg(sh, 2, E_SYNTAX_ERROR_OR));
 	if (logop == TOKEN_AND)
-		return (ret_exit_msg(sh, 2,
-				"syntax error near unexpected token `&&'"));
+		return (r_set_exit_msg(sh, 2, E_SYNTAX_ERROR_AND));
 	if (logop == TOKEN_AMPERSAND)
-		return (ret_exit_msg(sh, 2,
-				"syntax error near unexpected token `&'"));
+		return (r_set_exit_msg(sh, 2, E_SYNTAX_ERROR_AMPERSAND));
 	return (2);
 }

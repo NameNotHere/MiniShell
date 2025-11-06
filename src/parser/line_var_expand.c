@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 03:38:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 /*
 	Does a few things to support line expansions done correctly:
-	1) fixes backslash parsing either inside or outside single quotes (when PRO=1)
+	1) fixes backslash parsing either inside or outside single quotes (when PRO)
 	2) skips expansions on escaped $ char (sets location of skipped expansions)
 	3) also skips expansion on use of posix locale syntax ($"..."): $
 	char is skipped, variable expansion skipped so what is inside the quotes
@@ -23,7 +23,7 @@
 	needs to extract the untranslated content (english basically).
 
 	Proper precedence: The cycle_fix_slash_set_skip function handles escapes
-	in the right order (only when PRO=1):
+	in the right order (only when PRO):
 	1. \\ → \ (prevents false-positive escaped chars)
 	2. \$ → $ (with skip marking for variable expansion)
 	3. \" / \' → preserve both (for later quote removal)
@@ -35,13 +35,13 @@
 static void	cycle_advanced_substitutions(t_var_expand *ve, char *str, char *result)
 {
 	if (must_fix_escaped_backslash(ve, str))
-		fix_escaped_bkslash(ve, result);
+		fix_escaped_backslash(ve, result);
 	else if (must_fix_escaped_dollar(ve, str))
 		fix_escaped_dollar(ve, result);
 	else if (must_fix_escaped_quotes(ve, str))
 		fix_quoted_chars(ve, str, result);
 	else if (must_fix_unquoted_backslash(ve, str))
-		fix_unquoted_bkslash(ve, str, result);
+		fix_unquoted_backslash(ve, str, result);
 	else if (must_fix_locale_syntax(ve, str))
 		fix_locale_syntax(ve, result, str);
 	else if (must_fix_ansi_c_quoting(ve, str))
@@ -65,13 +65,15 @@ static void	cycle_advanced_substitutions(t_var_expand *ve, char *str, char *resu
 	backslashes escaped variables or characters, locale syntax and ANSI-C.
 	quoting
 	Replaces provided string pointer and updates ve->skipped/ve->skip_len.
-	Only applies if PRO=1.
+	Only applies if PRO.
  */
-bool	advanced_substitutions(t_var_expand *ve, char **str_ptr, size_t len)
+bool	advanced_substitutions(t_var_expand *ve, char **str_ptr)
 {
 	char	*result;
+	size_t	len;
 
-	if (x_calloc_char(&result, len + 1) != EXIT_SUCCESS
+	len = ft_strlen(*str_ptr) + 1;
+	if (x_calloc_char(&result, len) != EXIT_SUCCESS
 		|| x_calloc_int(&ve->skipped, len) != EXIT_SUCCESS)
 	{
 		safe_free_str(&result);
@@ -166,7 +168,7 @@ bool	expand_string_variables(t_msh *sh, char **str_ptr, bool is_hdoc)
 	success = true;
 	ft_bzero(&ve, sizeof(t_var_expand));
 	ve.is_hdoc = is_hdoc;
-	if (!advanced_substitutions(&ve, str_ptr, ft_strlen(*str_ptr)))
+	if (PRO && !advanced_substitutions(&ve, str_ptr))
 		return (false);
 	ve.str_len = ft_strlen(*str_ptr);
 	if (!ve.str_len)

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 00:12:45 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 02:52:47 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ static int	initialize_environment(t_msh *sh, char **envp)
 	else if (envp[0])
 		sh->envp = copy_string_array(envp);
 	if (!sh->envp)
-		return (ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV));
+		return (r_set_exit_perr(sh, E_INIT_ENV));
 	if (update_path_dirs(&sh->path_dirs, sh->envp) != EXIT_SUCCESS)
-		return (ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV));
+		return (r_set_exit_perr(sh, E_INIT_ENV));
 	update_shell_level_var(sh);
 	return (sh->exit_code);
 }
@@ -33,7 +33,7 @@ static int	initialize_run_script(t_msh *sh, char **argv)
 	if (sh->script_fd < 0)
 	{
 		msg_err(argv[1]);
-		return (ret_exit_perr(sh, ERRNO_CODE, ""));
+		return (r_set_exit_perr(sh, ""));
 	}
 	return (sh->exit_code);
 }
@@ -44,9 +44,9 @@ static int	initialize_run_command(t_msh *sh, char **argv)
 
 	sh->is_interact = false;
 	if (pipe(pipefd) < 0)
-		return (ret_exit_perr(sh, ERRNO_CODE, E_PIPE));
+		return (r_set_exit_perr(sh, E_PIPE));
 	if (write(pipefd[1], argv[2], ft_strlen(argv[2])) < 0)
-		return (ret_exit_perr(sh, ERRNO_CODE, E_WRITE));
+		return (r_set_exit_perr(sh, E_WRITE));
 	close(pipefd[1]);
 	sh->script_fd = pipefd[0];
 	return (sh->exit_code);
@@ -71,7 +71,7 @@ int	initialize_minishell(t_msh *sh, int argc, char **argv, char **envp)
 	if (argc > 1 && ft_strncmp(argv[1], "-c", 3) == 0)
 	{
 		if (argc < 3)
-			return (ret_exit_msg(sh, 127, E_OPTION_C_ARGUMENT));
+			return (r_set_exit_msg(sh, 127, E_OPTION_C_ARGUMENT));
 		return (initialize_run_command(sh, argv));
 	}
 	else if (argc > 1)

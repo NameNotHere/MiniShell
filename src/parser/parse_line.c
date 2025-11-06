@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:17:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/27 13:43:01 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ int	parse_line(t_msh *sh, t_ast *ast, char *string)
 
 	tokens = tokenize(string, &token_count, &sh->exit_code);
 	if (!tokens)
-		return (ret_exit_msg(sh, EXIT_FAILURE, "tokenizer failed"));
+		return (r_set_exit_msg(sh, EXIT_FAILURE, E_TOKENIZE_FAILED));
 	sh->tokens = tokens;
 	if (build_ast(sh, ast, tokens) != EXIT_SUCCESS)
 	{
 		free_tokens(&sh->tokens, token_count);
 		if (sh->exit_code != 2)
-			return (ret_exit_msg(sh, EXIT_FAILURE, "AST build failed"));
+			return (r_set_exit_msg(sh, EXIT_FAILURE, E_AST_BUILD_FAILED));
 		else
 			return (EXIT_FAILURE);
 	}

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/04 14:13:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,11 +159,25 @@ bool	rln_emit_line(t_rln_state *st, t_readbuf *rb, char **line);
 
 // utils/utils_set_exit_code.c
 void	set_exit_code(t_msh *sh, int exit_code);
-int		ret_exit(t_msh *sh, int exit_code);
 void	set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
-int		ret_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
-void	set_exit_perr(t_msh *sh, int exit_code, const char *error_msg);
-int		ret_exit_perr(t_msh *sh, int exit_code, const char *error_msg);
+void	set_exit_perr(t_msh *sh, const char *error_msg);
+
+// utils/utils_r_set_exit.c
+int		r_set_exit(t_msh *sh, int exit_code);
+int		r_set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
+int		r_set_exit_perr(t_msh *sh, const char *error_msg);
+int		r_set_exit_ret(t_msh *sh, int exit_code, int ret);
+int		r_msg_err(const char *error_msg, int ret);
+int		r_msg_perror(const char *error_msg, int ret);
+int		r_free_everything(t_msh *sh, int ret);
+
+// utils/utils_r_plus.c
+int		r_free_str(char **to_free, int ret);
+int		r_free_two_str(char **str_a, char **str_b, int ret);
+int		r_free_str_perr(t_msh *sh, char **to_free, const char *error_msg);
+
+// utils/utils_r_err_msg.c
+int		r_msg_free_str(const char *error, char **to_free, int ret);
 
 // utils/utils_string.c
 char	*get_shell_line(t_msh *sh, char *prompt);
