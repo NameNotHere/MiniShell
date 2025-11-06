@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 23:40:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 03:38:42 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static void	close_all_hdocs(t_redir *redir, int *write_fd)
 {
+	if (!redir)
+		return (safe_close_fd(write_fd));
 	safe_close_2_fds(write_fd, &redir->fd);
 	redir = redir->next;
 	while (redir)

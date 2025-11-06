@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/01 02:13:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 03:38:42 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@ bool	is_escaped(const char *str, int i)
 {
 	int	backslash_count;
 	int	j;
-	int	ret;
 
+	if (!PRO)
+		return (false);
 	backslash_count = 0;
 	if (i <= 0)
 		return (false);
@@ -27,9 +28,5 @@ bool	is_escaped(const char *str, int i)
 		backslash_count++;
 		j--;
 	}
-	ret = backslash_count % 2;
-	if (ret != 0)
-		return (true);
-	else
-		return (false);
+	return (backslash_count % 2);
 }

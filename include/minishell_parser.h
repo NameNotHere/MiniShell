@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/05 17:26:41 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 03:38:42 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ larger than 2048: arbitrarily high soft limit: avoids truncation
 
 /* marker for operators in variable expansions before tokenizing */
 # define EXP_MARK '\x01'
+
+/* marker for single quotes inside $"..." that should be preserved */
+# define ESCAPED_SGL_QUOTE '\x02'
 
 typedef enum e_token_ty
 {
@@ -252,6 +255,22 @@ bool		is_in_heredoc_delimiter(char *str, int pos);
 bool		expand_string_variables(t_msh *sh, char **string_ptr, bool is_hdoc);
 bool		must_skip_exp(t_var_expand *ve, int index);
 
+// parser/fix_slash_set_skip_helper.c - Condition checkers
+bool		must_fix_escaped_backslash(t_var_expand *ve, char *str);
+bool		must_fix_escaped_dollar(t_var_expand *ve, char *str);
+bool		must_fix_escaped_quotes(t_var_expand *ve, char *str);
+bool		must_fix_unquoted_backslash(t_var_expand *ve, char *str);
+bool		must_fix_locale_syntax(t_var_expand *ve, char *str);
+bool		must_fix_ansi_c_quoting(t_var_expand *ve, char *str);
+
+// parser/fix_slash_set_skip_helper.c - Action functions
+void		fix_escaped_bkslash(t_var_expand *ve, char *result);
+void		fix_escaped_dollar(t_var_expand *ve, char *result);
+void		fix_quoted_chars(t_var_expand *ve, char *str, char *result);
+void		fix_unquoted_bkslash(t_var_expand *ve, char *str, char *result);
+void		fix_locale_syntax(t_var_expand *ve, char *result, char *str);
+void		fix_ansi_c_quoting(t_var_expand *ve, char *result, char *str);
+
 // parser/line_var_expand_helper.c
 bool		handle_sgl_quote(char *str, bool *sgl_quote, int i);
 bool		handle_ve_quote(char *str, bool *sgl_quote, bool *dbl_quote, int i);
@@ -310,12 +329,12 @@ int			x_malloc(void **ptr, size_t nmemb, size_t size);
 int			x_calloc(void **ptr, size_t nmemb, size_t size);
 
 /* Type-specific x_calloc wrappers */
-int		x_calloc_char(char **ptr, size_t count);
-int		x_calloc_token(t_token **ptr, size_t count);
-int		x_calloc_int(int **ptr, size_t count);
-int		x_calloc_charptr(char ***ptr, size_t count);
-int		x_calloc_redir(t_redir **ptr, size_t count);
-int		x_calloc_ast(t_ast **ptr, size_t count);
+int			x_calloc_char(char **ptr, size_t count);
+int			x_calloc_token(t_token **ptr, size_t count);
+int			x_calloc_int(int **ptr, size_t count);
+int			x_calloc_charptr(char ***ptr, size_t count);
+int			x_calloc_redir(t_redir **ptr, size_t count);
+int			x_calloc_ast(t_ast **ptr, size_t count);
 int			is_closed(char *str, int i, char quote);
 int			unclosed_token(const char *str, char token);
 

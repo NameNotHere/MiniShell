@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:12:44 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 03:38:42 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	catch_var(t_msh *sh, t_var_expand *ve)
 		ve->var_values[ve->var_i] = ft_itoa(sh->saved_exit_code);
 		if (!ve->var_values[ve->var_i])
 		{
-		msg_err(E_ITOA_FAILED);
+			msg_err(E_ITOA_FAILED);
 			safe_free_str(&ve->var_names[ve->var_i]);
 			sh->exit_code = errno;
 			return (errno);
