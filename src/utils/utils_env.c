@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 18:28:25 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*get_env_value(t_msh *sh, char *var_name, int envp_idx)
 	var_value = ft_strdup(sh->envp[envp_idx] + ft_strlen(var_name) + 1);
 	if (!var_value)
 	{
-		set_exit_perr(sh, ERRNO_CODE, "get_env_value allocation failed");
+		set_exit_perr(sh, "get_env_value allocation failed");
 		return (NULL);
 	}
 	return (var_value);
@@ -105,17 +105,18 @@ int	initialize_null_env(t_msh *sh)
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-		return (ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV));
+		return (r_set_exit_perr(sh, E_INIT_ENV));
 	if (x_calloc_charptr(&sh->envp, 5) != EXIT_SUCCESS)
-		return (safe_free_str(&cwd),
-			ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV));
+		return (r_free_str_perr(sh, &cwd, E_INIT_ENV));
 	sh->envp[0] = ft_strjoin("PWD=", cwd);
 	sh->envp[1] = ft_strjoin("OLDPWD=", cwd);
 	sh->envp[2] = ft_strdup("SHLVL=");
 	sh->envp[3] = ft_strdup(PATH_DEFAULT);
 	safe_free_str(&cwd);
 	if (!sh->envp[0] || !sh->envp[1] || !sh->envp[2] || !sh->envp[3])
-		return (safe_free_2d_string(&sh->envp),
-			ret_exit_perr(sh, ERRNO_CODE, E_INIT_ENV));
+	{
+		safe_free_2d_string(&sh->envp);
+		return (r_set_exit_perr(sh, E_INIT_ENV));
+	}
 	return (sh->exit_code);
 }

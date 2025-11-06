@@ -6,16 +6,13 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 10:56:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 03:38:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_ERRORS_H
 # define MINISHELL_ERRORS_H
 
-/* ERRNO CODE used for minishell functions that try to use the errno value.
-	If no errno found, fallsback to EXIT_FAILURE (1) */
-# define ERRNO_CODE -1
 
 /* minishell start error message */
 # define E_MINISHELL "minishell: "
@@ -37,6 +34,7 @@ access parent directories: No such file or directory"
 # define E_UNSET_END ": invalid option"
 
 /* execution error messages */
+# define E_ENV_ARGS_NOT_SUPPORTED "env: arguments not supported"
 # define E_CD_NAME_TOO_LONG "cd: file name too long: "
 # define E_CD_NOT_DIR "cd: not a directory: "
 # define E_CD_NO_SUCH "cd: no such file or directory: "
@@ -62,16 +60,27 @@ access parent directories: No such file or directory"
 # define E_ITOA_FAILED "ft_itoa failed for $? expansion"
 
 /* AST and parsing error messages */
+# define E_AST_BUILD_FAILED "parse_line: AST build failed"
+# define E_AST_NODE_ALLOC "make_ast_node allocation"
 # define E_AST_ROOT_NULL "exec_ast_root: on execution, ast node is NULL"
+# define E_SYNTAX_ERROR_AMPERSAND "syntax error near unexpected token `&'"
+# define E_SYNTAX_ERROR_AND "syntax error near unexpected token `&&'"
+# define E_SYNTAX_ERROR_OR "syntax error near unexpected token `||'"
+# define E_SYNTAX_ERROR_PIPE "syntax error near unexpected token `|'"
 # define E_AST_ROOT_SIG "exec_ast_root: failed to set execution signal handling"
 # define E_EXEC_AST_NULL "exec_ast: ast root node is NULL"
 # define E_FAILED_ALLOC_AST "failed to allocate AST nodes"
 # define E_HEREDOC_AST_NULL "heredoc_ast_node, ast node is NULL"
 # define E_LOOKUP_AST_NULL "lookup_all_cmd_fullpaths: ast node is NULL"
+# define E_TOKENIZE_FAILED "parse_line: tokenizer failed"
 
 /* heredoc error messages */
 # define E_HEREDOC_REDIR "heredoc redir failed"
 # define E_HEREDOC_SIG "failed to set heredoc signal handler"
+
+/* builtin execution error messages */
+# define E_BUILTIN_REDIR_FAILED "exec_single_builtin: failed to save \
+stdin/stdout for builtin redirection"
 
 /* signal handling error messages */
 # define E_SIGNAL_INTERACTIVE "set interactive signal handling failed"

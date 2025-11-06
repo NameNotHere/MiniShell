@@ -86,8 +86,9 @@ SRCS = 	signals/signals.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
 	utils/utils_readline_state.c \
-	utils/utils_ret_err_msg.c \
-	utils/utils_ret_plus.c \
+	utils/utils_r_err_msg.c \
+	utils/utils_r_plus.c \
+	utils/utils_r_set_exit.c \
 	utils/utils_set_exit_code.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \

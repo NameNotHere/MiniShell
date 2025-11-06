@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 03:38:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 	return ;
 }
 
-bool	init_remove_quotes(char *str, char **result, int len)
+bool	init_remove_quotes(char *str, char **result, t_remove_quotes *rq, int len)
 {
 	*result = NULL;
 	if (!str)
@@ -44,36 +44,59 @@ bool	init_remove_quotes(char *str, char **result, int len)
 		ms_perror(E_INIT_REMOVE_QUOTES);
 		return (false);
 	}
+	ft_bzero(rq, sizeof(t_remove_quotes));
+	rq->str_i = -1;
 	return (true);
 }
 
+/*
+	Advanced parsing (applies if PRO)
+	On each str char, if no normal quotes were detected:
+	- replaces ESCAPED_SGL_QUOTE
+	or
+	- skips escape char and adds sglquote or dblquote to result
+	or (falback)
+	- passes char from str to result
+*/
+void	remove_quotes_pro(char *str, char *result, t_remove_quotes *q)
+{
+	if (str[q->str_i] == ESCAPED_SGL_QUOTE)
+		result[q->res_i++] = '\'';
+	else if (str[q->str_i] == '\\' && !q->in_sgl_quote && str[q->str_i + 1]
+		&& (str[q->str_i + 1] == '"' || str[q->str_i + 1] == '\''))
+		result[q->res_i++] = str[++q->str_i];
+	else
+		result[q->res_i++] = str[q->str_i];
+}
+
+/*
+	remove quotes from command argvs
+	since quotes were preserved on expansion and tokenizing,
+	they need to be stripped before making the argvs
+
+	simple quote removal for the non-PRO case
+	on PRO, also handles cases for preserving some escaped 
+*/
 char	*remove_quotes(char *str, int len)
 {
-	char	*result;
-	int		str_i;
-	int		res_i;
-	bool	in_sgl_quote;
-	bool	in_dbl_quote;
+	char			*result;
+	t_remove_quotes	q;
 
-	if (init_remove_quotes(str, &result, len) == false)
+	if (init_remove_quotes(str, &result, &q, len) == false)
 		return (result);
-	in_sgl_quote = false;
-	in_dbl_quote = false;
-	res_i = 0;
-	str_i = -1;
-	while (str[++str_i])
+	while (str[++q.str_i])
 	{
-		if (PRO && str[str_i] == ESCAPED_SGL_QUOTE)
-			result[res_i++] = '\'';
-		else if (str[str_i] == '\'' && !in_dbl_quote && !is_escaped(str, str_i))
-			in_sgl_quote = !in_sgl_quote;
-		else if (str[str_i] == '"' && !in_sgl_quote && !is_escaped(str, str_i))
-			in_dbl_quote = !in_dbl_quote;
-		else if (PRO && str[str_i] == '\\' && !in_sgl_quote && str[str_i + 1]
-			&& (str[str_i + 1] == '"' || str[str_i + 1] == '\''))
-			result[res_i++] = str[++str_i];
-		else
-			result[res_i++] = str[str_i];
+		if (str[q.str_i] == '\'' && !q.in_dbl_quote
+			&& !escape(str, q.str_i))
+			q.in_sgl_quote = !q.in_sgl_quote;
+		else if (str[q.str_i] == '"' && !q.in_sgl_quote
+			&& !escape(str, q.str_i))
+			q.in_dbl_quote = !q.in_dbl_quote;
+		else if (!PRO)
+			result[q.res_i++] = str[q.str_i];
+		else if (PRO)
+			remove_quotes_pro(str, result, &q);
+
 	}
 	return (result);
 }

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:38:21 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,22 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 	char		*oldpwd;
 
 	if (cmd->argc > 2)
-		return (msg_err(E_CD_TOO_MANY), EXIT_FAILURE);
+		return (r_msg_err(E_CD_TOO_MANY, EXIT_FAILURE));
 	oldpwd = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
 	if (set_dir_or_error(sh, &cmd->argv[1]) == EXIT_FAILURE)
-		return (ret_free_str(&oldpwd, EXIT_FAILURE));
+		return (r_free_str(&oldpwd, EXIT_FAILURE));
 	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)
-		return (ret_msg_free_str(E_CD_CWD_NULL, &oldpwd, EXIT_SUCCESS));
+		return (r_msg_free_str(E_CD_CWD_NULL, &oldpwd, EXIT_SUCCESS));
 	pwd_idx = search_name("PWD", sh->envp);
 	if ((pwd_idx == -1 && add_env_var(&sh->envp, "PWD", cwd) != EXIT_SUCCESS)
 		|| (pwd_idx != -1 && change_env_val_idx("PWD", cwd, pwd_idx, &sh->envp)
 			!= EXIT_SUCCESS))
-		return (ret_free_two_str(&cwd, &oldpwd, EXIT_FAILURE));
+		return (r_free_two_str(&cwd, &oldpwd, EXIT_FAILURE));
 	safe_free_str(&cwd);
 	pwd_idx = search_name("PWD", sh->envp);
 	if (pwd_idx == -1 || !sh->envp[pwd_idx])
-		return (ret_msg_free_str(E_CD_ALLOC, &oldpwd, EXIT_FAILURE));
+		return (r_msg_free_str(E_CD_ALLOC, &oldpwd, EXIT_FAILURE));
 	change_env_val("OLDPWD", oldpwd, &sh->envp);
 	safe_free_str(&oldpwd);
 	return (EXIT_SUCCESS);
@@ -64,7 +64,7 @@ int	ft_env(t_msh *sh, int argc)
 	int	i;
 
 	if (argc > 1)
-		return (ret_exit_msg(sh, 127, "env: arguments not supported"));
+		return (r_set_exit_msg(sh, 127, E_ENV_ARGS_NOT_SUPPORTED));
 	i = 0;
 	while (sh->envp[i])
 	{
