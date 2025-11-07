@@ -1,26 +1,42 @@
 NAME = minishell
 
-#TODO: LAST remove -g before submitting
 # compiler settings
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -fsanitize=address,undefined,leak -g3 -fno-omit-frame-pointer
-#TODO: remove temporary -Wuninitialized flag from debug flags... using just to check things now
-# CFLAGS_DEBUG = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer
-CFLAGS_DEBUG = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer -Wuninitialized
-CFLAGS_OPTIMAL = -Wall -Werror -Wextra -O3 -flto
+CFLAGS = -Wall -Werror -Wextra
+CFLAGS += -g3 -O0
 LDFLAGS = -lreadline -Llibft -lft
 
 # PRO mode: enable extra features (positional params, etc)
 ifdef PRO
 CFLAGS += -DPRO=$(PRO)
-CFLAGS_DEBUG += -DPRO=$(PRO)
 endif
 
 # VALIDATE mode: control operator validation (&&, ||, &, ;)
 ifdef VALIDATE
 CFLAGS += -DVALIDATE=$(VALIDATE)
-CFLAGS_DEBUG += -DVALIDATE=$(VALIDATE)
 endif
+
+########################################################################
+# TODO: remove below for evaluation                                    #
+CFLAGS += -fsanitize=address,undefined -fno-omit-frame-pointer
+LDFLAGS += -fsanitize=address,undefined
+# TODO: remove above for evaluation                                    #
+########################################################################
+
+CFLAGS_DEBUG = $(CFLAGS)
+CFLAGS_DEBUG += -fsanitize=address,undefined -fno-omit-frame-pointer
+########################################################################
+# CFLAGS_DEBUG CHOICE                                                  #
+CFLAGS_DEBUG += -Og
+# OR (substitutes: for checking uninitialized, it needs -O1)           #
+# CFLAGS_DEBUG += -O1 -Wuninitialized                                  #
+########################################################################
+LDFLAGS_DEBUG = $(LDFLAGS)
+LDFLAGS_DEBUG += -fsanitize=address,undefined
+
+CFLAGS_OPTIMAL = -Wall -Werror -Wextra -O3 -flto
+LDFLAGS_OPTIMAL = $(LDFLAGS)
+LDFLAGS_OPTIMAL += -flto
 
 # LIBFT settings
 LIBFTDIR = libft
@@ -74,9 +90,6 @@ SRCS = 	signals/signals.c \
 	parser/is_escaped.c \
 	utils/envp_assistance_array.c \
 	utils/detect_unsupported_operator.c \
-	utils/ft_strndup.c \
-	utils/ft_strcmp.c \
-	utils/ft_realloc.c \
 	utils/has_quotes.c \
 	utils/parser_is_operator.c \
 	utils/parser_line.c \
@@ -100,7 +113,6 @@ SRCS = 	signals/signals.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
 	utils/utils_token.c \
-	debug/utils_debug.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
@@ -118,7 +130,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 
 # libft maker
 $(LIBFT):
-	@$(MAKE) -C $(LIBFTDIR)
+	@$(MAKE) -C $(LIBFTDIR) CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"
 
 clean:
 	$(RM) $(OBJS)
@@ -134,11 +146,11 @@ re: fclean all
 bonus: all
 
 debug: fclean
-	$(MAKE) CFLAGS="$(CFLAGS_DEBUG)" all
+	$(MAKE) CFLAGS="$(CFLAGS_DEBUG)" LDFLAGS="$(LDFLAGS_DEBUG)" all
 	@echo "debug build made"
 
 optimal: fclean
-	$(MAKE) CFLAGS="$(CFLAGS_OPTIMAL)" all
+	$(MAKE) CFLAGS="$(CFLAGS_OPTIMAL)" LDFLAGS="$(LDFLAGS_OPTIMAL)" all
 	@echo "optimal build made"
 
 valgrind: debug

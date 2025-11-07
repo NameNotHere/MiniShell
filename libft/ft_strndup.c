@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   built_ins.c                                        :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,8 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include <sys/stat.h>
+/*
+** CUSTOM FUNCTION FOR MINISHELL
+** Added to libft as part of custom minishell project build.
+**
+** NOTE: Similar to strndup() but with size_t replaced by int parameter.
+**   - Duplicates up to 'size' characters from 'src'
+**   - Stops at null terminator if src is shorter than size
+**   - Returns newly allocated string, NULL on allocation failure
+*/
+
+#include <stdlib.h>
+#include <string.h>
 
 char	*ft_strndup(const char *src, int size)
 {

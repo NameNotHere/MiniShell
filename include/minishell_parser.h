@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/07 01:56:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/07 17:46:39 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,6 @@ Usage: make VALIDATE=0
 # ifndef VALIDATE
 #  define VALIDATE 1
 # endif
-
-// TODO: LAST remove debug include before eval
-# include "minishell_debug.h"
 
 # define PATH_DEFAULT "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin\
 :/sbin:/bin"

@@ -10,7 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+/*
+** CUSTOM FUNCTION FOR MINISHELL
+** Added to libft as part of custom minishell project build.
+**
+** NOTE: Differs from standard strcmp() - handles NULL pointers:
+**   - Returns pointer difference (s1 - s2) if either pointer is NULL
+**   - Returns standard character comparison result otherwise
+**   This allows NULL pointer comparisons without segfault.
+*/
+
+#include <stdlib.h>
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
