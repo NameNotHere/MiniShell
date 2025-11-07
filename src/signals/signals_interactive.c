@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 17:15:30 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/31 23:24:51 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/07 11:10:17 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,13 @@ static void	interactive_sig_int(void)
 /*
 	helper for handler_interactive_sig, on quit sig (control-\)
  	makes readline to redisplay previous input but on a new line
+
+	write call uses ANSI code to clear current line of the terminal output and
+	to move the cursor to the beginning of that line.
  */
 static void	interactive_sig_quit(void)
 {
-	write(STDOUT_FILENO, "\r\033[2K", 5);
+	write(STDOUT_FILENO, CLEAR_LINE_ANSI_CODE, sizeof(CLEAR_LINE_ANSI_CODE));
 	rl_on_new_line();
 	rl_redisplay();
 }

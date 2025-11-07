@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 00:12:45 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/07 11:10:17 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,26 @@ static int	initialize_run_command(t_msh *sh, char **argv)
 	return (sh->exit_code);
 }
 
+/*
+	Sets default echo to control chars as true, so control+c (SIGINT)
+	by default prints ^C. Minishell is handling SIGQUIT (triggered by control+\)
+	in a different way, to avoid printing anything (or doing anything): just
+	prints nothing always.
+
+	Control char echoes (like ^C for SIGINT) can be turned off with:
+		stty -echoctl
+	back on with:
+		stty echoctl
+
+	NOTE: forcing rl_on_new_line and rl_redisplay at the starts prevents
+	a bug with pasting text on first line (prompt gets messed up because
+	readline did not initialize properly before that). The issue is with
+	handling "bracketed paste", and the alternative would be to set it off
+	explicitly: rl_variable_bind("enable-bracketed-paste", "off");
+	That function also works and the intention is more clear, but it is not
+	an allowed function (at least not listed in the project's subject file).
+	So the on_new_line + redisplay calls are a workaround, but does the trick.
+*/
 static void	initialize_run_interactive(void)
 {
 	struct termios	term;
@@ -60,7 +80,10 @@ static void	initialize_run_interactive(void)
 	{
 		term.c_lflag |= ECHOCTL;
 		tcsetattr(STDIN_FILENO, TCSANOW, &term);
+		rl_variable_bind("enable-bracketed-paste", "off");
 	}
+	rl_on_new_line();
+	rl_redisplay();
 }
 
 int	initialize_minishell(t_msh *sh, int argc, char **argv, char **envp)

@@ -4,9 +4,9 @@ NAME = minishell
 # compiler settings
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -fsanitize=address,undefined,leak -g3 -fno-omit-frame-pointer
-#TODO: remove temporary -Wmaybe-uninitialized flag from debug flags... using just to check things now
+#TODO: remove temporary -Wuninitialized flag from debug flags... using just to check things now
 # CFLAGS_DEBUG = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer
-CFLAGS_DEBUG = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer -Wmaybe-uninitialized
+CFLAGS_DEBUG = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer -Wuninitialized
 CFLAGS_OPTIMAL = -Wall -Werror -Wextra -O3 -flto
 LDFLAGS = -lreadline -Llibft -lft
 

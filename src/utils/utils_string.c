@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/04 14:13:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/07 11:10:17 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 		g_sig = 0;
 		if (!set_interactive_sig())
 		{
-		msg_err(E_SIGNAL_INTERACTIVE);
+			msg_err(E_SIGNAL_INTERACTIVE);
 			sh->exit_code = EXIT_FAILURE;
 			return (NULL);
 		}
