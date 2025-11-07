@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/06 19:46:14 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/07 01:56:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,13 @@
 /*
 	Check if character at position is part of a token.
 	Returns true if character exists, is not whitespace, and is not an operator.
+	EXP_MARK (expansion marker) is treated as a token character.
 	Used to identify token boundaries during lexical analysis.
 */
 static bool	is_token_char(char *str, int pos)
 {
+	if (str[pos] == EXP_MARK)
+		return (true);
 	return (str[pos] && !ft_isspace(str[pos]) && is_operator(str, pos) == 0);
 }
 

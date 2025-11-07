@@ -16,6 +16,12 @@ CFLAGS += -DPRO=$(PRO)
 CFLAGS_DEBUG += -DPRO=$(PRO)
 endif
 
+# VALIDATE mode: control operator validation (&&, ||, &, ;)
+ifdef VALIDATE
+CFLAGS += -DVALIDATE=$(VALIDATE)
+CFLAGS_DEBUG += -DVALIDATE=$(VALIDATE)
+endif
+
 # LIBFT settings
 LIBFTDIR = libft
 LIBFT = $(LIBFTDIR)/libft.a
@@ -67,7 +73,7 @@ SRCS = 	signals/signals.c \
 	parser/tokenize.c \
 	parser/is_escaped.c \
 	utils/envp_assistance_array.c \
-	utils/detect_logical_op.c \
+	utils/detect_unsupported_operator.c \
 	utils/ft_strndup.c \
 	utils/ft_strcmp.c \
 	utils/ft_realloc.c \

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/06 19:46:14 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/07 01:56:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,24 @@ able to compile a version handing this or that feature.
 #  define PRO 1
 # endif
 
+/*
+VALIDATE mode: controls operator validation (defaults to 1)
+
+VALIDATE=1 (default): validates operators, throws syntax errors for:
+- Logical operators: &&, ||, &
+- Command separator: ;
+These are not supported by this minishell.
+
+VALIDATE=0: disables operator validation, treats all operators as literal text.
+Creates an ultra-minimal shell that accepts any input without syntax errors
+for unsupported operators.
+
+Usage: make VALIDATE=0
+*/
+# ifndef VALIDATE
+#  define VALIDATE 1
+# endif
+
 // TODO: LAST remove debug include before eval
 # include "minishell_debug.h"
 
@@ -82,6 +100,9 @@ typedef enum e_token_ty
 	TOKEN_AND,
 	TOKEN_OR,
 	TOKEN_AMPERSAND,
+	TOKEN_SEMICOLON,
+	TOKEN_LPAREN,
+	TOKEN_RPAREN,
 	TOKEN_LAST
 }	t_token_ty;
 
@@ -367,11 +388,10 @@ int			unclosed_token(const char *str, char token);
 
 // parser/parser_validation.c
 int			validate_pipe_syntax(t_token *tokens, int start, int end);
-int			validate_semicolon_syntax(t_token *tokens);
 
-// utils/detect_logical_op.c
-int			detect_logical_op_token(t_token *tokens);
-int			process_logical_op_syntax_error(t_msh *sh);
+// utils/detect_unsupported_operator.c
+int			detect_unsupported_operator(t_token *tokens);
+int			process_unsupported_operator_error(t_msh *sh);
 
 // utils/utils_error.c
 void		msg_err(const char *error);

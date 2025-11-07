@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:47:30 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 03:38:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/07 01:56:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,22 +50,3 @@ int	validate_pipe_syntax(t_token *tokens, int start, int end)
 	return (0);
 }
 
-/*
-	validate_semicolon_syntax: checks if any semicolon tokens are present
-	Returns:
-		- 0 if no semicolons found
-		- 2 if semicolon found (syntax error for minishell)
-*/
-int	validate_semicolon_syntax(t_token *tokens)
-{
-	int	i;
-
-	i = 0;
-	while (tokens[i].word)
-	{
-		if (ft_strncmp(tokens[i].word, ";", 1) == 0)
-			return (2);
-		i++;
-	}
-	return (0);
-}

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 10:56:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/07 01:56:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ access parent directories: No such file or directory"
 # define E_SYNTAX_ERROR_AND "syntax error near unexpected token `&&'"
 # define E_SYNTAX_ERROR_OR "syntax error near unexpected token `||'"
 # define E_SYNTAX_ERROR_PIPE "syntax error near unexpected token `|'"
+# define E_SYNTAX_ERROR_LPAREN "syntax error near unexpected token `('"
+# define E_SYNTAX_ERROR_RPAREN "syntax error near unexpected token `)'"
 # define E_AST_ROOT_SIG "exec_ast_root: failed to set execution signal handling"
 # define E_EXEC_AST_NULL "exec_ast: ast root node is NULL"
 # define E_FAILED_ALLOC_AST "failed to allocate AST nodes"
