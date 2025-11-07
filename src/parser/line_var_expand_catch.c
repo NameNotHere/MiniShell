@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:12:44 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 19:46:14 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/07 02:57:42 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,35 @@ bool	is_in_heredoc_delimiter(char *str, int pos)
 	return (false);
 }
 
+/*
+	Checks if tilde should be expanded at given position.
+	Tilde expansion rules (matching bash behavior):
+	- Must not be inside single or double quotes
+	- Must be at start of word (after space/tab)
+	  Examples: echo ~, cd ~/test
+	- If followed by a character, must be / or whitespace or operator
+	  This means: ~ and ~/... expand, but ~user does NOT (not implemented)
+	- End of string is valid: echo ~ (expands)
+
+	Note: Bash also expands after : and = in assignment context (VAR=~),
+	but minishell doesn't handle variable assignments so we skip those.
+
+	Note: Caller must check PRO mode before calling.
+*/
+static bool	must_expand_tilde(t_var_expand *ve, char *str, int pos)
+{
+	if (ve->sgl_quote || ve->dbl_quote)
+		return (false);
+	if (pos > 0 && str[pos - 1] != ' ' && str[pos - 1] != '\t')
+		return (false);
+	if (str[pos + 1] && str[pos + 1] != '/' && str[pos + 1] != ' '
+		&& str[pos + 1] != '\t' && str[pos + 1] != ':'
+		&& str[pos + 1] != '|' && str[pos + 1] != '>' && str[pos + 1] != '<'
+		&& str[pos + 1] != '&' && str[pos + 1] != ';')
+		return (false);
+	return (true);
+}
+
 int	get_var_count(char *str, t_var_expand *ve)
 {
 	int		var_count;
@@ -63,6 +92,8 @@ int	get_var_count(char *str, t_var_expand *ve)
 		if (handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, i))
 			;
 		else if ('$' == str[i] && must_expand(ve, str, i))
+			var_count++;
+		else if (PRO && '~' == str[i] && must_expand_tilde(ve, str, i))
 			var_count++;
 		i++;
 	}
@@ -144,6 +175,27 @@ int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 	return (EXIT_SUCCESS);
 }
 
+/*
+	Captures tilde expansion by storing "~" as name and HOME value.
+	Adds to var_names and var_values arrays like regular variables.
+*/
+static int	catch_tilde(t_msh *sh, t_var_expand *ve)
+{
+	ve->var_names[ve->var_i] = ft_strdup("~");
+	ve->var_values[ve->var_i] = get_env_value(sh, "HOME",
+			search_name("HOME", sh->envp));
+	if (!ve->var_names[ve->var_i] || !ve->var_values[ve->var_i])
+	{
+		msg_err("tilde expansion failed");
+		sh->exit_code = EXIT_FAILURE;
+		if (errno)
+			sh->exit_code = errno;
+		return (sh->exit_code);
+	}
+	ve->var_i++;
+	return (EXIT_SUCCESS);
+}
+
 int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *str)
 {
 	int	i;
@@ -155,6 +207,11 @@ int	catch_all_vars(t_msh *sh, t_var_expand *ve, char *str)
 		{
 			ve->var_lookup = true;
 			i++;
+		}
+		else if (PRO && str[i] == '~' && must_expand_tilde(ve, str, i))
+		{
+			if (catch_tilde(sh, ve) != EXIT_SUCCESS)
+				return (sh->exit_code);
 		}
 		if (lookup_var(sh, ve, str[i], str[i + 1]) != EXIT_SUCCESS)
 			return (sh->exit_code);
