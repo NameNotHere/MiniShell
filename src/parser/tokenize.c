@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/07 01:56:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,30 @@ t_token	make_token(char *str)
 
 	output.word = str;
 	output.ty = TOKEN_WORD;
-	if (ft_strncmp(str, "&&", 2) == 0)
+	if (VALIDATE && ft_strncmp(str, "&&", 2) == 0)
 		output.ty = TOKEN_AND;
-	else if (ft_strncmp(str, "||", 2) == 0)
+	else if (VALIDATE && ft_strncmp(str, "||", 2) == 0)
 		output.ty = TOKEN_OR;
-	else if (ft_strncmp(str, "&", 1) == 0)
+	else if (VALIDATE && str[0] == '&')
 		output.ty = TOKEN_AMPERSAND;
-	else if (str[0] == '-')
-		output.ty = TOKEN_DASH_PARAM;
+	else if (VALIDATE && str[0] == ';')
+		output.ty = TOKEN_SEMICOLON;
+	else if (VALIDATE && str[0] == '(')
+		output.ty = TOKEN_LPAREN;
+	else if (VALIDATE && str[0] == ')')
+		output.ty = TOKEN_RPAREN;
+	else if (str[0] == '|')
+		output.ty = TOKEN_PIPE;
 	else if (ft_strncmp(str, "<<", 2) == 0)
 		output.ty = TOKEN_HEREDOC;
 	else if (ft_strncmp(str, ">>", 2) == 0)
 		output.ty = TOKEN_APPEND;
-	else if (ft_strncmp(str, "<", 1) == 0)
+	else if (str[0] == '<')
 		output.ty = TOKEN_INPUT;
-	else if (ft_strncmp(str, ">", 1) == 0)
+	else if (str[0] == '>')
 		output.ty = TOKEN_OUTPUT;
-	else if (str[0] == '|')
-		output.ty = TOKEN_PIPE;
+	else if (str[0] == '-')
+		output.ty = TOKEN_DASH_PARAM;
 	return (output);
 }
 

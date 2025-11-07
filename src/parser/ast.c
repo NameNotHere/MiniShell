@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/07 01:56:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,11 @@ int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 
 	current_node = ast;
 	i = start;
-	if (validate_semicolon_syntax(sh->tokens) != 0)
-		return (r_set_exit_msg(sh, 2, E_SEMICOLON));
-	if (detect_logical_op_token(sh->tokens))
-		return (process_logical_op_syntax_error(sh));
+	if (VALIDATE && detect_unsupported_operator(sh->tokens))
+		return (process_unsupported_operator_error(sh));
 	if (has_pipe(sh->tokens, start, end))
 	{
-	if (validate_pipe_syntax(sh->tokens, start, end) != 0)
+		if (validate_pipe_syntax(sh->tokens, start, end) != 0)
 			return (r_set_exit_msg(sh, 2, E_SYNTAX_ERROR_PIPE));
 		scan_pipe(sh, current_node, sh->tokens, &i);
 	}
