@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ bool	init_remove_quotes(char *str, char **result, t_remove_quotes *rq, int len)
 	}
 	if (x_calloc_char(result, len + 1) != EXIT_SUCCESS)
 	{
-		ms_perror(E_INIT_REMOVE_QUOTES);
+		msg_perr(E_INIT_REMOVE_QUOTES);
 		return (false);
 	}
 	ft_bzero(rq, sizeof(t_remove_quotes));
@@ -113,7 +113,7 @@ char	**token_words_to_argv(t_token *tokens, int start, int end, int argc)
 		if (tokens[i].word && !is_within_redir_tokens(tokens, i++))
 			argc++;
 	if (x_calloc_charptr(&argv, argc + 1) != EXIT_SUCCESS)
-		return (NULL);
+		return (msg_perr("token words to argv: allocation"), NULL);
 	i = 0;
 	token_i = start;
 	while (token_i < end && i < argc)

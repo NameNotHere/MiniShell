@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 01:27:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:31:21 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	failed_open_set_error(t_msh *sh, char *filename)
 {
-	ms_perror(filename);
+	msg_perr(filename);
 	sh->exit_code = EXIT_FAILURE;
 }
 

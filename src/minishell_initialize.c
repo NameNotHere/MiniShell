@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 00:12:45 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/07 11:10:17 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	initialize_run_script(t_msh *sh, char **argv)
 	if (sh->script_fd < 0)
 	{
 		msg_err(argv[1]);
-		return (r_set_exit_perr(sh, ""));
+		return (r_set_exit_perr(sh, E_OPEN_RUN_SCRIPT));
 	}
 	return (sh->exit_code);
 }

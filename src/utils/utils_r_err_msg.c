@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 09:57:30 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:35:11 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,29 @@
 	prints error message, frees a string, returns a value.
 	the three parameters are passed in this order.
 */
-int	r_msg_free_str(const char *error, char **to_free, int ret)
+int	r_msg_err_free_str(const char *error, char **to_free, int ret)
 {
 	msg_err(error);
 	safe_free_str(to_free);
 	return (ret);
+}
+
+/*
+	prints error message,
+	returns NULL
+*/
+void	*msg_err_null(const char *error)
+{
+	msg_err(error);
+	return (NULL);
+}
+
+/*
+	prints error message with errno,
+	returns NULL
+*/
+void	*msg_perr_null(const char *error)
+{
+	msg_perr(error);
+	return (NULL);
 }

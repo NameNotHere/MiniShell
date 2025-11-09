@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 13:47:20 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:32:00 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,17 +27,30 @@ static void	print_chdir_error(char	*target_dir)
 		msg_err_2(E_CD_NO_SUCH, target_dir);
 }
 
-int	set_dir_or_error(t_msh *sh, char **directory)
+static void	get_home_value(t_msh *sh, char **target_dir)
+{
+	*target_dir = get_env_value(sh, "HOME", search_name("HOME", sh->envp));
+	if (!*target_dir || *target_dir[0] == '\0')
+	{
+		safe_free_str(target_dir);
+		*target_dir = ft_strdup(getenv("HOME"));
+	}
+	if (!*target_dir)
+		*target_dir = ft_strdup("");
+}
+
+int	change_dir_or_error(t_msh *sh, char **directory)
 {
 	char	*target_dir;
 	int		res;
 
+	target_dir = NULL;
 	res = EXIT_SUCCESS;
 	if (ft_strcmp(*directory, "-") == 0)
 		target_dir = get_env_value(sh, "OLDPWD",
 				search_name("OLDPWD", sh->envp));
 	else if (!*directory)
-		target_dir = get_env_value(sh, "HOME", search_name("HOME", sh->envp));
+		get_home_value(sh, &target_dir);
 	else if ((*directory)[0] == '\0')
 		return (EXIT_SUCCESS);
 	else
@@ -53,7 +66,10 @@ int	set_dir_or_error(t_msh *sh, char **directory)
 	return (res);
 }
 
-void	ms_perror(const char *error)
+/*
+	Prints minishell error message with errno information.
+*/
+void	msg_perr(const char *error)
 {
 	char		buf[4096];
 	size_t		len;

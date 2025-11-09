@@ -6,10 +6,11 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 03:38:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#define _GNU_SOURCE
 #include "minishell.h"
 
 static void	close_all_hdocs(t_redir *redir, int *write_fd)
@@ -26,45 +27,50 @@ static void	close_all_hdocs(t_redir *redir, int *write_fd)
 	}
 }
 
-void	hdoc_redir(t_msh *sh, t_redir *redir, int prev_hdoc_fd)
+void	hdoc_redir(t_msh *sh, t_redir *redir)
 {
 	char	*hdoc_str;
-	int		write_fd;
+	int		tmp_fd;
+	int		dup_fd;
 
 	if (!redir)
 		return ;
 	if (redir && redir->ty != REDIR_HEREDOC)
-		return (hdoc_redir(sh, redir->next, prev_hdoc_fd));
-	safe_close_fd(&prev_hdoc_fd);
-	write_fd = open("/tmp/tmp_hdoc", O_WRONLY | O_CREAT | O_TRUNC, 0600);
-	if (write_fd == -1)
-		return (hdoc_err(sh, NULL, NULL, NULL), ms_perror(E_OPEN_HEREDOC));
-	redir->fd = open("/tmp/tmp_hdoc", O_RDONLY);
-	if (redir->fd == -1)
-		return (hdoc_err(sh, &write_fd, NULL, NULL), ms_perror(E_OPEN_HEREDOC));
-	unlink("/tmp/tmp_hdoc");
+		return (hdoc_redir(sh, redir->next));
+	tmp_fd = open("/tmp", O_TMPFILE | O_RDWR, 0600);
+	if (tmp_fd == -1)
+		return (hdoc_err(sh, NULL, NULL, NULL), msg_perr(E_OPEN_HEREDOC));
 	hdoc_str = hdoc_loop(sh, redir);
 	if (hdoc_str == NULL && g_sig == SIGINT)
-		return (close_all_hdocs(redir->next, &write_fd));
+		return (close_all_hdocs(redir->next, &tmp_fd));
 	if (hdoc_str == NULL && set_empty_string(&hdoc_str) == false)
-		return (hdoc_err(sh, &write_fd, &redir->fd, hdoc_str), ms_perror(E_ALLOC));
-	if ((write(write_fd, hdoc_str, ft_strlen(hdoc_str)) == -1)
-		|| (ft_strlen(hdoc_str) > 0 && write(write_fd, "\n", 1) == -1))
-		return (hdoc_err(sh, &write_fd, &redir->fd, hdoc_str), ms_perror(E_WRITE));
-	safe_close_fd(&write_fd);
+		return (hdoc_err(sh, &tmp_fd, NULL, hdoc_str), msg_perr(E_ALLOC));
+	if ((write(tmp_fd, hdoc_str, ft_strlen(hdoc_str)) == -1)
+		|| (ft_strlen(hdoc_str) > 0 && write(tmp_fd, "\n", 1) == -1))
+		return (hdoc_err(sh, &tmp_fd, NULL, hdoc_str), msg_perr(E_WRITE));
+	if (lseek(tmp_fd, 0, SEEK_SET) == -1)
+		return (hdoc_err(sh, &tmp_fd, NULL, hdoc_str), msg_perr(E_WRITE));
+	dup_fd = fcntl(tmp_fd, F_DUPFD, 10);
+	if (dup_fd == -1)
+		return (hdoc_err(sh, &tmp_fd, NULL, hdoc_str), msg_perr(E_ALLOC));
+	safe_close_fd(&tmp_fd);
+	redir->fd = dup_fd;
 	safe_free_str(&hdoc_str);
-	hdoc_redir(sh, redir->next, redir->fd);
+	hdoc_redir(sh, redir->next);
 }
 
 int	heredoc_cmd_node(t_msh *sh, t_cmd *cmd)
 {
-	hdoc_redir(sh, cmd->redir, 0);
+	hdoc_redir(sh, cmd->redir);
 	return (sh->exit_code);
 }
 
 int	heredoc_pipe_node(t_msh *sh, t_pipe *pipe_node)
 {
-	sh->exit_code = heredoc_cmd_node(sh, &pipe_node->left->cmd);
+	if (pipe_node->left->nty == NODE_CMD)
+		sh->exit_code = heredoc_cmd_node(sh, &pipe_node->left->cmd);
+	else if (pipe_node->left->nty == NODE_PIPE)
+		sh->exit_code = heredoc_pipe_node(sh, &pipe_node->left->pipe);
 	if (sh->exit_code)
 		return (sh->exit_code);
 	sh->exit_code = heredoc_ast_node(sh, pipe_node->right);

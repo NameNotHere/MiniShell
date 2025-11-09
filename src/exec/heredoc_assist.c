@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 00:00:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/04 16:59:36 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 	hdoc_string = NULL;
 	sh->exit_code = EXIT_SUCCESS;
 	if (!set_heredoc_sig())
-		return (msg_err(E_HEREDOC_SIG), NULL);
+		return (msg_err_null(E_HEREDOC_SIG));
 	while (true)
 	{
 		hdoc_line = hdoc_handle_input(sh, redir);

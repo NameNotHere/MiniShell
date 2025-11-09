@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:13:32 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/05 17:10:56 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	invalid_redir(t_msh *sh, int i)
 	return (EXIT_SUCCESS);
 }
 
-// TODO: check if we need exit_code + err or just one (or 0)
 void	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
 {
 	int				i;
@@ -61,7 +60,7 @@ void	add_redir(t_ast *ast, t_token_ty token_type, char *word)
 	t_redir	*new_redir;
 
 	if (x_calloc_redir(&new_redir, 1) != EXIT_SUCCESS)
-		return (ms_perror(E_REDIR_ALLOCATION));
+		return (msg_perr(E_ALLOC_REDIR));
 	new_redir->quoted = has_quotes(word);
 	new_redir->string = remove_quotes(word, ft_strlen(word));
 	if (!new_redir->string)

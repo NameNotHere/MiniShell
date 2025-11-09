@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:45:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:31:49 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	try_dup2_stdout(t_msh *sh, int *fd_out)
 		return ;
 	if (dup2(*fd_out, STDOUT_FILENO) == -1)
 	{
-		ms_perror(E_DUP2);
+		msg_perr(E_DUP2);
 		safe_close_fd(fd_out);
 		exit_error_free(sh, E_REDIR_OUTPUT_FAILED);
 	}
@@ -30,7 +30,7 @@ void	try_dup2_stdin(t_msh *sh, int *fd_in)
 		return ;
 	if (dup2(*fd_in, STDIN_FILENO) == -1)
 	{
-		ms_perror(E_DUP2);
+		msg_perr(E_DUP2);
 		safe_close_fd(fd_in);
 		exit_error_free(sh, E_REDIR_INPUT_FAILED);
 	}

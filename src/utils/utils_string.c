@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/07 11:10:17 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	add_line_to_string(char **string, char **line)
 		updated_string = ft_strdup(*line);
 	if (updated_string == NULL)
 	{
-		ms_perror(E_ADD_LINE_STRING);
+		msg_perr(E_ADD_LINE_STRING);
 		result = EXIT_FAILURE;
 	}
 	safe_free_str(string);

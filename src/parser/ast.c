@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/07 01:56:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i)
 }
 
 /*
-TODO: REMOVE PRINTF DEBUGS (ADD ERROR CATCH)
 TODO: ADD ERROR CATCHING
 */
 void	parse_pipe(t_msh *sh, t_ast *ast, int start, int end)
@@ -86,10 +85,7 @@ void	parse_pipe(t_msh *sh, t_ast *ast, int start, int end)
 	ast->pipe.left = make_ast_node(NODE_CMD);
 	ast->pipe.right = make_ast_node(NODE_UNKNOWN);
 	if (!ast->pipe.left || !ast->pipe.right)
-	{
-		msg_err(E_FAILED_ALLOC_AST);
 		return ;
-	}
 	parse_cmd(sh, ast->pipe.left, start, end);
 	return ;
 }

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/07 17:46:39 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -396,15 +396,16 @@ void		msg_err_2(const char *str1, const char *str2);
 void		msg_err_3(const char *str1, const char *str2, const char *str3);
 
 // utils/utils_r_err_msg.c
-int			r_msg_free_str(const char *error, char **to_free, int ret);
+int			r_msg_err_free_str(const char *error, char **to_free, int ret);
+void		*msg_err_null(const char *error);
 
 // utils/utils_r_plus.c
 int			r_free_str(char **to_free, int ret);
 int			r_free_two_str(char **str_a, char **str_b, int ret);
 
 // utils/utils_error2.c
-int			set_dir_or_error(t_msh *sh, char **directory);
-void		ms_perror(const char *error);
+int			change_dir_or_error(t_msh *sh, char **directory);
+void		msg_perr(const char *error);
 
 // utils/has_quotes.c
 bool		has_quotes(const char *str);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:58:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	r_set_exit_msg(t_msh *sh, int exit_code, const char *error_msg)
 	return (exit_code);
 }
 
+
+
 /*
 	Sets exit code to EXIT_FAILURE and prints system error message.
 	Error code is always EXIT_FAILURE, not errno.
@@ -40,13 +42,14 @@ int	r_set_exit_msg(t_msh *sh, int exit_code, const char *error_msg)
 int	r_set_exit_perr(t_msh *sh, const char *error_msg)
 {
 	sh->exit_code = EXIT_FAILURE;
-	ms_perror(error_msg);
+	msg_perr(error_msg);
 	return (EXIT_FAILURE);
 }
 
 /*
 	Sets the shell exit code and returns a different value.
-	Useful for setting exit code while returning a different return value (e.g., enum).
+	Useful for setting exit code while returning a different return value
+	(e.g., enum).
 */
 int	r_set_exit_ret(t_msh *sh, int exit_code, int ret)
 {
@@ -66,9 +69,9 @@ int	r_msg_err(const char *error_msg, int ret)
 /*
 	Prints system error message and returns a value.
 */
-int	r_msg_perror(const char *error_msg, int ret)
+int	r_msg_perr(const char *error_msg, int ret)
 {
-	ms_perror(error_msg);
+	msg_perr(error_msg);
 	return (ret);
 }
 

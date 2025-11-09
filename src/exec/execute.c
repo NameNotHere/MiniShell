@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/04 15:38:25 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static int	wait_children(t_msh *sh)
 			if (errno == EINTR)
 				continue ;
 			if (errno != ECHILD)
-				ms_perror(E_WAIT);
+				msg_perr(E_WAIT);
 			break ;
 		}
 		process_child_status(sh, child_pid, child_status);
