@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 10:56:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ access parent directories: No such file or directory"
 # define E_EXIT_NUMERIC ": numeric argument required"
 # define E_EXIT_TOO_MANY "exit: too many arguments"
 # define E_IS_DIRECTORY "is a directory: "
-# define E_PERMISSION_DENIED "permission denied: "
-# define E_PERMISSION_DENIED_EMPTY "permission denied: (empty command)"
+# define E_PERM_DENIED "permission denied: "
+# define E_PERM_DENIED_EMPTY "permission denied: (empty command)"
 # define E_PWD_NOT_FOUND "PWD not found"
 
 /* allocation and initialization error messages */
@@ -67,12 +67,12 @@ access parent directories: No such file or directory"
 /* AST and parsing error messages */
 # define E_AST_BUILD_FAILED "parse line: AST build failed"
 # define E_AST_ROOT_NULL "exec AST root: on execution, AST node is NULL"
-# define E_SYNTAX_ERROR_AMPERSAND "syntax error near unexpected token `&'"
-# define E_SYNTAX_ERROR_AND "syntax error near unexpected token `&&'"
-# define E_SYNTAX_ERROR_OR "syntax error near unexpected token `||'"
-# define E_SYNTAX_ERROR_PIPE "syntax error near unexpected token `|'"
-# define E_SYNTAX_ERROR_LPAREN "syntax error near unexpected token `('"
-# define E_SYNTAX_ERROR_RPAREN "syntax error near unexpected token `)'"
+# define E_SYNTAX_AMPERSAND "syntax error near unexpected token `&'"
+# define E_SYNTAX_AND "syntax error near unexpected token `&&'"
+# define E_SYNTAX_OR "syntax error near unexpected token `||'"
+# define E_SYNTAX_PIPE "syntax error near unexpected token `|'"
+# define E_SYNTAX_LPAREN "syntax error near unexpected token `('"
+# define E_SYNTAX_RPAREN "syntax error near unexpected token `)'"
 # define E_AST_ROOT_SIG "AST root: failed to set exec signal handling"
 # define E_EXEC_AST_NULL "exec AST: AST root node is NULL"
 # define E_HEREDOC_AST_NULL "heredoc AST node: AST node is NULL"

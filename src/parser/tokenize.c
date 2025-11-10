@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/07 17:46:39 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ t_token	*tokenize(char *input, int *token_count, int *err)
 			break ;
 		token_word = make_token_word(input, &i, err);
 		if (!token_word)
-			return (free(res), NULL);
+			return (r_free_null((void **)&res));
 		res[id] = make_token(token_word);
 		strip_exp_marks(res[id].word);
 		id++;

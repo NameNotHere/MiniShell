@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 07:34:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	ft_export(t_msh **sh, t_cmd cmd)
 		if (cmd.argv[arg_idx][0] == '-')
 		{
 			msg_err_3(E_EXPORT_START, cmd.argv[arg_idx], E_EXPORT_END);
-			exit_code = 2;
+			exit_code = EXIT_SYNTAX;
 			arg_idx++;
 			continue ;
 		}

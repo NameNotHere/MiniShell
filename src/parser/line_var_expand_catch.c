@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:12:44 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ int	catch_var(t_msh *sh, t_var_expand *ve)
 		}
 	}
 	else
-		ve->var_values[ve->var_i] = get_env_value(sh,
+		ve->var_values[ve->var_i] = get_env_value_by_idx(sh,
 				ve->var_name_buffer,
 				ve->envp_var_i);
 	reset_var_lookup(ve);
@@ -182,8 +182,7 @@ int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 static int	catch_tilde(t_msh *sh, t_var_expand *ve)
 {
 	ve->var_names[ve->var_i] = ft_strdup("~");
-	ve->var_values[ve->var_i] = get_env_value(sh, "HOME",
-			search_name("HOME", sh->envp));
+	ve->var_values[ve->var_i] = get_env_value_by_name(sh, "HOME");
 	if (!ve->var_names[ve->var_i] || !ve->var_values[ve->var_i])
 	{
 		msg_err("tilde expansion failed");

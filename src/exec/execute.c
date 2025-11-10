@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 07:34:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ static int	wait_children(t_msh *sh)
 	bool	interrupted;
 
 	interrupted = false;
-	while (1)
+	while (true)
 	{
 		child_pid = wait(&child_status);
 		if (WIFSIGNALED(child_status)

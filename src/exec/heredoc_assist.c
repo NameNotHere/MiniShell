@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 00:00:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static char	*hdoc_handle_input(t_msh *sh, t_redir *redir)
 	g_sig = 0;
 	hdoc_line = get_shell_line(sh, HDOC_PROMPT);
 	if (g_sig == SIGINT)
-		return (safe_free_str(&hdoc_line), NULL);
+		return (r_free_str_null(&hdoc_line));
 	if (!hdoc_line)
 	{
 		msg_err_3(
@@ -61,7 +61,7 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 			if (g_sig == SIGINT)
 			{
 				safe_free_str(&hdoc_string);
-				sh->exit_code = 130;
+				sh->exit_code = EXIT_SIGINT;
 				return (NULL);
 			}
 			return (hdoc_string);

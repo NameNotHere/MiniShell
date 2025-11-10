@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:31:03 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	ft_exit(t_msh *sh, t_cmd cmd)
 	exit_code = EXIT_SUCCESS;
 	if (cmd.argc > 1 && !is_valid_exit_code(cmd.argv[1]))
 	{
-		exit_code = 2;
+		exit_code = EXIT_SYNTAX;
 		msg_err_3(E_EXIT_ARG, cmd.argv[1], E_EXIT_NUMERIC);
 	}
 	else if (cmd.argc > 2)

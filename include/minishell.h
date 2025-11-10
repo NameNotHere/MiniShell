@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 07:34:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@
 // # define MSH_PROMPT "$ "
 // # define HDOC_PROMPT "> "
 
-# define EXIT_INCORRECT_BUILTIN 2
 # define EXIT_CMD_NOT_FOUND 127
-# define EXIT_CMD_PERMISSION_DENIED 126
+# define EXIT_PERM_DENIED 126
+# define EXIT_SIGINT 130
 
 // 0644: user can read/write, others can read. reasonable/safe setting.
 # define OUTPUT_PERMISSIONS 0644
@@ -129,7 +129,8 @@ void	try_dup2(t_msh *sh, int *fd_in, int *fd_out);
 
 // utils/utils_env.c
 bool	is_var_in_env(t_msh *sh, char *var, int *envp_idx);
-char	*get_env_value(t_msh *sh, char *var_name, int envp_idx);
+char	*get_env_value_by_idx(t_msh *sh, char *var_name, int envp_idx);
+char	*get_env_value_by_name(t_msh *sh, char *var_name);
 int		update_shell_level_var(t_msh *sh);
 int		initialize_null_env(t_msh *sh);
 
@@ -161,6 +162,7 @@ bool	rln_emit_line(t_rln_state *st, t_readbuf *rb, char **line);
 void	set_exit_code(t_msh *sh, int exit_code);
 void	set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
 void	set_exit_perr(t_msh *sh, const char *error_msg);
+void	*set_exit_perr_null(t_msh *sh, const char *error_msg);
 
 // utils/utils_r_set_exit.c
 int		r_set_exit(t_msh *sh, int exit_code);
@@ -178,13 +180,14 @@ int		r_free_str_perr(t_msh *sh, char **to_free, const char *error_msg);
 
 // utils/utils_r_err_msg.c
 int		r_msg_err_free_str(const char *error, char **to_free, int ret);
+void	*msg_err_null(const char *error);
+void	*msg_perr_null(const char *error);
 
 // utils/utils_string.c
 char	*get_shell_line(t_msh *sh, char *prompt);
 int		add_line_to_string(char **string, char **line);
 char	*get_empty_string(void);
 bool	set_empty_string(char **to_empty);
-char	*ft_strstr(const char *haystack, const char *needle);
 
 // utils/utils_string_array.c
 char	**copy_string_array(char **strings);
@@ -210,7 +213,7 @@ char	*ft_strndup(const char *src, int size);
 int		ft_strcmp(const char *s1, const char *s2);
 
 //is_builtin.c
-int		is_builtin(char *str);
+bool	is_builtin(char *str);
 int		ft_echo(char **argv, int argc);
 int		ft_export(t_msh **sh, t_cmd cmd);
 

@@ -6,15 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-TODO: change return value for a custom one? (will count as exit code)
-*/
 int	build_ast(t_msh *sh, t_ast *ast, t_token *tokens)
 {
 	int	result;
@@ -37,14 +34,12 @@ int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 	if (has_pipe(sh->tokens, start, end))
 	{
 		if (validate_pipe_syntax(sh->tokens, start, end) != 0)
-			return (r_set_exit_msg(sh, 2, E_SYNTAX_ERROR_PIPE));
+			return (r_set_exit_msg(sh, 2, E_SYNTAX_PIPE));
 		scan_pipe(sh, current_node, sh->tokens, &i);
 	}
 	else
 		parse_cmd(sh, current_node, start, end);
-	if (sh->exit_code != EXIT_SUCCESS)
-		return (sh->exit_code);
-	return (EXIT_SUCCESS);
+	return (sh->exit_code);
 }
 
 /*scanning if pipe is found, if yes, call parsing with start/end */
@@ -75,9 +70,6 @@ void	scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i)
 	return ;
 }
 
-/*
-TODO: ADD ERROR CATCHING
-*/
 void	parse_pipe(t_msh *sh, t_ast *ast, int start, int end)
 {
 	if (!(sh->tokens && sh->tokens[0].word))
@@ -85,7 +77,10 @@ void	parse_pipe(t_msh *sh, t_ast *ast, int start, int end)
 	ast->pipe.left = make_ast_node(NODE_CMD);
 	ast->pipe.right = make_ast_node(NODE_UNKNOWN);
 	if (!ast->pipe.left || !ast->pipe.right)
+	{
+		sh->exit_code = EXIT_FAILURE;
 		return ;
+	}
 	parse_cmd(sh, ast->pipe.left, start, end);
 	return ;
 }

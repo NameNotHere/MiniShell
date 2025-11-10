@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,9 @@ larger than 256: hard to use and read.
 larger than 2048: arbitrarily high soft limit: avoids truncation
 */
 # define ENV_VAR_NAME_MAX 2048
+
+/* exit code for syntax errors (bash convention) */
+# define EXIT_SYNTAX 2
 
 /* marker for operators in variable expansions before tokenizing */
 # define EXP_MARK '\x01'
@@ -280,7 +283,7 @@ int			last_token(t_token *tokens);
 t_ast		*make_ast_node(t_node_ty ty);
 
 // parser/ast_redir.c
-void		add_redir(t_ast *ast, t_token_ty token_type, char *word);
+void		add_redir(t_msh *sh, t_ast *ast, t_token_ty token_type, char *word);
 t_redir_ty	get_redir_type(t_token_ty ty);
 void		parse_redir(t_msh *sh, t_ast *ast, int *start, int *end);
 
@@ -380,8 +383,6 @@ int			x_calloc_int(int **ptr, size_t count);
 int			x_calloc_charptr(char ***ptr, size_t count);
 int			x_calloc_redir(t_redir **ptr, size_t count);
 int			x_calloc_ast(t_ast **ptr, size_t count);
-int			is_closed(char *str, int i, char quote);
-int			unclosed_token(const char *str, char token);
 
 // parser/parser_validation.c
 int			validate_pipe_syntax(t_token *tokens, int start, int end);
@@ -398,10 +399,12 @@ void		msg_err_3(const char *str1, const char *str2, const char *str3);
 // utils/utils_r_err_msg.c
 int			r_msg_err_free_str(const char *error, char **to_free, int ret);
 void		*msg_err_null(const char *error);
+void		*r_free_str_null(char **to_free);
 
 // utils/utils_r_plus.c
 int			r_free_str(char **to_free, int ret);
 int			r_free_two_str(char **str_a, char **str_b, int ret);
+void		*r_free_null(void **ptr);
 
 // utils/utils_error2.c
 int			change_dir_or_error(t_msh *sh, char **directory);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:17:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void	exit_error(const char *error)
 	else
 		msg_err(error);
 	if (errno == EACCES)
-		exit(126);
+		exit(EXIT_PERM_DENIED);
 	else if (errno == ENOENT)
-		exit(127);
+		exit(EXIT_CMD_NOT_FOUND);
 	else
 		exit(EXIT_FAILURE);
 }
@@ -51,14 +51,14 @@ int	handle_execute_command_errors(t_cmd *cmd)
 	if (errno == EACCES)
 	{
 		if (cmd->full_cmd == NULL)
-			msg_err(E_PERMISSION_DENIED_EMPTY);
+			msg_err(E_PERM_DENIED_EMPTY);
 		else
-			msg_err_2(E_PERMISSION_DENIED, cmd->full_cmd);
-		return (126);
+			msg_err_2(E_PERM_DENIED, cmd->full_cmd);
+		return (EXIT_PERM_DENIED);
 	}
 	if (cmd->full_cmd == NULL)
 		msg_err(E_CMD_NOT_FOUND_EMPTY);
 	else
 		msg_err_2(E_CMD_NOT_FOUND, cmd->argv[0]);
-	return (127);
+	return (EXIT_CMD_NOT_FOUND);
 }

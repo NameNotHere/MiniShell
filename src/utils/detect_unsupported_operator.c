@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/28 13:05:01 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	detect_unsupported_operator(t_token *tokens)
 	int	i;
 
 	if (!tokens)
-		return (0);
+		return (EXIT_SUCCESS);
 	i = 0;
 	while (tokens[i].word)
 	{
@@ -40,7 +40,7 @@ int	detect_unsupported_operator(t_token *tokens)
 			return (tokens[i].ty);
 		i++;
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 int	process_unsupported_operator_error(t_msh *sh)
@@ -49,16 +49,16 @@ int	process_unsupported_operator_error(t_msh *sh)
 
 	token_type = detect_unsupported_operator(sh->tokens);
 	if (token_type == TOKEN_OR)
-		return (r_set_exit_msg(sh, 2, E_SYNTAX_ERROR_OR));
+		return (r_set_exit_msg(sh, EXIT_SYNTAX, E_SYNTAX_OR));
 	if (token_type == TOKEN_AND)
-		return (r_set_exit_msg(sh, 2, E_SYNTAX_ERROR_AND));
+		return (r_set_exit_msg(sh, EXIT_SYNTAX, E_SYNTAX_AND));
 	if (token_type == TOKEN_AMPERSAND)
-		return (r_set_exit_msg(sh, 2, E_SYNTAX_ERROR_AMPERSAND));
+		return (r_set_exit_msg(sh, EXIT_SYNTAX, E_SYNTAX_AMPERSAND));
 	if (token_type == TOKEN_SEMICOLON)
-		return (r_set_exit_msg(sh, 2, E_SEMICOLON));
+		return (r_set_exit_msg(sh, EXIT_SYNTAX, E_SEMICOLON));
 	if (token_type == TOKEN_LPAREN)
-		return (r_set_exit_msg(sh, 2, E_SYNTAX_ERROR_LPAREN));
+		return (r_set_exit_msg(sh, EXIT_SYNTAX, E_SYNTAX_LPAREN));
 	if (token_type == TOKEN_RPAREN)
-		return (r_set_exit_msg(sh, 2, E_SYNTAX_ERROR_RPAREN));
-	return (2);
+		return (r_set_exit_msg(sh, EXIT_SYNTAX, E_SYNTAX_RPAREN));
+	return (EXIT_SYNTAX);
 }

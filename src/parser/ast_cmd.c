@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 	if (sh->exit_code != EXIT_SUCCESS)
 		return ;
 	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end, 0);
+	if (!ast->cmd.argv)
+	{
+		sh->exit_code = EXIT_FAILURE;
+		return ;
+	}
 	ast->cmd.argc = 0;
 	while (ast->cmd.argv && ast->cmd.argv[ast->cmd.argc])
 		ast->cmd.argc++;
@@ -113,7 +118,7 @@ char	**token_words_to_argv(t_token *tokens, int start, int end, int argc)
 		if (tokens[i].word && !is_within_redir_tokens(tokens, i++))
 			argc++;
 	if (x_calloc_charptr(&argv, argc + 1) != EXIT_SUCCESS)
-		return (msg_perr("token words to argv: allocation"), NULL);
+		return (msg_perr_null("token words to argv: allocation"));
 	i = 0;
 	token_i = start;
 	while (token_i < end && i < argc)

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 
 	if (cmd->argc > 2)
 		return (r_msg_err(E_CD_TOO_MANY, EXIT_FAILURE));
-	oldpwd = get_env_value(sh, "PWD", search_name("PWD", sh->envp));
+	oldpwd = get_env_value_by_name(sh, "PWD");
 	if (change_dir_or_error(sh, &cmd->argv[1]) == EXIT_FAILURE)
 		return (r_free_str(&oldpwd, EXIT_FAILURE));
 	cwd = getcwd(NULL, 0);
@@ -64,7 +64,7 @@ int	ft_env(t_msh *sh, int argc)
 	int	i;
 
 	if (argc > 1)
-		return (r_set_exit_msg(sh, 127, E_ENV_ARGS_NOT_SUPPORTED));
+		return (r_set_exit_msg(sh, EXIT_CMD_NOT_FOUND, E_ENV_ARGS_NOT_SUPPORTED));
 	i = 0;
 	while (sh->envp[i])
 	{
@@ -85,7 +85,7 @@ int	ft_unset(t_msh **sh, char *name)
 	if (name[0] == '-')
 	{
 		msg_err_3(E_UNSET_START, name, E_UNSET_END);
-		return (2);
+		return (EXIT_SYNTAX);
 	}
 	i = search_name(name, (*sh)->envp);
 	if (i == -1)
@@ -107,7 +107,7 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 {
 	int	ret;
 
-	ret = 127;
+	ret = EXIT_CMD_NOT_FOUND;
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		ret = ft_pwd(sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
