@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:23:03 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 07:34:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,34 +39,31 @@ bool	is_valid_var_name(char *name)
 	return (true);
 }
 
-int	handle_export_name_only(t_msh **sh, char *arg)
+int	handle_export_name_only(t_msh **sh, char *name)
 {
 	int	i;
 
-	if (!is_valid_var_name(arg))
+	if (!is_valid_var_name(name))
 	{
-		msg_err_3(E_EXPORT_START, arg, E_EXPORT_END);
+		msg_err_3(E_EXPORT_START, name, E_EXPORT_END);
 		return (EXIT_FAILURE);
 	}
-	i = search_name(arg, (*sh)->envp);
+	i = search_name(name, (*sh)->envp);
 	if (i == -1)
 	{
-		add_env_var(&(*sh)->envp, arg, "");
-		if (ft_strcmp(arg, "PATH") == 0)
+		add_env_var(&(*sh)->envp, name, "");
+		if (ft_strcmp(name, "PATH") == 0)
 			update_path_dirs(&(*sh)->path_dirs, (*sh)->envp);
 	}
 	return (EXIT_SUCCESS);
 }
 
-// TODO: do we need *name? why not just use arg
-int	handle_export_assignment(t_msh **sh, char *arg, char *equals_pos)
+int	handle_export_assignment(t_msh **sh, char *name, char *equals_pos)
 {
-	char	*name;
 	char	*value;
 	int		i;
 
 	*equals_pos = '\0';
-	name = arg;
 	value = equals_pos + 1;
 	if (!is_valid_var_name(name))
 	{

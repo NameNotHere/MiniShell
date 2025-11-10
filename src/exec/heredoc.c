@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 07:34:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	hdoc_redir(t_msh *sh, t_redir *redir)
 		return (hdoc_err(sh, &tmp_fd, NULL, hdoc_str), msg_perr(E_WRITE));
 	if (lseek(tmp_fd, 0, SEEK_SET) == -1)
 		return (hdoc_err(sh, &tmp_fd, NULL, hdoc_str), msg_perr(E_WRITE));
-	dup_fd = fcntl(tmp_fd, F_DUPFD, 10);
+	dup_fd = fcntl(tmp_fd, F_DUPFD, 50);
 	if (dup_fd == -1)
 		return (hdoc_err(sh, &tmp_fd, NULL, hdoc_str), msg_perr(E_ALLOC));
 	safe_close_fd(&tmp_fd);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 07:34:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int		ft_echo(char **argv, int argc);
 // builtins_exit_export.c
 int		ft_exit(t_msh *sh, t_cmd cmd);
 int		ft_export(t_msh **sh, t_cmd cmd);
-int		handle_export_assignment(t_msh **sh, char *arg, char *equals_pos);
+int		handle_export_assignment(t_msh **sh, char *name, char *equals_pos);
 
 // exec/execute.c
 int		exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out);
