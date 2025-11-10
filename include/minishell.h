@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 20:36:04 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int		execute_builtin(t_msh *sh, t_cmd *cmd);
 int		ft_cd(t_msh *sh, t_cmd *cmd);
 int		ft_pwd(t_msh *sh, t_cmd *cmd);
 int		ft_env(t_msh *sh, int argc);
-int		ft_unset(t_msh *sh, char *name);
+int		ft_unset(t_msh *sh, t_cmd cmd);
 int		ft_echo(char **argv, int argc);
 
 // builtins_exit_export.c

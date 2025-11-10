@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 20:36:04 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,11 @@ int	ft_env(t_msh *sh, int argc)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_unset(t_msh *sh, char *name)
+static int	unset_single_var(t_msh *sh, char *name)
 {
 	int	i;
 	int	env_len;
 
-	if (!name)
-		return (EXIT_SUCCESS);
 	if (name[0] == '-')
 	{
 		msg_err_3(E_UNSET_START, name, E_UNSET_END);
@@ -102,6 +100,26 @@ int	ft_unset(t_msh *sh, char *name)
 	return (EXIT_SUCCESS);
 }
 
+int	ft_unset(t_msh *sh, t_cmd cmd)
+{
+	int	arg_idx;
+	int	exit_code;
+	int	ret;
+
+	if (!cmd.argv[1])
+		return (EXIT_SUCCESS);
+	arg_idx = 1;
+	exit_code = EXIT_SUCCESS;
+	while (arg_idx < cmd.argc)
+	{
+		ret = unset_single_var(sh, cmd.argv[arg_idx]);
+		if (ret != EXIT_SUCCESS)
+			exit_code = ret;
+		arg_idx++;
+	}
+	return (exit_code);
+}
+
 int	execute_builtin(t_msh *sh, t_cmd *cmd)
 {
 	int	ret;
@@ -118,7 +136,7 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 	else if (ft_strcmp(cmd->argv[0], "export") == 0)
 		ret = ft_export(sh, *cmd);
 	else if (ft_strcmp(cmd->argv[0], "unset") == 0)
-		ret = ft_unset(sh, cmd->argv[1]);
+		ret = ft_unset(sh, *cmd);
 	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
 		ret = ft_exit(sh, *cmd);
 	return (ret);
