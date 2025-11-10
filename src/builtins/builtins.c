@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 14:33:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ int	ft_pwd(t_msh *sh, t_cmd *cmd)
 		return (EXIT_FAILURE);
 	}
 	equal = length_till_equal(sh->envp[i]) + 1;
-	write(1, sh->envp[i] + equal, ft_strlen(sh->envp[i] + equal));
-	write(1, "\n", 1);
+	(void)write(1, sh->envp[i] + equal, ft_strlen(sh->envp[i] + equal));
+	(void)write(1, "\n", 1);
 	return (EXIT_SUCCESS);
 }
 
@@ -68,8 +68,8 @@ int	ft_env(t_msh *sh, int argc)
 	i = 0;
 	while (sh->envp[i])
 	{
-		write(1, sh->envp[i], ft_strlen(sh->envp[i]));
-		write(1, "\n", 1);
+		(void)write(1, sh->envp[i], ft_strlen(sh->envp[i]));
+		(void)write(1, "\n", 1);
 		i++;
 	}
 	return (EXIT_SUCCESS);

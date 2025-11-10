@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 17:15:30 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/07 11:10:17 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 14:33:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	interactive_sig_int(void)
  */
 static void	interactive_sig_quit(void)
 {
-	write(STDOUT_FILENO, CLEAR_LINE_ANSI_CODE, sizeof(CLEAR_LINE_ANSI_CODE));
+	(void)write(STDOUT_FILENO, CLEAR_LINE_ANSI_CODE, sizeof(CLEAR_LINE_ANSI_CODE));
 	rl_on_new_line();
 	rl_redisplay();
 }

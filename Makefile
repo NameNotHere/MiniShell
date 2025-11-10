@@ -38,6 +38,26 @@ CFLAGS_OPTIMAL = -Wall -Werror -Wextra -O3 -flto
 LDFLAGS_OPTIMAL = $(LDFLAGS)
 LDFLAGS_OPTIMAL += -flto
 
+# UBSan-only build (for focused undefined behavior testing)
+CFLAGS_UBSAN = -Wall -Werror -Wextra -g3 -O1
+CFLAGS_UBSAN += -fsanitize=undefined -fno-omit-frame-pointer
+CFLAGS_UBSAN += -fno-sanitize-recover=all  # abort on first UB
+LDFLAGS_UBSAN = $(LDFLAGS)
+LDFLAGS_UBSAN += -fsanitize=undefined
+
+# Memory Sanitizer (detects uninitialized memory reads)
+CFLAGS_MSAN = -Wall -Werror -Wextra -g3 -O1
+CFLAGS_MSAN += -fsanitize=memory -fno-omit-frame-pointer
+CFLAGS_MSAN += -fsanitize-memory-track-origins=2
+LDFLAGS_MSAN = -lreadline -Llibft -lft  # Base LDFLAGS without ASan
+LDFLAGS_MSAN += -fsanitize=memory
+
+# FORTIFY_SOURCE build (buffer overflow detection)
+CFLAGS_FORTIFY = -Wall -Werror -Wextra -g3 -O2
+CFLAGS_FORTIFY += -D_FORTIFY_SOURCE=2
+CFLAGS_FORTIFY += -fstack-protector-strong
+LDFLAGS_FORTIFY = $(LDFLAGS)
+
 # LIBFT settings
 LIBFTDIR = libft
 LIBFT = $(LIBFTDIR)/libft.a
@@ -156,4 +176,17 @@ optimal: fclean
 valgrind: debug
 	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --track-origins=yes --trace-children=yes --suppressions=rl.supp ./$(NAME)
 
-.PHONY: all clean fclean re bonus debug optimal
+ubsan: fclean
+	$(MAKE) CFLAGS="$(CFLAGS_UBSAN)" LDFLAGS="$(LDFLAGS_UBSAN)" all
+	@echo "UBSan build made - detects undefined behavior"
+
+msan: fclean
+	@echo "Building with MSan (including libft)..."
+	$(MAKE) CFLAGS="$(CFLAGS_MSAN)" LDFLAGS="$(LDFLAGS_MSAN)" all
+	@echo "MSan build made - detects uninitialized memory reads"
+
+fortify: fclean
+	$(MAKE) CFLAGS="$(CFLAGS_FORTIFY)" LDFLAGS="$(LDFLAGS_FORTIFY)" all
+	@echo "FORTIFY_SOURCE build made - detects buffer overflows"
+
+.PHONY: all clean fclean re bonus debug optimal ubsan msan fortify

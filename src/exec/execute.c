@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 14:33:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,6 @@ static int	wait_children(t_msh *sh)
 		process_child_status(sh, child_pid, child_status);
 	}
 	if (interrupted)
-		write(STDERR_FILENO, "\n", 1);
+		(void)write(STDERR_FILENO, "\n", 1);
 	return (sh->exit_code);
 }

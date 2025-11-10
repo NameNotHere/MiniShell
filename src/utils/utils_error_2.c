@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 13:47:20 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 14:33:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,5 @@ void	msg_perr(const char *error)
 		buf[len++] = *err_str++;
 	if (len < sizeof(buf) - 1)
 		buf[len++] = '\n';
-	write(STDERR_FILENO, buf, len);
+	(void)write(STDERR_FILENO, buf, len);
 }
