@@ -6,13 +6,13 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 20:36:04 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 20:43:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_cd(t_msh *sh, t_cmd *cmd)
+int	x_cd(t_msh *sh, t_cmd *cmd)
 {
 	int			pwd_idx;
 	char		*cwd;
@@ -40,7 +40,7 @@ int	ft_cd(t_msh *sh, t_cmd *cmd)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_pwd(t_msh *sh, t_cmd *cmd)
+int	x_pwd(t_msh *sh, t_cmd *cmd)
 {
 	int	i;
 	int	equal;
@@ -58,7 +58,7 @@ int	ft_pwd(t_msh *sh, t_cmd *cmd)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_env(t_msh *sh, int argc)
+int	x_env(t_msh *sh, int argc)
 {
 	int	i;
 
@@ -100,7 +100,7 @@ static int	unset_single_var(t_msh *sh, char *name)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_unset(t_msh *sh, t_cmd cmd)
+int	x_unset(t_msh *sh, t_cmd cmd)
 {
 	int	arg_idx;
 	int	exit_code;
@@ -126,18 +126,18 @@ int	execute_builtin(t_msh *sh, t_cmd *cmd)
 
 	ret = EXIT_CMD_NOT_FOUND;
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
-		ret = ft_pwd(sh, cmd);
+		ret = x_pwd(sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
-		ret = ft_cd(sh, cmd);
+		ret = x_cd(sh, cmd);
 	else if (ft_strcmp(cmd->argv[0], "echo") == 0)
-		ret = ft_echo(cmd->argv, cmd->argc);
+		ret = x_echo(cmd->argv, cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "env") == 0)
-		ret = ft_env(sh, cmd->argc);
+		ret = x_env(sh, cmd->argc);
 	else if (ft_strcmp(cmd->argv[0], "export") == 0)
-		ret = ft_export(sh, *cmd);
+		ret = x_export(sh, *cmd);
 	else if (ft_strcmp(cmd->argv[0], "unset") == 0)
-		ret = ft_unset(sh, *cmd);
+		ret = x_unset(sh, *cmd);
 	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
-		ret = ft_exit(sh, *cmd);
+		ret = x_exit(sh, *cmd);
 	return (ret);
 }

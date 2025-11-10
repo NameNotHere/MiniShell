@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 14:33:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 20:43:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	ft_echo_arg(char **argv, int *arg_i, bool *first_content)
 	(*arg_i)++;
 }
 
-int	ft_echo(char **argv, int argc)
+int	x_echo(char **argv, int argc)
 {
 	int		arg_i;
 	bool	first_content;

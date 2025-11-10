@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 20:43:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	handle_export_assignment(t_msh *sh, char *name, char *equals_pos)
 	return (EXIT_SUCCESS);
 }
 
-int	ft_export(t_msh *sh, t_cmd cmd)
+int	x_export(t_msh *sh, t_cmd cmd)
 {
 	char	*equals_pos;
 	int		arg_idx;
@@ -90,7 +90,7 @@ int	ft_export(t_msh *sh, t_cmd cmd)
 	int		ret;
 
 	if (!cmd.argv[1])
-		return (ft_env(sh, 1));
+		return (x_env(sh, 1));
 	arg_idx = 1;
 	exit_code = EXIT_SUCCESS;
 	while (arg_idx < cmd.argc)

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 20:36:04 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 20:43:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,15 @@ int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 
 // builtins.c
 int		execute_builtin(t_msh *sh, t_cmd *cmd);
-int		ft_cd(t_msh *sh, t_cmd *cmd);
-int		ft_pwd(t_msh *sh, t_cmd *cmd);
-int		ft_env(t_msh *sh, int argc);
-int		ft_unset(t_msh *sh, t_cmd cmd);
-int		ft_echo(char **argv, int argc);
+int		x_cd(t_msh *sh, t_cmd *cmd);
+int		x_pwd(t_msh *sh, t_cmd *cmd);
+int		x_env(t_msh *sh, int argc);
+int		x_unset(t_msh *sh, t_cmd cmd);
+int		x_echo(char **argv, int argc);
 
 // builtins_exit_export.c
-int		ft_exit(t_msh *sh, t_cmd cmd);
-int		ft_export(t_msh *sh, t_cmd cmd);
+int		x_exit(t_msh *sh, t_cmd cmd);
+int		x_export(t_msh *sh, t_cmd cmd);
 int		handle_export_assignment(t_msh *sh, char *name, char *equals_pos);
 
 // exec/execute.c
@@ -214,7 +214,7 @@ int		ft_strcmp(const char *s1, const char *s2);
 
 //is_builtin.c
 bool	is_builtin(char *str);
-int		ft_echo(char **argv, int argc);
+int		x_echo(char **argv, int argc);
 
 // utils/ft_realloc
 void	*ft_realloc(void *ptr, size_t new_size, size_t old_size);
