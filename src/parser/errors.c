@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:01:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,28 +47,6 @@ int	xe_calloc(void **ptr, int *err, size_t nmemb, size_t size)
 	return (ret);
 }
 
-/*
-|x_malloc: simple malloc wrapper without error pointer parameter
-|Uses local error variable internally
-*/
-int	x_malloc(void **ptr, size_t nmemb, size_t size)
-{
-	int	local_err;
-
-	return (xe_malloc(ptr, &local_err, nmemb, size));
-}
-
-/*
-|x_calloc: simple calloc wrapper without error pointer parameter
-|Uses local error variable internally
-*/
-int	x_calloc(void **ptr, size_t nmemb, size_t size)
-{
-	int	local_err;
-
-	return (xe_calloc(ptr, &local_err, nmemb, size));
-}
-
 /* Type-specific wrappers for calloc only */
 
 int	xe_calloc_char(char **ptr, int *err, size_t count)
@@ -98,13 +76,6 @@ int	x_calloc_char(char **ptr, size_t count)
 	int	local_err;
 
 	return (xe_calloc_char(ptr, &local_err, count));
-}
-
-int	x_calloc_token(t_token **ptr, size_t count)
-{
-	int	local_err;
-
-	return (xe_calloc_token(ptr, &local_err, count));
 }
 
 int	x_calloc_int(int **ptr, size_t count)

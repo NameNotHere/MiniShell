@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:17:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:01:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,6 @@ void	exit_free_with_code(t_msh *sh, int exit_code)
 {
 	free_everything(sh);
 	exit(exit_code);
-}
-
-void	close_fds_exit_error_free(t_msh *sh, const char *error,\
-	int *fd_in, int *fd_out)
-{
-	safe_close_2_fds(fd_in, fd_out);
-	exit_error_free(sh, error);
 }
 
 int	handle_execute_command_errors(t_cmd *cmd)

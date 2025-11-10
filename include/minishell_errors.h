@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 10:56:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:01:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ access parent directories: No such file or directory"
 # define E_ALLOC_REDIR "add redir: allocation"
 # define E_ALLOC_AST_NODE "make AST node: allocation"
 # define E_ALLOC_RLN_CHUNK "readline non-interact: add chunk"
-# define E_ALLOC_HDOC "alloc"
-# define E_ALLOC_START "initialize_environment allocation failed"
 # define E_CATCH_ABSENT_VAR "catch absent var: allocation error"
 # define E_CATCH_VAR "catch var: allocation error"
 

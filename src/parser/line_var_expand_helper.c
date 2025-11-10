@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:01:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,19 +84,6 @@ bool	handle_ve_quote(char *str, bool *sgl_quote, bool *dbl_quote, int i)
 		handled = true;
 	}
 	return (handled);
-}
-
-bool	handle_sgl_quote(char *str, bool *sgl_quote, int i)
-{
-	if (*sgl_quote && is_sgl_quote(str[i]))
-		*sgl_quote = false;
-	else if (*sgl_quote)
-		;
-	else if (is_sgl_quote(str[i]))
-		*sgl_quote = true;
-	else
-		return (false);
-	return (true);
 }
 
 int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)

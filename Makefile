@@ -112,7 +112,6 @@ SRCS = 	signals/signals.c \
 	utils/detect_unsupported_operator.c \
 	utils/has_quotes.c \
 	utils/parser_is_operator.c \
-	utils/parser_line.c \
 	utils/unclosed_quotes.c \
 	utils/utils_char.c \
 	utils/utils_dup2.c \
