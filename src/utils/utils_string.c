@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,10 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 */
 int	add_line_to_string(char **string, char **line)
 {
-	int		result;
+	int		ret;
 	char	*updated_string;
 
-	result = EXIT_SUCCESS;
+	ret = EXIT_SUCCESS;
 	if (!(*line))
 	{
 		msg_err(E_ADD_LINE_INVALID);
@@ -95,13 +95,13 @@ int	add_line_to_string(char **string, char **line)
 	if (updated_string == NULL)
 	{
 		msg_perr(E_ADD_LINE_STRING);
-		result = EXIT_FAILURE;
+		ret = EXIT_FAILURE;
 	}
 	safe_free_str(string);
 	safe_free_str(line);
 	*string = updated_string;
 	updated_string = NULL;
-	return (result);
+	return (ret);
 }
 
 /*

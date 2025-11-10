@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 13:47:20 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,10 @@ static void	get_home_value(t_msh *sh, char **target_dir)
 int	change_dir_or_error(t_msh *sh, char **directory)
 {
 	char	*target_dir;
-	int		res;
+	int		ret;
 
 	target_dir = NULL;
-	res = EXIT_SUCCESS;
+	ret = EXIT_SUCCESS;
 	if (ft_strcmp(*directory, "-") == 0)
 		target_dir = get_env_value_by_name(sh, "OLDPWD");
 	else if (!*directory)
@@ -57,12 +57,12 @@ int	change_dir_or_error(t_msh *sh, char **directory)
 	if (chdir(target_dir) != EXIT_SUCCESS)
 	{
 		print_chdir_error(target_dir);
-		res = EXIT_FAILURE;
+		ret = EXIT_FAILURE;
 		errno = 0;
 	}
 	if (target_dir != *directory)
 		free(target_dir);
-	return (res);
+	return (ret);
 }
 
 /*

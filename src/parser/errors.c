@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ int	xe_malloc(void **ptr, int *err, size_t nmemb, size_t size)
 */
 int	xe_calloc(void **ptr, int *err, size_t nmemb, size_t size)
 {
-	int	retval;
+	int	ret;
 
-	retval = xe_malloc(ptr, err, nmemb, size);
-	if (retval == EXIT_SUCCESS)
+	ret = xe_malloc(ptr, err, nmemb, size);
+	if (ret == EXIT_SUCCESS)
 		ft_bzero(*ptr, nmemb * size);
-	return (retval);
+	return (ret);
 }
 
 /*

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,11 +261,11 @@ typedef struct s_msh
 // parser/ast.c
 int			build_ast(t_msh *sh, t_ast *ast, t_token *tokens);
 int			scan_tokens(t_msh *sh, t_ast *ast, int start, int end);
-void		scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i);
-void		parse_pipe(t_msh *sh, t_ast *ast, int start, int end);
+int			scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i);
+int			parse_pipe(t_msh *sh, t_ast *ast, int start, int end);
 
 // parser/ast_cmd.c
-void		parse_cmd(t_msh *sh, t_ast *ast, int start, int end);
+int			parse_cmd(t_msh *sh, t_ast *ast, int start, int end);
 char		**token_words_to_argv(t_token *tokens, int start, int end,
 				int argc);
 char		*remove_quotes(char *str, int len);
@@ -283,9 +283,9 @@ int			last_token(t_token *tokens);
 t_ast		*make_ast_node(t_node_ty ty);
 
 // parser/ast_redir.c
-void		add_redir(t_msh *sh, t_ast *ast, t_token_ty token_type, char *word);
+int			add_redir(t_ast *ast, t_token_ty token_type, char *word);
 t_redir_ty	get_redir_type(t_token_ty ty);
-void		parse_redir(t_msh *sh, t_ast *ast, int *start, int *end);
+int			parse_redir(t_msh *sh, t_ast *ast, int *start, int *end);
 
 // parser/lex.c
 int			count_tokens(char *str, int count, int i);

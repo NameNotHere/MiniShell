@@ -6,32 +6,31 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
 #include "minishell.h"
 
-void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
+int	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 {
+	int	ret;
+
 	ast->nty = NODE_CMD;
-	parse_redir(sh, ast, &start, &end);
-	if (sh->exit_code != EXIT_SUCCESS)
-		return ;
+	ret = parse_redir(sh, ast, &start, &end);
+	if (ret != EXIT_SUCCESS)
+		return (ret);
 	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end, 0);
 	if (!ast->cmd.argv)
-	{
-		sh->exit_code = EXIT_FAILURE;
-		return ;
-	}
+		return (EXIT_FAILURE);
 	ast->cmd.argc = 0;
 	while (ast->cmd.argv && ast->cmd.argv[ast->cmd.argc])
 		ast->cmd.argc++;
 	ast->cmd.built_in = false;
 	if (ast->cmd.argv && ast->cmd.argv[0] && is_builtin(ast->cmd.argv[0]))
 		ast->cmd.built_in = true;
-	return ;
+	return (EXIT_SUCCESS);
 }
 
 bool	init_remove_quotes(char *str, char **result, t_remove_quotes *rq, int len)
