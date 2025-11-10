@@ -6,11 +6,10 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:58:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <errno.h>
 #include "minishell.h"
 
 /*

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 18:28:25 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	update_shell_level_var(t_msh *sh)
 	if (!assign)
 		return (EXIT_FAILURE);
 	equals_pos = ft_strchr(assign, '=');
-	handle_export_assignment(&sh, assign, equals_pos);
+	handle_export_assignment(sh, assign, equals_pos);
 	safe_free_str(&assign);
 	return (EXIT_SUCCESS);
 }

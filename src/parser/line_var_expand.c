@@ -6,11 +6,10 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/07 02:57:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parser.h"
 #include "minishell.h"
 
 /*

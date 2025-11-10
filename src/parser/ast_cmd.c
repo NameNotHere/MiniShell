@@ -6,11 +6,10 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parser.h"
 #include "minishell.h"
 
 int	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)

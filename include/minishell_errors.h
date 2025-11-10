@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 10:56:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 17:01:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ access parent directories: No such file or directory"
 # define E_UNSET_END ": invalid option"
 
 /* execution error messages */
-# define E_ENV_ARGS_NOT_SUPPORTED "env: arguments not supported"
+# define E_ENV_ARG_NOT_SUPPORT "env: arguments not supported"
 # define E_CD_NAME_TOO_LONG "cd: file name too long: "
 # define E_CD_NOT_DIR "cd: not a directory: "
 # define E_CD_NO_SUCH "cd: no such file or directory: "

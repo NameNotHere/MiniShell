@@ -4,7 +4,15 @@ NAME = libft.a
 CC = cc
 # compiler for static library
 LIBC = ar rcs
-# list sources. wildcards are not allowed
+
+# compiler flags (use ?= to allow parent Makefile to override)
+CFLAGS ?= -Wall -Wextra -Werror
+# remove files without asking
+RM = rm -f
+# .o files same name as .c, but in bin folder
+DIR_INCLUDE = include
+INCLUDE = -I $(DIR_INCLUDE)
+SRCDIR = src
 SRCS = ft_atoi.c \
 		ft_atoll.c \
 		ft_bzero.c \
@@ -28,14 +36,6 @@ SRCS = ft_atoi.c \
 		ft_strndup.c \
 		ft_strnstr.c \
 
-# compiler flags (use ?= to allow parent Makefile to override)
-CFLAGS ?= -Wall -Wextra -Werror
-# remove files without asking
-RM = rm -f
-# .o files same name as .c, but in bin folder
-DIR_INCLUDE = include
-INCLUDE = -I $(DIR_INCLUDE)
-SRCDIR = src
 OBJDIR = bin
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))

@@ -6,13 +6,10 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 13:47:20 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 14:33:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
 #include "minishell.h"
 
 static void	print_chdir_error(char	*target_dir)

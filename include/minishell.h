@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,13 @@ int		execute_builtin(t_msh *sh, t_cmd *cmd);
 int		ft_cd(t_msh *sh, t_cmd *cmd);
 int		ft_pwd(t_msh *sh, t_cmd *cmd);
 int		ft_env(t_msh *sh, int argc);
-int		ft_unset(t_msh **sh, char *name);
+int		ft_unset(t_msh *sh, char *name);
 int		ft_echo(char **argv, int argc);
 
 // builtins_exit_export.c
 int		ft_exit(t_msh *sh, t_cmd cmd);
-int		ft_export(t_msh **sh, t_cmd cmd);
-int		handle_export_assignment(t_msh **sh, char *name, char *equals_pos);
+int		ft_export(t_msh *sh, t_cmd cmd);
+int		handle_export_assignment(t_msh *sh, char *name, char *equals_pos);
 
 // exec/execute.c
 int		exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out);
@@ -215,7 +215,6 @@ int		ft_strcmp(const char *s1, const char *s2);
 //is_builtin.c
 bool	is_builtin(char *str);
 int		ft_echo(char **argv, int argc);
-int		ft_export(t_msh **sh, t_cmd cmd);
 
 // utils/ft_realloc
 void	*ft_realloc(void *ptr, size_t new_size, size_t old_size);
