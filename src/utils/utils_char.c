@@ -6,14 +6,14 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:03:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/10/27 13:43:10 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 22:06:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdbool.h>
 #include "libft.h"
 
-bool	ft_valid_var_char(int c)
+bool	is_valid_var_char(int c)
 {
 	if (ft_isalnum(c))
 		return (true);

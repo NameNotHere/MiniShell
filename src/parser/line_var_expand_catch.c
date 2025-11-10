@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:12:44 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 22:06:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,12 +160,12 @@ int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 		ve->var_name_buffer[ve->var_name_i] = '\0';
 		return (catch_var(sh, ve));
 	}
-	if (!ft_valid_var_char(c))
+	if (!is_valid_var_char(c))
 		return (catch_absent_var(sh, ve));
 	ve->var_name_buffer[ve->var_name_i] = c;
 	ve->var_name_i++;
 	ve->var_name_buffer[ve->var_name_i] = '\0';
-	if (!ft_valid_var_char(next_c) || (PRO && is_positional_var(ve, c)))
+	if (!is_valid_var_char(next_c) || (PRO && is_positional_var(ve, c)))
 	{
 		if (is_var_in_env(sh, ve->var_name_buffer, &ve->envp_var_i))
 			return (catch_var(sh, ve));

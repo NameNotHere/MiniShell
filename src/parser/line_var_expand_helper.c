@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 17:01:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 22:06:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ bool	is_quote_free(t_var_expand *ve)
 */
 bool	must_expand(t_var_expand *ve, char *str, int pos)
 {
-	return ((ft_valid_var_char(str[pos + 1]) || str[pos + 1] == '?')
+	return ((is_valid_var_char(str[pos + 1]) || str[pos + 1] == '?')
 		&& !ve->sgl_quote && !is_in_heredoc_delimiter(str, pos)
 		&& (!PRO || !must_skip_exp(ve, pos)));
 }

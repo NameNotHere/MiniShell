@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 22:06:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -338,7 +338,7 @@ bool		is_operator_char(char c);
 bool		piped_line(char *line);
 
 // utils/utils_char.c
-bool		ft_valid_var_char(int c);
+bool		is_valid_var_char(int c);
 bool		is_sgl_quote(int c);
 bool		is_dbl_quote(int c);
 
