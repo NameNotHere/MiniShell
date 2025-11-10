@@ -64,7 +64,7 @@ LIBFT = $(LIBFTDIR)/libft.a
 
 # DIR settings
 INCLUDEDIR = include
-INCLUDE = -I $(INCLUDEDIR) -I $(LIBFTDIR)
+INCLUDE = -I $(INCLUDEDIR) -I $(LIBFTDIR)/include
 SRCDIR = src/
 OBJDIR = bin
 
