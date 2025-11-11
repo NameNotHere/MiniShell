@@ -100,6 +100,8 @@ SRCS = 	signals/signals.c \
 	parser/lex.c \
 	parser/is_builtin.c \
 	parser/advanced_expansions.c \
+	parser/advanced_expansions_fixes.c \
+	parser/advanced_expansions_helpers.c \
 	parser/line_var_expand.c \
 	parser/line_var_expand_catch.c \
 	parser/line_var_expand_helper.c \
