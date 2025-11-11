@@ -6,11 +6,10 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 02:06:41 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 12:42:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 16:00:42 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define _GNU_SOURCE
 #include "minishell.h"
 
 int	heredoc_pipe_node(t_msh *sh, t_pipe *pipe_node)
