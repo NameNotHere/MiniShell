@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:40:47 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,7 +304,7 @@ bool		must_skip_exp(t_var_expand *ve, int index);
 // parser/line_var_expand_exec.c
 int			expand_vars(t_var_expand *ve, char *str);
 
-// parser/line_var_expand_helpers.c
+// parser/line_var_expand_helper_pro.c
 bool		advanced_substitutions(t_var_expand *ve, char **str_ptr);
 
 // parser/line_var_expand_catch_lookup.c

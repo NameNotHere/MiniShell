@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 12:45:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:40:47 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,7 @@ bool	is_token_char(char *str, int pos);
 void	update_quoted_len(char *str, int *len, int i);
 void	calculate_token_word_len(char *str, int *i, int *len);
 
-// parser/line_var_expand_helpers.c
+// parser/line_var_expand_helper_pro.c
 bool	advanced_substitutions(t_var_expand *ve, char **str_ptr);
 
 #endif
