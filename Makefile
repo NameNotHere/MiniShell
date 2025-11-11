@@ -99,7 +99,7 @@ SRCS = 	signals/signals.c \
 	parser/ast_redir.c \
 	parser/lex.c \
 	parser/is_builtin.c \
-	parser/fix_slash_set_skip_helper.c \
+	parser/advanced_expansions.c \
 	parser/line_var_expand.c \
 	parser/line_var_expand_catch.c \
 	parser/line_var_expand_helper.c \

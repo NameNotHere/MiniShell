@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/10 22:06:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 11:39:23 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,7 +301,7 @@ bool		is_in_heredoc_delimiter(char *str, int pos);
 bool		expand_string_variables(t_msh *sh, char **string_ptr, bool is_hdoc);
 bool		must_skip_exp(t_var_expand *ve, int index);
 
-// parser/fix_slash_set_skip_helper.c - Condition checkers
+// parser/advanced_expansions.c - Condition checkers
 bool		must_fix_escaped_backslash(t_var_expand *ve, char *str);
 bool		must_fix_escaped_dollar(t_var_expand *ve, char *str);
 bool		must_fix_escaped_quotes(t_var_expand *ve, char *str);
@@ -309,7 +309,7 @@ bool		must_fix_unquoted_backslash(t_var_expand *ve, char *str);
 bool		must_fix_locale_syntax(t_var_expand *ve, char *str);
 bool		must_fix_ansi_c_quoting(t_var_expand *ve, char *str);
 
-// parser/fix_slash_set_skip_helper.c - Action functions
+// parser/advanced_expansions.c - Action functions
 void		fix_escaped_backslash(t_var_expand *ve, char *result);
 void		fix_escaped_dollar(t_var_expand *ve, char *result);
 void		fix_quoted_chars(t_var_expand *ve, char *str, char *result);
