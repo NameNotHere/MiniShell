@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 10:27:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 16:29:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 
 // int		minishell_mainloop(t_msh *sh);
 
-// builtins.c
+// builtins_cd_pwd_env.c
 int		execute_builtin(t_msh *sh, t_cmd *cmd);
 int		x_cd(t_msh *sh, t_cmd *cmd);
 int		x_pwd(t_msh *sh, t_cmd *cmd);
@@ -104,6 +104,8 @@ int		open_append_redirection(t_msh *sh, char *filename);
 
 // exec/heredoc.c
 int		heredoc_ast_node(t_msh *sh, t_ast *node);
+int		heredoc_pipe_node(t_msh *sh, t_pipe *pipe_node);
+int		hdoc_redir(t_msh *sh, t_redir *redir);
 
 // exec/heredoc_assist.c
 char	*hdoc_loop(t_msh *sh, t_redir *redir);
@@ -159,8 +161,6 @@ bool	rln_init(t_rln_state *st, t_readbuf *rb, char **line);
 bool	rln_emit_line(t_rln_state *st, t_readbuf *rb, char **line);
 
 // utils/utils_set_exit_code.c
-void	set_exit_code(t_msh *sh, int exit_code);
-void	set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
 void	set_exit_perr(t_msh *sh, const char *error_msg);
 void	*set_exit_perr_null(t_msh *sh, const char *error_msg);
 
@@ -222,5 +222,17 @@ void	*ft_realloc(void *ptr, size_t new_size, size_t old_size);
 // utils/unclosed_quotes.c
 int		unclosed_quotes(const char *line);
 bool	error_unclosed_quotes(const char *line);
+
+// utils/utils_fd_path.c
+char	*build_fd_path(int fd);
+
+// parser/lex_helpers.c
+void	skip_spaces(int *i, char *str);
+bool	is_token_char(char *str, int pos);
+void	update_quoted_len(char *str, int *len, int i);
+void	calculate_token_word_len(char *str, int *i, int *len);
+
+// parser/line_var_expand_helper_pro.c
+bool	advanced_substitutions(t_var_expand *ve, char **str_ptr);
 
 #endif

@@ -6,93 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-	Does a few things to support line expansions done correctly:
-	1) fixes backslash parsing either inside or outside single quotes (when PRO)
-	2) skips expansions on escaped $ char (sets location of skipped expansions)
-	3) also skips expansion on use of posix locale syntax ($"..."): $
-	char is skipped, variable expansion skipped so what is inside the quotes
-	do not expand. note that no translation lookup is supported, so it just
-	needs to extract the untranslated content (english basically).
-
-	Proper precedence: The cycle_fix_slash_set_skip function handles escapes
-	in the right order (only when PRO):
-	1. \\ → \ (prevents false-positive escaped chars)
-	2. \$ → $ (with skip marking for variable expansion)
-	3. \" / \' → preserve both (for later quote removal)
-	4. \X → X (general case, outside double quotes only)
-
-	Single quotes are marked with SGL_QUOTE_MARK to preserve them initially.
-	Note: inside $"..." , escapes the single quotes, otherwise they get marked
-*/
-static void	cycle_advanced_substitutions(t_var_expand *ve, char *str, char *result)
-{
-	if (must_fix_escaped_backslash(ve, str))
-		fix_escaped_backslash(ve, result);
-	else if (must_fix_escaped_dollar(ve, str))
-		fix_escaped_dollar(ve, result);
-	else if (must_fix_escaped_quotes(ve, str))
-		fix_quoted_chars(ve, str, result);
-	else if (must_fix_unquoted_backslash(ve, str))
-		fix_unquoted_backslash(ve, str, result);
-	else if (must_fix_locale_syntax(ve, str))
-		fix_locale_syntax(ve, result, str);
-	else if (must_fix_ansi_c_quoting(ve, str))
-		fix_ansi_c_quoting(ve, result, str);
-	else if (str[ve->i] == '\'')
-	{
-		result[ve->res_i++] = str[ve->i++];
-		ve->sgl_quote = !ve->sgl_quote;
-	}
-	else if (str[ve->i] == '"')
-	{
-		result[ve->res_i++] = str[ve->i++];
-		ve->dbl_quote = !ve->dbl_quote;
-	}
-	else
-		result[ve->res_i++] = str[ve->i++];
-}
-
-/*
-	Processes advanced interpreting, expansions and substitutions involving
-	backslashes escaped variables or characters, locale syntax and ANSI-C.
-	quoting
-	Replaces provided string pointer and updates ve->skipped/ve->skip_len.
-	Only applies if PRO.
- */
-bool	advanced_substitutions(t_var_expand *ve, char **str_ptr)
-{
-	char	*result;
-	size_t	len;
-
-	len = ft_strlen(*str_ptr) + 1;
-	if (x_calloc_char(&result, len) != EXIT_SUCCESS
-		|| x_calloc_int(&ve->skipped, len) != EXIT_SUCCESS)
-	{
-		safe_free_str(&result);
-		safe_free((void **)&ve->skipped);
-		return (false);
-	}
-	while ((*str_ptr)[ve->i])
-		cycle_advanced_substitutions(ve, *str_ptr, result);
-	ve->i = 0;
-	ve->res_i = 0;
-	ve->sgl_quote = false;
-	ve->dbl_quote = false;
-	safe_free_str(str_ptr);
-	*str_ptr = result;
-	return (true);
-}
-
-/*
-	Check if a given index should be skipped (not expanded)
- */
 bool	must_skip_exp(t_var_expand *ve, int index)
 {
 	int	i;
@@ -105,63 +24,6 @@ bool	must_skip_exp(t_var_expand *ve, int index)
 		i++;
 	}
 	return (false);
-}
-
-/*
-	Helper to check if we're expanding a tilde at current position.
-	Matches against stored var_names (which contains "~" for tilde expansions).
-*/
-static bool	is_expanding_tilde(t_var_expand *ve, char *str)
-{
-	return (ve->var_names[ve->var_i]
-		&& ve->var_names[ve->var_i][0] == '~'
-		&& ve->var_names[ve->var_i][1] == '\0'
-		&& str[ve->i] == '~');
-}
-
-int	expand_vars(t_var_expand *ve, char *str)
-{
-	while (str[ve->i])
-	{
-		if (handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, ve->i))
-			;
-		else if ('$' == str[ve->i] && must_expand(ve, str, ve->i))
-		{
-			ve->var_lookup = true;
-			ve->value = ve->var_values[ve->var_i];
-			while (*ve->value)
-			{
-				if (!ve->dbl_quote && is_operator_char(*ve->value))
-					ve->new_str[ve->i + ve->exp_i++ - ve->skipped_chars] = EXP_MARK;
-				ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = *ve->value;
-				ve->exp_i++;
-				ve->value++;
-			}
-			ve->i += ft_strlen(ve->var_names[ve->var_i]);
-			ve->skipped_chars += ft_strlen(ve->var_names[ve->var_i]) + 1;
-			ve->var_i++;
-		}
-		else if (is_expanding_tilde(ve, str))
-		{
-			ve->var_lookup = true;
-			ve->value = ve->var_values[ve->var_i];
-			while (*ve->value)
-			{
-				if (is_operator_char(*ve->value))
-					ve->new_str[ve->i + ve->exp_i++ - ve->skipped_chars] = EXP_MARK;
-				ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = *ve->value;
-				ve->exp_i++;
-				ve->value++;
-			}
-			ve->skipped_chars += 1;
-			ve->var_i++;
-		}
-		if (ve->var_lookup == false)
-			ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = str[ve->i];
-		ve->var_lookup = false;
-		ve->i++;
-	}
-	return (EXIT_SUCCESS);
 }
 
 void	cleanup_ve(t_var_expand *ve, bool free_new_str)

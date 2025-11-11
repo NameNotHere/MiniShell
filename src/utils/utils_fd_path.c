@@ -1,19 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isspace.c                                       :+:      :+:    :+:   */
+/*   utils_fd_path.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
+/*   Created: 2025/11/11 11:30:00 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/11/11 12:42:29 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-int	ft_isspace(char c)
+char	*build_fd_path(int fd)
 {
-	return (c == ' ' || c == '\n' || c == '\t'
-		|| c == '\v' || c == '\f' || c == '\r');
+	char	*fd_str;
+	char	*path;
+
+	fd_str = ft_itoa(fd);
+	if (!fd_str)
+		return (NULL);
+	path = ft_strjoin("/proc/self/fd/", fd_str);
+	safe_free_str(&fd_str);
+	return (path);
 }

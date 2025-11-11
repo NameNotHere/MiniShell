@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:13:32 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	invalid_redir(t_msh *sh, int i)
 	return (EXIT_SUCCESS);
 }
 
-int	parse_redir(t_msh *sh,  t_ast *ast, int *start, int *end)
+int	parse_redir(t_msh *sh, t_ast *ast, int *start, int *end)
 {
 	int				i;
 	int				ret;

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:58:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ int	r_set_exit_msg(t_msh *sh, int exit_code, const char *error_msg)
 	return (exit_code);
 }
 
-
-
 /*
 	Sets exit code to EXIT_FAILURE and prints system error message.
 	Error code is always EXIT_FAILURE, not errno.
@@ -53,32 +51,5 @@ int	r_set_exit_perr(t_msh *sh, const char *error_msg)
 int	r_set_exit_ret(t_msh *sh, int exit_code, int ret)
 {
 	sh->exit_code = exit_code;
-	return (ret);
-}
-
-/*
-	Prints error message and returns a value.
-*/
-int	r_msg_err(const char *error_msg, int ret)
-{
-	msg_err(error_msg);
-	return (ret);
-}
-
-/*
-	Prints system error message and returns a value.
-*/
-int	r_msg_perr(const char *error_msg, int ret)
-{
-	msg_perr(error_msg);
-	return (ret);
-}
-
-/*
-	Frees all shell resources and returns a value.
-*/
-int	r_free_everything(t_msh *sh, int ret)
-{
-	free_everything(sh);
 	return (ret);
 }

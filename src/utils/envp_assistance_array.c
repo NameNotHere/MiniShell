@@ -6,42 +6,16 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:17:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 12:07:35 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	length_till_equal(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	return (i);
-}
-
-int	search_name(char *name, char **envp)
-{
-	int	i;
-	int	len_name;
-	int	length_envp;
-
-	if (!name)
-		return (-1);
-	i = 0;
-	len_name = ft_strlen(name);
-	while (envp[i])
-	{
-		length_envp = length_till_equal(envp[i]);
-		if (ft_strncmp(name, envp[i], length_envp) == 0
-			&& len_name == length_envp)
-			return (i);
-		i++;
-	}
-	return (-1);
-}
+/* Helper function declarations */
+int	length_till_equal(char *str);
+int	search_name(char *name, char **envp);
+int	envp_len(char **envp);
 
 int	change_env_val_idx(char *name, char *new_value, int index, char ***envp)
 {
@@ -71,16 +45,6 @@ int	change_env_val(char *name, char *new_value, char ***envp)
 	if (index == -1)
 		return (EXIT_FAILURE);
 	return (change_env_val_idx(name, new_value, index, envp));
-}
-
-int	envp_len(char **envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp && envp[i])
-		i++;
-	return (i);
 }
 
 int	add_env_var(char ***envp, char *name, char *value)

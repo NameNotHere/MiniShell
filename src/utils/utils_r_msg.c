@@ -1,36 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_set_exit_code.c                           :+:      :+:    :+:   */
+/*   utils_r_msg.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/29 17:52:21 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 16:29:51 by tda-roch         ###  ########.fr       */
+/*   Created: 2025/11/11 10:55:01 by tda-roch          #+#    #+#             */
+/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-	Sets exit code to EXIT_FAILURE, prints system error message.
-	Uses msg_perr to print errno-based error info.
+	Prints error message and returns a value.
 */
-void	set_exit_perr(t_msh *sh, const char *error_msg)
+int	r_msg_err(const char *error_msg, int ret)
 {
-	sh->exit_code = EXIT_FAILURE;
-	msg_perr(error_msg);
+	msg_err(error_msg);
+	return (ret);
 }
 
 /*
-	Calls set_exit_perr:
-		Sets exit code to EXIT_FAILURE,
-		prints error message with errno information.
-	Returns NULL
+	Prints system error message and returns a value.
 */
-void	*set_exit_perr_null(t_msh *sh, const char *error_msg)
+int	r_msg_perr(const char *error_msg, int ret)
 {
-	sh->exit_code = EXIT_FAILURE;
 	msg_perr(error_msg);
-	return (NULL);
+	return (ret);
+}
+
+/*
+	Frees all shell resources and returns a value.
+*/
+int	r_free_everything(t_msh *sh, int ret)
+{
+	free_everything(sh);
+	return (ret);
 }

@@ -25,18 +25,19 @@ LDFLAGS += -fsanitize=address,undefined
 
 CFLAGS_DEBUG = $(CFLAGS)
 CFLAGS_DEBUG += -fsanitize=address,undefined -fno-omit-frame-pointer
-########################################################################
-# CFLAGS_DEBUG CHOICE                                                  #
 CFLAGS_DEBUG += -Og
-# OR (substitutes: for checking uninitialized, it needs -O1)           #
-# CFLAGS_DEBUG += -O1 -Wuninitialized                                  #
-########################################################################
 LDFLAGS_DEBUG = $(LDFLAGS)
 LDFLAGS_DEBUG += -fsanitize=address,undefined
 
 CFLAGS_OPTIMAL = -Wall -Werror -Wextra -O3 -flto
 LDFLAGS_OPTIMAL = $(LDFLAGS)
 LDFLAGS_OPTIMAL += -flto
+
+# Uninitialized variable detection (compile-time warnings)
+CFLAGS_UNINIT = -Wall -Werror -Wextra -g3 -O1 -Wuninitialized
+CFLAGS_UNINIT += -fsanitize=address,undefined -fno-omit-frame-pointer
+LDFLAGS_UNINIT = $(LDFLAGS)
+LDFLAGS_UNINIT += -fsanitize=address,undefined
 
 # UBSan-only build (for focused undefined behavior testing)
 CFLAGS_UBSAN = -Wall -Werror -Wextra -g3 -O1
@@ -45,7 +46,7 @@ CFLAGS_UBSAN += -fno-sanitize-recover=all  # abort on first UB
 LDFLAGS_UBSAN = $(LDFLAGS)
 LDFLAGS_UBSAN += -fsanitize=undefined
 
-# Memory Sanitizer (detects uninitialized memory reads)
+# Memory Sanitizer (detects uninitialized memory reads at runtime)
 CFLAGS_MSAN = -Wall -Werror -Wextra -g3 -O1
 CFLAGS_MSAN += -fsanitize=memory -fno-omit-frame-pointer
 CFLAGS_MSAN += -fsanitize-memory-track-origins=2
@@ -76,9 +77,12 @@ SRCS = 	signals/signals.c \
 	signals/signals_execution.c \
 	signals/signals_interactive.c \
 	signals/signals_heredoc.c \
+	get_shell_line.c \
 	minishell_initialize.c \
 	minishell_main.c \
-	builtins/builtins.c \
+	builtins/builtins_cd_pwd_env.c \
+	builtins/builtins_unset.c \
+	builtins/builtins_dispatcher.c \
 	builtins/builtins_export.c \
 	builtins/builtins_echo.c \
 	builtins/builtins_exit_export.c \
@@ -90,6 +94,7 @@ SRCS = 	signals/signals.c \
 	exec/execute_cmd_redir.c \
 	exec/execute_cmd_redir_open.c \
 	exec/heredoc.c \
+	exec/heredoc_helpers.c \
 	exec/heredoc_assist.c \
 	exec/safe_fork.c \
 	exec/safe_pipe.c \
@@ -97,11 +102,18 @@ SRCS = 	signals/signals.c \
 	parser/ast_cmd.c \
 	parser/ast_helper.c \
 	parser/ast_redir.c \
-	parser/errors.c \
 	parser/lex.c \
+	parser/lex_helpers.c \
 	parser/is_builtin.c \
-	parser/fix_slash_set_skip_helper.c \
+	parser/advanced_expansions.c \
+	parser/advanced_expansions_fixes.c \
+	parser/advanced_expansions_helpers.c \
 	parser/line_var_expand.c \
+	parser/line_var_expand_exec.c \
+	parser/line_var_expand_helper_pro.c \
+	parser/line_var_expand_catch_helpers.c \
+	parser/line_var_expand_catch_lookup.c \
+	parser/line_var_expand_array.c \
 	parser/line_var_expand_catch.c \
 	parser/line_var_expand_helper.c \
 	parser/parse_line.c \
@@ -109,6 +121,7 @@ SRCS = 	signals/signals.c \
 	parser/tokenize.c \
 	parser/is_escaped.c \
 	utils/envp_assistance_array.c \
+	utils/envp_assistance_helpers.c \
 	utils/detect_unsupported_operator.c \
 	utils/has_quotes.c \
 	utils/parser_is_operator.c \
@@ -120,7 +133,11 @@ SRCS = 	signals/signals.c \
 	utils/utils_error_2.c \
 	utils/utils_exit.c \
 	utils/utils_fd.c \
+	utils/utils_fd_path.c \
 	utils/utils_free.c \
+	utils/util_malloc.c \
+	utils/util_malloc_types.c \
+	utils/util_malloc_simple.c \
 	utils/utils_math.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
@@ -128,6 +145,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_r_err_msg.c \
 	utils/utils_r_plus.c \
 	utils/utils_r_set_exit.c \
+	utils/utils_r_msg.c \
 	utils/utils_set_exit_code.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
@@ -179,6 +197,10 @@ ubsan: fclean
 	$(MAKE) CFLAGS="$(CFLAGS_UBSAN)" LDFLAGS="$(LDFLAGS_UBSAN)" all
 	@echo "UBSan build made - detects undefined behavior"
 
+uninit: fclean
+	$(MAKE) CFLAGS="$(CFLAGS_UNINIT)" LDFLAGS="$(LDFLAGS_UNINIT)" all
+	@echo "Uninitialized variable detection build made (compile-time warnings)"
+
 msan: fclean
 	@echo "Building with MSan (including libft)..."
 	$(MAKE) CFLAGS="$(CFLAGS_MSAN)" LDFLAGS="$(LDFLAGS_MSAN)" all
@@ -188,4 +210,4 @@ fortify: fclean
 	$(MAKE) CFLAGS="$(CFLAGS_FORTIFY)" LDFLAGS="$(LDFLAGS_FORTIFY)" all
 	@echo "FORTIFY_SOURCE build made - detects buffer overflows"
 
-.PHONY: all clean fclean re bonus debug optimal ubsan msan fortify
+.PHONY: all clean fclean re bonus debug optimal valgrind ubsan uninit msan fortify

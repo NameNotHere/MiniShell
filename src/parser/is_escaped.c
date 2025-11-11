@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 12:57:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 	backslashes(escaped backslashes, no actual escape char).
 	only checked if PRO (otherwise automatically false)
 */
-bool	escape(const char *str, int i)
+bool	is_escaped(const char *str, int i)
 {
 	int	backslash_count;
 	int	j;
