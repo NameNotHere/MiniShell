@@ -113,6 +113,7 @@ SRCS = 	signals/signals.c \
 	parser/tokenize.c \
 	parser/is_escaped.c \
 	utils/envp_assistance_array.c \
+	utils/envp_assistance_helpers.c \
 	utils/detect_unsupported_operator.c \
 	utils/has_quotes.c \
 	utils/parser_is_operator.c \
