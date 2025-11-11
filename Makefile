@@ -97,7 +97,6 @@ SRCS = 	signals/signals.c \
 	parser/ast_cmd.c \
 	parser/ast_helper.c \
 	parser/ast_redir.c \
-	parser/errors.c \
 	parser/lex.c \
 	parser/is_builtin.c \
 	parser/fix_slash_set_skip_helper.c \
@@ -121,6 +120,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_exit.c \
 	utils/utils_fd.c \
 	utils/utils_free.c \
+	utils/utils_malloc.c \
 	utils/utils_math.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
