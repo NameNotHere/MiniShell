@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/11 11:39:23 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 12:57:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -415,6 +415,6 @@ bool		has_quotes(const char *str);
 bool		has_single_quotes(const char *str);
 
 // parser/is_escaped.C
-bool		escape(const char *str, int i);
+bool		is_escaped(const char *str, int i);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 00:32:07 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 12:57:27 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ int	unclosed_quotes(const char *line)
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == '\'' && !dbl && !escape(line, i))
+		if (line[i] == '\'' && !dbl && !is_escaped(line, i))
 			single = !single;
-		else if (line[i] == '"' && !single && !escape(line, i))
+		else if (line[i] == '"' && !single && !is_escaped(line, i))
 			dbl = !dbl;
 		i++;
 	}
