@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 10:27:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	remove_quotes_pro(char *str, char *result, t_remove_quotes *q)
 	they need to be stripped before making the argvs
 
 	simple quote removal for the non-PRO case
-	on PRO, also handles cases for preserving some escaped 
+	on PRO, also handles cases for preserving some escaped
 */
 char	*remove_quotes(char *str, int len)
 {

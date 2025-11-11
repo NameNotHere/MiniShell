@@ -6,13 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 10:56:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 10:27:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_ERRORS_H
 # define MINISHELL_ERRORS_H
-
 
 /* minishell start error message */
 # define E_MINISHELL "minishell: "
@@ -78,8 +77,16 @@ access parent directories: No such file or directory"
 # define E_TOKENIZE_FAILED "parse line: tokenizer failed"
 
 /* heredoc error messages */
-# define E_HEREDOC_REDIR "heredoc redir failed"
 # define E_HEREDOC_SIG "failed to set heredoc signal handler"
+# define E_OPEN_HEREDOC "open: heredoc redirection"
+# define E_DUP_HEREDOC "dup fd: heredoc redirection"
+# define E_ALLOC_HEREDOC "allocation: heredoc redirection"
+# define E_WRITE_HEREDOC "write: heredoc redirection"
+
+/* heredoc warning messages */
+# define E_HDOC_EOF_START "warning: here-document delimited by end-of-file \
+(wanted `"
+# define E_HDOC_EOF_END "')"
 
 /* builtin execution error messages */
 # define E_BUILTIN_REDIR_FAILED "exec_single_builtin: failed to save \
@@ -95,18 +102,13 @@ stdin/stdout for builtin redirection"
 # define E_FORK_CMD "cmd node fork"
 # define E_FORK_PIPE "pipe node fork"
 # define E_INIT_REMOVE_QUOTES "init_remove_quotes"
-# define E_OPEN_HEREDOC "open: hdoc"
+
 # define E_OPEN_RUN_SCRIPT "open: run script fd"
 # define E_PIPE "pipe"
-# define E_REDIR_INPUT_FAILED "failed to redirect input"
-# define E_REDIR_OUTPUT_FAILED "failed to redirect output"
+# define E_REDIR_INPUT_FAILED "redirect input failed"
+# define E_REDIR_OUTPUT_FAILED "redirect output failed"
 # define E_WAIT "wait"
 # define E_WRITE "write"
 # define E_ALLOC "allocation"
-
-/* heredoc warning messages */
-# define E_HDOC_EOF_START "warning: here-document delimited by end-of-file \
-(wanted `"
-# define E_HDOC_EOF_END "')"
 
 #endif

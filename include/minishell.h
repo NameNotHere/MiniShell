@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 20:43:38 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 10:27:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int		heredoc_ast_node(t_msh *sh, t_ast *node);
 
 // exec/heredoc_assist.c
 char	*hdoc_loop(t_msh *sh, t_redir *redir);
-void	hdoc_err(t_msh *sh, int *write_fd, int *redir_fd, char *hdoc_str);
+int		hdoc_err(int *tmp_fd, char *hdoc_str, char *error_msg);
 
 // exec/lookup_cmd_fullpath.c
 int		lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);

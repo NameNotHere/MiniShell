@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 22:06:40 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 10:27:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 */
 bool	is_quote_free(t_var_expand *ve)
 {
-	return !ve->sgl_quote && !ve->dbl_quote;
+	return (!ve->sgl_quote && !ve->dbl_quote);
 }
 
 /*
