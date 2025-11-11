@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   realloc.c                                          :+:      :+:    :+:   */
+/*   ft_realloc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: orhan    <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+/*
+** CUSTOM FUNCTION FOR MINISHELL
+** Added to libft as part of custom minishell project build.
+**
+** NOTE: Differs from standard realloc():
+**   - Requires explicit old_size parameter (standard realloc tracks it)
+**   - If new_size is 0, frees memory and returns NULL (like realloc)
+**   - Allocates new memory, copies min(old_size, new_size) bytes
+**   - Frees original pointer
+**   - Returns NULL on allocation failure
+*/
+
+#include <stdlib.h>
+#include "libft.h"
 
 void	*ft_realloc(void *ptr, size_t new_size, size_t old_size)
 {

@@ -6,11 +6,10 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:52:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 20:34:26 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdbool.h>
 #include <stdlib.h>
 
 /*
@@ -62,14 +61,4 @@ void	safe_free_2d_string(char ***ptr)
 		free(*ptr);
 		*ptr = NULL;
 	}
-}
-
-/*
-	wrapper to safe_free_string
-	Returns true.
-*/
-bool	make_string_free(char **string)
-{
-	safe_free_str(string);
-	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 09:10:35 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 14:33:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static t_flow	cycle_loop(t_msh *sh)
 {
 	sh->line = get_shell_line(sh, MSH_PROMPT);
 	if (sh->line == NULL && sh->is_interact)
-		write(1, "exit\n", 5);
+		(void)write(1, "exit\n", 5);
 	if (sh->line == NULL)
 		return (BREAK_FLOW);
 	if (g_sig == SIGINT)

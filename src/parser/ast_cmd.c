@@ -6,27 +6,30 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 10:27:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parser.h"
 #include "minishell.h"
 
-void	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
+int	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 {
+	int	ret;
+
 	ast->nty = NODE_CMD;
-	parse_redir(sh, ast, &start, &end);
-	if (sh->exit_code != EXIT_SUCCESS)
-		return ;
+	ret = parse_redir(sh, ast, &start, &end);
+	if (ret != EXIT_SUCCESS)
+		return (ret);
 	ast->cmd.argv = token_words_to_argv(sh->tokens, start, end, 0);
+	if (!ast->cmd.argv)
+		return (EXIT_FAILURE);
 	ast->cmd.argc = 0;
 	while (ast->cmd.argv && ast->cmd.argv[ast->cmd.argc])
 		ast->cmd.argc++;
 	ast->cmd.built_in = false;
 	if (ast->cmd.argv && ast->cmd.argv[0] && is_builtin(ast->cmd.argv[0]))
 		ast->cmd.built_in = true;
-	return ;
+	return (EXIT_SUCCESS);
 }
 
 bool	init_remove_quotes(char *str, char **result, t_remove_quotes *rq, int len)
@@ -41,7 +44,7 @@ bool	init_remove_quotes(char *str, char **result, t_remove_quotes *rq, int len)
 	}
 	if (x_calloc_char(result, len + 1) != EXIT_SUCCESS)
 	{
-		ms_perror(E_INIT_REMOVE_QUOTES);
+		msg_perr(E_INIT_REMOVE_QUOTES);
 		return (false);
 	}
 	ft_bzero(rq, sizeof(t_remove_quotes));
@@ -75,7 +78,7 @@ void	remove_quotes_pro(char *str, char *result, t_remove_quotes *q)
 	they need to be stripped before making the argvs
 
 	simple quote removal for the non-PRO case
-	on PRO, also handles cases for preserving some escaped 
+	on PRO, also handles cases for preserving some escaped
 */
 char	*remove_quotes(char *str, int len)
 {
@@ -113,7 +116,7 @@ char	**token_words_to_argv(t_token *tokens, int start, int end, int argc)
 		if (tokens[i].word && !is_within_redir_tokens(tokens, i++))
 			argc++;
 	if (x_calloc_charptr(&argv, argc + 1) != EXIT_SUCCESS)
-		return (NULL);
+		return (msg_perr_null("token words to argv: allocation"));
 	i = 0;
 	token_i = start;
 	while (token_i < end && i < argc)

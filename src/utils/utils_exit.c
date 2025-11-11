@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:17:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 02:13:08 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:01:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 void	exit_error(const char *error)
 {
 	if (errno)
-		ms_perror(error);
+		msg_perr(error);
 	else
 		msg_err(error);
 	if (errno == EACCES)
-		exit(126);
+		exit(EXIT_PERM_DENIED);
 	else if (errno == ENOENT)
-		exit(127);
+		exit(EXIT_CMD_NOT_FOUND);
 	else
 		exit(EXIT_FAILURE);
 }
@@ -38,27 +38,20 @@ void	exit_free_with_code(t_msh *sh, int exit_code)
 	exit(exit_code);
 }
 
-void	close_fds_exit_error_free(t_msh *sh, const char *error,\
-	int *fd_in, int *fd_out)
-{
-	safe_close_2_fds(fd_in, fd_out);
-	exit_error_free(sh, error);
-}
-
 int	handle_execute_command_errors(t_cmd *cmd)
 {
 	(void)cmd;
 	if (errno == EACCES)
 	{
 		if (cmd->full_cmd == NULL)
-			msg_err(E_PERMISSION_DENIED_EMPTY);
+			msg_err(E_PERM_DENIED_EMPTY);
 		else
-			msg_err_2(E_PERMISSION_DENIED, cmd->full_cmd);
-		return (126);
+			msg_err_2(E_PERM_DENIED, cmd->full_cmd);
+		return (EXIT_PERM_DENIED);
 	}
 	if (cmd->full_cmd == NULL)
 		msg_err(E_CMD_NOT_FOUND_EMPTY);
 	else
 		msg_err_2(E_CMD_NOT_FOUND, cmd->argv[0]);
-	return (127);
+	return (EXIT_CMD_NOT_FOUND);
 }

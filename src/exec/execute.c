@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/04 15:38:25 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 14:33:32 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ int	exec_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
 		exec_left(sh, pipe_node->left, pipefd, (int *[2]){&fd_in, &fd_out});
 	if (sh->exit_code != EXIT_SUCCESS)
 		return (cleanup_all_fds(sh, pipefd, &fd_in, &fd_out));
+	safe_close_fd(&pipefd[1]);
 	if (pipe_node->right->nty == NODE_PIPE)
 	{
 		safe_close_fd(&fd_in);
-		safe_close_fd(&pipefd[1]);
 		return (exec_pipe_node(sh, &pipe_node->right->pipe, pipefd[0], fd_out));
 	}
 	if (safe_fork_pipe(sh, pipefd, &fd_in, &fd_out) == 0)
@@ -100,7 +100,7 @@ static int	wait_children(t_msh *sh)
 	bool	interrupted;
 
 	interrupted = false;
-	while (1)
+	while (true)
 	{
 		child_pid = wait(&child_status);
 		if (WIFSIGNALED(child_status)
@@ -111,12 +111,12 @@ static int	wait_children(t_msh *sh)
 			if (errno == EINTR)
 				continue ;
 			if (errno != ECHILD)
-				ms_perror(E_WAIT);
+				msg_perr(E_WAIT);
 			break ;
 		}
 		process_child_status(sh, child_pid, child_status);
 	}
 	if (interrupted)
-		write(STDERR_FILENO, "\n", 1);
+		(void)write(STDERR_FILENO, "\n", 1);
 	return (sh->exit_code);
 }

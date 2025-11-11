@@ -6,28 +6,26 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/07 01:56:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-TODO: change return value for a custom one? (will count as exit code)
-*/
 int	build_ast(t_msh *sh, t_ast *ast, t_token *tokens)
 {
-	int	result;
+	int	ret;
 
 	if (tokens == NULL || tokens[0].word == NULL)
 		return (EXIT_SUCCESS);
-	result = scan_tokens(sh, ast, 0, last_token(tokens));
-	return (result);
+	ret = scan_tokens(sh, ast, 0, last_token(tokens));
+	return (ret);
 }
 
 int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 {
 	int		i;
+	int		ret;
 	t_ast	*current_node;
 
 	current_node = ast;
@@ -37,59 +35,52 @@ int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 	if (has_pipe(sh->tokens, start, end))
 	{
 		if (validate_pipe_syntax(sh->tokens, start, end) != 0)
-			return (r_set_exit_msg(sh, 2, E_SYNTAX_ERROR_PIPE));
-		scan_pipe(sh, current_node, sh->tokens, &i);
+			return (r_msg_err(E_SYNTAX_PIPE, EXIT_SYNTAX));
+		ret = scan_pipe(sh, current_node, sh->tokens, &i);
 	}
 	else
-		parse_cmd(sh, current_node, start, end);
-	if (sh->exit_code != EXIT_SUCCESS)
-		return (sh->exit_code);
-	return (EXIT_SUCCESS);
+		ret = parse_cmd(sh, current_node, start, end);
+	return (ret);
 }
 
 /*scanning if pipe is found, if yes, call parsing with start/end */
-void	scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i)
+int	scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i)
 {
 	int			start;
 	int			end;
+	int			ret;
 
 	start = *i;
 	end = last_token(tokens);
 	if (tokens[start].word == NULL)
-		return ;
+		return (EXIT_SUCCESS);
 	ast->nty = NODE_PIPE;
 	while (tokens[*i].word)
 	{
 		if (tokens[*i].ty == TOKEN_PIPE)
 		{
-			parse_pipe(sh, ast, start, *i);
+			ret = parse_pipe(sh, ast, start, *i);
+			if (ret != EXIT_SUCCESS)
+				return (ret);
 			(*i)++;
 			break ;
 		}
 		(*i)++;
 	}
 	if (has_pipe(tokens, *i, end))
-		scan_tokens(sh, ast->pipe.right, *i, end);
+		return (scan_tokens(sh, ast->pipe.right, *i, end));
 	else if (tokens[*i].word)
-		parse_cmd(sh, ast->pipe.right, *i, end);
-	return ;
+		return (parse_cmd(sh, ast->pipe.right, *i, end));
+	return (EXIT_SUCCESS);
 }
 
-/*
-TODO: REMOVE PRINTF DEBUGS (ADD ERROR CATCH)
-TODO: ADD ERROR CATCHING
-*/
-void	parse_pipe(t_msh *sh, t_ast *ast, int start, int end)
+int	parse_pipe(t_msh *sh, t_ast *ast, int start, int end)
 {
 	if (!(sh->tokens && sh->tokens[0].word))
-		return ;
+		return (EXIT_SUCCESS);
 	ast->pipe.left = make_ast_node(NODE_CMD);
 	ast->pipe.right = make_ast_node(NODE_UNKNOWN);
 	if (!ast->pipe.left || !ast->pipe.right)
-	{
-		msg_err(E_FAILED_ALLOC_AST);
-		return ;
-	}
-	parse_cmd(sh, ast->pipe.left, start, end);
-	return ;
+		return (EXIT_FAILURE);
+	return (parse_cmd(sh, ast->pipe.left, start, end));
 }

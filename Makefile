@@ -1,26 +1,62 @@
 NAME = minishell
 
-#TODO: LAST remove -g before submitting
 # compiler settings
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -fsanitize=address,undefined,leak -g3 -fno-omit-frame-pointer
-#TODO: remove temporary -Wmaybe-uninitialized flag from debug flags... using just to check things now
-# CFLAGS_DEBUG = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer
-CFLAGS_DEBUG = -Wall -Werror -Wextra -g3 -fno-omit-frame-pointer -Wmaybe-uninitialized
-CFLAGS_OPTIMAL = -Wall -Werror -Wextra -O3 -flto
+CFLAGS = -Wall -Werror -Wextra
+CFLAGS += -g3 -O0
 LDFLAGS = -lreadline -Llibft -lft
 
 # PRO mode: enable extra features (positional params, etc)
 ifdef PRO
 CFLAGS += -DPRO=$(PRO)
-CFLAGS_DEBUG += -DPRO=$(PRO)
 endif
 
 # VALIDATE mode: control operator validation (&&, ||, &, ;)
 ifdef VALIDATE
 CFLAGS += -DVALIDATE=$(VALIDATE)
-CFLAGS_DEBUG += -DVALIDATE=$(VALIDATE)
 endif
+
+########################################################################
+# TODO: remove below for evaluation                                    #
+CFLAGS += -fsanitize=address,undefined -fno-omit-frame-pointer
+LDFLAGS += -fsanitize=address,undefined
+# TODO: remove above for evaluation                                    #
+########################################################################
+
+CFLAGS_DEBUG = $(CFLAGS)
+CFLAGS_DEBUG += -fsanitize=address,undefined -fno-omit-frame-pointer
+########################################################################
+# CFLAGS_DEBUG CHOICE                                                  #
+CFLAGS_DEBUG += -Og
+# OR (substitutes: for checking uninitialized, it needs -O1)           #
+# CFLAGS_DEBUG += -O1 -Wuninitialized                                  #
+########################################################################
+LDFLAGS_DEBUG = $(LDFLAGS)
+LDFLAGS_DEBUG += -fsanitize=address,undefined
+
+CFLAGS_OPTIMAL = -Wall -Werror -Wextra -O3 -flto
+LDFLAGS_OPTIMAL = $(LDFLAGS)
+LDFLAGS_OPTIMAL += -flto
+
+# UBSan-only build (for focused undefined behavior testing)
+CFLAGS_UBSAN = -Wall -Werror -Wextra -g3 -O1
+CFLAGS_UBSAN += -fsanitize=undefined -fno-omit-frame-pointer
+CFLAGS_UBSAN += -fno-sanitize-recover=all  # abort on first UB
+LDFLAGS_UBSAN = $(LDFLAGS)
+LDFLAGS_UBSAN += -fsanitize=undefined
+
+# Memory Sanitizer (detects uninitialized memory reads)
+CFLAGS_MSAN = -Wall -Werror -Wextra -g3 -O1
+CFLAGS_MSAN += -fsanitize=memory -fno-omit-frame-pointer
+CFLAGS_MSAN += -fsanitize-memory-track-origins=2
+LDFLAGS_MSAN = -lreadline -Llibft -lft  # Base LDFLAGS without ASan
+LDFLAGS_MSAN += -fsanitize=memory
+
+# FORTIFY_SOURCE build (buffer overflow detection)
+CFLAGS_FORTIFY = -Wall -Werror -Wextra -g3 -O2
+CFLAGS_FORTIFY += -D_FORTIFY_SOURCE=2
+CFLAGS_FORTIFY += -fstack-protector-strong
+LDFLAGS_FORTIFY = $(LDFLAGS)
 
 # LIBFT settings
 LIBFTDIR = libft
@@ -28,8 +64,8 @@ LIBFT = $(LIBFTDIR)/libft.a
 
 # DIR settings
 INCLUDEDIR = include
-INCLUDE = -I $(INCLUDEDIR) -I $(LIBFTDIR)
-SRCDIR = src/
+INCLUDE = -I $(INCLUDEDIR) -I $(LIBFTDIR)/include
+SRCDIR = src
 OBJDIR = bin
 
 # Default rule
@@ -43,7 +79,7 @@ SRCS = 	signals/signals.c \
 	minishell_initialize.c \
 	minishell_main.c \
 	builtins/builtins.c \
-	builtins/ft_export.c \
+	builtins/builtins_export.c \
 	builtins/builtins_echo.c \
 	builtins/builtins_exit_export.c \
 	exec/lookup_cmd_fullpath.c \
@@ -74,12 +110,8 @@ SRCS = 	signals/signals.c \
 	parser/is_escaped.c \
 	utils/envp_assistance_array.c \
 	utils/detect_unsupported_operator.c \
-	utils/ft_strndup.c \
-	utils/ft_strcmp.c \
-	utils/ft_realloc.c \
 	utils/has_quotes.c \
 	utils/parser_is_operator.c \
-	utils/parser_line.c \
 	utils/unclosed_quotes.c \
 	utils/utils_char.c \
 	utils/utils_dup2.c \
@@ -100,7 +132,6 @@ SRCS = 	signals/signals.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
 	utils/utils_token.c \
-	debug/utils_debug.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
@@ -118,7 +149,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 
 # libft maker
 $(LIBFT):
-	@$(MAKE) -C $(LIBFTDIR)
+	@$(MAKE) -C $(LIBFTDIR) CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"
 
 clean:
 	$(RM) $(OBJS)
@@ -134,14 +165,27 @@ re: fclean all
 bonus: all
 
 debug: fclean
-	$(MAKE) CFLAGS="$(CFLAGS_DEBUG)" all
+	$(MAKE) CFLAGS="$(CFLAGS_DEBUG)" LDFLAGS="$(LDFLAGS_DEBUG)" all
 	@echo "debug build made"
 
 optimal: fclean
-	$(MAKE) CFLAGS="$(CFLAGS_OPTIMAL)" all
+	$(MAKE) CFLAGS="$(CFLAGS_OPTIMAL)" LDFLAGS="$(LDFLAGS_OPTIMAL)" all
 	@echo "optimal build made"
 
 valgrind: debug
 	valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --track-origins=yes --trace-children=yes --suppressions=rl.supp ./$(NAME)
 
-.PHONY: all clean fclean re bonus debug optimal
+ubsan: fclean
+	$(MAKE) CFLAGS="$(CFLAGS_UBSAN)" LDFLAGS="$(LDFLAGS_UBSAN)" all
+	@echo "UBSan build made - detects undefined behavior"
+
+msan: fclean
+	@echo "Building with MSan (including libft)..."
+	$(MAKE) CFLAGS="$(CFLAGS_MSAN)" LDFLAGS="$(LDFLAGS_MSAN)" all
+	@echo "MSan build made - detects uninitialized memory reads"
+
+fortify: fclean
+	$(MAKE) CFLAGS="$(CFLAGS_FORTIFY)" LDFLAGS="$(LDFLAGS_FORTIFY)" all
+	@echo "FORTIFY_SOURCE build made - detects buffer overflows"
+
+.PHONY: all clean fclean re bonus debug optimal ubsan msan fortify

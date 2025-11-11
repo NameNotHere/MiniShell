@@ -6,13 +6,10 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:04:21 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/03 11:49:25 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
 #include "minishell.h"
 
 void	msg_err(const char *str1)
@@ -27,7 +24,7 @@ void	msg_err(const char *str1)
 		buf[len++] = *str1++;
 	if (len < sizeof(buf) - 1)
 		buf[len++] = '\n';
-	write(STDERR_FILENO, buf, len);
+	(void)write(STDERR_FILENO, buf, len);
 }
 
 void	msg_err_2(const char *str1, const char *str2)
@@ -44,7 +41,7 @@ void	msg_err_2(const char *str1, const char *str2)
 		buf[len++] = *str2++;
 	if (len < sizeof(buf) - 1)
 		buf[len++] = '\n';
-	write(STDERR_FILENO, buf, len);
+	(void)write(STDERR_FILENO, buf, len);
 }
 
 void	msg_err_3(const char *str1, const char *str2, const char *str3)
@@ -63,5 +60,6 @@ void	msg_err_3(const char *str1, const char *str2, const char *str3)
 		buf[len++] = *str3++;
 	if (len < sizeof(buf) - 1)
 		buf[len++] = '\n';
-	write(STDERR_FILENO, buf, len);
+	(void)write(STDERR_FILENO, buf, len);
 }
+

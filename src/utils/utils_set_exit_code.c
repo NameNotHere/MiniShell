@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 17:52:21 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###  ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###  ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 /*
 	Sets the shell exit code.
 */
+// TODO: check if this function is being used.
 void	set_exit_code(t_msh *sh, int exit_code)
 {
 	sh->exit_code = exit_code;
@@ -23,6 +24,7 @@ void	set_exit_code(t_msh *sh, int exit_code)
 /*
 	Sets the shell exit code, prints error message.
 */
+// TODO: check if this function is being used.
 void	set_exit_msg(t_msh *sh, int exit_code, const char *error_msg)
 {
 	sh->exit_code = exit_code;
@@ -31,10 +33,23 @@ void	set_exit_msg(t_msh *sh, int exit_code, const char *error_msg)
 
 /*
 	Sets exit code to EXIT_FAILURE, prints system error message.
-	Uses ms_perror to print errno-based error info.
+	Uses msg_perr to print errno-based error info.
 */
 void	set_exit_perr(t_msh *sh, const char *error_msg)
 {
 	sh->exit_code = EXIT_FAILURE;
-	ms_perror(error_msg);
+	msg_perr(error_msg);
+}
+
+/*
+	Calls set_exit_perr:
+		Sets exit code to EXIT_FAILURE,
+		prints error message with errno information.
+	Returns NULL
+*/
+void	*set_exit_perr_null(t_msh *sh, const char *error_msg)
+{
+	sh->exit_code = EXIT_FAILURE;
+	msg_perr(error_msg);
+	return (NULL);
 }

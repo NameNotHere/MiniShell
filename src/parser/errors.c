@@ -6,51 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 12:46:28 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "minishell_parser.h"
 
-bool	is_quote_closed(const char *str, char quote)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == quote && (i == 0 || str[i - 1] != '\\'))
-			return (true);
-		i++;
-	}
-	return (false);
-}
-
-int	unclosed_token(const char *str, char token)
-{
-	if (token == 0)
-	{
-		if (!is_quote_closed(str, '\''))
-			return (2);
-		if (!is_quote_closed(str, '\"'))
-			return (3);
-	}
-	else if (!is_quote_closed(str, token))
-		return (1);
-	return (0);
-}
-
-int	is_closed(char *str, int i, char quote)
-{
-	while (str[i])
-	{
-		if (str[i] == quote)
-			return (1);
-		i++;
-	}
-	return (0);
-}
 
 int	xe_malloc(void **ptr, int *err, size_t nmemb, size_t size)
 {
@@ -77,34 +38,12 @@ int	xe_malloc(void **ptr, int *err, size_t nmemb, size_t size)
 */
 int	xe_calloc(void **ptr, int *err, size_t nmemb, size_t size)
 {
-	int	retval;
+	int	ret;
 
-	retval = xe_malloc(ptr, err, nmemb, size);
-	if (retval == EXIT_SUCCESS)
+	ret = xe_malloc(ptr, err, nmemb, size);
+	if (ret == EXIT_SUCCESS)
 		ft_bzero(*ptr, nmemb * size);
-	return (retval);
-}
-
-/*
-|x_malloc: simple malloc wrapper without error pointer parameter
-|Uses local error variable internally
-*/
-int	x_malloc(void **ptr, size_t nmemb, size_t size)
-{
-	int	local_err;
-
-	return (xe_malloc(ptr, &local_err, nmemb, size));
-}
-
-/*
-|x_calloc: simple calloc wrapper without error pointer parameter
-|Uses local error variable internally
-*/
-int	x_calloc(void **ptr, size_t nmemb, size_t size)
-{
-	int	local_err;
-
-	return (xe_calloc(ptr, &local_err, nmemb, size));
+	return (ret);
 }
 
 /* Type-specific wrappers for calloc only */
@@ -136,13 +75,6 @@ int	x_calloc_char(char **ptr, size_t count)
 	int	local_err;
 
 	return (xe_calloc_char(ptr, &local_err, count));
-}
-
-int	x_calloc_token(t_token **ptr, size_t count)
-{
-	int	local_err;
-
-	return (xe_calloc_token(ptr, &local_err, count));
 }
 
 int	x_calloc_int(int **ptr, size_t count)

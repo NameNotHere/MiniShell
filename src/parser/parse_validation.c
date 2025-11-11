@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 14:47:30 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/07 01:56:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	validate_pipe_syntax(t_token *tokens, int start, int end)
 			set_has_cmd(&i, &has_right_cmd, tokens);
 	}
 	if (found_pipe && (!has_left_cmd || !has_right_cmd))
-		return (2);
-	return (0);
+		return (EXIT_SYNTAX);
+	return (EXIT_SUCCESS);
 }
 

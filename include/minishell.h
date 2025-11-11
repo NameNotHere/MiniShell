@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 10:27:18 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@
 // # define MSH_PROMPT "$ "
 // # define HDOC_PROMPT "> "
 
-# define EXIT_INCORRECT_BUILTIN 2
 # define EXIT_CMD_NOT_FOUND 127
-# define EXIT_CMD_PERMISSION_DENIED 126
+# define EXIT_PERM_DENIED 126
+# define EXIT_SIGINT 130
 
 // 0644: user can read/write, others can read. reasonable/safe setting.
 # define OUTPUT_PERMISSIONS 0644
@@ -65,16 +65,16 @@ int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 
 // builtins.c
 int		execute_builtin(t_msh *sh, t_cmd *cmd);
-int		ft_cd(t_msh *sh, t_cmd *cmd);
-int		ft_pwd(t_msh *sh, t_cmd *cmd);
-int		ft_env(t_msh *sh, int argc);
-int		ft_unset(t_msh **sh, char *name);
-int		ft_echo(char **argv, int argc);
+int		x_cd(t_msh *sh, t_cmd *cmd);
+int		x_pwd(t_msh *sh, t_cmd *cmd);
+int		x_env(t_msh *sh, int argc);
+int		x_unset(t_msh *sh, t_cmd cmd);
+int		x_echo(char **argv, int argc);
 
 // builtins_exit_export.c
-int		ft_exit(t_msh *sh, t_cmd cmd);
-int		ft_export(t_msh **sh, t_cmd cmd);
-int		handle_export_assignment(t_msh **sh, char *arg, char *equals_pos);
+int		x_exit(t_msh *sh, t_cmd cmd);
+int		x_export(t_msh *sh, t_cmd cmd);
+int		handle_export_assignment(t_msh *sh, char *name, char *equals_pos);
 
 // exec/execute.c
 int		exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out);
@@ -107,7 +107,7 @@ int		heredoc_ast_node(t_msh *sh, t_ast *node);
 
 // exec/heredoc_assist.c
 char	*hdoc_loop(t_msh *sh, t_redir *redir);
-void	hdoc_err(t_msh *sh, int *write_fd, int *redir_fd, char *hdoc_str);
+int		hdoc_err(int *tmp_fd, char *hdoc_str, char *error_msg);
 
 // exec/lookup_cmd_fullpath.c
 int		lookup_all_cmd_fullpaths(t_msh *sh, t_ast *node);
@@ -129,7 +129,8 @@ void	try_dup2(t_msh *sh, int *fd_in, int *fd_out);
 
 // utils/utils_env.c
 bool	is_var_in_env(t_msh *sh, char *var, int *envp_idx);
-char	*get_env_value(t_msh *sh, char *var_name, int envp_idx);
+char	*get_env_value_by_idx(t_msh *sh, char *var_name, int envp_idx);
+char	*get_env_value_by_name(t_msh *sh, char *var_name);
 int		update_shell_level_var(t_msh *sh);
 int		initialize_null_env(t_msh *sh);
 
@@ -161,6 +162,7 @@ bool	rln_emit_line(t_rln_state *st, t_readbuf *rb, char **line);
 void	set_exit_code(t_msh *sh, int exit_code);
 void	set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
 void	set_exit_perr(t_msh *sh, const char *error_msg);
+void	*set_exit_perr_null(t_msh *sh, const char *error_msg);
 
 // utils/utils_r_set_exit.c
 int		r_set_exit(t_msh *sh, int exit_code);
@@ -168,7 +170,7 @@ int		r_set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
 int		r_set_exit_perr(t_msh *sh, const char *error_msg);
 int		r_set_exit_ret(t_msh *sh, int exit_code, int ret);
 int		r_msg_err(const char *error_msg, int ret);
-int		r_msg_perror(const char *error_msg, int ret);
+int		r_msg_perr(const char *error_msg, int ret);
 int		r_free_everything(t_msh *sh, int ret);
 
 // utils/utils_r_plus.c
@@ -177,14 +179,15 @@ int		r_free_two_str(char **str_a, char **str_b, int ret);
 int		r_free_str_perr(t_msh *sh, char **to_free, const char *error_msg);
 
 // utils/utils_r_err_msg.c
-int		r_msg_free_str(const char *error, char **to_free, int ret);
+int		r_msg_err_free_str(const char *error, char **to_free, int ret);
+void	*msg_err_null(const char *error);
+void	*msg_perr_null(const char *error);
 
 // utils/utils_string.c
 char	*get_shell_line(t_msh *sh, char *prompt);
 int		add_line_to_string(char **string, char **line);
 char	*get_empty_string(void);
 bool	set_empty_string(char **to_empty);
-char	*ft_strstr(const char *haystack, const char *needle);
 
 // utils/utils_string_array.c
 char	**copy_string_array(char **strings);
@@ -210,9 +213,8 @@ char	*ft_strndup(const char *src, int size);
 int		ft_strcmp(const char *s1, const char *s2);
 
 //is_builtin.c
-int		is_builtin(char *str);
-int		ft_echo(char **argv, int argc);
-int		ft_export(t_msh **sh, t_cmd cmd);
+bool	is_builtin(char *str);
+int		x_echo(char **argv, int argc);
 
 // utils/ft_realloc
 void	*ft_realloc(void *ptr, size_t new_size, size_t old_size);

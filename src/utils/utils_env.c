@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 18:28:25 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 14:47:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,26 +46,33 @@ bool	is_var_in_env(t_msh *sh, char *var, int *envp_idx)
 }
 
 /*
-Returns value from an environment variable
-Needs both the var name and the index.
-
-TODO: probably redundant to pass both...
-TODO: check maybe separate in two kinds of lookup (by name / by index)
-
+	Returns value from an environment variable by index.
+	Use this when you already have the index from search_name or is_var_in_env.
 */
-char	*get_env_value(t_msh *sh, char *var_name, int envp_idx)
+char	*get_env_value_by_idx(t_msh *sh, char *var_name, int envp_idx)
 {
 	char	*var_value;
 
+	var_value = NULL;
 	if (envp_idx < 0 || !sh->envp[envp_idx])
 		return (ft_strdup(""));
 	var_value = ft_strdup(sh->envp[envp_idx] + ft_strlen(var_name) + 1);
 	if (!var_value)
-	{
-		set_exit_perr(sh, "get_env_value allocation failed");
-		return (NULL);
-	}
+		return (set_exit_perr_null(sh, E_GET_ENV_VALUE));
 	return (var_value);
+}
+
+/*
+	Returns value from an environment variable by name.
+	Looks up the variable and returns its value.
+	Returns empty string if variable not found.
+*/
+char	*get_env_value_by_name(t_msh *sh, char *var_name)
+{
+	int	idx;
+
+	idx = search_name(var_name, sh->envp);
+	return (get_env_value_by_idx(sh, var_name, idx));
 }
 
 // updates shell level variable. safe to ignore return,
@@ -84,7 +91,7 @@ int	update_shell_level_var(t_msh *sh)
 		assign = ft_strdup("SHLVL=1");
 	else
 	{
-		var_value = get_env_value(sh, "SHLVL", var_idx);
+		var_value = get_env_value_by_idx(sh, "SHLVL", var_idx);
 		var_int = min_int(max_int(ft_atoi(var_value), 0), INT_MAX - 1) + 1;
 		safe_free_str(&var_value);
 		var_value = ft_itoa(var_int);
@@ -94,7 +101,7 @@ int	update_shell_level_var(t_msh *sh)
 	if (!assign)
 		return (EXIT_FAILURE);
 	equals_pos = ft_strchr(assign, '=');
-	handle_export_assignment(&sh, assign, equals_pos);
+	handle_export_assignment(sh, assign, equals_pos);
 	safe_free_str(&assign);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:55:54 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/09/23 12:54:19 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/07 11:10:17 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@
 # include <signal.h>
 # include <stddef.h>
 # include <stdbool.h>
+
+/*
+	this escape code printed on a terminal is used to tell terminal to clear
+	current line and return cursor to the start of the line
+*/
+# define CLEAR_LINE_ANSI_CODE "\r\033[2K"
 
 // Signal integer value received by minishell.
 //

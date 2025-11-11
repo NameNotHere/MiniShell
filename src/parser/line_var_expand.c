@@ -6,11 +6,10 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/06 19:46:14 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_parser.h"
 #include "minishell.h"
 
 /*
@@ -108,6 +107,18 @@ bool	must_skip_exp(t_var_expand *ve, int index)
 	return (false);
 }
 
+/*
+	Helper to check if we're expanding a tilde at current position.
+	Matches against stored var_names (which contains "~" for tilde expansions).
+*/
+static bool	is_expanding_tilde(t_var_expand *ve, char *str)
+{
+	return (ve->var_names[ve->var_i]
+		&& ve->var_names[ve->var_i][0] == '~'
+		&& ve->var_names[ve->var_i][1] == '\0'
+		&& str[ve->i] == '~');
+}
+
 int	expand_vars(t_var_expand *ve, char *str)
 {
 	while (str[ve->i])
@@ -128,6 +139,21 @@ int	expand_vars(t_var_expand *ve, char *str)
 			}
 			ve->i += ft_strlen(ve->var_names[ve->var_i]);
 			ve->skipped_chars += ft_strlen(ve->var_names[ve->var_i]) + 1;
+			ve->var_i++;
+		}
+		else if (is_expanding_tilde(ve, str))
+		{
+			ve->var_lookup = true;
+			ve->value = ve->var_values[ve->var_i];
+			while (*ve->value)
+			{
+				if (is_operator_char(*ve->value))
+					ve->new_str[ve->i + ve->exp_i++ - ve->skipped_chars] = EXP_MARK;
+				ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = *ve->value;
+				ve->exp_i++;
+				ve->value++;
+			}
+			ve->skipped_chars += 1;
 			ve->var_i++;
 		}
 		if (ve->var_lookup == false)

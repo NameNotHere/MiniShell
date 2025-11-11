@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/04 14:13:06 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 		g_sig = 0;
 		if (!set_interactive_sig())
 		{
-		msg_err(E_SIGNAL_INTERACTIVE);
+			msg_err(E_SIGNAL_INTERACTIVE);
 			sh->exit_code = EXIT_FAILURE;
 			return (NULL);
 		}
@@ -79,10 +79,10 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 */
 int	add_line_to_string(char **string, char **line)
 {
-	int		result;
+	int		ret;
 	char	*updated_string;
 
-	result = EXIT_SUCCESS;
+	ret = EXIT_SUCCESS;
 	if (!(*line))
 	{
 		msg_err(E_ADD_LINE_INVALID);
@@ -94,14 +94,14 @@ int	add_line_to_string(char **string, char **line)
 		updated_string = ft_strdup(*line);
 	if (updated_string == NULL)
 	{
-		ms_perror(E_ADD_LINE_STRING);
-		result = EXIT_FAILURE;
+		msg_perr(E_ADD_LINE_STRING);
+		ret = EXIT_FAILURE;
 	}
 	safe_free_str(string);
 	safe_free_str(line);
 	*string = updated_string;
 	updated_string = NULL;
-	return (result);
+	return (ret);
 }
 
 /*
@@ -121,14 +121,4 @@ bool	set_empty_string(char **to_empty)
 	if (*to_empty == NULL)
 		return (false);
 	return (true);
-}
-
-/*
-	strstr implementation using ft_strnstr from libft
-*/
-char	*ft_strstr(const char *haystack, const char *needle)
-{
-	if (!haystack || !needle)
-		return (NULL);
-	return (ft_strnstr(haystack, needle, ft_strlen(haystack)));
 }

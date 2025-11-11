@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:09:12 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/02 20:30:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 22:06:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,16 @@ static bool	is_valid_n_flag(const char *arg)
 	return (true);
 }
 
-static void	ft_echo_arg(char **argv, int *arg_i, bool *first_content)
+static void	echo_arg(char **argv, int *arg_i, bool *first_content)
 {
 	if (!*first_content)
-		write(1, " ", 1);
+		(void)write(1, " ", 1);
 	*first_content = false;
-	write(1, argv[*arg_i], ft_strlen(argv[*arg_i]));
+	(void)write(1, argv[*arg_i], ft_strlen(argv[*arg_i]));
 	(*arg_i)++;
 }
 
-int	ft_echo(char **argv, int argc)
+int	x_echo(char **argv, int argc)
 {
 	int		arg_i;
 	bool	first_content;
@@ -52,8 +52,8 @@ int	ft_echo(char **argv, int argc)
 		arg_i++;
 	}
 	while (arg_i < argc && argv[arg_i])
-		ft_echo_arg(argv, &arg_i, &first_content);
+		echo_arg(argv, &arg_i, &first_content);
 	if (!has_n_flag)
-		write(1, "\n", 1);
+		(void)write(1, "\n", 1);
 	return (EXIT_SUCCESS);
 }

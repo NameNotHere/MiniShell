@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/07 01:56:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/10 22:06:40 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,6 @@ Usage: make VALIDATE=0
 #  define VALIDATE 1
 # endif
 
-// TODO: LAST remove debug include before eval
-# include "minishell_debug.h"
-
 # define PATH_DEFAULT "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin\
 :/sbin:/bin"
 
@@ -81,6 +78,9 @@ larger than 256: hard to use and read.
 larger than 2048: arbitrarily high soft limit: avoids truncation
 */
 # define ENV_VAR_NAME_MAX 2048
+
+/* exit code for syntax errors (bash convention) */
+# define EXIT_SYNTAX 2
 
 /* marker for operators in variable expansions before tokenizing */
 # define EXP_MARK '\x01'
@@ -261,11 +261,11 @@ typedef struct s_msh
 // parser/ast.c
 int			build_ast(t_msh *sh, t_ast *ast, t_token *tokens);
 int			scan_tokens(t_msh *sh, t_ast *ast, int start, int end);
-void		scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i);
-void		parse_pipe(t_msh *sh, t_ast *ast, int start, int end);
+int			scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i);
+int			parse_pipe(t_msh *sh, t_ast *ast, int start, int end);
 
 // parser/ast_cmd.c
-void		parse_cmd(t_msh *sh, t_ast *ast, int start, int end);
+int			parse_cmd(t_msh *sh, t_ast *ast, int start, int end);
 char		**token_words_to_argv(t_token *tokens, int start, int end,
 				int argc);
 char		*remove_quotes(char *str, int len);
@@ -283,9 +283,9 @@ int			last_token(t_token *tokens);
 t_ast		*make_ast_node(t_node_ty ty);
 
 // parser/ast_redir.c
-void		add_redir(t_ast *ast, t_token_ty token_type, char *word);
+int			add_redir(t_ast *ast, t_token_ty token_type, char *word);
 t_redir_ty	get_redir_type(t_token_ty ty);
-void		parse_redir(t_msh *sh, t_ast *ast, int *start, int *end);
+int			parse_redir(t_msh *sh, t_ast *ast, int *start, int *end);
 
 // parser/lex.c
 int			count_tokens(char *str, int count, int i);
@@ -338,7 +338,7 @@ bool		is_operator_char(char c);
 bool		piped_line(char *line);
 
 // utils/utils_char.c
-bool		ft_valid_var_char(int c);
+bool		is_valid_var_char(int c);
 bool		is_sgl_quote(int c);
 bool		is_dbl_quote(int c);
 
@@ -383,8 +383,6 @@ int			x_calloc_int(int **ptr, size_t count);
 int			x_calloc_charptr(char ***ptr, size_t count);
 int			x_calloc_redir(t_redir **ptr, size_t count);
 int			x_calloc_ast(t_ast **ptr, size_t count);
-int			is_closed(char *str, int i, char quote);
-int			unclosed_token(const char *str, char token);
 
 // parser/parser_validation.c
 int			validate_pipe_syntax(t_token *tokens, int start, int end);
@@ -399,15 +397,18 @@ void		msg_err_2(const char *str1, const char *str2);
 void		msg_err_3(const char *str1, const char *str2, const char *str3);
 
 // utils/utils_r_err_msg.c
-int			r_msg_free_str(const char *error, char **to_free, int ret);
+int			r_msg_err_free_str(const char *error, char **to_free, int ret);
+void		*msg_err_null(const char *error);
+void		*r_free_str_null(char **to_free);
 
 // utils/utils_r_plus.c
 int			r_free_str(char **to_free, int ret);
 int			r_free_two_str(char **str_a, char **str_b, int ret);
+void		*r_free_null(void **ptr);
 
 // utils/utils_error2.c
-int			set_dir_or_error(t_msh *sh, char **directory);
-void		ms_perror(const char *error);
+int			change_dir_or_error(t_msh *sh, char **directory);
+void		msg_perr(const char *error);
 
 // utils/has_quotes.c
 bool		has_quotes(const char *str);
