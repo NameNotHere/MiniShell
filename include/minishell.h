@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 12:42:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 12:45:16 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 
 // int		minishell_mainloop(t_msh *sh);
 
-// builtins.c
+// builtins_cd_pwd_env.c
 int		execute_builtin(t_msh *sh, t_cmd *cmd);
 int		x_cd(t_msh *sh, t_cmd *cmd);
 int		x_pwd(t_msh *sh, t_cmd *cmd);

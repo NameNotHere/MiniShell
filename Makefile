@@ -78,7 +78,7 @@ SRCS = 	signals/signals.c \
 	signals/signals_heredoc.c \
 	minishell_initialize.c \
 	minishell_main.c \
-	builtins/builtins.c \
+	builtins/builtins_cd_pwd_env.c \
 	builtins/builtins_unset.c \
 	builtins/builtins_dispatcher.c \
 	builtins/builtins_export.c \
