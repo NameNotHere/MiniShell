@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 12:57:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ char	*remove_quotes(char *str, int len)
 			result[q.res_i++] = str[q.str_i];
 		else if (PRO)
 			remove_quotes_pro(str, result, &q);
-
 	}
 	return (result);
 }

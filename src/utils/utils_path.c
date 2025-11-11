@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:18:36 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,8 @@ char	*make_cmd_full_path(const char *dir, const char *cmd)
 
 	add_slash = (dir[ft_strlen(dir) - 1] != '/');
 	len = ft_strlen(dir) + ft_strlen(cmd) + add_slash + 1;
-	// full = malloc(len * sizeof(char));
-	// if (!full)
-	// 	return (NULL);
 	if (x_calloc_char(&full, len) != EXIT_SUCCESS)
 		return (NULL);
-
 	i = 0;
 	cmd_i = 0;
 	while (dir[i])
@@ -49,13 +45,6 @@ char	*make_cmd_full_path(const char *dir, const char *cmd)
 	return (full);
 }
 
-// Gets a full command path by checking concatenations of path
-// directories with command, and checking if the full path exists
-// and is executable.
-// Also checks if the command contains a '/' character, in which case
-// it is treated as a full path.
-// Returns full path if found, or NULL if not found.
-// Caller is responsible for freeing the returned string.
 char	*get_valid_cmd_full_path(char **path_dirs, char *cmd)
 {
 	int		i;
@@ -85,8 +74,6 @@ char	*get_valid_cmd_full_path(char **path_dirs, char *cmd)
 	return (NULL);
 }
 
-// Retrieves the PATH variable from the environment variables.
-// Returns a pointer to the value of PATH (the part after "PATH=").
 char	*get_path_from_env(char **envp)
 {
 	while (*envp)
@@ -98,14 +85,6 @@ char	*get_path_from_env(char **envp)
 	return (NULL);
 }
 
-// Updates path_dirs.
-// Gets PATH value from env.
-// If PATH is not set (NULL), uses PATH_DEFAULT (skip "PATH=" prefix).
-// If PATH="" (empty string), path_dirs will be NULL.
-// Frees old path_dirs and creates new one.
-// Returns:
-// 	- EXIT_SUCCESS on success
-//	- EXIT_FAILURE on failure
 int	update_path_dirs(char ***path_dirs, char **envp)
 {
 	char	*path_value;
@@ -128,3 +107,4 @@ int	update_path_dirs(char ***path_dirs, char **envp)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
+

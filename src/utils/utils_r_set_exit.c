@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:58:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 11:58:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ int	r_set_exit_msg(t_msh *sh, int exit_code, const char *error_msg)
 	return (exit_code);
 }
 
-
-
 /*
 	Sets exit code to EXIT_FAILURE and prints system error message.
 	Error code is always EXIT_FAILURE, not errno.
@@ -55,4 +53,3 @@ int	r_set_exit_ret(t_msh *sh, int exit_code, int ret)
 	sh->exit_code = exit_code;
 	return (ret);
 }
-

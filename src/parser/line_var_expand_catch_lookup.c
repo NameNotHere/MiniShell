@@ -6,13 +6,12 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 10:53:49 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 11:58:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* Function declarations */
 int	catch_var(t_msh *sh, t_var_expand *ve);
 int	catch_absent_var(t_msh *sh, t_var_expand *ve);
 bool	is_positional_var(t_var_expand *ve, char c);

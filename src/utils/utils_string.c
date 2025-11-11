@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ char	*get_shell_line(t_msh *sh, char *prompt)
 
 	line = NULL;
 	full = NULL;
-
 	if (sh->is_interact)
 	{
 		g_sig = 0;
