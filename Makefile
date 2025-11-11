@@ -25,18 +25,19 @@ LDFLAGS += -fsanitize=address,undefined
 
 CFLAGS_DEBUG = $(CFLAGS)
 CFLAGS_DEBUG += -fsanitize=address,undefined -fno-omit-frame-pointer
-########################################################################
-# CFLAGS_DEBUG CHOICE                                                  #
 CFLAGS_DEBUG += -Og
-# OR (substitutes: for checking uninitialized, it needs -O1)           #
-# CFLAGS_DEBUG += -O1 -Wuninitialized                                  #
-########################################################################
 LDFLAGS_DEBUG = $(LDFLAGS)
 LDFLAGS_DEBUG += -fsanitize=address,undefined
 
 CFLAGS_OPTIMAL = -Wall -Werror -Wextra -O3 -flto
 LDFLAGS_OPTIMAL = $(LDFLAGS)
 LDFLAGS_OPTIMAL += -flto
+
+# Uninitialized variable detection (compile-time warnings)
+CFLAGS_UNINIT = -Wall -Werror -Wextra -g3 -O1 -Wuninitialized
+CFLAGS_UNINIT += -fsanitize=address,undefined -fno-omit-frame-pointer
+LDFLAGS_UNINIT = $(LDFLAGS)
+LDFLAGS_UNINIT += -fsanitize=address,undefined
 
 # UBSan-only build (for focused undefined behavior testing)
 CFLAGS_UBSAN = -Wall -Werror -Wextra -g3 -O1
@@ -45,7 +46,7 @@ CFLAGS_UBSAN += -fno-sanitize-recover=all  # abort on first UB
 LDFLAGS_UBSAN = $(LDFLAGS)
 LDFLAGS_UBSAN += -fsanitize=undefined
 
-# Memory Sanitizer (detects uninitialized memory reads)
+# Memory Sanitizer (detects uninitialized memory reads at runtime)
 CFLAGS_MSAN = -Wall -Werror -Wextra -g3 -O1
 CFLAGS_MSAN += -fsanitize=memory -fno-omit-frame-pointer
 CFLAGS_MSAN += -fsanitize-memory-track-origins=2
@@ -196,6 +197,10 @@ ubsan: fclean
 	$(MAKE) CFLAGS="$(CFLAGS_UBSAN)" LDFLAGS="$(LDFLAGS_UBSAN)" all
 	@echo "UBSan build made - detects undefined behavior"
 
+uninit: fclean
+	$(MAKE) CFLAGS="$(CFLAGS_UNINIT)" LDFLAGS="$(LDFLAGS_UNINIT)" all
+	@echo "Uninitialized variable detection build made (compile-time warnings)"
+
 msan: fclean
 	@echo "Building with MSan (including libft)..."
 	$(MAKE) CFLAGS="$(CFLAGS_MSAN)" LDFLAGS="$(LDFLAGS_MSAN)" all
@@ -205,4 +210,4 @@ fortify: fclean
 	$(MAKE) CFLAGS="$(CFLAGS_FORTIFY)" LDFLAGS="$(LDFLAGS_FORTIFY)" all
 	@echo "FORTIFY_SOURCE build made - detects buffer overflows"
 
-.PHONY: all clean fclean re bonus debug optimal ubsan msan fortify
+.PHONY: all clean fclean re bonus debug optimal valgrind ubsan uninit msan fortify
