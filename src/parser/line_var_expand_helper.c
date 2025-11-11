@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 10:27:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 11:11:13 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	init_var_expand_arrays(t_msh *sh, t_var_expand *ve)
 void	reset_var_lookup(t_var_expand *ve)
 {
 	ve->var_lookup = false;
-	bzero(ve->var_name_buffer, sizeof(ve->var_name_buffer));
+	ft_bzero(ve->var_name_buffer, sizeof(ve->var_name_buffer));
 	ve->var_name_i = 0;
 }
 

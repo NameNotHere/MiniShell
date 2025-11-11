@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/30 00:12:45 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/09 12:22:16 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 11:11:13 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,12 @@ static int	initialize_run_command(t_msh *sh, char **argv)
 	back on with:
 		stty echoctl
 
-	NOTE: forcing rl_on_new_line and rl_redisplay at the starts prevents
-	a bug with pasting text on first line (prompt gets messed up because
-	readline did not initialize properly before that). The issue is with
-	handling "bracketed paste", and the alternative would be to set it off
-	explicitly: rl_variable_bind("enable-bracketed-paste", "off");
-	That function also works and the intention is more clear, but it is not
-	an allowed function (at least not listed in the project's subject file).
-	So the on_new_line + redisplay calls are a workaround, but does the trick.
+	NOTE: there is an issue with bracketed paste on the first line
+	without this function call:
+	rl_variable_bind("enable-bracketed-paste", "off");
+	minishell messes up prompt if you paste on first line.
+	using the second line fixes it, or adding this function call.
+	but that function is not in the allowed functions list.
 */
 static void	initialize_run_interactive(void)
 {
@@ -80,7 +78,6 @@ static void	initialize_run_interactive(void)
 	{
 		term.c_lflag |= ECHOCTL;
 		tcsetattr(STDIN_FILENO, TCSANOW, &term);
-		rl_variable_bind("enable-bracketed-paste", "off");
 	}
 	rl_on_new_line();
 	rl_redisplay();
