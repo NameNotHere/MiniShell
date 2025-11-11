@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 15:40:47 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 16:29:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,8 +161,6 @@ bool	rln_init(t_rln_state *st, t_readbuf *rb, char **line);
 bool	rln_emit_line(t_rln_state *st, t_readbuf *rb, char **line);
 
 // utils/utils_set_exit_code.c
-void	set_exit_code(t_msh *sh, int exit_code);
-void	set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
 void	set_exit_perr(t_msh *sh, const char *error_msg);
 void	*set_exit_perr_null(t_msh *sh, const char *error_msg);
 

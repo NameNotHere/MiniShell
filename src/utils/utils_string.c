@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 16:29:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,6 @@ int	add_line_to_string(char **string, char **line)
 	return (ret);
 }
 
-/*
-	Returns an empty string
-	TODO: check if we need to catch error here or on the caller.
-	Probably the latter
-*/
 char	*get_empty_string(void)
 {
 	return (ft_calloc(1, sizeof(char)));

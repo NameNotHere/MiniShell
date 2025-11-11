@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 16:00:42 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 16:29:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 	return (ret);
 }
 
-/*scanning if pipe is found, if yes, call parsing with start/end */
 int	scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i)
 {
 	int			start;

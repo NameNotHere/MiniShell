@@ -6,30 +6,11 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 17:52:21 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###  ########.fr       */
+/*   Updated: 2025/11/11 16:29:51 by tda-roch         ###  ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-	Sets the shell exit code.
-*/
-// TODO: check if this function is being used.
-void	set_exit_code(t_msh *sh, int exit_code)
-{
-	sh->exit_code = exit_code;
-}
-
-/*
-	Sets the shell exit code, prints error message.
-*/
-// TODO: check if this function is being used.
-void	set_exit_msg(t_msh *sh, int exit_code, const char *error_msg)
-{
-	sh->exit_code = exit_code;
-	msg_err(error_msg);
-}
 
 /*
 	Sets exit code to EXIT_FAILURE, prints system error message.
