@@ -76,6 +76,7 @@ SRCS = 	signals/signals.c \
 	signals/signals_execution.c \
 	signals/signals_interactive.c \
 	signals/signals_heredoc.c \
+	get_shell_line.c \
 	minishell_initialize.c \
 	minishell_main.c \
 	builtins/builtins_cd_pwd_env.c \
@@ -107,6 +108,7 @@ SRCS = 	signals/signals.c \
 	parser/advanced_expansions_fixes.c \
 	parser/advanced_expansions_helpers.c \
 	parser/line_var_expand.c \
+	parser/line_var_expand_exec.c \
 	parser/line_var_expand_helpers.c \
 	parser/line_var_expand_catch_helpers.c \
 	parser/line_var_expand_catch_lookup.c \

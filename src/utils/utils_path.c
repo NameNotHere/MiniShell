@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:18:36 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,4 +107,3 @@ int	update_path_dirs(char ***path_dirs, char **envp)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
-

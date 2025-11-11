@@ -6,71 +6,11 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 09:42:11 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-	Gets a line in two different possible modes depending on is_interactive flag
-	- interactive (with readline)
-	- non-interactive (with readline_noninteractive)
-
-	Returns a line string typed in interactive mode, or string passed through
-	pipe (stripped of newline char).
-	If failed, returns NULL.
-*/
-
-char	*get_shell_line(t_msh *sh, char *prompt)
-{
-	char	*line;
-	char	*full;
-	char	*tmp;
-	int		input_fd;
-
-	line = NULL;
-	full = NULL;
-	if (sh->is_interact)
-	{
-		g_sig = 0;
-		if (!set_interactive_sig())
-		{
-			msg_err(E_SIGNAL_INTERACTIVE);
-			sh->exit_code = EXIT_FAILURE;
-			return (NULL);
-		}
-		rl_event_hook = event_hook_sigint_return;
-		line = readline(prompt);
-		if (!line)
-			return (NULL);
-		full = ft_strdup(line);
-		while (PRO && unclosed_quotes(full))
-		{
-			safe_free_str(&line);
-			line = readline("unclosed quotes> ");
-			if (!line)
-				break ;
-			tmp = ft_strjoin3(full, "\n", line);
-			safe_free_str(&full);
-			full = tmp;
-		}
-		safe_free_str(&line);
-		return (full);
-	}
-	else
-	{
-		if (sh->script_fd >= 0)
-			input_fd = sh->script_fd;
-		else
-			input_fd = STDIN_FILENO;
-		if (g_sig != SIGINT && g_sig != SIGQUIT
-			&& set_ignore_sig()
-			&& readline_noninteract(input_fd, &sh->readbuf, &line) == false)
-			safe_free_str(&line);
-	}
-	return (line);
-}
 
 /*
 	Adds a line to a string, after newline char.

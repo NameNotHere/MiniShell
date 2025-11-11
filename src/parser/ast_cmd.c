@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,17 @@ int	parse_cmd(t_msh *sh, t_ast *ast, int start, int end)
 	return (EXIT_SUCCESS);
 }
 
-bool	init_remove_quotes(char *str, char **result, t_remove_quotes *rq, int len)
+bool	init_remove_quotes(char *str, char **res, t_remove_quotes *rq, int len)
 {
-	*result = NULL;
+	*res = NULL;
 	if (!str)
 		return (false);
 	if (len == 0)
 	{
-		*result = get_empty_string();
+		*res = get_empty_string();
 		return (false);
 	}
-	if (x_calloc_char(result, len + 1) != EXIT_SUCCESS)
+	if (x_calloc_char(res, len + 1) != EXIT_SUCCESS)
 	{
 		msg_perr(E_INIT_REMOVE_QUOTES);
 		return (false);

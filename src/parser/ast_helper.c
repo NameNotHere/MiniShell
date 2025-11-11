@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:04:16 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	last_token(t_token *tokens)
 	return (i);
 }
 
-bool	has_pipe(t_token *tokens, int start, int end)
+bool	has_pipe(t_ast *ast, t_token *tokens, int start, int end)
 {
 	int	i;
 
@@ -71,7 +71,11 @@ bool	has_pipe(t_token *tokens, int start, int end)
 	while (tokens[i].word && i <= end)
 	{
 		if (tokens[i].ty == TOKEN_PIPE)
+		{
+			if (ast)
+				ast->nty = NODE_PIPE;
 			return (true);
+		}
 		i++;
 	}
 	return (false);

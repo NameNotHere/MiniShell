@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/05 10:22:19 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 11:58:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,3 @@ bool	handle_ve_quote(char *str, bool *sgl_quote, bool *dbl_quote, int i)
 	}
 	return (handled);
 }
-

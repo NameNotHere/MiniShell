@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:17:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,7 @@ int	parse_line(t_msh *sh, t_ast *ast, char *string)
 	{
 		free_tokens(&sh->tokens, token_count);
 		if (ret == EXIT_SYNTAX)
-		{
-			sh->exit_code = EXIT_SYNTAX;
-			return (EXIT_SYNTAX);
-		}
+			return (r_set_exit(sh, EXIT_SYNTAX));
 		return (r_set_exit_msg(sh, EXIT_FAILURE, E_AST_BUILD_FAILED));
 	}
 	free_tokens(&sh->tokens, token_count);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 00:07:42 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 12:42:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,59 +24,6 @@ bool	must_skip_exp(t_var_expand *ve, int index)
 		i++;
 	}
 	return (false);
-}
-
-static bool	is_expanding_tilde(t_var_expand *ve, char *str)
-{
-	return (ve->var_names[ve->var_i]
-		&& ve->var_names[ve->var_i][0] == '~'
-		&& ve->var_names[ve->var_i][1] == '\0'
-		&& str[ve->i] == '~');
-}
-
-int	expand_vars(t_var_expand *ve, char *str)
-{
-	while (str[ve->i])
-	{
-		if (handle_ve_quote(str, &ve->sgl_quote, &ve->dbl_quote, ve->i))
-			;
-		else if ('$' == str[ve->i] && must_expand(ve, str, ve->i))
-		{
-			ve->var_lookup = true;
-			ve->value = ve->var_values[ve->var_i];
-			while (*ve->value)
-			{
-				if (!ve->dbl_quote && is_operator_char(*ve->value))
-					ve->new_str[ve->i + ve->exp_i++ - ve->skipped_chars] = EXP_MARK;
-				ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = *ve->value;
-				ve->exp_i++;
-				ve->value++;
-			}
-			ve->i += ft_strlen(ve->var_names[ve->var_i]);
-			ve->skipped_chars += ft_strlen(ve->var_names[ve->var_i]) + 1;
-			ve->var_i++;
-		}
-		else if (is_expanding_tilde(ve, str))
-		{
-			ve->var_lookup = true;
-			ve->value = ve->var_values[ve->var_i];
-			while (*ve->value)
-			{
-				if (is_operator_char(*ve->value))
-					ve->new_str[ve->i + ve->exp_i++ - ve->skipped_chars] = EXP_MARK;
-				ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = *ve->value;
-				ve->exp_i++;
-				ve->value++;
-			}
-			ve->skipped_chars += 1;
-			ve->var_i++;
-		}
-		if (ve->var_lookup == false)
-			ve->new_str[ve->i + ve->exp_i - ve->skipped_chars] = str[ve->i];
-		ve->var_lookup = false;
-		ve->i++;
-	}
-	return (EXIT_SUCCESS);
 }
 
 void	cleanup_ve(t_var_expand *ve, bool free_new_str)

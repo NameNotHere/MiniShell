@@ -6,17 +6,11 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 10:53:49 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	catch_var(t_msh *sh, t_var_expand *ve);
-int	catch_absent_var(t_msh *sh, t_var_expand *ve);
-bool	is_positional_var(t_var_expand *ve, char c);
-bool	must_expand_tilde(t_var_expand *ve, char *str, int pos);
-int	catch_tilde(t_msh *sh, t_var_expand *ve);
 
 int	lookup_var(t_msh *sh, t_var_expand *ve, char c, char next_c)
 {

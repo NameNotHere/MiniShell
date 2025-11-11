@@ -6,42 +6,47 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 13:05:20 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_parser.h"
+
+static t_token_ty	get_token_type(char *str)
+{
+	if (VALIDATE && ft_strncmp(str, "&&", 2) == 0)
+		return (TOKEN_AND);
+	else if (VALIDATE && ft_strncmp(str, "||", 2) == 0)
+		return (TOKEN_OR);
+	else if (VALIDATE && str[0] == '&')
+		return (TOKEN_AMPERSAND);
+	else if (VALIDATE && str[0] == ';')
+		return (TOKEN_SEMICOLON);
+	else if (VALIDATE && str[0] == '(')
+		return (TOKEN_LPAREN);
+	else if (VALIDATE && str[0] == ')')
+		return (TOKEN_RPAREN);
+	else if (str[0] == '|')
+		return (TOKEN_PIPE);
+	else if (ft_strncmp(str, "<<", 2) == 0)
+		return (TOKEN_HEREDOC);
+	else if (ft_strncmp(str, ">>", 2) == 0)
+		return (TOKEN_APPEND);
+	else if (str[0] == '<')
+		return (TOKEN_INPUT);
+	else if (str[0] == '>')
+		return (TOKEN_OUTPUT);
+	else if (str[0] == '-')
+		return (TOKEN_DASH_PARAM);
+	return (TOKEN_WORD);
+}
 
 t_token	make_token(char *str)
 {
 	t_token	output;
 
 	output.word = str;
-	output.ty = TOKEN_WORD;
-	if (VALIDATE && ft_strncmp(str, "&&", 2) == 0)
-		output.ty = TOKEN_AND;
-	else if (VALIDATE && ft_strncmp(str, "||", 2) == 0)
-		output.ty = TOKEN_OR;
-	else if (VALIDATE && str[0] == '&')
-		output.ty = TOKEN_AMPERSAND;
-	else if (VALIDATE && str[0] == ';')
-		output.ty = TOKEN_SEMICOLON;
-	else if (VALIDATE && str[0] == '(')
-		output.ty = TOKEN_LPAREN;
-	else if (VALIDATE && str[0] == ')')
-		output.ty = TOKEN_RPAREN;
-	else if (str[0] == '|')
-		output.ty = TOKEN_PIPE;
-	else if (ft_strncmp(str, "<<", 2) == 0)
-		output.ty = TOKEN_HEREDOC;
-	else if (ft_strncmp(str, ">>", 2) == 0)
-		output.ty = TOKEN_APPEND;
-	else if (str[0] == '<')
-		output.ty = TOKEN_INPUT;
-	else if (str[0] == '>')
-		output.ty = TOKEN_OUTPUT;
-	else if (str[0] == '-')
-		output.ty = TOKEN_DASH_PARAM;
+	output.ty = get_token_type(str);
 	return (output);
 }
 

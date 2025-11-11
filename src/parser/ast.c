@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 02:59:59 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 13:48:31 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	scan_tokens(t_msh *sh, t_ast *ast, int start, int end)
 	i = start;
 	if (VALIDATE && detect_unsupported_operator(sh->tokens))
 		return (process_unsupported_operator_error(sh));
-	if (has_pipe(sh->tokens, start, end))
+	if (has_pipe(current_node, sh->tokens, start, end))
 	{
 		if (validate_pipe_syntax(sh->tokens, start, end) != 0)
 			return (r_msg_err(E_SYNTAX_PIPE, EXIT_SYNTAX));
@@ -54,7 +54,6 @@ int	scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i)
 	end = last_token(tokens);
 	if (tokens[start].word == NULL)
 		return (EXIT_SUCCESS);
-	ast->nty = NODE_PIPE;
 	while (tokens[*i].word)
 	{
 		if (tokens[*i].ty == TOKEN_PIPE)
@@ -67,7 +66,7 @@ int	scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i)
 		}
 		(*i)++;
 	}
-	if (has_pipe(tokens, *i, end))
+	if (has_pipe(ast->pipe.right, tokens, *i, end))
 		return (scan_tokens(sh, ast->pipe.right, *i, end));
 	else if (tokens[*i].word)
 		return (parse_cmd(sh, ast->pipe.right, *i, end));

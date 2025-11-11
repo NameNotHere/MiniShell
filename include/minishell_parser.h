@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/11 12:57:27 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,7 +278,7 @@ bool		is_valid_cmd_token(t_token_ty token_type);
 // parser/ast_helper.c
 void		free_ast(t_ast **node);
 void		free_ast_cmd(t_ast *node);
-bool		has_pipe(t_token *tokens, int start, int end);
+bool		has_pipe(t_ast *ast, t_token *tokens, int start, int end);
 int			last_token(t_token *tokens);
 t_ast		*make_ast_node(t_node_ty ty);
 
@@ -300,6 +300,19 @@ bool		is_in_heredoc_delimiter(char *str, int pos);
 // parser/line_var_expand.c
 bool		expand_string_variables(t_msh *sh, char **string_ptr, bool is_hdoc);
 bool		must_skip_exp(t_var_expand *ve, int index);
+
+// parser/line_var_expand_exec.c
+int			expand_vars(t_var_expand *ve, char *str);
+
+// parser/line_var_expand_helpers.c
+bool		advanced_substitutions(t_var_expand *ve, char **str_ptr);
+
+// parser/line_var_expand_catch_lookup.c
+int			catch_var(t_msh *sh, t_var_expand *ve);
+int			catch_absent_var(t_msh *sh, t_var_expand *ve);
+bool		is_positional_var(t_var_expand *ve, char c);
+bool		must_expand_tilde(t_var_expand *ve, char *str, int pos);
+int			catch_tilde(t_msh *sh, t_var_expand *ve);
 
 // parser/advanced_expansions.c - Condition checkers
 bool		must_fix_escaped_backslash(t_var_expand *ve, char *str);

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 01:24:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 11:45:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,3 @@ bool	must_fix_locale_syntax(t_var_expand *ve, char *str)
 	return (is_quote_free(ve)
 		&& str[ve->i] == '$' && str[ve->i + 1] == '"');
 }
-

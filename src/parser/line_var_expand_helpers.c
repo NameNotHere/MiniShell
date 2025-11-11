@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 11:12:09 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 	Single quotes are marked with SGL_QUOTE_MARK to preserve them initially.
 	Note: inside $"..." , escapes the single quotes, otherwise they get marked
 */
-static void	cycle_advanced_substitutions(t_var_expand *ve, char *str, char *result)
+static void	cycle_pro_substitutions(t_var_expand *ve, char *str, char *result)
 {
 	if (must_fix_escaped_backslash(ve, str))
 		fix_escaped_backslash(ve, result);
@@ -80,7 +80,7 @@ bool	advanced_substitutions(t_var_expand *ve, char **str_ptr)
 		return (false);
 	}
 	while ((*str_ptr)[ve->i])
-		cycle_advanced_substitutions(ve, *str_ptr, result);
+		cycle_pro_substitutions(ve, *str_ptr, result);
 	ve->i = 0;
 	ve->res_i = 0;
 	ve->sgl_quote = false;
