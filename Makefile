@@ -103,6 +103,9 @@ SRCS = 	signals/signals.c \
 	parser/advanced_expansions_fixes.c \
 	parser/advanced_expansions_helpers.c \
 	parser/line_var_expand.c \
+	parser/line_var_expand_catch_helpers.c \
+	parser/line_var_expand_catch_lookup.c \
+	parser/line_var_expand_array.c \
 	parser/line_var_expand_catch.c \
 	parser/line_var_expand_helper.c \
 	parser/parse_line.c \
@@ -132,6 +135,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_r_err_msg.c \
 	utils/utils_r_plus.c \
 	utils/utils_r_set_exit.c \
+	utils/utils_r_msg.c \
 	utils/utils_set_exit_code.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
