@@ -79,6 +79,8 @@ SRCS = 	signals/signals.c \
 	minishell_initialize.c \
 	minishell_main.c \
 	builtins/builtins.c \
+	builtins/builtins_unset.c \
+	builtins/builtins_dispatcher.c \
 	builtins/builtins_export.c \
 	builtins/builtins_echo.c \
 	builtins/builtins_exit_export.c \
@@ -90,6 +92,7 @@ SRCS = 	signals/signals.c \
 	exec/execute_cmd_redir.c \
 	exec/execute_cmd_redir_open.c \
 	exec/heredoc.c \
+	exec/heredoc_helpers.c \
 	exec/heredoc_assist.c \
 	exec/safe_fork.c \
 	exec/safe_pipe.c \
@@ -98,11 +101,13 @@ SRCS = 	signals/signals.c \
 	parser/ast_helper.c \
 	parser/ast_redir.c \
 	parser/lex.c \
+	parser/lex_helpers.c \
 	parser/is_builtin.c \
 	parser/advanced_expansions.c \
 	parser/advanced_expansions_fixes.c \
 	parser/advanced_expansions_helpers.c \
 	parser/line_var_expand.c \
+	parser/line_var_expand_helpers.c \
 	parser/line_var_expand_catch_helpers.c \
 	parser/line_var_expand_catch_lookup.c \
 	parser/line_var_expand_array.c \
@@ -125,6 +130,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_error_2.c \
 	utils/utils_exit.c \
 	utils/utils_fd.c \
+	utils/utils_fd_path.c \
 	utils/utils_free.c \
 	utils/util_malloc.c \
 	utils/util_malloc_types.c \
