@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/12 07:22:51 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:36:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ bool	set_empty_string(char **to_empty);
 char	**copy_string_array(char **strings);
 int		ft_strlen_array(char **array);
 
-// utils/utils_token.c
+// utils/parser_token.c
 bool	is_valid_cmd_token(t_token_ty token_type);
 
 //envp assistance

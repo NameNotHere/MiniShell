@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/12 07:22:51 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:36:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,7 +270,7 @@ char		**token_words_to_argv(t_token *tokens, int start, int end,
 				int argc);
 char		*remove_quotes(char *str, int len);
 
-// utils/utils_token.c
+// utils/parser_token.c
 bool		is_redir_token(t_token_ty token_type);
 bool		is_within_redir_tokens(t_token *tokens, int i);
 bool		is_valid_cmd_token(t_token_ty token_type);
@@ -350,7 +350,7 @@ bool		is_operator_char(char c);
 // utils/parser_line.c
 bool		piped_line(char *line);
 
-// utils/utils_char.c
+// utils/parser_char.c
 bool		is_valid_var_char(int c);
 bool		is_sgl_quote(int c);
 bool		is_dbl_quote(int c);

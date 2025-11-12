@@ -124,7 +124,7 @@ SRCS = 	signals/signals.c \
 	utils/parser_has_quotes.c \
 	utils/parser_is_operator.c \
 	utils/parser_unclosed_quotes.c \
-	utils/utils_char.c \
+	utils/parser_char.c \
 	utils/utils_dup2.c \
 	utils/utils_env.c \
 	utils/utils_error.c \
@@ -147,7 +147,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_set_exit_code.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
-	utils/utils_token.c \
+	utils/parser_token.c \
 	utils/parser_helpers.c \
 
 OBJS = $(SRCS:.c=.o)
