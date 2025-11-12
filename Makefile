@@ -104,17 +104,17 @@ SRCS = 	signals/signals.c \
 	parser/ast_redir.c \
 	parser/lex.c \
 	parser/lex_helpers.c \
-	parser/advanced_expansions.c \
-	parser/advanced_expansions_fixes.c \
-	parser/advanced_expansions_helpers.c \
-	parser/line_var_expand.c \
-	parser/line_var_expand_exec.c \
-	parser/line_var_expand_helper_pro.c \
-	parser/line_var_expand_catch_helpers.c \
-	parser/line_var_expand_catch_lookup.c \
-	parser/line_var_expand_array.c \
-	parser/line_var_expand_catch.c \
-	parser/line_var_expand_helper.c \
+	expansions/advanced_expansions.c \
+	expansions/advanced_expansions_fixes.c \
+	expansions/advanced_expansions_helpers.c \
+	expansions/line_var_expand.c \
+	expansions/line_var_expand_exec.c \
+	expansions/line_var_expand_helper_pro.c \
+	expansions/line_var_expand_catch_helpers.c \
+	expansions/line_var_expand_catch_lookup.c \
+	expansions/line_var_expand_array.c \
+	expansions/line_var_expand_catch.c \
+	expansions/line_var_expand_helper.c \
 	parser/parse_line.c \
 	parser/parse_validation.c \
 	parser/tokenize.c \

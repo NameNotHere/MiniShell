@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/12 07:10:38 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:22:51 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,29 +292,29 @@ int			count_tokens(char *str, int count, int i);
 char		*make_token_word(char *str, int *i, int *err);
 void		skip_spaces(int *i, char *str);
 
-// parser/line_var_expand_catch.c
+// expansions/line_var_expand_catch.c
 int			get_var_count(char *str, t_var_expand *ve);
 int			catch_all_vars(t_msh *sh, t_var_expand *ve, char *str);
 bool		is_in_heredoc_delimiter(char *str, int pos);
 
-// parser/line_var_expand.c
+// expansions/line_var_expand.c
 bool		expand_string_variables(t_msh *sh, char **string_ptr, bool is_hdoc);
 bool		must_skip_exp(t_var_expand *ve, int index);
 
-// parser/line_var_expand_exec.c
+// expansions/line_var_expand_exec.c
 int			expand_vars(t_var_expand *ve, char *str);
 
-// parser/line_var_expand_helper_pro.c
+// expansions/line_var_expand_helper_pro.c
 bool		advanced_substitutions(t_var_expand *ve, char **str_ptr);
 
-// parser/line_var_expand_catch_lookup.c
+// expansions/line_var_expand_catch_lookup.c
 int			catch_var(t_msh *sh, t_var_expand *ve);
 int			catch_absent_var(t_msh *sh, t_var_expand *ve);
 bool		is_positional_var(t_var_expand *ve, char c);
 bool		must_expand_tilde(t_var_expand *ve, char *str, int pos);
 int			catch_tilde(t_msh *sh, t_var_expand *ve);
 
-// parser/advanced_expansions.c - Condition checkers
+// expansions/advanced_expansions.c - Condition checkers
 bool		must_fix_escaped_backslash(t_var_expand *ve, char *str);
 bool		must_fix_escaped_dollar(t_var_expand *ve, char *str);
 bool		must_fix_escaped_quotes(t_var_expand *ve, char *str);
@@ -322,7 +322,7 @@ bool		must_fix_unquoted_backslash(t_var_expand *ve, char *str);
 bool		must_fix_locale_syntax(t_var_expand *ve, char *str);
 bool		must_fix_ansi_c_quoting(t_var_expand *ve, char *str);
 
-// parser/advanced_expansions.c - Action functions
+// expansions/advanced_expansions.c - Action functions
 void		fix_escaped_backslash(t_var_expand *ve, char *result);
 void		fix_escaped_dollar(t_var_expand *ve, char *result);
 void		fix_quoted_chars(t_var_expand *ve, char *str, char *result);
@@ -330,7 +330,7 @@ void		fix_unquoted_backslash(t_var_expand *ve, char *str, char *result);
 void		fix_locale_syntax(t_var_expand *ve, char *result, char *str);
 void		fix_ansi_c_quoting(t_var_expand *ve, char *result, char *str);
 
-// parser/line_var_expand_helper.c
+// expansions/line_var_expand_helper.c
 bool		is_quote_free(t_var_expand *ve);
 bool		must_expand(t_var_expand *ve, char *str, int pos);
 bool		handle_sgl_quote(char *str, bool *sgl_quote, int i);
