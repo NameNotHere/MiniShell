@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 17:35:08 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 12:49:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:46:19 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,15 @@ int	execute_command(t_msh *sh, t_cmd *cmd)
 	if (cmd->argv[0] == NULL)
 		return (EXIT_SUCCESS);
 	if (!ft_strlen(cmd->argv[0]))
-	{
-		msg_err(E_CMD_NOT_FOUND);
-		return (EXIT_CMD_NOT_FOUND);
-	}
+		return (r_msg_err(E_CMD_NOT_FOUND, EXIT_CMD_NOT_FOUND));
 	if (cmd->built_in)
 		return (execute_builtin(sh, cmd));
 	if (cmd->is_a_dir)
-		return (msg_err_2(E_IS_DIRECTORY, cmd->argv[0]), EXIT_PERM_DENIED);
+		return (r_msg_err_2(E_IS_DIRECTORY, cmd->argv[0], EXIT_PERM_DENIED));
 	if (cmd->permission_denied)
-		return (msg_err_2(E_PERM_DENIED, cmd->argv[0]), EXIT_PERM_DENIED);
+		return (r_msg_err_2(E_PERM_DENIED, cmd->argv[0], EXIT_PERM_DENIED));
 	if (cmd->not_found)
-		return (msg_err_2(E_CMD_NOT_FOUND, cmd->argv[0]), EXIT_CMD_NOT_FOUND);
+		return (r_msg_err_2(E_CMD_NOT_FOUND, cmd->argv[0], EXIT_CMD_NOT_FOUND));
 	execve(cmd->full_cmd, cmd->argv, sh->envp);
 	return (handle_execute_command_errors(cmd));
 }

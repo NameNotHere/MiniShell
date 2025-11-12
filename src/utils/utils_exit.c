@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:17:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 17:01:53 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:36:46 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	exit_free_with_code(t_msh *sh, int exit_code)
 
 int	handle_execute_command_errors(t_cmd *cmd)
 {
-	(void)cmd;
 	if (errno == EACCES)
 	{
 		if (cmd->full_cmd == NULL)

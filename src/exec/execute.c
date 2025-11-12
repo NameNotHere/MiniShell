@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 15:59:07 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 14:33:32 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:10:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,9 @@ int	exec_pipe_node(t_msh *sh, t_pipe *pipe_node, int fd_in, int fd_out)
 int	exec_ast_root(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 {
 	if (!node)
-	{
-		msg_err(E_AST_ROOT_NULL);
-		return (EXIT_FAILURE);
-	}
+		return (r_msg_err(E_AST_ROOT_NULL, EXIT_FAILURE));
 	if (!set_ignore_sig())
-	{
-		msg_err(E_AST_ROOT_SIG);
-		sh->exit_code = EXIT_FAILURE;
-		return (sh->exit_code);
-	}
+		return (r_set_exit_msg(sh, EXIT_FAILURE, E_AST_ROOT_SIG));
 	if (node->nty == NODE_CMD)
 		sh->exit_code = exec_single_cmd_node(sh, &node->cmd, fd_in, fd_out);
 	else if (node->nty == NODE_PIPE)
@@ -62,10 +55,7 @@ int	exec_ast(t_msh *sh, t_ast *node, int fd_in, int fd_out)
 {
 	sh->last_pid = 0;
 	if (!node)
-	{
-		msg_err(E_EXEC_AST_NULL);
-		return (EXIT_FAILURE);
-	}
+		return (r_msg_err(E_EXEC_AST_NULL, EXIT_FAILURE));
 	if (heredoc_ast_node(sh, sh->ast) != EXIT_SUCCESS)
 		return (sh->exit_code);
 	sh->exit_code = exec_ast_root(sh, sh->ast, fd_in, fd_out);

@@ -6,24 +6,24 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 00:00:00 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 10:27:18 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:10:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	hdoc_process_line(t_msh *sh, t_redir *redir,\
+static int	hdoc_add_line(t_msh *sh, t_redir *redir,\
 	char **hdoc_line, char **hdoc_string)
 {
 	if (!*hdoc_line)
-		return (safe_free_str(hdoc_line), true);
+		return (r_free_str(hdoc_line, EXIT_SUCCESS));
 	if (!redir->quoted && !expand_string_variables(sh, hdoc_line, true))
-		return (safe_free_str(hdoc_line), false);
+		return (r_free_str(hdoc_line, EXIT_FAILURE));
 	if (ft_strcmp(redir->string, *hdoc_line) == 0)
-		return (safe_free_str(hdoc_line), false);
+		return (r_free_str(hdoc_line, EXIT_FAILURE));
 	if (add_line_to_string(hdoc_string, hdoc_line) == EXIT_FAILURE)
-		return (false);
-	return (true);
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 static char	*hdoc_handle_input(t_msh *sh, t_redir *redir)
@@ -36,9 +36,7 @@ static char	*hdoc_handle_input(t_msh *sh, t_redir *redir)
 		return (r_free_str_null(&hdoc_line));
 	if (!hdoc_line)
 	{
-		msg_err_3(
-			E_HDOC_EOF_START,
-			redir->string, E_HDOC_EOF_END);
+		msg_err_3(E_HDOC_EOF_START, redir->string, E_HDOC_EOF_END);
 		return (NULL);
 	}
 	return (hdoc_line);
@@ -66,7 +64,7 @@ char	*hdoc_loop(t_msh *sh, t_redir *redir)
 			}
 			return (hdoc_string);
 		}
-		if (!hdoc_process_line(sh, redir, &hdoc_line, &hdoc_string))
+		if (hdoc_add_line(sh, redir, &hdoc_line, &hdoc_string) == EXIT_FAILURE)
 			break ;
 	}
 	return (hdoc_string);

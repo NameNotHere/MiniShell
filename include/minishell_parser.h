@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/11 15:40:47 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 09:57:05 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,19 @@ an evaluator that would argue that one of those features are required, to be
 able to compile a version handing this or that feature.
 */
 # ifndef PRO
-#  define PRO 1
+#  define PRO 0
+# endif
+
+// If PRO mode is enabled, VALIDATE must also be enabled
+# if PRO == 1
+#  ifdef VALIDATE
+#   if VALIDATE == 0
+#    undef VALIDATE
+#    define VALIDATE 1
+#   endif
+#  else
+#   define VALIDATE 1
+#  endif
 # endif
 
 /*
@@ -201,13 +213,6 @@ typedef struct s_ast
 	};
 }	t_ast;
 
-typedef struct s_envp
-{
-	char			*name;
-	char			*value;
-	struct s_envp	*next;
-}	t_envp;
-
 /* struct for processing variable expansions before tokenizing */
 typedef struct s_var_expand
 {
@@ -242,6 +247,7 @@ typedef struct s_remove_quotes
 	bool	in_dbl_quote;
 }	t_remove_quotes;
 
+/*minishell data struct */
 typedef struct s_msh
 {
 	t_ast		*ast;
@@ -270,7 +276,7 @@ char		**token_words_to_argv(t_token *tokens, int start, int end,
 				int argc);
 char		*remove_quotes(char *str, int len);
 
-// utils/utils_token.c
+// utils/parser_token.c
 bool		is_redir_token(t_token_ty token_type);
 bool		is_within_redir_tokens(t_token *tokens, int i);
 bool		is_valid_cmd_token(t_token_ty token_type);
@@ -292,29 +298,38 @@ int			count_tokens(char *str, int count, int i);
 char		*make_token_word(char *str, int *i, int *err);
 void		skip_spaces(int *i, char *str);
 
-// parser/line_var_expand_catch.c
+// parser/lex_helpers.c
+bool		is_token_char(char *str, int pos);
+void		update_quoted_len(char *str, int *len, int i);
+void		calculate_token_word_len(char *str, int *i, int *len);
+
+/* LINE VAR EXPAND */
+
+// expansions/line_var_expand_catch.c
 int			get_var_count(char *str, t_var_expand *ve);
 int			catch_all_vars(t_msh *sh, t_var_expand *ve, char *str);
 bool		is_in_heredoc_delimiter(char *str, int pos);
 
-// parser/line_var_expand.c
+// expansions/line_var_expand.c
 bool		expand_string_variables(t_msh *sh, char **string_ptr, bool is_hdoc);
 bool		must_skip_exp(t_var_expand *ve, int index);
 
-// parser/line_var_expand_exec.c
+// expansions/line_var_expand_exec.c
 int			expand_vars(t_var_expand *ve, char *str);
 
-// parser/line_var_expand_helper_pro.c
+// expansions/line_var_expand_helper_pro.c
 bool		advanced_substitutions(t_var_expand *ve, char **str_ptr);
 
-// parser/line_var_expand_catch_lookup.c
+// expansions/line_var_expand_catch_lookup.c
 int			catch_var(t_msh *sh, t_var_expand *ve);
 int			catch_absent_var(t_msh *sh, t_var_expand *ve);
 bool		is_positional_var(t_var_expand *ve, char c);
 bool		must_expand_tilde(t_var_expand *ve, char *str, int pos);
 int			catch_tilde(t_msh *sh, t_var_expand *ve);
 
-// parser/advanced_expansions.c - Condition checkers
+/* ADVANCED EXPANSIONS */
+
+// expansions/advanced_expansions.c - Condition checkers
 bool		must_fix_escaped_backslash(t_var_expand *ve, char *str);
 bool		must_fix_escaped_dollar(t_var_expand *ve, char *str);
 bool		must_fix_escaped_quotes(t_var_expand *ve, char *str);
@@ -322,7 +337,7 @@ bool		must_fix_unquoted_backslash(t_var_expand *ve, char *str);
 bool		must_fix_locale_syntax(t_var_expand *ve, char *str);
 bool		must_fix_ansi_c_quoting(t_var_expand *ve, char *str);
 
-// parser/advanced_expansions.c - Action functions
+// expansions/advanced_expansions.c - Action functions
 void		fix_escaped_backslash(t_var_expand *ve, char *result);
 void		fix_escaped_dollar(t_var_expand *ve, char *result);
 void		fix_quoted_chars(t_var_expand *ve, char *str, char *result);
@@ -330,7 +345,7 @@ void		fix_unquoted_backslash(t_var_expand *ve, char *str, char *result);
 void		fix_locale_syntax(t_var_expand *ve, char *result, char *str);
 void		fix_ansi_c_quoting(t_var_expand *ve, char *result, char *str);
 
-// parser/line_var_expand_helper.c
+// expansions/line_var_expand_helper.c
 bool		is_quote_free(t_var_expand *ve);
 bool		must_expand(t_var_expand *ve, char *str, int pos);
 bool		handle_sgl_quote(char *str, bool *sgl_quote, int i);
@@ -350,7 +365,7 @@ bool		is_operator_char(char c);
 // utils/parser_line.c
 bool		piped_line(char *line);
 
-// utils/utils_char.c
+// utils/parser_char.c
 bool		is_valid_var_char(int c);
 bool		is_sgl_quote(int c);
 bool		is_dbl_quote(int c);
@@ -400,7 +415,7 @@ int			x_calloc_ast(t_ast **ptr, size_t count);
 // parser/parser_validation.c
 int			validate_pipe_syntax(t_token *tokens, int start, int end);
 
-// utils/detect_unsupported_operator.c
+// utils/parser_detect_unsupported_operator.c
 int			detect_unsupported_operator(t_token *tokens);
 int			process_unsupported_operator_error(t_msh *sh);
 
@@ -409,12 +424,12 @@ void		msg_err(const char *error);
 void		msg_err_2(const char *str1, const char *str2);
 void		msg_err_3(const char *str1, const char *str2, const char *str3);
 
-// utils/utils_r_err_msg.c
+// utils/shortcuts/utils_r_err_msg.c
 int			r_msg_err_free_str(const char *error, char **to_free, int ret);
 void		*msg_err_null(const char *error);
 void		*r_free_str_null(char **to_free);
 
-// utils/utils_r_plus.c
+// utils/shortcuts/utils_r_plus.c
 int			r_free_str(char **to_free, int ret);
 int			r_free_two_str(char **str_a, char **str_b, int ret);
 void		*r_free_null(void **ptr);
@@ -422,12 +437,5 @@ void		*r_free_null(void **ptr);
 // utils/utils_error2.c
 int			change_dir_or_error(t_msh *sh, char **directory);
 void		msg_perr(const char *error);
-
-// utils/has_quotes.c
-bool		has_quotes(const char *str);
-bool		has_single_quotes(const char *str);
-
-// parser/is_escaped.C
-bool		is_escaped(const char *str, int i);
 
 #endif

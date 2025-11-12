@@ -9,6 +9,9 @@ LDFLAGS = -lreadline -Llibft -lft
 # PRO mode: enable extra features (positional params, etc)
 ifdef PRO
 CFLAGS += -DPRO=$(PRO)
+ifeq ($(PRO),1)
+VALIDATE = 1
+endif
 endif
 
 # VALIDATE mode: control operator validation (&&, ||, &, ;)
@@ -77,15 +80,15 @@ SRCS = 	signals/signals.c \
 	signals/signals_execution.c \
 	signals/signals_interactive.c \
 	signals/signals_heredoc.c \
-	get_shell_line.c \
-	minishell_initialize.c \
+	init/get_shell_line.c \
+	init/minishell_initialize.c \
 	minishell_main.c \
 	builtins/builtins_cd_pwd_env.c \
 	builtins/builtins_unset.c \
 	builtins/builtins_dispatcher.c \
 	builtins/builtins_export.c \
 	builtins/builtins_echo.c \
-	builtins/builtins_exit_export.c \
+	builtins/builtins_exit.c \
 	exec/lookup_cmd_fullpath.c \
 	exec/execute.c \
 	exec/execute_cleanup.c \
@@ -104,29 +107,26 @@ SRCS = 	signals/signals.c \
 	parser/ast_redir.c \
 	parser/lex.c \
 	parser/lex_helpers.c \
-	parser/is_builtin.c \
-	parser/advanced_expansions.c \
-	parser/advanced_expansions_fixes.c \
-	parser/advanced_expansions_helpers.c \
-	parser/line_var_expand.c \
-	parser/line_var_expand_exec.c \
-	parser/line_var_expand_helper_pro.c \
-	parser/line_var_expand_catch_helpers.c \
-	parser/line_var_expand_catch_lookup.c \
-	parser/line_var_expand_array.c \
-	parser/line_var_expand_catch.c \
-	parser/line_var_expand_helper.c \
+	expansions/advanced_expansions.c \
+	expansions/advanced_expansions_fixes.c \
+	expansions/advanced_expansions_helpers.c \
+	expansions/line_var_expand.c \
+	expansions/line_var_expand_exec.c \
+	expansions/line_var_expand_helper_pro.c \
+	expansions/line_var_expand_catch_helpers.c \
+	expansions/line_var_expand_catch_lookup.c \
+	expansions/line_var_expand_array.c \
+	expansions/line_var_expand_catch.c \
+	expansions/line_var_expand_helper.c \
 	parser/parse_line.c \
 	parser/parse_validation.c \
 	parser/tokenize.c \
-	parser/is_escaped.c \
 	utils/envp_assistance_array.c \
 	utils/envp_assistance_helpers.c \
-	utils/detect_unsupported_operator.c \
-	utils/has_quotes.c \
+	utils/parser_detect_unsupported_operator.c \
 	utils/parser_is_operator.c \
-	utils/unclosed_quotes.c \
-	utils/utils_char.c \
+	utils/parser_unclosed_quotes.c \
+	utils/parser_char.c \
 	utils/utils_dup2.c \
 	utils/utils_env.c \
 	utils/utils_error.c \
@@ -135,21 +135,22 @@ SRCS = 	signals/signals.c \
 	utils/utils_fd.c \
 	utils/utils_fd_path.c \
 	utils/utils_free.c \
-	utils/util_malloc.c \
-	utils/util_malloc_types.c \
-	utils/util_malloc_simple.c \
+	utils/utils_malloc.c \
+	utils/utils_malloc_types.c \
+	utils/utils_malloc_simple.c \
 	utils/utils_math.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
 	utils/utils_readline_state.c \
-	utils/utils_r_err_msg.c \
-	utils/utils_r_plus.c \
-	utils/utils_r_set_exit.c \
-	utils/utils_r_msg.c \
-	utils/utils_set_exit_code.c \
+	utils/shortcuts/utils_r_err_msg.c \
+	utils/shortcuts/utils_r_plus.c \
+	utils/shortcuts/utils_r_set_exit.c \
+	utils/shortcuts/utils_r_msg.c \
+	utils/shortcuts/utils_set_exit_code.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
-	utils/utils_token.c \
+	utils/parser_token.c \
+	utils/parser_helpers.c \
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))
