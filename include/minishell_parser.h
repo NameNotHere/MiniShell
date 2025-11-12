@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/12 08:04:03 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 09:03:13 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,19 @@ an evaluator that would argue that one of those features are required, to be
 able to compile a version handing this or that feature.
 */
 # ifndef PRO
-#  define PRO 1
+#  define PRO 0
+# endif
+
+// If PRO mode is enabled, VALIDATE must also be enabled
+# if PRO == 1
+#  ifdef VALIDATE
+#   if VALIDATE == 0
+#    undef VALIDATE
+#    define VALIDATE 1
+#   endif
+#  else
+#   define VALIDATE 1
+#  endif
 # endif
 
 /*

@@ -9,6 +9,9 @@ LDFLAGS = -lreadline -Llibft -lft
 # PRO mode: enable extra features (positional params, etc)
 ifdef PRO
 CFLAGS += -DPRO=$(PRO)
+ifeq ($(PRO),1)
+VALIDATE = 1
+endif
 endif
 
 # VALIDATE mode: control operator validation (&&, ||, &, ;)
