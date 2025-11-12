@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/12 08:04:03 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 09:12:29 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,6 @@
 # define MSH_PROMPT "\001\033[96m\002✶➜\001\033[0m\002 "
 # define HDOC_PROMPT "hdoc > "
 
-// alternative simpler prompts commented out below:
-// # define MSH_PROMPT "$ "
-// # define HDOC_PROMPT "> "
-
 # define EXIT_CMD_NOT_FOUND 127
 # define EXIT_PERM_DENIED 126
 # define EXIT_SIGINT 130
@@ -51,6 +47,7 @@
 // 0644: user can read/write, others can read. reasonable/safe setting.
 # define OUTPUT_PERMISSIONS 0644
 
+/* enum for flow control (returned value to break or continue from loop)*/
 typedef enum e_flow
 {
 	EXEC_FLOW,
