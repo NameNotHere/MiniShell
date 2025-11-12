@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/12 07:46:19 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 08:04:03 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ typedef enum e_flow
 	BREAK_FLOW
 }	t_flow;
 
-// minishell_initialize.c
+// init/minishell_initialize.c
 int		initialize_minishell(t_msh *sh, int argc, char **argv, char **envp);
 
 // int		minishell_mainloop(t_msh *sh);
@@ -160,11 +160,11 @@ bool	rln_flush_line(t_rln_state *st, char **line);
 bool	rln_init(t_rln_state *st, t_readbuf *rb, char **line);
 bool	rln_emit_line(t_rln_state *st, t_readbuf *rb, char **line);
 
-// utils/utils_set_exit_code.c
+// utils/shortcuts/utils_set_exit_code.c
 void	set_exit_perr(t_msh *sh, const char *error_msg);
 void	*set_exit_perr_null(t_msh *sh, const char *error_msg);
 
-// utils/utils_r_set_exit.c
+// utils/shortcuts/utils_r_set_exit.c
 int		r_set_exit(t_msh *sh, int exit_code);
 int		r_set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
 int		r_set_exit_perr(t_msh *sh, const char *error_msg);
@@ -174,18 +174,20 @@ int		r_msg_err_2(const char *str1, const char *str2, int ret);
 int		r_msg_perr(const char *error_msg, int ret);
 int		r_free_everything(t_msh *sh, int ret);
 
-// utils/utils_r_plus.c
+// utils/shortcuts/utils_r_plus.c
 int		r_free_str(char **to_free, int ret);
 int		r_free_two_str(char **str_a, char **str_b, int ret);
 int		r_free_str_perr(t_msh *sh, char **to_free, const char *error_msg);
 
-// utils/utils_r_err_msg.c
+// utils/shortcuts/utils_r_err_msg.c
 int		r_msg_err_free_str(const char *error, char **to_free, int ret);
 void	*msg_err_null(const char *error);
 void	*msg_perr_null(const char *error);
 
-// utils/utils_string.c
+// init/get_shell_line.c
 char	*get_shell_line(t_msh *sh, char *prompt);
+
+// utils/utils_string.c
 int		add_line_to_string(char **string, char **line);
 char	*get_empty_string(void);
 bool	set_empty_string(char **to_empty);

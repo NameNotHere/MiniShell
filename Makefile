@@ -77,8 +77,8 @@ SRCS = 	signals/signals.c \
 	signals/signals_execution.c \
 	signals/signals_interactive.c \
 	signals/signals_heredoc.c \
-	get_shell_line.c \
-	minishell_initialize.c \
+	init/get_shell_line.c \
+	init/minishell_initialize.c \
 	minishell_main.c \
 	builtins/builtins_cd_pwd_env.c \
 	builtins/builtins_unset.c \
@@ -139,11 +139,11 @@ SRCS = 	signals/signals.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
 	utils/utils_readline_state.c \
-	utils/utils_r_err_msg.c \
-	utils/utils_r_plus.c \
-	utils/utils_r_set_exit.c \
-	utils/utils_r_msg.c \
-	utils/utils_set_exit_code.c \
+	utils/shortcuts/utils_r_err_msg.c \
+	utils/shortcuts/utils_r_plus.c \
+	utils/shortcuts/utils_r_set_exit.c \
+	utils/shortcuts/utils_r_msg.c \
+	utils/shortcuts/utils_set_exit_code.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
 	utils/parser_token.c \
