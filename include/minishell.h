@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/12 12:43:21 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 12:51:45 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,9 @@
 
 # include "minishell_parser.h"
 # include "minishell_signal.h"
-# include <fcntl.h>
-# include <stdio.h>
-# include <stdbool.h>
-# include <stdint.h>
-# include <stdlib.h>
-# include <string.h>
-# include <unistd.h>
-# include <sys/wait.h>
-# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
-# include <unistd.h>
 # include <termios.h>
 
 /*
