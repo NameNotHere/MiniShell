@@ -85,7 +85,7 @@ SRCS = 	signals/signals.c \
 	builtins/builtins_dispatcher.c \
 	builtins/builtins_export.c \
 	builtins/builtins_echo.c \
-	builtins/builtins_exit_export.c \
+	builtins/builtins_exit.c \
 	exec/lookup_cmd_fullpath.c \
 	exec/execute.c \
 	exec/execute_cleanup.c \

@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 16:29:51 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 05:35:21 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int		x_env(t_msh *sh, int argc);
 int		x_unset(t_msh *sh, t_cmd cmd);
 int		x_echo(char **argv, int argc);
 
-// builtins_exit_export.c
+// builtins_exit.c
 int		x_exit(t_msh *sh, t_cmd cmd);
 int		x_export(t_msh *sh, t_cmd cmd);
 int		handle_export_assignment(t_msh *sh, char *name, char *equals_pos);
