@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:49:37 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 12:43:21 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ char	**token_words_to_argv(t_token *tokens, int start, int end, int argc)
 		if (tokens[i].word && !is_within_redir_tokens(tokens, i++))
 			argc++;
 	if (x_calloc_charptr(&argv, argc + 1) != EXIT_SUCCESS)
-		return (msg_perr_null("token words to argv: allocation"));
+		return (r_msg_perr_null("token words to argv: allocation"));
 	i = 0;
 	token_i = start;
 	while (token_i < end && i < argc)

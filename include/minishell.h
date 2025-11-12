@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/12 09:57:05 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 12:43:21 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,9 @@ int		change_env_val(char *name, char *new_value, char ***envp);
 int		add_env_var(char ***envp, char *name, char *value);
 int		envp_len(char **envp);
 
-/* UTILS */
+/* ========================================================================== */
+/*                              UTILS FUNCTIONS                               */
+/* ========================================================================== */
 
 // dup2
 void	try_dup2_stdout(t_msh *sh, int *fd_out);
@@ -152,40 +154,5 @@ bool	add_chunk(t_rln_state *st, const char *src, size_t n);
 bool	rln_flush_line(t_rln_state *st, char **line);
 bool	rln_init(t_rln_state *st, t_readbuf *rb, char **line);
 bool	rln_emit_line(t_rln_state *st, t_readbuf *rb, char **line);
-
-// shortcuts
-void	set_exit_perr(t_msh *sh, const char *error_msg);
-void	*set_exit_perr_null(t_msh *sh, const char *error_msg);
-int		r_set_exit(t_msh *sh, int exit_code);
-int		r_set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
-int		r_set_exit_perr(t_msh *sh, const char *error_msg);
-int		r_set_exit_ret(t_msh *sh, int exit_code, int ret);
-int		r_msg_err(const char *error_msg, int ret);
-int		r_msg_err_2(const char *str1, const char *str2, int ret);
-int		r_msg_perr(const char *error_msg, int ret);
-int		r_free_everything(t_msh *sh, int ret);
-int		r_free_str(char **to_free, int ret);
-int		r_free_two_str(char **str_a, char **str_b, int ret);
-int		r_free_str_perr(t_msh *sh, char **to_free, const char *error_msg);
-int		r_msg_err_free_str(const char *error, char **to_free, int ret);
-void	*msg_err_null(const char *error);
-void	*msg_perr_null(const char *error);
-
-// string
-int		add_line_to_string(char **string, char **line);
-char	*get_empty_string(void);
-bool	set_empty_string(char **to_empty);
-
-// string_array
-char	**copy_string_array(char **strings);
-int		ft_strlen_array(char **array);
-
-// parser utils
-bool	is_valid_cmd_token(t_token_ty token_type);
-int		unclosed_quotes(const char *line);
-bool	error_unclosed_quotes(const char *line);
-bool	is_builtin(char *str);
-bool	is_escaped(const char *str, int i);
-bool	has_quotes(const char *str);
 
 #endif

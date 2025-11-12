@@ -6,24 +6,14 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/12 09:57:05 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 12:43:21 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_PARSER_H
 # define MINISHELL_PARSER_H
 
-# include <stdio.h>
-# include <stdarg.h>
-# include <stdlib.h>
-# include <stdbool.h>
-# include <string.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <sys/wait.h>
-# include <errno.h>
-# include "libft.h"
-# include "minishell_errors.h"
+# include "minishell_base.h"
 
 /*
 PRO defaults 0 (false)
@@ -117,27 +107,6 @@ typedef enum e_token_ty
 	TOKEN_RPAREN,
 	TOKEN_LAST
 }	t_token_ty;
-
-typedef struct s_readbuf
-{
-	char	buf[4096];
-	ssize_t	len;
-	ssize_t	pos;
-}	t_readbuf;
-
-/*
-	Struct to hold per-call state of the readline_noninteractive.
-	- This tracks the accumulating line buffer made and its current length
-	during a single call.
-	- It is initialized fresh each time and freed/returned when the
-	line is emitted. Unlike t_readbuf, this does not persist across calls.
-*/
-typedef struct s_rln_state
-{
-	char	*line_made;
-	size_t	made_len;
-	ssize_t	end;
-}	t_rln_state;
 
 typedef struct s_token
 {
@@ -264,22 +233,21 @@ typedef struct s_msh
 	t_readbuf	readbuf;
 }	t_msh;
 
+/* ========================================================================== */
+/*                              PARSER FUNCTIONS                              */
+/* ========================================================================== */
+
 // parser/ast.c
 int			build_ast(t_msh *sh, t_ast *ast, t_token *tokens);
-int			scan_tokens(t_msh *sh, t_ast *ast, int start, int end);
-int			scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i);
 int			parse_pipe(t_msh *sh, t_ast *ast, int start, int end);
+int			scan_pipe(t_msh *sh, t_ast *ast, t_token *tokens, int *i);
+int			scan_tokens(t_msh *sh, t_ast *ast, int start, int end);
 
 // parser/ast_cmd.c
 int			parse_cmd(t_msh *sh, t_ast *ast, int start, int end);
+char		*remove_quotes(char *str, int len);
 char		**token_words_to_argv(t_token *tokens, int start, int end,
 				int argc);
-char		*remove_quotes(char *str, int len);
-
-// utils/parser_token.c
-bool		is_redir_token(t_token_ty token_type);
-bool		is_within_redir_tokens(t_token *tokens, int i);
-bool		is_valid_cmd_token(t_token_ty token_type);
 
 // parser/ast_helper.c
 void		free_ast(t_ast **node);
@@ -299,143 +267,116 @@ char		*make_token_word(char *str, int *i, int *err);
 void		skip_spaces(int *i, char *str);
 
 // parser/lex_helpers.c
+void		calculate_token_word_len(char *str, int *i, int *len);
 bool		is_token_char(char *str, int pos);
 void		update_quoted_len(char *str, int *len, int i);
-void		calculate_token_word_len(char *str, int *i, int *len);
 
-/* LINE VAR EXPAND */
+// parser/parse_validation.c
+int			validate_pipe_syntax(t_token *tokens, int start, int end);
 
-// expansions/line_var_expand_catch.c
-int			get_var_count(char *str, t_var_expand *ve);
-int			catch_all_vars(t_msh *sh, t_var_expand *ve, char *str);
-bool		is_in_heredoc_delimiter(char *str, int pos);
+// parser/tokenize.c
+void		free_tokens(t_token **tokens, int amount);
+t_token		*tokenize(char *input, int *token_count, int *err);
+
+/* ========================================================================== */
+/*                            EXPANSION FUNCTIONS                             */
+/* ========================================================================== */
+
+// expansions: advanced_expansions.c
+void		fix_ansi_c_quoting(t_var_expand *ve, char *result, char *str);
+void		fix_escaped_backslash(t_var_expand *ve, char *result);
+void		fix_escaped_dollar(t_var_expand *ve, char *result);
+void		fix_locale_syntax(t_var_expand *ve, char *result, char *str);
+void		fix_quoted_chars(t_var_expand *ve, char *str, char *result);
+void		fix_unquoted_backslash(t_var_expand *ve, char *str, char *result);
+bool		must_fix_ansi_c_quoting(t_var_expand *ve, char *str);
+bool		must_fix_escaped_backslash(t_var_expand *ve, char *str);
+bool		must_fix_escaped_dollar(t_var_expand *ve, char *str);
+bool		must_fix_escaped_quotes(t_var_expand *ve, char *str);
+bool		must_fix_locale_syntax(t_var_expand *ve, char *str);
+bool		must_fix_unquoted_backslash(t_var_expand *ve, char *str);
 
 // expansions/line_var_expand.c
 bool		expand_string_variables(t_msh *sh, char **string_ptr, bool is_hdoc);
 bool		must_skip_exp(t_var_expand *ve, int index);
 
+// expansions/line_var_expand_catch.c
+int			catch_all_vars(t_msh *sh, t_var_expand *ve, char *str);
+int			get_var_count(char *str, t_var_expand *ve);
+bool		is_in_heredoc_delimiter(char *str, int pos);
+
+// expansions/line_var_expand_catch_lookup.c
+int			catch_absent_var(t_msh *sh, t_var_expand *ve);
+int			catch_tilde(t_msh *sh, t_var_expand *ve);
+int			catch_var(t_msh *sh, t_var_expand *ve);
+bool		is_positional_var(t_var_expand *ve, char c);
+bool		must_expand_tilde(t_var_expand *ve, char *str, int pos);
+
 // expansions/line_var_expand_exec.c
 int			expand_vars(t_var_expand *ve, char *str);
+
+// expansions/line_var_expand_helper.c
+int			allocate_new_str(t_msh *sh, t_var_expand *ve);
+bool		handle_sgl_quote(char *str, bool *sgl_quote, int i);
+bool		handle_ve_quote(char *str, bool *sgl_quote, bool *dbl_quote, int i);
+int			init_var_expand_arrays(t_msh *sh, t_var_expand *ve);
+bool		is_quote_free(t_var_expand *ve);
+bool		must_expand(t_var_expand *ve, char *str, int pos);
+void		reset_var_lookup(t_var_expand *ve);
 
 // expansions/line_var_expand_helper_pro.c
 bool		advanced_substitutions(t_var_expand *ve, char **str_ptr);
 
-// expansions/line_var_expand_catch_lookup.c
-int			catch_var(t_msh *sh, t_var_expand *ve);
-int			catch_absent_var(t_msh *sh, t_var_expand *ve);
-bool		is_positional_var(t_var_expand *ve, char c);
-bool		must_expand_tilde(t_var_expand *ve, char *str, int pos);
-int			catch_tilde(t_msh *sh, t_var_expand *ve);
+/* ========================================================================== */
+/*                              UTILS FUNCTIONS                               */
+/* ========================================================================== */
 
-/* ADVANCED EXPANSIONS */
-
-// expansions/advanced_expansions.c - Condition checkers
-bool		must_fix_escaped_backslash(t_var_expand *ve, char *str);
-bool		must_fix_escaped_dollar(t_var_expand *ve, char *str);
-bool		must_fix_escaped_quotes(t_var_expand *ve, char *str);
-bool		must_fix_unquoted_backslash(t_var_expand *ve, char *str);
-bool		must_fix_locale_syntax(t_var_expand *ve, char *str);
-bool		must_fix_ansi_c_quoting(t_var_expand *ve, char *str);
-
-// expansions/advanced_expansions.c - Action functions
-void		fix_escaped_backslash(t_var_expand *ve, char *result);
-void		fix_escaped_dollar(t_var_expand *ve, char *result);
-void		fix_quoted_chars(t_var_expand *ve, char *str, char *result);
-void		fix_unquoted_backslash(t_var_expand *ve, char *str, char *result);
-void		fix_locale_syntax(t_var_expand *ve, char *result, char *str);
-void		fix_ansi_c_quoting(t_var_expand *ve, char *result, char *str);
-
-// expansions/line_var_expand_helper.c
-bool		is_quote_free(t_var_expand *ve);
-bool		must_expand(t_var_expand *ve, char *str, int pos);
-bool		handle_sgl_quote(char *str, bool *sgl_quote, int i);
-bool		handle_ve_quote(char *str, bool *sgl_quote, bool *dbl_quote, int i);
-int			init_var_expand_arrays(t_msh *sh, t_var_expand *ve);
-int			allocate_new_str(t_msh *sh, t_var_expand *ve);
-void		reset_var_lookup(t_var_expand *ve);
-
-// parser/tokenize.c
-t_token		*tokenize(char *input, int *token_count, int *err);
-void		free_tokens(t_token **tokens, int amount);
-
-// utils/parser_isminioperator.c
-int			is_operator(char *token, int i);
-bool		is_operator_char(char c);
-
-// utils/parser_line.c
-bool		piped_line(char *line);
+// utils/utils_error_2.c
+int			change_dir_or_error(t_msh *sh, char **directory);
 
 // utils/parser_char.c
-bool		is_valid_var_char(int c);
-bool		is_sgl_quote(int c);
 bool		is_dbl_quote(int c);
-
-// utils/utils_free.c
-void		safe_free(void **ptr);
-void		safe_free_str(char **ptr);
-void		safe_free_2d_string(char ***ptr);
-bool		make_string_free(char **string);
-
-// utils/math.c
-int			min_int(int a, int b);
-int			max_int(int a, int b);
-
-// utils/utils_path.c
-char		*make_cmd_full_path(const char *dir, const char *cmd);
-char		*get_valid_cmd_full_path(char **path_dirs, char *cmd);
-char		*get_path_from_env(char **envp);
-int			update_path_dirs(char ***path_dirs, char **envp);
-
-// parser/errors.c
-void		int_closed(char *str, int i, char quote);
-int			ft_strcmp(const char *s1, const char *s2);
-
-/* xe_ functions: with error pointer parameter */
-int			xe_malloc(void **ptr, int *err, size_t nmemb, size_t size);
-int			xe_calloc(void **ptr, int *err, size_t nmemb, size_t size);
-
-/* Type-specific xe_calloc wrappers */
-int			xe_calloc_char(char **ptr, int *err, size_t count);
-int			xe_calloc_token(t_token **ptr, int *err, size_t count);
-int			xe_calloc_int(int **ptr, int *err, size_t count);
-int			xe_calloc_charptr(char ***ptr, int *err, size_t count);
-
-/* x_ functions: without error pointer parameter (uses local error) */
-int			x_malloc(void **ptr, size_t nmemb, size_t size);
-int			x_calloc(void **ptr, size_t nmemb, size_t size);
-
-/* Type-specific x_calloc wrappers */
-int			x_calloc_char(char **ptr, size_t count);
-int			x_calloc_token(t_token **ptr, size_t count);
-int			x_calloc_int(int **ptr, size_t count);
-int			x_calloc_charptr(char ***ptr, size_t count);
-int			x_calloc_redir(t_redir **ptr, size_t count);
-int			x_calloc_ast(t_ast **ptr, size_t count);
-
-// parser/parser_validation.c
-int			validate_pipe_syntax(t_token *tokens, int start, int end);
+bool		is_sgl_quote(int c);
+bool		is_valid_var_char(int c);
 
 // utils/parser_detect_unsupported_operator.c
 int			detect_unsupported_operator(t_token *tokens);
 int			process_unsupported_operator_error(t_msh *sh);
 
-// utils/utils_error.c
-void		msg_err(const char *error);
-void		msg_err_2(const char *str1, const char *str2);
-void		msg_err_3(const char *str1, const char *str2, const char *str3);
+/* utils/parser_helpers.c */
+int			unclosed_quotes(const char *line);
+bool		error_unclosed_quotes(const char *line);
+bool		is_builtin(char *str);
+bool		is_escaped(const char *str, int i);
+bool		has_quotes(const char *str);
 
-// utils/shortcuts/utils_r_err_msg.c
-int			r_msg_err_free_str(const char *error, char **to_free, int ret);
-void		*msg_err_null(const char *error);
-void		*r_free_str_null(char **to_free);
+// utils/parser_is_operator.c
+bool		is_operator_char(char c);
+int			is_operator(char *token, int i);
 
-// utils/shortcuts/utils_r_plus.c
-int			r_free_str(char **to_free, int ret);
-int			r_free_two_str(char **str_a, char **str_b, int ret);
-void		*r_free_null(void **ptr);
+// utils/parser_token.c
+bool		is_redir_token(t_token_ty token_type);
+bool		is_valid_cmd_token(t_token_ty token_type);
+bool		is_within_redir_tokens(t_token *tokens, int i);
 
-// utils/utils_error2.c
-int			change_dir_or_error(t_msh *sh, char **directory);
-void		msg_perr(const char *error);
+// utils/utils_malloc_simple.c
+int			x_calloc_ast(t_ast **ptr, size_t count);
+int			x_calloc_redir(t_redir **ptr, size_t count);
+
+// utils/utils_malloc_types.c
+int			xe_calloc_token(t_token **ptr, int *err, size_t count);
+
+/* ========================================================================== */
+/*                   SHORTCUT FUNCTIONS (struct dependent)                    */
+/* ========================================================================== */
+
+void		set_exit_perr(t_msh *sh, const char *error_msg);
+void		*r_set_exit_perr_null(t_msh *sh, const char *error_msg);
+int			r_set_exit(t_msh *sh, int exit_code);
+int			r_set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
+int			r_set_exit_perr(t_msh *sh, const char *error_msg);
+int			r_set_exit_ret(t_msh *sh, int exit_code, int ret);
+int			r_free_everything(t_msh *sh, int ret);
+int			r_free_str_perr(t_msh *sh, char **to_free, const char *error_msg);
 
 #endif

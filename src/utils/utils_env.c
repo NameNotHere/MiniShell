@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 18:28:25 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/10 19:48:59 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 12:43:21 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*get_env_value_by_idx(t_msh *sh, char *var_name, int envp_idx)
 		return (ft_strdup(""));
 	var_value = ft_strdup(sh->envp[envp_idx] + ft_strlen(var_name) + 1);
 	if (!var_value)
-		return (set_exit_perr_null(sh, E_GET_ENV_VALUE));
+		return (r_set_exit_perr_null(sh, E_GET_ENV_VALUE));
 	return (var_value);
 }
 

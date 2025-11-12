@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 04:04:16 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 15:36:09 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 12:43:21 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_ast	*make_ast_node(t_node_ty type)
 	t_ast	*new_node;
 
 	if (x_calloc_ast(&new_node, 1) != EXIT_SUCCESS)
-		return (msg_perr_null(E_ALLOC_AST_NODE));
+		return (r_msg_perr_null(E_ALLOC_AST_NODE));
 	new_node->nty = type;
 	return (new_node);
 }
