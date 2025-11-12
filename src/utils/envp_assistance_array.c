@@ -6,16 +6,11 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 16:17:51 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 12:07:35 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:46:19 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/* Helper function declarations */
-int	length_till_equal(char *str);
-int	search_name(char *name, char **envp);
-int	envp_len(char **envp);
 
 int	change_env_val_idx(char *name, char *new_value, int index, char ***envp)
 {

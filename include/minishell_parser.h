@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/12 07:36:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:46:19 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -422,9 +422,5 @@ void		*r_free_null(void **ptr);
 // utils/utils_error2.c
 int			change_dir_or_error(t_msh *sh, char **directory);
 void		msg_perr(const char *error);
-
-// utils/parser_has_quotes.c
-bool		has_quotes(const char *str);
-bool		has_single_quotes(const char *str);
 
 #endif

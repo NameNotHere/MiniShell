@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/12 07:36:46 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:46:19 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,6 +223,7 @@ bool	error_unclosed_quotes(const char *line);
 // utils/parser_helpers.c
 bool	is_builtin(char *str);
 bool	is_escaped(const char *str, int i);
+bool	has_quotes(const char *str);
 
 // utils/utils_fd_path.c
 char	*build_fd_path(int fd);

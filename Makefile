@@ -121,7 +121,6 @@ SRCS = 	signals/signals.c \
 	utils/envp_assistance_array.c \
 	utils/envp_assistance_helpers.c \
 	utils/parser_detect_unsupported_operator.c \
-	utils/parser_has_quotes.c \
 	utils/parser_is_operator.c \
 	utils/parser_unclosed_quotes.c \
 	utils/parser_char.c \

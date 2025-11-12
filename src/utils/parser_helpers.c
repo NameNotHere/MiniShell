@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/12 06:59:52 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/12 06:59:57 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:46:19 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,17 @@ bool	is_escaped(const char *str, int i)
 		j--;
 	}
 	return (backslash_count % 2);
+}
+
+bool	has_quotes(const char *str)
+{
+	if (!str)
+		return (false);
+	while (*str)
+	{
+		if (*str == '"' || *str == '\'')
+			return (true);
+		str++;
+	}
+	return (false);
 }
