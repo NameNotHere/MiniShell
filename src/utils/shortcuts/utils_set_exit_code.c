@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 17:52:21 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 16:29:51 by tda-roch         ###  ########.fr       */
+/*   Updated: 2025/11/12 12:43:21 by tda-roch         ###  ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	set_exit_perr(t_msh *sh, const char *error_msg)
 		prints error message with errno information.
 	Returns NULL
 */
-void	*set_exit_perr_null(t_msh *sh, const char *error_msg)
+void	*r_set_exit_perr_null(t_msh *sh, const char *error_msg)
 {
 	sh->exit_code = EXIT_FAILURE;
 	msg_perr(error_msg);
