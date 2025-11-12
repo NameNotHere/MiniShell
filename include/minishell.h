@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:51:03 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/12 05:35:21 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:10:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,7 @@ int		r_set_exit_msg(t_msh *sh, int exit_code, const char *error_msg);
 int		r_set_exit_perr(t_msh *sh, const char *error_msg);
 int		r_set_exit_ret(t_msh *sh, int exit_code, int ret);
 int		r_msg_err(const char *error_msg, int ret);
+int		r_msg_err_2(const char *str1, const char *str2, int ret);
 int		r_msg_perr(const char *error_msg, int ret);
 int		r_free_everything(t_msh *sh, int ret);
 
@@ -212,16 +213,16 @@ char	*ft_strndup(const char *src, int size);
 // utils/ft_strcmp
 int		ft_strcmp(const char *s1, const char *s2);
 
-//is_builtin.c
-bool	is_builtin(char *str);
-int		x_echo(char **argv, int argc);
-
 // utils/ft_realloc
 void	*ft_realloc(void *ptr, size_t new_size, size_t old_size);
 
-// utils/unclosed_quotes.c
+// utils/parser_unclosed_quotes.c
 int		unclosed_quotes(const char *line);
 bool	error_unclosed_quotes(const char *line);
+
+// utils/parser_helpers.c
+bool	is_builtin(char *str);
+bool	is_escaped(const char *str, int i);
 
 // utils/utils_fd_path.c
 char	*build_fd_path(int fd);

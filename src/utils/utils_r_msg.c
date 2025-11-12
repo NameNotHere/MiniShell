@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 10:55:01 by tda-roch          #+#    #+#             */
-/*   Updated: 2025/11/11 13:58:58 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:10:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,12 @@
 int	r_msg_err(const char *error_msg, int ret)
 {
 	msg_err(error_msg);
+	return (ret);
+}
+
+int	r_msg_err_2(const char *str1, const char *str2, int ret)
+{
+	msg_err_2(str1, str2);
 	return (ret);
 }
 

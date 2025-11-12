@@ -104,7 +104,6 @@ SRCS = 	signals/signals.c \
 	parser/ast_redir.c \
 	parser/lex.c \
 	parser/lex_helpers.c \
-	parser/is_builtin.c \
 	parser/advanced_expansions.c \
 	parser/advanced_expansions_fixes.c \
 	parser/advanced_expansions_helpers.c \
@@ -119,13 +118,12 @@ SRCS = 	signals/signals.c \
 	parser/parse_line.c \
 	parser/parse_validation.c \
 	parser/tokenize.c \
-	parser/is_escaped.c \
 	utils/envp_assistance_array.c \
 	utils/envp_assistance_helpers.c \
-	utils/detect_unsupported_operator.c \
-	utils/has_quotes.c \
+	utils/parser_detect_unsupported_operator.c \
+	utils/parser_has_quotes.c \
 	utils/parser_is_operator.c \
-	utils/unclosed_quotes.c \
+	utils/parser_unclosed_quotes.c \
 	utils/utils_char.c \
 	utils/utils_dup2.c \
 	utils/utils_env.c \
@@ -135,9 +133,9 @@ SRCS = 	signals/signals.c \
 	utils/utils_fd.c \
 	utils/utils_fd_path.c \
 	utils/utils_free.c \
-	utils/util_malloc.c \
-	utils/util_malloc_types.c \
-	utils/util_malloc_simple.c \
+	utils/utils_malloc.c \
+	utils/utils_malloc_types.c \
+	utils/utils_malloc_simple.c \
 	utils/utils_math.c \
 	utils/utils_path.c \
 	utils/utils_readline.c \
@@ -150,6 +148,7 @@ SRCS = 	signals/signals.c \
 	utils/utils_string.c \
 	utils/utils_string_array.c \
 	utils/utils_token.c \
+	utils/parser_helpers.c \
 
 OBJS = $(SRCS:.c=.o)
 OBJS := $(addprefix $(OBJDIR)/, $(OBJS))

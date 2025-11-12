@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/11 15:40:47 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 07:10:38 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -400,7 +400,7 @@ int			x_calloc_ast(t_ast **ptr, size_t count);
 // parser/parser_validation.c
 int			validate_pipe_syntax(t_token *tokens, int start, int end);
 
-// utils/detect_unsupported_operator.c
+// utils/parser_detect_unsupported_operator.c
 int			detect_unsupported_operator(t_token *tokens);
 int			process_unsupported_operator_error(t_msh *sh);
 
@@ -423,11 +423,8 @@ void		*r_free_null(void **ptr);
 int			change_dir_or_error(t_msh *sh, char **directory);
 void		msg_perr(const char *error);
 
-// utils/has_quotes.c
+// utils/parser_has_quotes.c
 bool		has_quotes(const char *str);
 bool		has_single_quotes(const char *str);
-
-// parser/is_escaped.C
-bool		is_escaped(const char *str, int i);
 
 #endif
