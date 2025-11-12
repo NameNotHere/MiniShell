@@ -6,7 +6,7 @@
 /*   By: tda-roch <tda-roch@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:00:32 by otanovic          #+#    #+#             */
-/*   Updated: 2025/11/12 09:12:29 by tda-roch         ###   ########.fr       */
+/*   Updated: 2025/11/12 09:57:05 by tda-roch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,6 +298,13 @@ int			count_tokens(char *str, int count, int i);
 char		*make_token_word(char *str, int *i, int *err);
 void		skip_spaces(int *i, char *str);
 
+// parser/lex_helpers.c
+bool		is_token_char(char *str, int pos);
+void		update_quoted_len(char *str, int *len, int i);
+void		calculate_token_word_len(char *str, int *i, int *len);
+
+/* LINE VAR EXPAND */
+
 // expansions/line_var_expand_catch.c
 int			get_var_count(char *str, t_var_expand *ve);
 int			catch_all_vars(t_msh *sh, t_var_expand *ve, char *str);
@@ -319,6 +326,8 @@ int			catch_absent_var(t_msh *sh, t_var_expand *ve);
 bool		is_positional_var(t_var_expand *ve, char c);
 bool		must_expand_tilde(t_var_expand *ve, char *str, int pos);
 int			catch_tilde(t_msh *sh, t_var_expand *ve);
+
+/* ADVANCED EXPANSIONS */
 
 // expansions/advanced_expansions.c - Condition checkers
 bool		must_fix_escaped_backslash(t_var_expand *ve, char *str);
