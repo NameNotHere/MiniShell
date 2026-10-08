@@ -18,13 +18,13 @@ MiniShell is a custom shell that replicates core behavior of Bash, including:
 
 ---
 
-## 🧠 Architecture
+##  Architecture
 
 ```text
 input → lexer → tokenizer → parser → AST → expansion → execution
 ```
 
-### 🔄 Execution Flow
+###  Execution Flow
 
 1. **Input**
 
@@ -62,7 +62,7 @@ input → lexer → tokenizer → parser → AST → expansion → execution
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```text
 MiniShell/
@@ -129,13 +129,13 @@ MiniShell/
 
 ## ✨ Features
 
-### ✅ Core Shell
+###  Core Shell
 
 * Execute commands via `$PATH`
 * Support for absolute and relative paths
 * Built-in command dispatcher
 
-### 🔗 Pipes & Redirections
+###  Pipes & Redirections
 
 * Pipes: `|`
 * Input: `<`
@@ -143,13 +143,13 @@ MiniShell/
 * Append: `>>`
 * Heredoc: `<<`
 
-### 🔤 Expansions
+### Expansions
 
 * `$VAR`
 * `$?`
 * Advanced expansion handling (edge cases covered)
 
-### 🛠 Built-in Commands
+### Built-in Commands
 
 * `echo`
 * `cd`
@@ -159,7 +159,7 @@ MiniShell/
 * `env`
 * `exit`
 
-### ⚡ Signal Handling
+### Signal Handling
 
 * Interactive signals (`Ctrl+C`, `Ctrl+D`, `Ctrl+\`)
 * Separate handling for:
@@ -170,9 +170,9 @@ MiniShell/
 
 ---
 
-## 🔥 Notable Design Choices
+## Design
 
-### 🌳 AST-Based Execution
+### AST-Based Execution
 
 Unlike simpler command-table approaches, this shell builds an **Abstract Syntax Tree**, allowing:
 
@@ -180,7 +180,7 @@ Unlike simpler command-table approaches, this shell builds an **Abstract Syntax 
 * easier extension (e.g. `&&`, `||`)
 * better handling of nested structures
 
-### 🧩 Modular Expansion System
+### Modular Expansion System
 
 Expansion logic is split across multiple files:
 
@@ -190,7 +190,7 @@ Expansion logic is split across multiple files:
 
 This avoids monolithic parsing code and improves maintainability.
 
-### 🛡 Safe System Wrappers
+### Safe System Wrappers
 
 Custom wrappers:
 
@@ -204,7 +204,7 @@ Ensure:
 
 ---
 
-## ⚙️ Compilation
+## Compilation
 
 ```bash
 make
@@ -220,7 +220,7 @@ make re
 
 ---
 
-## 🚀 Usage
+## Usage
 
 ```bash
 ./minishell
@@ -235,22 +235,7 @@ minishell$ export NAME=MiniShell
 minishell$ echo $NAME
 ```
 
----
-
-### Run with Valgrind
-
-```bash
-valgrind --suppressions=rl.supp --leak-check=full ./minishell
-```
-
-
-## ⚠️ Limitations
-
-* No job control (`fg`, `bg`)
-* No wildcard expansion (`*`)
-* No logical operators (`&&`, `||`) *(AST allows future support)*
-
-## 🧠 What This Project Demonstrates
+##  This Project Demonstrates
 
 * Process control (`fork`, `execve`, `waitpid`)
 * File descriptor manipulation (`dup2`, pipes)
@@ -258,9 +243,3 @@ valgrind --suppressions=rl.supp --leak-check=full ./minishell
 * Memory management in C
 * Shell behavior replication
 
-
-## 👤 Author
-
-* **orhan / NameNotHere**
-  GitHub: [https://github.com/NameNotHere](https://github.com/NameNotHere)
-    -- plus thomas
